@@ -1,0 +1,282 @@
+/*
+ * newcharacter.go
+ * 
+ * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ * 
+ */
+
+package main
+
+import (
+	"fmt"
+	"bufio"
+	"os"
+	"strconv"
+	
+	"github.com/isangeles/flame/core/game/object/character"
+	"github.com/isangeles/flame/core/data/text/lang"
+)
+
+// startNewCharacterDialog starts new CLI dialog to create new playable
+// game character.
+func newCharacterDialog() character.Character {
+	var (
+		name string
+		race character.Race
+		sex character.Gender
+		attrs character.Attributes
+		attrsPoints int = 10
+		c character.Character
+	)
+	
+	scan := bufio.NewScanner(os.Stdin)
+	
+	// Character creation dialog
+	var mainAccept = false
+	for !mainAccept {
+		// Name
+		fmt.Printf("%s:", lang.GetUIText("cli_newchar_name"))
+		for scan.Scan() {
+			name = scan.Text()
+			if isCharNameValid(name) {	
+				break;		
+			} else {
+				fmt.Printf("%s\n", lang.GetUIText("cli_newchar_invalid_name_err"))
+				fmt.Printf("%s:", lang.GetUIText("cli_newchar_name"))
+			}
+		}
+		
+		// Race
+		race = raceDialog()
+		
+		// Gender
+		sex = genderDialog()
+		
+		// Attributes
+		var accept = false
+		for !accept {
+			attrs = newAttributesDialog(attrsPoints)
+			fmt.Printf("%s: %s\n", lang.GetUIText("cli_newchar_attrs_summary"), attrs)
+			fmt.Printf("%s:", lang.GetUIText("cli_newchar_accept_dialog"))
+			scan.Scan()
+			input := scan.Text()
+			if input != "r" {
+				accept = true
+			}
+		}
+	
+		// Summary
+		c = character.NewCharacter("player", name, 1, sex, race, character.Friendly, 
+									character.NewGuild("none"), attrs)
+		fmt.Printf("%s: %s\n", lang.GetUIText("cli_newchar_summary"), c)
+		fmt.Printf("%s:", lang.GetUIText("cli_newchar_accept_dialog"))
+		scan.Scan()
+		input := scan.Text()
+		if input != "r" {
+			mainAccept = true
+		}
+	}
+	
+	return c
+}
+
+// raceDialog starts CLI dialog for game character race.
+// Returns character race.
+func raceDialog() character.Race {
+	scan := bufio.NewScanner(os.Stdin)
+	fmt.Printf("%s:", lang.GetUIText("cli_newchar_race"))
+	racesNames := lang.GetUITexts("race_human", "race_elf", "race_dwarf",
+										"race_gnome")
+	s := make([]interface{}, len(racesNames))
+	for i, v := range racesNames {
+		s[i] = v
+	}
+	
+	for true {
+		fmt.Printf("[1 - %s, 2 - %s, 3 - %s, 4 - %s]:", s...);
+		scan.Scan()
+		input := scan.Text()
+		switch(input) {
+		case "1":
+			return character.HUMAN;
+		case "2":
+			return character.ELF;
+		case "3":
+			return character.DWARF;
+		case "4":
+			return character.GNOME;
+		default:
+			fmt.Printf("%s:%s\n", lang.GetUIText("cli_newchar_invalid_value_err"),
+						input)
+		}
+	}
+	
+	return character.HUMAN;
+}
+
+// genderDialog starts CLI dialog for game character gender.
+// Returns character gender.
+func genderDialog() character.Gender {
+	scan := bufio.NewScanner(os.Stdin)
+	fmt.Printf("%s:", lang.GetUIText("cli_newchar_gender"))
+	genderNames := lang.GetUITexts("gender_male", "gender_female")
+	s := make([]interface{}, len(genderNames))
+	for i, v := range genderNames {
+		s[i] = v
+	}
+	
+	for true {
+		fmt.Printf("[1 - %s, 2 - %s]:", s...)
+		scan.Scan()
+		input := scan.Text()
+		switch(input) {
+		case "1":
+			return character.MALE
+		case "2":
+			return character.FEMALE
+		default:
+			fmt.Printf("%s:%s\n", lang.GetUIText("cli_newchar_invalid_value_err"),
+						input)
+		}
+	}
+	
+	return character.MALE
+}
+
+// newAttributesDialog Starts CLI dialog for game character attributes.
+// Returns character attributes.
+func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
+	scan := bufio.NewScanner(os.Stdin)
+	fmt.Printf("%s:\n", lang.GetUIText("cli_newchar_attrs"))
+	for attrsPoints > 0 {
+		
+		for true {
+			fmt.Printf("%s[%s = %d, %s = %d]+", lang.GetUIText("attr_str"),
+					 lang.GetUIText("cli_newchar_value"), attrs.Str, 
+					 lang.GetUIText("cli_newchar_points"), attrsPoints)
+			scan.Scan()
+			input := scan.Text()
+			attr, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Printf("%s:%s\n", lang.GetUIText("cli_newchar_nan_error"),
+							input)
+			} else {
+				if attrsPoints - attr >= 0 {
+					attrs.Str += attr
+					attrsPoints -= attr
+					break
+				} else {
+					fmt.Printf("%s\n", lang.GetUIText("cli_newchar_no_pts_error"))
+				}
+			}
+		}
+		
+		for true {
+			fmt.Printf("%s[%s = %d, %s = %d]+", lang.GetUIText("attr_con"),
+						 lang.GetUIText("cli_newchar_value"), attrs.Con, 
+						 lang.GetUIText("cli_newchar_points"), attrsPoints)
+			scan.Scan()
+			input := scan.Text()
+			attr, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Printf("%s:%s\n", lang.GetUIText("cli_newchar_nan_error"),
+							input)
+			} else {
+				if attrsPoints - attr >= 0 {
+					attrs.Con += attr
+					attrsPoints -= attr
+					break
+				} else {
+					fmt.Printf("%s\n", lang.GetUIText("cli_newchar_no_pts_error"))
+				}
+			}
+			
+		}
+		
+		for true {
+			fmt.Printf("%s[%s = %d, %s = %d]+", lang.GetUIText("attr_dex"),
+						 lang.GetUIText("cli_newchar_value"), attrs.Dex, 
+						 lang.GetUIText("cli_newchar_points"), attrsPoints)
+			scan.Scan()
+			input := scan.Text()
+			attr, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Printf("%s:%s\n", lang.GetUIText("cli_newchar_nan_error"),
+							input)
+			} else {
+				if attrsPoints - attr >= 0 {
+					attrs.Dex += attr
+					attrsPoints -= attr
+					break
+				} else {
+					fmt.Printf("%s\n", lang.GetUIText("cli_newchar_no_pts_error"))
+				}
+			}
+		}
+		
+		for true {
+			fmt.Printf("%s[%s = %d, %s = %d]+", lang.GetUIText("attr_wis"),
+						 lang.GetUIText("cli_newchar_value"), attrs.Wis, 
+						 lang.GetUIText("cli_newchar_points"), attrsPoints)
+			scan.Scan()
+			input := scan.Text()
+			attr, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Printf("%s:%s\n", lang.GetUIText("cli_newchar_nan_error"),
+							input)
+			} else {
+				if attrsPoints - attr >= 0 {
+					attrs.Wis += attr
+					attrsPoints -= attr
+					break
+				} else {
+					fmt.Printf("%s\n", lang.GetUIText("cli_newchar_no_pts_error"))
+				}
+			}
+		}
+		
+		for true {
+			fmt.Printf("%s[%s = %d, %s = %d]+", lang.GetUIText("attr_int"),
+						 lang.GetUIText("cli_newchar_value"), attrs.Int, 
+						 lang.GetUIText("cli_newchar_points"), attrsPoints)
+			scan.Scan()
+			input := scan.Text()
+			attr, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Printf("%s:%s\n", lang.GetUIText("cli_newchar_nan_error"),
+							input)
+			} else {
+				if attrsPoints - attr >= 0 {
+					attrs.Int += attr
+					attrsPoints -= attr
+					break
+				} else {
+					fmt.Printf("%s\n", lang.GetUIText("cli_newchar_no_pts_error"))
+				}
+			}
+		}
+		
+	}
+	return
+}
+
+// isCharNameVaild Checks if specified name is valid character name.
+func isCharNameValid(name string) bool {
+	return name != ""
+}
