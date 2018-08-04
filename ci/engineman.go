@@ -71,7 +71,7 @@ func showEngineOption(cmd Command) (int, string) {
 	
 	switch cmd.TargetArgs()[0] {
 		default:
-			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.OptionArgs()[1])
+			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }
 
@@ -104,7 +104,7 @@ func loadEngineOption(cmd Command) (int, string) {
 			// TODO game load
 			return 9, "TODO"
 		default:
-			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.OptionArgs()[1])
+			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }
 
@@ -116,9 +116,15 @@ func saveEngineOption(cmd Command) (int, string) {
 	}
 	
 	switch cmd.TargetArgs()[0] {
+		case "config":
+			err := core.SaveConfig()
+			if err != nil {
+				return 8, fmt.Sprintf("%s:config_save_fail:%v", ENGINE_MAN, err)
+			}
 			
+			return 0, ""
 		default:
-			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.OptionArgs()[1])
+			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }
 
@@ -142,7 +148,7 @@ func startEngineOption(cmd Command) (int, string) {
 			
 			return 0, ""
 		default:
-			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.OptionArgs()[1])
+			return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }
  

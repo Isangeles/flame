@@ -46,7 +46,7 @@ var (
 
 // On init.
 func init() {
-	err := loadConfig()
+	err := LoadConfig()
 	if err != nil {
 		enginelog.Error(fmt.Sprintf("config_load_fail:%s\n", err))
 	}
@@ -73,7 +73,7 @@ func Mod() *module.Module {
 // pcId:  ID of game character in loaded module base for player.
 // Error: if no module is loaded.
 func StartGame(pcId string) error {
-	if !mod.IsLoaded() {
+	if !mod.Loaded() {
 		return fmt.Errorf("no_module_loaded")
 	}
 	
@@ -82,6 +82,11 @@ func StartGame(pcId string) error {
 		return fmt.Errorf("not_found_character_with_id:'%s'", pcId)
 	}
 	
-	gm = game.NewGame(mod, pc)
+	g, err := game.NewGame(&mod, pc)
+	if err != nil {
+		return err
+	}
+	gm = *g
+	
 	return nil
 }

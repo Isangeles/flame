@@ -26,18 +26,23 @@ package ci
 import (
 	"fmt"
 	
-	//"github.com/isangeles/flame/core"
+	"github.com/isangeles/flame/core"
 	//"github.com/isangeles/flame/core/module"
 )
 
 // Handles specified module command,
 // returns response code and message.
 func handleModuleCommand(cmd Command) (int, string) {
+	if !core.Mod().Loaded() {
+		return 3, fmt.Sprintf("%s:no_module_loaded", MODULE_MAN)
+	} 
 	if len(cmd.OptionArgs()) < 1 {
 		return 3, fmt.Sprintf("%s:no_option_args", MODULE_MAN)
 	}
 	
 	switch cmd.OptionArgs()[0] {
+		case "name":
+			return 0, core.Mod().Name()
 		default:
 			return 4, fmt.Sprintf("%s:no_such_option:%s", MODULE_MAN, cmd.OptionArgs()[0])
 	}

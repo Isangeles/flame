@@ -1,5 +1,5 @@
 /*
- * config.go
+ * scenario.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,48 +21,10 @@
  * 
  */
 
-package main
+package area
 
-import (
-	"fmt"
-	"os"
-	"bufio"
-	"strings"
-	
-	"github.com/isangeles/flame/core/data/text"
-)
-
-const (
-	CONFIG_FILE_NAME = ".flame-cli"
-)
-
-var (
-	userTools []string // list with names of perrmited user tools
-)
-
-// loadConfig Loads CLI config file.
-func loadConfig() error {
-	file, err := os.Open(CONFIG_FILE_NAME)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	
-	s := bufio.NewScanner(file)
-	for s.Scan() {
-		line := s.Text()
-		if strings.HasPrefix(line, text.COMMENT_PREFIX) {
-			continue
-		}
-		
-		// TODO read user tools
-	}
-	
-	return fmt.Errorf("unsupported_yet")
-}
-
-// saveConfig Saves current config values in config file.
-func saveConfig() error {
-	// TODO config saving
-	return fmt.Errorf("unsupported_yet")
+// Scenario struct represents area scenario
+type Scenario struct {
+	id    string
+	areas []Area
 }

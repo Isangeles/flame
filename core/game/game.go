@@ -26,18 +26,31 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/game/object/character"
+	"github.com/isangeles/flame/core/game/area"
 )
 
 // Struct Game represents game.
 type Game struct {
-	mod module.Module
-	pc  character.Character
+	mod 	  module.Module
+	pc        character.Character
+	scenarios []area.Scenario
 }
 
-// NewGame returns new instance of game struct.
-func NewGame(mod module.Module, player character.Character) Game {
-	return Game{mod, player}
+// NewGame returns pointer to new instance of game struct.
+// Error: if error occurs during module data loading.
+func NewGame(mod *module.Module, player character.Character) (*Game, error) {
+	err := mod.LoadData()
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
+	}
+	
+	var g *Game = new(Game)
+	g.mod = *mod
+	g.pc = player
+	return g, nil
 }
 

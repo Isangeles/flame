@@ -47,11 +47,20 @@ const (
 	COMMAND_PREFIX = "$"
 	CLOSE_CMD = "close"
 	NEW_CHAR_CMD = "newchar"
+	INPUT_INDICATOR = ">"
 )
+
+// On init.
+func init() {
+	err := loadConfig()
+	if err != nil {
+		log.Printf("flame-cli>fail_to_load_config:%v", err)
+	}
+}
 
 func main() {
 	fmt.Printf("*%s\t%s*\n", core.NAME, core.VERSION)
-	fmt.Print(">") // input indicator
+	fmt.Print(INPUT_INDICATOR)
 	scan := bufio.NewScanner(os.Stdin)
 	for scan.Scan() {
 		input := scan.Text()
@@ -59,9 +68,14 @@ func main() {
 			input := strings.TrimPrefix(input, COMMAND_PREFIX)
 			switch input {
 			case CLOSE_CMD:
+				err := core.SaveConfig()
+				if err != nil {
+					log.Printf("config_save_fail:%v", err) 
+				}
+				
 				os.Exit(0)
 			case NEW_CHAR_CMD:
-				if !core.Mod().IsLoaded() {
+				if !core.Mod().Loaded() {
 					fmt.Printf("%s\n", lang.GetUIText("cli_newchar_no_mod_err"))
 					break
 				}
@@ -70,15 +84,15 @@ func main() {
 			default:
 				cmd, err := NewCommand(input)
 				if err != nil {
-					fmt.Printf("COMMAND_BUILD_ERROR:%v", err)
+					fmt.Printf("command_build_error:%v", err)
 				}
 				code, msg := ci.HandleCommand(cmd)
-				log.Printf("flame_ci[%d]:%s\n", code, msg) // uses log to auto print timestamps
+				log.Printf("flame-ci[%d]>%s\n", code, msg) // uses log to auto print timestamps
 			}
 		} else {
 			fmt.Println(input)
 		}
-		fmt.Print(">") // input indicator
+		fmt.Print(INPUT_INDICATOR)
 	}
 	if err := scan.Err(); err != nil {
 		fmt.Printf("input_scanner_init_fail_msg:%v\n", err)  

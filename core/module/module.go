@@ -26,9 +26,11 @@
 package module
 
 import (
+	"fmt"
 	"path/filepath"
 	
 	"github.com/isangeles/flame/core/game/object/character"
+	"github.com/isangeles/flame/core/data"
 )
 
 var (
@@ -39,7 +41,13 @@ var (
 type Module struct {
 	name, path string
 	
+	chapters   map[int]Chapter
 	characters map[string]character.Character
+}
+
+// DefaultModulesPath returns default path to modules directory.
+func DefaultModulesPath() string {
+	return defaultModulesPath
 }
 
 // NewModule creates new representation of module with specified name and
@@ -48,6 +56,17 @@ func NewModule(name, path string) Module {
 	m := Module{name: name, path: path}
 	m.characters = make(map[string]character.Character)
 	return m
+}
+
+// LoadData loads module data
+func (m *Module) LoadData() error {
+	chars, err := data.GetCharactersFromXML(m.CharactersBasePath())
+	if err != nil {
+		return fmt.Errorf("fail_to_load_npcs_base:%v", err)
+	}
+	m.characters = *chars
+	
+	return nil
 }
 
 // Name returns module name
@@ -61,7 +80,7 @@ func (m *Module) Path() string {
 }
 
 // Checks if module is loaded.
-func (m *Module) IsLoaded() bool {
+func (m *Module) Loaded() bool {
 	return m.name != "" && m.path != ""
 }
 
@@ -75,9 +94,10 @@ func (m *Module) AddCharacter(char character.Character) {
 	m.characters[char.Id()] = char
 }
 
-// DefaultModulesPath returns default path to modules directory.
-func DefaultModulesPath() string {
-	return defaultModulesPath
+// CharactersBasePath returns path to XML document with module characters.
+func (m *Module) CharactersBasePath() string {
+	return filepath.FromSlash("data/modules/" + m.Name() + "/npcs/npcs.base")
 }
+
 
 
