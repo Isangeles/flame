@@ -1,3 +1,2 @@
 #Flame CLI config file
-user_tools:
-$engineman
+user_tool:$engineman

@@ -27,12 +27,11 @@ package core
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/game"
 	"github.com/isangeles/flame/core/enginelog"
-	//"github.com/isangeles/flame/core/game/object/character"
+	"github.com/isangeles/flame/core/game/object/character"
 )
 
 const (
@@ -54,13 +53,12 @@ func init() {
 
 // LoadModule loads module with specified name from default directory(data/modules).
 // Error: if specified module name was invalid
-func LoadModule(name, path string) error {
-	//TODO loading module data from directory
-	if _, err := os.Stat(path + string(os.PathSeparator) + name); os.IsNotExist(err) {
-		return fmt.Errorf("module_not_found:'%s' in:'%s'", name, path)
+func SetModule(m module.Module) error {
+	if !m.Loaded() {
+		return fmt.Errorf("set_module_fail:module_not_loaded")
 	}
+	mod = m
 	
-	mod = module.NewModule(name, path)
 	return nil
 }
 
@@ -69,17 +67,12 @@ func Mod() *module.Module {
 	return &mod
 }
 
-// StartGame starts new game for loaded module.
-// pcId:  ID of game character in loaded module base for player.
+// StartGame starts new game for loaded module with specified character
+// as PC.
 // Error: if no module is loaded.
-func StartGame(pcId string) error {
+func StartGame(pc character.Character) error {
 	if !mod.Loaded() {
 		return fmt.Errorf("no_module_loaded")
-	}
-	
-	pc := mod.GetCharacter(pcId)
-	if pc.Id() == "" {
-		return fmt.Errorf("not_found_character_with_id:'%s'", pcId)
 	}
 	
 	g, err := game.NewGame(&mod, pc)

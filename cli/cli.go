@@ -38,7 +38,6 @@ import (
 	"strings"
 	
 	"github.com/isangeles/flame/core"
-	"github.com/isangeles/flame/core/data/text/lang"
 	//"github.com/isangeles/flame/core/log"
 	"github.com/isangeles/flame/ci"
 )
@@ -47,6 +46,7 @@ const (
 	COMMAND_PREFIX = "$"
 	CLOSE_CMD = "close"
 	NEW_CHAR_CMD = "newchar"
+	NEW_GAME_CMD = "newgame"
 	INPUT_INDICATOR = ">"
 )
 
@@ -75,12 +75,19 @@ func main() {
 				
 				os.Exit(0)
 			case NEW_CHAR_CMD:
-				if !core.Mod().Loaded() {
-					fmt.Printf("%s\n", lang.GetUIText("cli_newchar_no_mod_err"))
+				createdChar, err := newCharacterDialog()
+				if err != nil {
+					fmt.Printf("%s\n", err)
+					break 
+				}
+				playableChars = append(playableChars, createdChar)
+				core.Mod().AddCharacter(createdChar)
+			case NEW_GAME_CMD:
+				err := newGameDialog()
+				if err != nil {
+					fmt.Printf("%s\n", err)
 					break
 				}
-				created_char := newCharacterDialog()
-				core.Mod().AddCharacter(created_char)
 			default:
 				cmd, err := NewCommand(input)
 				if err != nil {

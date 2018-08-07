@@ -88,13 +88,20 @@ func loadEngineOption(cmd Command) (int, string) {
 				return 7, fmt.Sprintf("%s:no_enought_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[1])
 			}
 			
-			var err error
+			var (
+				err error
+				m module.Module
+			)
 			if len(cmd.Args()) > 1 {
-				err = core.LoadModule(cmd.Args()[0], cmd.Args()[1])
+				m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1])
 			} else {
-				err = core.LoadModule(cmd.Args()[0], module.DefaultModulesPath())
+				m, err = module.NewModule(cmd.Args()[0], module.DefaultModulesPath())
+			}
+			if err != nil {
+				return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN, err)
 			}
 			
+			err = core.SetModule(m)
 			if err != nil {
 				return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN, err)
 			}
@@ -140,8 +147,16 @@ func startEngineOption(cmd Command) (int, string) {
 			if len(cmd.Args()) < 1 {
 				return 7, fmt.Sprintf("%s:not_enought_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[1])
 			} 
+			if !core.Mod().Loaded() {
+				return 7, fmt.Sprintf("no_module_loaded")
+			}
 			
-			err := core.StartGame(cmd.Args()[0])
+			pc := core.Mod().GetCharacter(cmd.Args()[0])
+			if pc.Id() == "" {
+				return 7, fmt.Sprintf("not_found_character_with_id:'%s'", cmd.Args()[0])
+			}
+			
+			err := core.StartGame(pc)
 			if err != nil {
 				return 8, fmt.Sprintf("%s:new_game_start_fail:%s", ENGINE_MAN, err)
 			}

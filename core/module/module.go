@@ -28,6 +28,7 @@ package module
 import (
 	"fmt"
 	"path/filepath"
+	"os"
 	
 	"github.com/isangeles/flame/core/game/object/character"
 	"github.com/isangeles/flame/core/data"
@@ -52,10 +53,16 @@ func DefaultModulesPath() string {
 
 // NewModule creates new representation of module with specified name and
 // with specified path.
-func NewModule(name, path string) Module {
-	m := Module{name: name, path: path}
+func NewModule(name, path string) (m Module, err error) {
+	//TODO loading module data from directory
+	if _, err = os.Stat(path + string(os.PathSeparator) + name); os.IsNotExist(err) {
+		return m, fmt.Errorf("module_not_found:'%s' in:'%s'", name, path)
+	}
+	m.name = name
+	m.path = path
+	
 	m.characters = make(map[string]character.Character)
-	return m
+	return m, nil
 }
 
 // LoadData loads module data

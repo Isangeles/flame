@@ -29,13 +29,14 @@ import (
 	"os"
 	"strconv"
 	
+	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/game/object/character"
 	"github.com/isangeles/flame/core/data/text/lang"
 )
 
 // startNewCharacterDialog starts new CLI dialog to create new playable
 // game character.
-func newCharacterDialog() character.Character {
+func newCharacterDialog() (character.Character, error) {
 	var (
 		name string
 		race character.Race
@@ -44,6 +45,9 @@ func newCharacterDialog() character.Character {
 		attrsPoints int = 10
 		c character.Character
 	)
+	if !core.Mod().Loaded() {
+		return c, fmt.Errorf(lang.GetUIText("cli_no_mod_err"))
+	}
 	
 	scan := bufio.NewScanner(os.Stdin)
 	
@@ -73,7 +77,7 @@ func newCharacterDialog() character.Character {
 		for !accept {
 			attrs = newAttributesDialog(attrsPoints)
 			fmt.Printf("%s: %s\n", lang.GetUIText("cli_newchar_attrs_summary"), attrs)
-			fmt.Printf("%s:", lang.GetUIText("cli_newchar_accept_dialog"))
+			fmt.Printf("%s:", lang.GetUIText("cli_accept_dialog"))
 			scan.Scan()
 			input := scan.Text()
 			if input != "r" {
@@ -85,7 +89,7 @@ func newCharacterDialog() character.Character {
 		c = character.NewCharacter("player", name, 1, sex, race, character.Friendly, 
 									character.NewGuild("none"), attrs)
 		fmt.Printf("%s: %s\n", lang.GetUIText("cli_newchar_summary"), c)
-		fmt.Printf("%s:", lang.GetUIText("cli_newchar_accept_dialog"))
+		fmt.Printf("%s:", lang.GetUIText("cli_accept_dialog"))
 		scan.Scan()
 		input := scan.Text()
 		if input != "r" {
@@ -93,7 +97,7 @@ func newCharacterDialog() character.Character {
 		}
 	}
 	
-	return c
+	return c, nil
 }
 
 // raceDialog starts CLI dialog for game character race.

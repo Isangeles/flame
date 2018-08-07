@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"os"
 	"bufio"
+	"strings"
 	
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module"
@@ -49,13 +50,26 @@ func LoadConfig() error {
 		return err
 	}
 	
-	langID   = confValues[0]
-	err = LoadModule(confValues[1], module.DefaultModulesPath())
-	if err != nil {
-		enginelog.Error(fmt.Sprintf("config_module_load_fail:", err))
+	langID = confValues[0]
+	
+	modNamePath := strings.Split(confValues[1], ";")
+	if modNamePath[0] != "" {
+		var m module.Module
+		if len(modNamePath) < 2 {
+			m, err = module.NewModule(modNamePath[0], module.DefaultModulesPath())
+		} else {
+			m, err = module.NewModule(modNamePath[0], modNamePath[1])
+		}
+		if err != nil {
+			enginelog.Error(fmt.Sprintf("config_module_load_fail:", err))
+		}
+		err = SetModule(m)
+		if err != nil {
+			enginelog.Error(fmt.Sprintf("config_module_load_fail:", err))
+		}
 	}
 	
-	
+	enginelog.Info("config_file_loaded")
 	return nil
 }
 
@@ -70,10 +84,11 @@ func SaveConfig() error {
 	w := bufio.NewWriter(f)
 	w.WriteString(fmt.Sprintf("%s\n", "#Flame engine config file")) // default header
 	w.WriteString(fmt.Sprintf("lang:%s;\n", langID))
-	w.WriteString(fmt.Sprintf("module:%s;\n", mod.Name()))
+	w.WriteString(fmt.Sprintf("module:%s;%s;\n", mod.Name(), mod.Path()))
 	
 	w.Flush()
 	
+	enginelog.Info("config_file_saved")
 	return nil
 }
 
@@ -86,9 +101,5 @@ func LangID() string {
 func SetLang(lng string) error {
 	// TODO check if specified language is supported
 	langID = lng
-	err := SaveConfig()
-	if err != nil {
-		return fmt.Errorf("fail_to_save_config_file:%v", err)
-	}
 	return nil 
 }
