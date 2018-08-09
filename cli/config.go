@@ -27,7 +27,6 @@ import (
 	"fmt"
 	"os"
 	"bufio"
-	"strings"
 	
 	"github.com/isangeles/flame/core/data/text"
 )
@@ -37,32 +36,32 @@ const (
 )
 
 var (
-	userTools []string // list with names of perrmited user tools
+	restrictMode bool = false
 )
 
 // loadConfig Loads CLI config file.
 func loadConfig() error {
-	file, err := os.Open(CONFIG_FILE_NAME)
+	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "restrict_mode")
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 	
-	s := bufio.NewScanner(file)
-	for s.Scan() {
-		line := s.Text()
-		if strings.HasPrefix(line, text.COMMENT_PREFIX) {
-			continue
-		}
-		
-		// TODO read user tools
-	}
-	
-	return fmt.Errorf("unsupported_yet")
+	restrictMode = confValues[0] == "true"
+	return nil
 }
 
 // saveConfig Saves current config values in config file.
 func saveConfig() error {
-	// TODO config saving
-	return fmt.Errorf("unsupported_yet")
+	f, err := os.Create(CONFIG_FILE_NAME)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	
+	w := bufio.NewWriter(f)
+	w.WriteString(fmt.Sprintf("%s\n", "#Flame CLI config file")) // default header
+	w.WriteString(fmt.Sprintf("restrict_mode:%v;\n", restrictMode))
+	
+	w.Flush()
+	return nil
 }

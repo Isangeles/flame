@@ -70,6 +70,10 @@ func main() {
 			case CLOSE_CMD:
 				err := core.SaveConfig()
 				if err != nil {
+					log.Printf("engine_config_save_fail:%v", err) 
+				}
+				err = saveConfig()
+				if err != nil {
 					log.Printf("config_save_fail:%v", err) 
 				}
 				
