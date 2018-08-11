@@ -38,8 +38,7 @@ import (
 	"strings"
 	
 	"github.com/isangeles/flame/core"
-	//"github.com/isangeles/flame/core/log"
-	"github.com/isangeles/flame/ci"
+	"github.com/isangeles/flame/core/ci"
 )
 
 const (
@@ -50,11 +49,16 @@ const (
 	INPUT_INDICATOR = ">"
 )
 
+var (
+	stdout *log.Logger = log.New(os.Stdout, "flame-cli>", 0)
+	stderr *log.Logger = log.New(os.Stderr, "flame-cli>", 0)
+)
+
 // On init.
 func init() {
 	err := loadConfig()
 	if err != nil {
-		log.Printf("flame-cli>fail_to_load_config:%v", err)
+		stderr.Printf("fail_to_load_config:%v", err)
 	}
 }
 
@@ -70,18 +74,18 @@ func main() {
 			case CLOSE_CMD:
 				err := core.SaveConfig()
 				if err != nil {
-					log.Printf("engine_config_save_fail:%v", err) 
+					stderr.Printf("engine_config_save_fail:%v", err) 
 				}
 				err = saveConfig()
 				if err != nil {
-					log.Printf("config_save_fail:%v", err) 
+					stderr.Printf("config_save_fail:%v", err) 
 				}
 				
 				os.Exit(0)
 			case NEW_CHAR_CMD:
 				createdChar, err := newCharacterDialog()
 				if err != nil {
-					fmt.Printf("%s\n", err)
+					stderr.Printf("%s\n", err)
 					break 
 				}
 				playableChars = append(playableChars, createdChar)
@@ -89,19 +93,19 @@ func main() {
 			case NEW_GAME_CMD:
 				err := newGameDialog()
 				if err != nil {
-					fmt.Printf("%s\n", err)
+					stderr.Printf("%s\n", err)
 					break
 				}
 			default:
 				cmd, err := NewCommand(input)
 				if err != nil {
-					fmt.Printf("command_build_error:%v", err)
+					stderr.Printf("command_build_error:%v", err)
 				}
 				code, msg := ci.HandleCommand(cmd)
-				log.Printf("flame-ci[%d]>%s\n", code, msg) // uses log to auto print timestamps
+				stdout.Printf("flame-ci[%d]:%s\n", code, msg) // uses log to auto print timestamps
 			}
 		} else {
-			fmt.Println(input)
+			stdout.Println(input)
 		}
 		fmt.Print(INPUT_INDICATOR)
 	}

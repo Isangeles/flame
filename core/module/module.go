@@ -53,16 +53,17 @@ func DefaultModulesPath() string {
 
 // NewModule creates new representation of module with specified name and
 // with specified path.
-func NewModule(name, path string) (m Module, err error) {
+func NewModule(name, path string) (*Module, error) {
 	//TODO loading module data from directory
-	if _, err = os.Stat(path + string(os.PathSeparator) + name); os.IsNotExist(err) {
-		return m, fmt.Errorf("module_not_found:'%s' in:'%s'", name, path)
+	var m Module
+	if _, err := os.Stat(path + string(os.PathSeparator) + name); os.IsNotExist(err) {
+		return nil, fmt.Errorf("module_not_found:'%s' in:'%s'", name, path)
 	}
 	m.name = name
 	m.path = path
 	
 	m.characters = make(map[string]character.Character)
-	return m, nil
+	return &m, nil
 }
 
 // LoadData loads module data

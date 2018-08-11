@@ -39,7 +39,7 @@ const (
 )
 
 var (
-	mod module.Module
+	mod *module.Module
 	gm  game.Game
 )
 
@@ -53,8 +53,8 @@ func init() {
 
 // LoadModule loads module with specified name from default directory(data/modules).
 // Error: if specified module name was invalid
-func SetModule(m module.Module) error {
-	if !m.Loaded() {
+func SetModule(m *module.Module) error {
+	if m == nil {
 		return fmt.Errorf("set_module_fail:module_not_loaded")
 	}
 	mod = m
@@ -64,18 +64,18 @@ func SetModule(m module.Module) error {
 
 // Mod returns loaded module
 func Mod() *module.Module {
-	return &mod
+	return mod
 }
 
 // StartGame starts new game for loaded module with specified character
 // as PC.
 // Error: if no module is loaded.
 func StartGame(pc character.Character) error {
-	if !mod.Loaded() {
+	if mod != nil {
 		return fmt.Errorf("no_module_loaded")
 	}
 	
-	g, err := game.NewGame(&mod, pc)
+	g, err := game.NewGame(mod, pc)
 	if err != nil {
 		return err
 	}

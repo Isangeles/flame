@@ -18,9 +18,8 @@ detect_indent_width=false
 indent_mode=2
 
 [project]
-name=flame
-base_path=/home/darek/go/src/github.com/Isangeles/flame
-description=
+name=flame\\
+base_path=/home/darek/go/src/github.com/isangeles/flame
 
 [long line marker]
 long_line_behaviour=1
@@ -28,3 +27,6 @@ long_line_column=72
 
 [files]
 current_page=-1
+
+[VTE]
+last_dir=/home/darek/go/src/tgpl/ch2/cf

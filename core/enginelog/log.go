@@ -33,8 +33,8 @@ import (
 
 var (
 	messages []message
-	err *log.Logger = log.New(os.Stderr, "flame-core>", 0)
-	std *log.Logger = log.New(os.Stdout, "flame-core>", 0)
+	stderr *log.Logger = log.New(os.Stderr, "flame-core>", 0)
+	stdout *log.Logger = log.New(os.Stdout, "flame-core>", 0)
 	debug bool
 )
 
@@ -43,7 +43,7 @@ func Info(msg string) {
 	m := message{time.Now().String(), msg, INF}
 	messages = append(messages, m)
 	if debug {
-		std.Println(msg)
+		stdout.Println(msg)
 	}
 }
 
@@ -51,7 +51,7 @@ func Info(msg string) {
 func Error(msg string) {
 	m := message{time.Now().String(), msg, ERR}
 	messages = append(messages, m)
-	err.Println(msg)
+	stderr.Println(msg)
 }
 
 // Debug registers specified text as debug message
@@ -62,7 +62,7 @@ func Debug(msg string) {
 	
 	m := message{time.Now().String(), msg, ERR}
 	messages = append(messages, m)
-	std.Println(msg)
+	stdout.Println(msg)
 }
 
 // EnableDebug enables debug mode

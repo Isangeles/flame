@@ -90,7 +90,7 @@ func loadEngineOption(cmd Command) (int, string) {
 			
 			var (
 				err error
-				m module.Module
+				m *module.Module
 			)
 			if len(cmd.Args()) > 1 {
 				m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1])

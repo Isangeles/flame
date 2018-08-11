@@ -54,7 +54,7 @@ func LoadConfig() error {
 	
 	modNamePath := strings.Split(confValues[1], ";")
 	if modNamePath[0] != "" {
-		var m module.Module
+		var m *module.Module
 		if len(modNamePath) < 2 {
 			m, err = module.NewModule(modNamePath[0], module.DefaultModulesPath())
 		} else {
@@ -84,7 +84,11 @@ func SaveConfig() error {
 	w := bufio.NewWriter(f)
 	w.WriteString(fmt.Sprintf("%s\n", "#Flame engine config file")) // default header
 	w.WriteString(fmt.Sprintf("lang:%s;\n", langID))
-	w.WriteString(fmt.Sprintf("module:%s;%s;\n", mod.Name(), mod.Path()))
+	if mod != nil {
+		w.WriteString(fmt.Sprintf("module:%s;%s;\n", mod.Name(), mod.Path()))
+	} else {
+		w.WriteString(fmt.Sprintf("module:;;\n"))
+	}
 	
 	w.Flush()
 	
