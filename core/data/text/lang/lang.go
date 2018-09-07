@@ -28,35 +28,53 @@ package lang
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
-	"github.com/isangeles/flame/core"
+	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data/text"
 )
 
-var (
-	mainLangPath string = filepath.FromSlash("data/lang")
+const (
+	LANG_FILE_EXT = ".lang"
 )
 
-// GetUIText returns text with specified ID from main UI lang file('ui.lang')
+var (
+	mainLangPath = "data/lang"
+)
+
+// Text returns text with specified ID from file with specified name in 
+// current lang directory.
+// In case of error(file/ID not found) returns string with error 
+// message.
+func Text(langFile, textId string) string {
+	if !strings.HasSuffix(langFile, LANG_FILE_EXT) {
+		langFile = langFile + LANG_FILE_EXT
+	}
+	
+	var fullpath string = filepath.FromSlash(CurrentLangPath() + "/" + langFile)
+	return text.ReadDisplayText(fullpath, textId)[0]
+}
+
+// UIText returns text with specified ID from main UI lang file('ui.lang')
 // in 'core.MainLangPath()' directory.
 // In case of error(file/ID not found) returns string with error
 // message.
-func GetUIText(textId string) string {
-	return text.ReadDisplayText(MainLangPath() + string(os.PathSeparator) + 
+func UIText(textId string) string {
+	return text.ReadDisplayText(CurrentLangPath() + string(os.PathSeparator) + 
 					"ui.lang", textId)[0]
 }
 
-// GetUITexts returns all text lines from UI lang file with specified IDs
+// UITexts returns all text lines from UI lang file with specified IDs
 // In case of error(file/ID not found) returns string with error
 // message.
 // In case of error(file/ID not found) returns string with error
 // message instead of text. 
-func GetUITexts(textIDs ...string) []string {
-	return text.ReadDisplayText(MainLangPath() + string(os.PathSeparator) + 
+func UITexts(textIDs ...string) []string {
+	return text.ReadDisplayText(CurrentLangPath() + string(os.PathSeparator) + 
 					"ui.lang", textIDs...)
 }
 
 // MainLangPath return path to main lang direcotry for current language.
-func MainLangPath() string {
-	return filepath.FromSlash(mainLangPath + "/" + core.LangID())
+func CurrentLangPath() string {
+	return filepath.FromSlash(mainLangPath + "/" + flame.LangID())
 }

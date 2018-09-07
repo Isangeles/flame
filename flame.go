@@ -23,7 +23,7 @@
  
 // Flame engine core
 // @Isangeles
-package core
+package flame
 
 import (
 	"fmt"
@@ -70,12 +70,12 @@ func Mod() *module.Module {
 // StartGame starts new game for loaded module with specified character
 // as PC.
 // Error: if no module is loaded.
-func StartGame(pc character.Character) error {
-	if mod != nil {
+func StartGame(pcs []character.Character) error {
+	if mod == nil {
 		return fmt.Errorf("no_module_loaded")
 	}
 	
-	g, err := game.NewGame(mod, pc)
+	g, err := game.NewGame(mod, pcs)
 	if err != nil {
 		return err
 	}

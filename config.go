@@ -21,7 +21,7 @@
  * 
  */
 
-package core
+package flame
 
 import (
 	"fmt"
