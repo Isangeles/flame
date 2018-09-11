@@ -1,22 +1,20 @@
 ## Introduction
   Flame is RPG game engine written from scratch in Go.
   
-  The main goal is to create simple, flexible, extensible and completely modular game engine.
+  The main goal is to create simple, flexible, extensible and completely modular game engine. Engine provides build-in CLI frontend to easy run and debug modules.
   
-  The engine provides CLI frontend to easy run and debug modules.
-  
-  The project idea is based on Senlin game engine, senlin modules should be compatible with Flame.
+  The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine, senlin modules should be compatible with Flame.
   
   Currently in a very early development stage.
 
 ## Install & Run
   Get sources from git:
 ```
-  $ go get github.com/isangeles/flame
+  $ go get -u github.com/isangeles/flame
 ```
   Build Flame CLI:
 ```
-  $ go build -o flame-cli github.com/isangeles/flame/cli
+  $ go build -o flame-cli github.com/isangeles/flame/cmd
 ```
   Run CLI:
 ```
@@ -26,7 +24,7 @@
 * Isangeles <dev@isangeles.pl>
 
 ## License
-Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+Copyright 2018 Dariusz Sikora <<dev@isangeles.pl>>
  
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

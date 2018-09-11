@@ -36,6 +36,7 @@ import (
 
 const (
 	NAME, VERSION = "Flame Engine", "0.0.0"
+	log_prefix    = "flame-core"
 )
 
 var (
@@ -47,7 +48,7 @@ var (
 func init() {
 	err := LoadConfig()
 	if err != nil {
-		enginelog.Error(fmt.Sprintf("config_load_fail:%s\n", err))
+		enginelog.Error(fmt.Sprintf("config_load_fail:%s\n", err), log_prefix)
 	}
 }
 

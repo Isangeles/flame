@@ -61,15 +61,15 @@ func LoadConfig() error {
 			m, err = module.NewModule(modNamePath[0], modNamePath[1])
 		}
 		if err != nil {
-			enginelog.Error(fmt.Sprintf("config_module_load_fail:", err))
+			return err
 		}
 		err = SetModule(m)
 		if err != nil {
-			enginelog.Error(fmt.Sprintf("config_module_load_fail:", err))
+			return err
 		}
 	}
 	
-	enginelog.Info("config_file_loaded")
+	enginelog.Info("config_file_loaded", log_prefix)
 	return nil
 }
 
@@ -92,7 +92,7 @@ func SaveConfig() error {
 	
 	w.Flush()
 	
-	enginelog.Info("config_file_saved")
+	enginelog.Info("config_file_saved", log_prefix)
 	return nil
 }
 
