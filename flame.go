@@ -1,5 +1,5 @@
 /*
- * engine.go
+ * flame.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,25 +21,28 @@
  * 
  */
  
-// Flame engine core
+// Flame engine is modular RPG game engine.
 // @Isangeles
 package flame
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/game"
-	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/core/game/object/character"
 )
 
 const (
 	NAME, VERSION = "Flame Engine", "0.0.0"
-	log_prefix    = "flame-core"
 )
 
 var (
+	inflog *log.Logger = log.New(InfLog, "flame-core>", 0)
+	errlog *log.Logger = log.New(ErrLog, "flame-core>", 0)
+	dbglog *log.Logger = log.New(DbgLog, "flame-debug>", 0)
+	
 	mod *module.Module
 	gm  game.Game
 )
@@ -48,7 +51,7 @@ var (
 func init() {
 	err := LoadConfig()
 	if err != nil {
-		enginelog.Error(fmt.Sprintf("config_load_fail:%s\n", err), log_prefix)
+		errlog.Printf("config_load_fail:%s\n", err)
 	}
 }
 

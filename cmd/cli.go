@@ -50,8 +50,8 @@ const (
 )
 
 var (
-	stdout *log.Logger = log.New(os.Stdout, "flame-cli>", 0)
-	stderr *log.Logger = log.New(os.Stderr, "flame-cli>", 0)
+	stdout *log.Logger = log.New(flame.InfLog, "flame-cli>", 0)
+	stderr *log.Logger = log.New(flame.ErrLog, "flame-cli>", 0)
 )
 
 // On init.

@@ -39,30 +39,27 @@ var (
 )
 
 // Info registers specified text as info message.
-func Info(msg, prefix string) {
+func Info(msg string) {
 	m := message{time.Now(), msg, INF}
 	messages = append(messages, m)
-	stdout.SetPrefix(prefix + ">")
-	stdout.Println(msg)
+	stdout.Print(msg)
 }
 
 // Error registers specified text as error message.
-func Error(msg, prefix string) {
+func Error(msg string) {
 	m := message{time.Now(), msg, ERR}
 	messages = append(messages, m)
-	stderr.SetPrefix(prefix + ">")
-	stderr.Println(msg)
+	stderr.Print(msg)
 }
 
 // Debug registers specified text as debug message.
-func Debug(msg, prefix string) {
+func Debug(msg string) {
 	if !debug {
 		return
 	}
 	m := message{time.Now(), msg, ERR}
 	messages = append(messages, m)
-	stdout.SetPrefix(prefix + ">")
-	stdout.Println(msg)
+	stdout.Print(msg)
 }
 
 // EnableDebug enables debug mode.

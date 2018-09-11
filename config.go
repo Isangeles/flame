@@ -30,8 +30,8 @@ import (
 	"strings"
 	
 	"github.com/isangeles/flame/core/data/text"
-	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/enginelog"
+	"github.com/isangeles/flame/core/module"
 )
 
 const (
@@ -39,13 +39,13 @@ const (
 )
 
 var (
-	langID string = "english" // default eng
+	langID = "english" // default eng
 )
 
 // loadConfig loads engine configuration file.
 func LoadConfig() error {
 	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", 
-							"module")
+							"module", "debug")
 	if err != nil {
 		return err
 	}
@@ -68,8 +68,10 @@ func LoadConfig() error {
 			return err
 		}
 	}
+
+	enginelog.EnableDebug(confValues[2] == "true")
 	
-	enginelog.Info("config_file_loaded", log_prefix)
+	dbglog.Print("config_file_loaded")
 	return nil
 }
 
@@ -82,17 +84,17 @@ func SaveConfig() error {
 	defer f.Close()
 	
 	w := bufio.NewWriter(f)
-	w.WriteString(fmt.Sprintf("%s\n", "#Flame engine config file")) // default header
+	w.WriteString(fmt.Sprintf("%s\n", "#Flame engine configuration file")) // default header
 	w.WriteString(fmt.Sprintf("lang:%s;\n", langID))
 	if mod != nil {
 		w.WriteString(fmt.Sprintf("module:%s;%s;\n", mod.Name(), mod.Path()))
 	} else {
 		w.WriteString(fmt.Sprintf("module:;;\n"))
 	}
-	
+	w.WriteString(fmt.Sprintf("debug:%v;\n", enginelog.IsDebug()))
 	w.Flush()
 	
-	enginelog.Info("config_file_saved", log_prefix)
+	dbglog.Print("config_file_saved")
 	return nil
 }
 
