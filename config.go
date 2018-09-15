@@ -84,7 +84,7 @@ func SaveConfig() error {
 	defer f.Close()
 	
 	w := bufio.NewWriter(f)
-	w.WriteString(fmt.Sprintf("%s\n", "#Flame engine configuration file")) // default header
+	w.WriteString(fmt.Sprintf("%s\n", "# Flame engine configuration file")) // default header
 	w.WriteString(fmt.Sprintf("lang:%s;\n", langID))
 	if mod != nil {
 		w.WriteString(fmt.Sprintf("module:%s;%s;\n", mod.Name(), mod.Path()))

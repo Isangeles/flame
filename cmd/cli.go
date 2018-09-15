@@ -52,11 +52,16 @@ const (
 var (
 	stdout *log.Logger = log.New(flame.InfLog, "flame-cli>", 0)
 	stderr *log.Logger = log.New(flame.ErrLog, "flame-cli>", 0)
+	dbglog *log.Logger = log.New(flame.DbgLog, "flame-cli-debug>", 0)
 )
 
 // On init.
 func init() {
-	err := loadConfig()
+	err := flame.LoadConfig()
+	if err != nil {
+		stderr.Printf("fail_to_load_flame_config:%v", err)
+	}
+	err = loadConfig()
 	if err != nil {
 		stderr.Printf("fail_to_load_config:%v", err)
 	}

@@ -26,15 +26,16 @@
 package enginelog
 
 import (
-	"log"
-	"os"
+	"fmt"
+	//"log"
+	//"os"
 	"time"
 )
 
 var (
 	messages []message
-	stderr   *log.Logger = log.New(os.Stderr, "", 0)
-	stdout   *log.Logger = log.New(os.Stdout, "", 0)
+	//stderr   *log.Logger = log.New(os.Stderr, "", 0)
+	//stdout   *log.Logger = log.New(os.Stdout, "", 0)
 	debug    bool
 )
 
@@ -42,14 +43,14 @@ var (
 func Info(msg string) {
 	m := message{time.Now(), msg, INF}
 	messages = append(messages, m)
-	stdout.Print(msg)
+	fmt.Print(msg)
 }
 
 // Error registers specified text as error message.
 func Error(msg string) {
 	m := message{time.Now(), msg, ERR}
 	messages = append(messages, m)
-	stderr.Print(msg)
+	fmt.Print(msg)
 }
 
 // Debug registers specified text as debug message.
@@ -59,7 +60,7 @@ func Debug(msg string) {
 	}
 	m := message{time.Now(), msg, ERR}
 	messages = append(messages, m)
-	stdout.Print(msg)
+	fmt.Print(msg)
 }
 
 // EnableDebug enables debug mode.

@@ -47,6 +47,7 @@ func loadConfig() error {
 	}
 	
 	restrictMode = confValues[0] == "true"
+	dbglog.Println("config_file_loaded")
 	return nil
 }
 
@@ -59,9 +60,10 @@ func saveConfig() error {
 	defer f.Close()
 	
 	w := bufio.NewWriter(f)
-	w.WriteString(fmt.Sprintf("%s\n", "#Flame CLI config file")) // default header
+	w.WriteString(fmt.Sprintf("%s\n", "# Flame CLI configuration file")) // default header
 	w.WriteString(fmt.Sprintf("restrict_mode:%v;\n", restrictMode))
 	
 	w.Flush()
+	dbglog.Println("config_file_loaded")
 	return nil
 }

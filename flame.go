@@ -49,10 +49,12 @@ var (
 
 // On init.
 func init() {
+	/* Now config should be loaded by interfaces.
 	err := LoadConfig()
 	if err != nil {
 		errlog.Printf("config_load_fail:%s\n", err)
 	}
+        */
 }
 
 // LoadModule loads module with specified name from default directory(data/modules).
