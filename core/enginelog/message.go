@@ -40,6 +40,11 @@ const (
 // Struct for log messages.
 type message struct {
 	date    time.Time
-	content string
+	text    string
 	mType   MessageType
+}
+
+// Text returns text content of message.
+func (m message) String() string {
+	return m.text
 }

@@ -28,6 +28,7 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	//"runtime/debug"
 	
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/enginelog"
@@ -45,11 +46,12 @@ var (
 // loadConfig loads engine configuration file.
 func LoadConfig() error {
 	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", 
-							"module", "debug")
+		"module", "debug")
+	
 	if err != nil {
 		return err
 	}
-	
+
 	langID = confValues[0]
 	
 	modNamePath := strings.Split(confValues[1], ";")
@@ -82,7 +84,7 @@ func SaveConfig() error {
 		return err
 	}
 	defer f.Close()
-	
+
 	w := bufio.NewWriter(f)
 	w.WriteString(fmt.Sprintf("%s\n", "# Flame engine configuration file")) // default header
 	w.WriteString(fmt.Sprintf("lang:%s;\n", langID))
@@ -95,6 +97,7 @@ func SaveConfig() error {
 	w.Flush()
 	
 	dbglog.Print("config_file_saved")
+	//debug.PrintStack()
 	return nil
 }
 

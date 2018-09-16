@@ -72,3 +72,8 @@ func EnableDebug(d bool) {
 func IsDebug() bool {
 	return debug
 }
+
+// Messages returns all messages from log.
+func Messages() []message {
+	return messages
+}
