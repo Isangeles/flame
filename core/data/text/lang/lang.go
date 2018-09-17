@@ -26,7 +26,6 @@
 package lang
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -55,13 +54,25 @@ func Text(langFile, textId string) string {
 	return text.ReadDisplayText(fullpath, textId)[0]
 }
 
+// Texts returns slice with all values for specified IDs from file
+// with specified name in current lang directory.
+// In case of error(file/ID not found) returns string with error 
+// message.
+func Texts(langFile string, textIDs ...string) []string {
+	if !strings.HasSuffix(langFile, LANG_FILE_EXT) {
+		langFile = langFile + LANG_FILE_EXT
+	}
+
+	var fullpath string = filepath.FromSlash(CurrentLangPath() + "/" + langFile)
+	return text.ReadDisplayText(fullpath, textIDs...)
+}
+
 // UIText returns text with specified ID from main UI lang file('ui.lang')
 // in 'core.MainLangPath()' directory.
 // In case of error(file/ID not found) returns string with error
 // message.
-func UIText(textId string) string {
-	return text.ReadDisplayText(CurrentLangPath() + string(os.PathSeparator) + 
-					"ui.lang", textId)[0]
+func UIText(textID string) string {
+	return Text("ui", textID)
 }
 
 // UITexts returns all text lines from UI lang file with specified IDs
@@ -70,8 +81,7 @@ func UIText(textId string) string {
 // In case of error(file/ID not found) returns string with error
 // message instead of text. 
 func UITexts(textIDs ...string) []string {
-	return text.ReadDisplayText(CurrentLangPath() + string(os.PathSeparator) + 
-					"ui.lang", textIDs...)
+	return Texts("ui", textIDs...)
 }
 
 // MainLangPath return path to main lang direcotry for current language.
