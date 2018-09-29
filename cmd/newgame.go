@@ -40,7 +40,7 @@ var (
 
 // newGameDialog starts CLI dialog for new game.
 func newGameDialog() error {
-	if !flame.Mod().Loaded() {
+	if flame.Mod() == nil {
 		return fmt.Errorf(lang.UIText("cli_no_mod_err"))
 	}
 	if len(playableChars) < 1 {

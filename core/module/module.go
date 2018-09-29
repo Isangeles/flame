@@ -88,9 +88,9 @@ func (m *Module) Path() string {
 }
 
 // Checks if module is loaded.
-func (m *Module) Loaded() bool {
-	return m.name != "" && m.path != ""
-}
+//func (m *Module) Loaded() bool {
+//	return m.name != "" && m.path != ""
+//}
 
 // GetCharacter returns loaded character with specified ID.
 func (m *Module) GetCharacter(id string) character.Character {

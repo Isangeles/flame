@@ -148,7 +148,7 @@ func startEngineOption(cmd Command) (int, string) {
 		if len(cmd.Args()) < 1 {
 			return 7, fmt.Sprintf("%s:not_enought_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[1])
 		}
-		if !flame.Mod().Loaded() {
+		if flame.Mod() == nil {
 			return 7, fmt.Sprintf("no_module_loaded")
 		}
 

@@ -33,7 +33,7 @@ import (
 // Handles specified module command,
 // returns response code and message.
 func handleModuleCommand(cmd Command) (int, string) {
-	if !flame.Mod().Loaded() {
+	if flame.Mod() == nil {
 		return 3, fmt.Sprintf("%s:no_module_loaded", MODULE_MAN)
 	}
 	if len(cmd.OptionArgs()) < 1 {

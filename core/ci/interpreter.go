@@ -27,11 +27,11 @@ package ci
 
 // Command interface for all commands interpreted by CI
 type Command interface {
-	Tool() 		 string
-	String()	 string
+	Tool() 	     string
+	String()     string
 	TargetArgs() []string
 	OptionArgs() []string
-	Args()		 []string
+	Args()	     []string
 }
 
 const (

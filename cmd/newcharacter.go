@@ -45,7 +45,7 @@ func newCharacterDialog() (character.Character, error) {
 		attrsPoints int = 10
 		c           character.Character
 	)
-	if !flame.Mod().Loaded() {
+	if flame.Mod() == nil {
 		return c, fmt.Errorf(lang.UIText("cli_no_mod_err"))
 	}
 
