@@ -1,5 +1,5 @@
 /*
- * log.go
+ * writers.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,11 +21,7 @@
  * 
  */
 
-package flame
-
-import (
-	"github.com/isangeles/flame/core/enginelog"
-)
+package enginelog
 
 var (
 	InfLog infoWriter
@@ -48,20 +44,20 @@ type debugWriter struct {
 // Write for info logger.
 func (l infoWriter) Write(p []byte) (n int, err error) {
 	s := string(p[:])
-	enginelog.Info(s)
+	logInfo(s)
 	return len(p), nil
 }
 
 // Write for error loger.
 func (l errorWriter) Write(p []byte) (n int, err error) {
 	s := string(p[:])
-	enginelog.Error(s)
+	logError(s)
 	return len(p), nil
 }
 
 // Write for debug logger.
 func (l debugWriter) Write(p []byte) (n int, err error) {
 	s := string(p[:])
-	enginelog.Debug(s)
+	logDebug(s)
 	return len(p), nil
 }

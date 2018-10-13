@@ -22,40 +22,39 @@
  */
 
 // Package with engine log.
-// @Isangeles
+// To use log, create new log.Loger with one of
+// log writers as writer.
 package enginelog
 
 import (
 	"fmt"
-	//"log"
-	//"os"
 	"time"
 )
 
 var (
 	messages []message
-	//stderr   *log.Logger = log.New(os.Stderr, "", 0)
-	//stdout   *log.Logger = log.New(os.Stdout, "", 0)
-	debug    bool
+	debuging  bool
 )
 
 // Info registers specified text as info message.
-func Info(msg string) {
+func logInfo(msg string) {
 	m := message{time.Now(), msg, INF}
 	messages = append(messages, m)
-	fmt.Print(msg)
+	if debuging {	
+		fmt.Print(msg)
+	}
 }
 
 // Error registers specified text as error message.
-func Error(msg string) {
+func logError(msg string) {
 	m := message{time.Now(), msg, ERR}
 	messages = append(messages, m)
 	fmt.Print(msg)
 }
 
 // Debug registers specified text as debug message.
-func Debug(msg string) {
-	if !debug {
+func logDebug(msg string) {
+	if !debuging {
 		return
 	}
 	m := message{time.Now(), msg, ERR}
@@ -65,12 +64,12 @@ func Debug(msg string) {
 
 // EnableDebug enables debug mode.
 func EnableDebug(d bool) {
-	debug = d
+	debuging = d
 }
 
 // Debug checks if debug mode is enabled.
 func IsDebug() bool {
-	return debug
+	return debuging
 }
 
 // Messages returns all messages from log.

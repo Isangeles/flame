@@ -38,7 +38,8 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/core/ci"
+	"github.com/isangeles/flame/core/enginelog"
+	"github.com/isangeles/flame/cmd/ci"
 )
 
 const (
@@ -50,9 +51,9 @@ const (
 )
 
 var (
-	stdout *log.Logger = log.New(flame.InfLog, "flame-cli>", 0)
-	stderr *log.Logger = log.New(flame.ErrLog, "flame-cli>", 0)
-	dbglog *log.Logger = log.New(flame.DbgLog, "flame-cli-debug>", 0)
+	stdout *log.Logger = log.New(enginelog.InfLog, "flame-cli>", 0)
+	stderr *log.Logger = log.New(enginelog.ErrLog, "flame-cli>", 0)
+	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-cli-debug>", 0)
 )
 
 // On init.

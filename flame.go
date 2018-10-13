@@ -29,6 +29,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/game"
 	"github.com/isangeles/flame/core/game/object/character"
@@ -39,9 +40,9 @@ const (
 )
 
 var (
-	inflog *log.Logger = log.New(InfLog, "flame-core>", 0)
-	errlog *log.Logger = log.New(ErrLog, "flame-core>", 0)
-	dbglog *log.Logger = log.New(DbgLog, "flame-debug>", 0)
+	inflog *log.Logger = log.New(enginelog.InfLog, "flame-core>", 0)
+	errlog *log.Logger = log.New(enginelog.ErrLog, "flame-core>", 0)
+	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-debug>", 0)
 	
 	mod *module.Module
 	gm  game.Game
