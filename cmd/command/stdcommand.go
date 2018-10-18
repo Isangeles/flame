@@ -1,5 +1,5 @@
 /*
- * command.go
+ * stdcommand.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,25 +21,26 @@
  * 
  */
 
-package main
+package command
 
 import (
 	"fmt"
 	"strings"
 )
 
-// Struct for CLI commands.
-type Command struct {
+// Struct for CLI standard commands.
+// Standard commands structure: '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
+type StdCommand struct {
 	text, tool string
 	targetArgs, optionArgs, args []string
 	commandParts []string
 }
 
-// Creates new command from specified text input.
-// Command structure: '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
+// Creates new standard command from specified text input.
+// Standard command structure: '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
 // Error: If specified input text is not valid text command.
-func NewCommand(text string) (Command, error) {
-	var c Command
+func NewStdCommand(text string) (StdCommand, error) {
+	var c StdCommand
 	c.text = text		
 	c.commandParts = strings.Split(c.text, " ")
 	
@@ -84,26 +85,26 @@ func NewCommand(text string) (Command, error) {
 }
 
 // Tool return command tool name.
-func (c Command) Tool() string {
+func (c StdCommand) Tool() string {
 	return c.tool
 }
 
 // TargetArgs returns slice with target arguments of command.
-func (c Command) TargetArgs() []string {
+func (c StdCommand) TargetArgs() []string {
 	return c.targetArgs
 }
 
 // OptionArgs returns slice with options arguments of command.
-func (c Command) OptionArgs() []string {
+func (c StdCommand) OptionArgs() []string {
 	return c.optionArgs
 }
 
 // Args returns slice with command arguments.
-func (c Command) Args() []string {
+func (c StdCommand) Args() []string {
 	return c.args
 }
 
 // String return full command text
-func (c Command) String() string {
+func (c StdCommand) String() string {
 	return c.text
 }

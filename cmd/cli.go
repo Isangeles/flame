@@ -40,6 +40,7 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/cmd/ci"
+	"github.com/isangeles/flame/cmd/command"
 )
 
 const (
@@ -103,7 +104,7 @@ func main() {
 					break
 				}
 			default:
-				cmd, err := NewCommand(input)
+				cmd, err := command.NewStdCommand(input)
 				if err != nil {
 					stderr.Printf("command_build_error:%v", err)
 				}
