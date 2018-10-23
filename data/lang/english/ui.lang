@@ -12,6 +12,8 @@ race_goblin:Goblin;
 race_unknown:Unknown;
 gender_male:Male;
 gender_female:Female;
+com_yes:Yes;
+com_no:No;
 cli_newchar_name:Character name;
 cli_newchar_race:Character race;
 cli_newchar_gender:Character gender;

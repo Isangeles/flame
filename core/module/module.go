@@ -82,9 +82,14 @@ func (m *Module) Name() string {
 	return m.name;
 }
 
-// Path returns module path
+// Path returns path to PARENT module directory.
 func (m *Module) Path() string {
 	return m.path;
+}
+
+// FullPath returns path to module directory.
+func (m *Module) FullPath() string {
+	return filepath.FromSlash(m.Path() + "/" + m.Name())
 }
 
 // Checks if module is loaded.
