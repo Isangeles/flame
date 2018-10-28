@@ -28,6 +28,7 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"strconv"
 	//"runtime/debug"
 	
 	"github.com/isangeles/flame/core/data/text"
@@ -41,15 +42,20 @@ const (
 
 var (
 	langID = "english" // default eng
+	newCharAttrMin = 5
+	newCharAttrMax = 15
 )
 
 // loadConfig loads engine configuration file.
 func LoadConfig() error {
 	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", 
-		"module", "debug")
-	
+		"module", "debug", "new_char_attr_min", "new_char_attr_max")
 	if err != nil {
-		return err
+		// Terrible hack(possible loop?).
+		SaveConfig()
+		return LoadConfig()
+		//errlog.Printf("fail_to_load_some_conf_values:%v\n", err)
+		//return err
 	}
 
 	langID = confValues[0]
@@ -70,8 +76,17 @@ func LoadConfig() error {
 			return err
 		}
 	}
-
 	enginelog.EnableDebug(confValues[2] == "true")
+	attrPtsMin, err := strconv.Atoi(confValues[3])
+	if err != nil {
+		attrPtsMin = 5
+	}
+	newCharAttrMin = attrPtsMin
+	attrPtsMax, err := strconv.Atoi(confValues[4])
+	if err != nil {
+		attrPtsMax = 15
+	}
+	newCharAttrMax = attrPtsMax
 	
 	dbglog.Print("config_file_loaded")
 	return nil
@@ -94,6 +109,8 @@ func SaveConfig() error {
 		w.WriteString(fmt.Sprintf("module:;;\n"))
 	}
 	w.WriteString(fmt.Sprintf("debug:%v;\n", enginelog.IsDebug()))
+	w.WriteString(fmt.Sprintf("new_char_attr_min:%d;\n", newCharAttrMin))
+	w.WriteString(fmt.Sprintf("new_char_attr_max:%d;\n", newCharAttrMax))
 	w.Flush()
 	
 	dbglog.Print("config_file_saved")
@@ -104,6 +121,18 @@ func SaveConfig() error {
 // LangID returns current language ID.
 func LangID() string {
 	return langID
+}
+
+// NewCharAttrMin returns minimal amount of attributes points
+// for new character.
+func NewCharAttrMin() int {
+	return newCharAttrMin
+}
+
+// NewCharAttrMax returns maximal amount of attributes points
+// for new character.
+func NewCharAttrMax() int {
+	return newCharAttrMax
 }
 
 // SetLang sets language with specified ID as current language.

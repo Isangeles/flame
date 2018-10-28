@@ -65,7 +65,8 @@ func ReadDisplayText(filePath string, textIDs ...string) (texts []string) {
 			lineParts := strings.Split(line, ID_TEXT_SEP)
 			if lineParts[0] == id {
 				t := lineParts[1]
-				texts = append(texts, strings.TrimSuffix(t, LINE_TERMINATOR))
+				texts = append(texts,
+					strings.TrimSuffix(t, LINE_TERMINATOR))
 				found = true
 				break
 			}
@@ -101,7 +102,8 @@ func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 			lineParts := strings.Split(line, ID_TEXT_SEP)
 			if lineParts[0] == id {
 				t := lineParts[1]
-				texts = append(texts, strings.TrimSuffix(t, LINE_TERMINATOR))
+				texts = append(texts,
+					strings.TrimSuffix(t, LINE_TERMINATOR))
 				found = true
 				break
 			}

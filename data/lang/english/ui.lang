@@ -3,6 +3,7 @@ attr_con:Constitution;
 attr_dex:Dexterity;
 attr_wis:Wisdom;
 attr_int:Intelligence;
+attr_pts:Points;
 race_human:Human;
 race_elf:Elf;
 race_dwarf:Dwarf;
