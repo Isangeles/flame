@@ -33,6 +33,7 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"strconv"
 )
 
 const (
@@ -79,9 +80,9 @@ func ReadDisplayText(filePath string, textIDs ...string) (texts []string) {
 	return
 }
 
-// ReadDisplayText retrives text(one or more) with specified IDs from file 
+// ReadConfigValue retrives text(one or more) with specified IDs from file 
 // from sepcified path.
-// Returns error if file/ID was not found.
+// Returns error if file or at least one speicfied ID was not found.
 func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -114,4 +115,24 @@ func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 	}
 	
 	return texts, nil
+}
+
+// ReadConfigInt retrives integer(one or more) with specified IDs from file 
+// from sepcified path.
+// Returns error if file or at least one speicfied ID was not found, or
+// value for at least one specified ID was not parseable to integer.
+func ReadConfigInt(filePath string, ids ...string) ([]int, error) {
+	vals, err := ReadConfigValue(filePath, ids...)
+	if err != nil {
+		return nil, err
+	}
+	var ints []int
+	for _, v := range vals {
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
+		ints = append(ints, i)
+	}
+	return ints, nil
 }

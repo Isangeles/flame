@@ -30,8 +30,9 @@ import (
 	"path/filepath"
 	"os"
 	
-	"github.com/isangeles/flame/core/game/object/character"
 	"github.com/isangeles/flame/core/data"
+	"github.com/isangeles/flame/core/data/text" 
+	"github.com/isangeles/flame/core/game/object/character"
 )
 
 var (
@@ -40,7 +41,9 @@ var (
 
 // Module struct represents engine module.
 type Module struct {
-	name, path string
+	name, path      string
+	newcharAttrsMin int
+	newcharAttrsMax int
 	
 	chapters   map[int]Chapter
 	characters map[string]character.Character
@@ -56,11 +59,18 @@ func DefaultModulesPath() string {
 func NewModule(name, path string) (*Module, error) {
 	//TODO loading module data from directory
 	var m Module
-	if _, err := os.Stat(path + string(os.PathSeparator) + name); os.IsNotExist(err) {
+	if _, err := os.Stat(path + string(os.PathSeparator) + name);
+	os.IsNotExist(err) {
 		return nil, fmt.Errorf("module_not_found:'%s' in:'%s'", name, path)
 	}
 	m.name = name
 	m.path = path
+	confValues, err := text.ReadConfigInt(m.ConfPath(), "new_char_attrs_min",
+		"new_char_attrs_max")
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_conf:%s", err)
+	}
+	m.newcharAttrsMin, m.newcharAttrsMax = confValues[0], confValues[1]
 	
 	m.characters = make(map[string]character.Character)
 	return &m, nil
@@ -92,6 +102,28 @@ func (m *Module) FullPath() string {
 	return filepath.FromSlash(m.Path() + "/" + m.Name())
 }
 
+// ConfPath returns path to module configuration file.
+func (m *Module) ConfPath() string {
+	return filepath.FromSlash(m.FullPath() + "/mod.conf")
+}
+
+// CharactersBasePath returns path to XML document with module characters.
+func (m *Module) CharactersBasePath() string {
+	return filepath.FromSlash("data/modules/" + m.Name() + "/npcs/npcs.base")
+}
+
+// NewcharAttrsMin returns minimal amount of
+// attributes points for new characer.
+func (m *Module) NewcharAttrsMin() int {
+	return m.newcharAttrsMin
+}
+
+// NewCharAttrsMax return maximal amount of
+// attributes points for new character.
+func (m *Module) NewcharAttrsMax() int {
+	return m.newcharAttrsMax
+}
+
 // Checks if module is loaded.
 //func (m *Module) Loaded() bool {
 //	return m.name != "" && m.path != ""
@@ -105,11 +137,6 @@ func (m *Module) GetCharacter(id string) character.Character {
 // AddCharacter adds character to module characters base.
 func (m *Module) AddCharacter(char character.Character) {
 	m.characters[char.Id()] = char
-}
-
-// CharactersBasePath returns path to XML document with module characters.
-func (m *Module) CharactersBasePath() string {
-	return filepath.FromSlash("data/modules/" + m.Name() + "/npcs/npcs.base")
 }
 
 
