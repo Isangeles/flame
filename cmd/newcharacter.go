@@ -42,7 +42,7 @@ func newCharacterDialog() (character.Character, error) {
 		race        character.Race
 		sex         character.Gender
 		attrs       character.Attributes
-		attrsPoints int = 10
+		attrsPoints = flame.NewCharAttrMax()
 		c           character.Character
 	)
 	if flame.Mod() == nil {
