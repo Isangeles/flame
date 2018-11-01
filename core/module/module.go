@@ -46,7 +46,7 @@ type Module struct {
 	newcharAttrsMax int
 	
 	chapters   map[int]Chapter
-	characters map[string]character.Character
+	characters map[string]*character.Character
 }
 
 // DefaultModulesPath returns default path to modules directory.
@@ -72,7 +72,7 @@ func NewModule(name, path string) (*Module, error) {
 	}
 	m.newcharAttrsMin, m.newcharAttrsMax = confValues[0], confValues[1]
 	
-	m.characters = make(map[string]character.Character)
+	m.characters = make(map[string]*character.Character)
 	return &m, nil
 }
 
@@ -82,7 +82,7 @@ func (m *Module) LoadData() error {
 	if err != nil {
 		return fmt.Errorf("fail_to_load_npcs_base:%v", err)
 	}
-	m.characters = *chars
+	m.characters = chars
 	
 	return nil
 }
@@ -130,12 +130,12 @@ func (m *Module) NewcharAttrsMax() int {
 //}
 
 // GetCharacter returns loaded character with specified ID.
-func (m *Module) GetCharacter(id string) character.Character {
+func (m *Module) GetCharacter(id string) *character.Character {
 	return m.characters[id]
 }
 
 // AddCharacter adds character to module characters base.
-func (m *Module) AddCharacter(char character.Character) {
+func (m *Module) AddCharacter(char *character.Character) {
 	m.characters[char.Id()] = char
 }
 

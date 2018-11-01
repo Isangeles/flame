@@ -35,7 +35,7 @@ import (
 )
 
 var (
-	playableChars []character.Character
+	playableChars []*character.Character
 )
 
 // newGameDialog starts CLI dialog for new game.
@@ -81,7 +81,7 @@ func newGameDialog() error {
 		}
 	}
 
-	var pcs []character.Character
+	var pcs []*character.Character
 	pcs = append(pcs, pc)
 	err := flame.StartGame(pcs)
 	if err != nil {

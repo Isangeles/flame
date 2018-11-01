@@ -33,7 +33,7 @@ import (
 
 // GetCharactersFromDoc retrieves characters saved in form of XML document
 // in specified path.
-func GetCharactersFromXML(xmlPath string) (*map[string]character.Character, error) {
+func GetCharactersFromXML(xmlPath string) (map[string]*character.Character, error) {
 	// TODO retrieving data from doc
 	return nil, fmt.Errorf("unsupported_yet")
 } 

@@ -169,7 +169,7 @@ func startEngineOption(cmd Command) (int, string) {
 		}
 
 		pc := flame.Mod().GetCharacter(cmd.Args()[0])
-		var pcs []character.Character
+		var pcs []*character.Character
 		pcs = append(pcs, pc)
 		if pc.Id() == "" {
 			return 7, fmt.Sprintf("not_found_character_with_id:'%s'",

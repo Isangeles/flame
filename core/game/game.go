@@ -36,13 +36,13 @@ import (
 // Struct Game represents game.
 type Game struct {
 	mod 	  module.Module
-	pcs        []character.Character
+	pcs       []*character.Character
 	scenarios []area.Scenario
 }
 
 // NewGame returns pointer to new instance of game struct.
 // Error: if error occurs during module data loading.
-func NewGame(mod *module.Module, players []character.Character) (*Game, error) {
+func NewGame(mod *module.Module, players []*character.Character) (*Game, error) {
 	err := mod.LoadData()
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)

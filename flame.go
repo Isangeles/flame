@@ -67,7 +67,7 @@ func Mod() *module.Module {
 // StartGame starts new game for loaded module with specified character
 // as PC.
 // Error: if no module is loaded.
-func StartGame(pcs []character.Character) error {
+func StartGame(pcs []*character.Character) error {
 	if mod == nil {
 		return fmt.Errorf("no_module_loaded")
 	}
