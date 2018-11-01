@@ -115,3 +115,8 @@ func SetLang(lng string) error {
 	langID = lng
 	return nil 
 }
+
+// SetDebug toggles debug mode.
+func SetDebug(dbg bool) {
+	enginelog.EnableDebug(dbg)
+}

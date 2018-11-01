@@ -81,7 +81,8 @@ func main() {
 			case CLOSE_CMD:
 				err := flame.SaveConfig()
 				if err != nil {
-					stderr.Printf("engine_config_save_fail:%v", err)
+					stderr.Printf("engine_config_save_fail:%v",
+						err)
 				}
 				err = saveConfig()
 				if err != nil {

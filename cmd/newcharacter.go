@@ -61,7 +61,8 @@ func newCharacterDialog() (character.Character, error) {
 			if isCharNameValid(name) {
 				break
 			} else {
-				fmt.Printf("%s\n", lang.UIText("cli_newchar_invalid_name_err"))
+				fmt.Printf("%s\n",
+					lang.UIText("cli_newchar_invalid_name_err"))
 				fmt.Printf("%s:", lang.UIText("cli_newchar_name"))
 			}
 		}
@@ -76,7 +77,8 @@ func newCharacterDialog() (character.Character, error) {
 		var accept = false
 		for !accept {
 			attrs = newAttributesDialog(attrsPoints)
-			fmt.Printf("%s: %s\n", lang.UIText("cli_newchar_attrs_summary"), attrs)
+			fmt.Printf("%s: %s\n",
+				lang.UIText("cli_newchar_attrs_summary"), attrs)
 			fmt.Printf("%s:", lang.UIText("cli_accept_dialog"))
 			scan.Scan()
 			input := scan.Text()
@@ -86,8 +88,9 @@ func newCharacterDialog() (character.Character, error) {
 		}
 
 		// Summary
-		c = character.NewCharacter("player", name, 1, sex, race, character.Friendly,
-			character.NewGuild("none"), attrs)
+		c = character.NewCharacter("player", name, 1, sex, race,
+			character.Friendly, character.NewGuild("none"), attrs,
+			character.True_neutral)
 		fmt.Printf("%s: %s\n", lang.UIText("cli_newchar_summary"), c)
 		fmt.Printf("%s:", lang.UIText("cli_accept_dialog"))
 		scan.Scan()
