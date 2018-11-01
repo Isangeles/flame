@@ -23,7 +23,6 @@
  
 // character package provides game character struct representation and
 // other types for game characters.
-// @Isnageles
 package character
 
 import (
@@ -39,15 +38,26 @@ type Character struct {
 	sex Gender
 	race Race
 	attitude Attitude
+	alignment Alignment
 	guild Guild
 	attributes Attributes
 }
 
 // NewCharacter returns new character with specified parameters.
-func NewCharacter(id string, name string, level int, sex Gender, 
-					race Race, attitude Attitude, 
-					guild Guild, attributes Attributes) Character {
-	return Character{id, name, level, sex, race, attitude, guild, attributes}
+func NewCharacter(id string, name string, level int, sex Gender, race Race,
+	attitude Attitude, guild Guild, attributes Attributes,
+	alignment Alignment) Character {
+	return Character{
+		id: id,
+		name: name,
+		level: level,
+		sex: sex,
+		race: race,
+		attitude: attitude,
+		guild: guild,
+		attributes: attributes,
+		alignment: alignment,
+	}
 }
 
 // Id returns character ID.
@@ -57,6 +67,7 @@ func (c Character) Id() string {
 
 // String returns string with character parameters spearated by ', '.
 func (c Character) String() string {
-	return fmt.Sprintf("%s, %d, %v, %v, %v, %s, %s", c.id, c.level, c.sex, 
-						c.race, c.attitude, c.guild, c.attributes) 
+	return fmt.Sprintf("%s, %d, %v, %v, %v, %s, %s",
+		c.id, c.level, c.sex, c.race, c.attitude, c.guild, c.attributes,
+		c.alignment) 
 }

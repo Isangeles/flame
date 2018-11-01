@@ -58,8 +58,11 @@ func handleEngineCommand(cmd Command) (int, string) {
 		return loadEngineOption(cmd)
 	case "start":
 		return startEngineOption(cmd)
+	case "set":
+		return setEngineOption(cmd)
 	default:
-		return 4, fmt.Sprintf("%s:no_such_option:%s", ENGINE_MAN, cmd.OptionArgs()[0])
+		return 4, fmt.Sprintf("%s:no_such_option:%s", ENGINE_MAN,
+			cmd.OptionArgs()[0])
 	}
 }
 
@@ -67,12 +70,14 @@ func handleEngineCommand(cmd Command) (int, string) {
 // returns response code and message.
 func showEngineOption(cmd Command) (int, string) {
 	if len(cmd.TargetArgs()) < 1 {
-		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[0])
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			ENGINE_MAN, cmd.OptionArgs()[0])
 	}
 
 	switch cmd.TargetArgs()[0] {
 	default:
-		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
+			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }
 
@@ -80,13 +85,15 @@ func showEngineOption(cmd Command) (int, string) {
 // returns response code and message.
 func loadEngineOption(cmd Command) (int, string) {
 	if len(cmd.TargetArgs()) < 1 {
-		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[0])
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", ENGINE_MAN,
+			cmd.OptionArgs()[0])
 	}
 
 	switch cmd.TargetArgs()[0] {
 	case "module":
 		if len(cmd.Args()) < 1 {
-			return 7, fmt.Sprintf("%s:no_enought_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[1])
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				ENGINE_MAN, cmd.OptionArgs()[1])
 		}
 
 		var (
@@ -96,15 +103,18 @@ func loadEngineOption(cmd Command) (int, string) {
 		if len(cmd.Args()) > 1 {
 			m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1])
 		} else {
-			m, err = module.NewModule(cmd.Args()[0], module.DefaultModulesPath())
+			m, err = module.NewModule(cmd.Args()[0],
+				module.DefaultModulesPath())
 		}
 		if err != nil {
-			return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN, err)
+			return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN,
+				err)
 		}
 
 		err = flame.SetModule(m)
 		if err != nil {
-			return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN, err)
+			return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN,
+				err)
 		}
 
 		return 0, ""
@@ -112,7 +122,8 @@ func loadEngineOption(cmd Command) (int, string) {
 		// TODO game load
 		return 9, "TODO"
 	default:
-		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
+			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }
 
@@ -120,19 +131,22 @@ func loadEngineOption(cmd Command) (int, string) {
 // returns response code and message.
 func saveEngineOption(cmd Command) (int, string) {
 	if len(cmd.TargetArgs()) < 1 {
-		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[0])
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			ENGINE_MAN, cmd.OptionArgs()[0])
 	}
 
 	switch cmd.TargetArgs()[0] {
 	case "config":
 		err := flame.SaveConfig()
 		if err != nil {
-			return 8, fmt.Sprintf("%s:config_save_fail:%v", ENGINE_MAN, err)
+			return 8, fmt.Sprintf("%s:config_save_fail:%v",
+				ENGINE_MAN, err)
 		}
 
 		return 0, ""
 	default:
-		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'",
+			ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }
 
@@ -140,13 +154,15 @@ func saveEngineOption(cmd Command) (int, string) {
 // returns response code and message.
 func startEngineOption(cmd Command) (int, string) {
 	if len(cmd.TargetArgs()) < 1 {
-		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[0])
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			ENGINE_MAN, cmd.OptionArgs()[0])
 	}
 
 	switch cmd.TargetArgs()[0] {
 	case "game":
 		if len(cmd.Args()) < 1 {
-			return 7, fmt.Sprintf("%s:not_enought_args_for:%s", ENGINE_MAN, cmd.OptionArgs()[1])
+			return 7, fmt.Sprintf("%s:not_enought_args_for:%s",
+				ENGINE_MAN, cmd.OptionArgs()[1])
 		}
 		if flame.Mod() == nil {
 			return 7, fmt.Sprintf("no_module_loaded")
@@ -156,16 +172,43 @@ func startEngineOption(cmd Command) (int, string) {
 		var pcs []character.Character
 		pcs = append(pcs, pc)
 		if pc.Id() == "" {
-			return 7, fmt.Sprintf("not_found_character_with_id:'%s'", cmd.Args()[0])
+			return 7, fmt.Sprintf("not_found_character_with_id:'%s'",
+				cmd.Args()[0])
 		}
 
 		err := flame.StartGame(pcs)
 		if err != nil {
-			return 8, fmt.Sprintf("%s:new_game_start_fail:%s", ENGINE_MAN, err)
+			return 8, fmt.Sprintf("%s:new_game_start_fail:%s",
+				ENGINE_MAN, err)
 		}
 
 		return 0, ""
 	default:
-		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'",
+			ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
+}
+
+// setEngineOption handles 'set' option for engineman CI tool,
+// returns response code and message.
+func setEngineOption(cmd Command) (int, string) {
+	if len(cmd.TargetArgs()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			ENGINE_MAN, cmd.OptionArgs()[0])
+	}
+
+	switch cmd.TargetArgs()[0] {
+	case "debug":
+		if len(cmd.Args()) < 1 {
+			return 7, fmt.Sprintf("%s:not_enought_args_for:%s",
+				ENGINE_MAN, cmd.OptionArgs()[1])
+		}
+		dbgMode := cmd.Args()[0] == "true"
+		flame.SetDebug(dbgMode)
+		return 0, ""
+	default:
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'",
+			ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])
+	}
+
 }

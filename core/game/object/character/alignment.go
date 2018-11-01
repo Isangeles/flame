@@ -1,5 +1,5 @@
 /*
- * attitude.go
+ * alignment.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -20,14 +20,20 @@
  * 
  * 
  */
- 
+
 package character
 
-// Type for charactes attitudes.
-type Attitude int
+// Type for character alignment.
+type Alignment int
 
 const (
-	Friendly Attitude = iota
-	Neutral
-	Hostile
+	Lawful_good Alignment = iota
+	Neutral_good
+	Chaotic_good
+	Lawful_neutral
+	True_neutral
+	Chaotic_neutral
+	Lawful_evil
+	Neutral_evil
+	Chaotic_evil
 )
