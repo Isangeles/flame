@@ -26,7 +26,7 @@
 package character
 
 import (
-		"fmt"
+	"fmt"
 )
 
 // Character struct represents game character.
@@ -46,8 +46,8 @@ type Character struct {
 // NewCharacter returns new character with specified parameters.
 func NewCharacter(id string, name string, level int, sex Gender, race Race,
 	attitude Attitude, guild Guild, attributes Attributes,
-	alignment Alignment) Character {
-	return Character{
+	alignment Alignment) *Character {
+	c := Character{
 		id: id,
 		name: name,
 		level: level,
@@ -58,15 +58,56 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 		attributes: attributes,
 		alignment: alignment,
 	}
+	return &c
 }
 
 // Id returns character ID.
-func (c Character) Id() string {
+func (c *Character) Id() string {
 	return c.id
 }
 
+// Name returns character name.
+func (c *Character) Name() string {
+	return c.name
+}
+
+// Level returns character level.
+func (c *Character) Level() int {
+	return c.level
+}
+
+// Gender returns character gender.
+func (c *Character) Gender() Gender {
+	return c.sex
+}
+
+// Race returns character race.
+func (c *Character) Race() Race {
+	return c.race
+}
+
+// Attitude returns character attitude.
+func (c *Character) Attitude() Attitude {
+	return c.attitude
+}
+
+// Guild returns character guild.
+func (c *Character) Guild() Guild {
+	return c.guild
+}
+
+// Attributes returns character attributes.
+func (c *Character) Attributes() Attributes {
+	return c.attributes
+}
+
+// Alignment returns character alignment
+func (c *Character) Alignment() Alignment {
+	return c.alignment
+}
+
 // String returns string with character parameters spearated by ', '.
-func (c Character) String() string {
+func (c *Character) String() string {
 	return fmt.Sprintf("%s, %d, %v, %v, %v, %s, %s",
 		c.id, c.level, c.sex, c.race, c.attitude, c.guild, c.attributes,
 		c.alignment) 

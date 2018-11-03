@@ -47,7 +47,7 @@ func newGameDialog() error {
 		return fmt.Errorf(lang.UIText("cli_newgame_no_chars_err"))
 	}
 	var (
-		pc character.Character
+		pc *character.Character
 	)
 
 	scan := bufio.NewScanner(os.Stdin)

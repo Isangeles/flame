@@ -36,3 +36,23 @@ const (
 	UNKNOWN
 	//...
 )
+
+// Id returns race ID.
+func (r Race) Id() string {
+	switch r {
+	case HUMAN:
+		return "race_human"
+	case ELF:
+		return "race_elf"
+	case DWARF:
+		return "race_dwarf"
+	case GNOME:
+		return "race_gnome"
+	case WOLF:
+		return "race_wolf"
+	case GOBLIN:
+		return "race_goblin"
+	default:
+		return "race_unknown"
+	}
+}

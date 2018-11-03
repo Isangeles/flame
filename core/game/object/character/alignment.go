@@ -37,3 +37,29 @@ const (
 	Neutral_evil
 	Chaotic_evil
 )
+
+// Id returns alignemnt ID.
+func (a Alignment) Id() string {
+	switch a {
+	case Lawful_good:
+		return "ali_law_good"
+	case Neutral_good:
+		return "ali_neu_good"
+	case Chaotic_good:
+		return "ali_cha_good"
+	case Lawful_neutral:
+		return "ali_law_neutral"
+	case True_neutral:
+		return "ali_tru_neutral"
+	case Chaotic_neutral:
+		return "ali_cha_neutral"
+	case Lawful_evil:
+		return "ali_law_evil"
+	case Neutral_evil:
+		return "ali_neu_evil"
+	case Chaotic_evil:
+		return "alsi_cha_evil"
+	default:
+		return "ali_unknown"
+	}
+}

@@ -37,6 +37,11 @@ func NewGuild(id string) Guild {
 	return Guild{id}
 }
 
+// Id return character ID.
+func (g Guild) Id() string {
+	return g.id
+}
+
 // String returns guild ID
 func (g Guild) String() string {
 	return fmt.Sprintf("%s", g.id)

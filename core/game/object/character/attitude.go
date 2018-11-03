@@ -31,3 +31,17 @@ const (
 	Neutral
 	Hostile
 )
+
+// Id returns attitude ID.
+func (a Attitude) Id() string {
+	switch a {
+	case Friendly:
+		return "att_friendly"
+	case Neutral:
+		return "att_neutral"
+	case Hostile:
+		return "att_hostile"
+	default:
+		return "att_unknown"
+	}
+}

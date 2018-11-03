@@ -30,3 +30,15 @@ const (
 	MALE Gender = iota
 	FEMALE
 )
+
+// Id returns gender ID.
+func (g Gender) Id() string {
+	switch g {
+	case MALE:
+		return "gender_male"
+	case FEMALE:
+		return "gender_female"
+	default:
+		return "gender_male"
+	}
+}

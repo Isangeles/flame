@@ -36,18 +36,18 @@ import (
 
 // startNewCharacterDialog starts new CLI dialog to create new playable
 // game character.
-func newCharacterDialog() (character.Character, error) {
+func newCharacterDialog() (*character.Character, error) {
+	if flame.Mod() == nil {
+		return nil, fmt.Errorf(lang.UIText("cli_no_mod_err"))
+	}
 	var (
 		name        string
 		race        character.Race
 		sex         character.Gender
 		attrs       character.Attributes
-		attrsPoints = flame.NewCharAttrMax()
-		c           character.Character
+		attrsPoints = flame.Mod().NewcharAttrsMax()
+		c           *character.Character
 	)
-	if flame.Mod() == nil {
-		return c, fmt.Errorf(lang.UIText("cli_no_mod_err"))
-	}
 
 	scan := bufio.NewScanner(os.Stdin)
 

@@ -14,12 +14,31 @@
 ```
   Build Flame CLI:
 ```
-  $ go build -o flame-cli github.com/isangeles/flame/cmd
+  $ go build github.com/isangeles/flame/cmd
 ```
   Run CLI:
 ```
-  $ ./flame-cli
+  $ ./cmd
 ```
+
+## Flame CLI commands
+Load module:
+```
+  $engineman -o load -t module -a [module name] [module path](optional)
+```
+Loads module with the specified name(module directory name) and with a specified path,
+if no path provided, the engine will search default modules directory(data/modules).
+
+Create new character:
+```
+  $newchar
+```
+
+Start new game:
+```
+  $newgame
+```
+
 ## Contact
 * Isangeles <dev@isangeles.pl>
 
