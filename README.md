@@ -40,7 +40,7 @@ Start new game:
 ```
 
 ## Contact
-* Isangeles <dev@isangeles.pl>
+* Isangeles <<dev@isangeles.pl>>
 
 ## License
 Copyright 2018 Dariusz Sikora <<dev@isangeles.pl>>

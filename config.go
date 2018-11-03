@@ -45,19 +45,11 @@ var (
 
 // loadConfig loads engine configuration file.
 func LoadConfig() error {
-	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", 
-		"module", "debug")
+	confModVal, err := text.ReadConfigValue(CONFIG_FILE_NAME, "module")
 	if err != nil {
-		// Terrible hack(possible loop?).
-		SaveConfig()
-		return LoadConfig()
-		//errlog.Printf("fail_to_load_some_conf_values:%v\n", err)
-		//return err
+		return err
 	}
-
-	langID = confValues[0]
-	
-	modNamePath := strings.Split(confValues[1], ";")
+	modNamePath := strings.Split(confModVal[0], ";")
 	if modNamePath[0] != "" {
 		var m *module.Module
 		if len(modNamePath) < 2 {
@@ -74,7 +66,17 @@ func LoadConfig() error {
 			return err
 		}
 	}
-	enginelog.EnableDebug(confValues[2] == "true")
+	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", "debug")
+	if err != nil {
+		// Terrible hack(possible loop?).
+		SaveConfig()
+		return LoadConfig()
+		//errlog.Printf("fail_to_load_some_conf_values:%v\n", err)
+		//return err
+	}
+
+	langID = confValues[0]
+	enginelog.EnableDebug(confValues[1] == "true")
 	
 	dbglog.Print("config_file_loaded")
 	return nil
