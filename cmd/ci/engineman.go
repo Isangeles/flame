@@ -27,8 +27,9 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/core/game/object/character"
+	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/data"
 )
 
 // Handles specified engine command,
@@ -101,21 +102,16 @@ func loadEngineOption(cmd Command) (int, string) {
 			m   *module.Module
 		)
 		if len(cmd.Args()) > 1 {
-			m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1])
+			m, err = data.LoadMod(cmd.Args()[0], cmd.Args()[1])
 		} else {
-			m, err = module.NewModule(cmd.Args()[0],
+			m, err = data.LoadMod(cmd.Args()[0],
 				module.DefaultModulesPath())
 		}
 		if err != nil {
 			return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN,
 				err)
 		}
-
-		err = flame.SetModule(m)
-		if err != nil {
-			return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN,
-				err)
-		}
+		flame.SetModule(m)
 
 		return 0, ""
 	case "game":
@@ -168,13 +164,13 @@ func startEngineOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("no_module_loaded")
 		}
 
-		pc := flame.Mod().GetCharacter(cmd.Args()[0])
-		var pcs []*character.Character
-		pcs = append(pcs, pc)
-		if pc.Id() == "" {
+		pc := flame.Mod().Character(cmd.Args()[0])
+		if pc == nil {
 			return 7, fmt.Sprintf("not_found_character_with_id:'%s'",
 				cmd.Args()[0])
 		}
+		var pcs []*character.Character
+		pcs = append(pcs, pc)
 
 		err := flame.StartGame(pcs)
 		if err != nil {

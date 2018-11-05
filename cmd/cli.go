@@ -97,7 +97,6 @@ func main() {
 					break
 				}
 				playableChars = append(playableChars, createdChar)
-				flame.Mod().AddCharacter(createdChar)
 			case NEW_GAME_CMD:
 				err := newGameDialog()
 				if err != nil {
@@ -110,7 +109,7 @@ func main() {
 					stderr.Printf("command_build_error:%v", err)
 				}
 				code, msg := ci.HandleCommand(cmd)
-				stdout.Printf("flame-ci[%d]:%s\n", code, msg) // uses log to auto print timestamps
+				stdout.Printf("CI[%d]:%s\n", code, msg) // uses log to auto print timestamps
 			}
 		} else {
 			stdout.Println(input)

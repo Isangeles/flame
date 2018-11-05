@@ -29,7 +29,8 @@ import (
 	"bufio"
 	"strings"
 	//"runtime/debug"
-	
+
+	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/core/module"
@@ -53,15 +54,15 @@ func LoadConfig() error {
 	if modNamePath[0] != "" {
 		var m *module.Module
 		if len(modNamePath) < 2 {
-			m, err = module.NewModule(modNamePath[0],
+			m, err = data.LoadMod(modNamePath[0],
 				module.DefaultModulesPath())
 		} else {
-			m, err = module.NewModule(modNamePath[0], modNamePath[1])
+			m, err = data.LoadMod(modNamePath[0], modNamePath[1])
 		}
 		if err != nil {
 			return err
 		}
-		err = SetModule(m)
+		SetModule(m)
 		if err != nil {
 			return err
 		}

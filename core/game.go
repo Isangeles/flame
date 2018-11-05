@@ -1,5 +1,5 @@
 /*
- * flame.go
+ * game.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,51 +21,26 @@
  * 
  */
  
-// Flame engine is modular RPG game engine.
-// @Isangeles
-package flame
+// game package provides game struct representation.
+// @Isnageles
+package core
 
 import (
-	"fmt"
-	"log"
-	
-	"github.com/isangeles/flame/core"
-	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 )
 
-const (
-	NAME, VERSION = "Flame Engine", "0.0.0"
-)
-
-var (
-	inflog *log.Logger = log.New(enginelog.InfLog, "flame-core>", 0)
-	errlog *log.Logger = log.New(enginelog.ErrLog, "flame-core>", 0)
-	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-debug>", 0)
-	
+// Struct Game represents game.
+type Game struct {
 	mod *module.Module
-	g   *core.Game
-)
-
-// SetModule sets specified module as current module.
-func SetModule(m *module.Module) {
-	mod = m
+	pcs []*character.Character
 }
 
-// Mod returns loaded module
-func Mod() *module.Module {
-	return mod
+// NewGame returns pointer to new instance of game struct.
+func NewGame(mod *module.Module, players []*character.Character) (*Game) {
+	g := new(Game)
+	g.mod = mod
+	g.pcs = players
+	return g
 }
 
-// StartGame starts new game for loaded module with specified character
-// as PC.
-// Error: if no module is loaded.
-func StartGame(pcs []*character.Character) error {
-	if mod == nil {
-		return fmt.Errorf("no_module_loaded")
-	}
-	
-	g = core.NewGame(mod, pcs)
-	return nil
-}

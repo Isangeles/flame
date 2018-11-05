@@ -31,7 +31,7 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data/text/lang"
-	"github.com/isangeles/flame/core/game/object/character"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
 var (
@@ -63,8 +63,8 @@ func newGameDialog() error {
 			input := scan.Text()
 			id, err := strconv.Atoi(input)
 			if err != nil {
-				fmt.Printf("%s:%s\n", lang.UIText("cli_newchar_nan_error"),
-					input)
+				fmt.Printf("%s:%s\n",
+					lang.UIText("cli_newchar_nan_error"), input)
 			}
 			if id >= 0 && id < len(playableChars) {
 				pc = playableChars[id]

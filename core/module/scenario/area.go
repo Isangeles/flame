@@ -1,5 +1,5 @@
 /*
- * game.go
+ * area.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -20,37 +20,16 @@
  * 
  * 
  */
- 
-// game package provides game struct representation.
-// @Isnageles
-package game
+
+// area package provides structs and functions for game world areas
+package scenario
 
 import (
-	"fmt"
-
-	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/game/object/character"
-	"github.com/isangeles/flame/core/game/area"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
-// Struct Game represents game.
-type Game struct {
-	mod 	  module.Module
-	pcs       []*character.Character
-	scenarios []area.Scenario
+// Area struct represents game world area
+type Area struct {
+	id   string
+	npcs []character.Character
 }
-
-// NewGame returns pointer to new instance of game struct.
-// Error: if error occurs during module data loading.
-func NewGame(mod *module.Module, players []*character.Character) (*Game, error) {
-	err := mod.LoadData()
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
-	}
-	
-	var g *Game = new(Game)
-	g.mod = *mod
-	g.pcs = players
-	return g, nil
-}
-

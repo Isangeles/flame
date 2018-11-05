@@ -31,7 +31,7 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data/text/lang"
-	"github.com/isangeles/flame/core/game/object/character"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
 // startNewCharacterDialog starts new CLI dialog to create new playable

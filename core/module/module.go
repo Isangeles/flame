@@ -26,13 +26,10 @@
 package module
 
 import (
-	"fmt"
 	"path/filepath"
-	"os"
 	
-	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/data/text" 
-	"github.com/isangeles/flame/core/game/object/character"
+	//"github.com/isangeles/flame/core/data/text" 
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
 var (
@@ -41,12 +38,9 @@ var (
 
 // Module struct represents engine module.
 type Module struct {
-	name, path      string
-	newcharAttrsMin int
-	newcharAttrsMax int
-	
-	chapters   map[int]Chapter
-	characters map[string]*character.Character
+	conf           Conf
+	chapters       []*Chapter
+	currentChapter *Chapter
 }
 
 // DefaultModulesPath returns default path to modules directory.
@@ -54,89 +48,54 @@ func DefaultModulesPath() string {
 	return defaultModulesPath
 }
 
-// NewModule creates new representation of module with specified name and
-// with specified path.
-func NewModule(name, path string) (*Module, error) {
-	//TODO loading module data from directory
-	var m Module
-	if _, err := os.Stat(path + string(os.PathSeparator) + name);
-	os.IsNotExist(err) {
-		return nil, fmt.Errorf("module_not_found:'%s' in:'%s'", name, path)
-	}
-	m.name = name
-	m.path = path
-	confValues, err := text.ReadConfigInt(m.ConfPath(), "new_char_attrs_min",
-		"new_char_attrs_max")
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_conf:%s", err)
-	}
-	m.newcharAttrsMin, m.newcharAttrsMax = confValues[0], confValues[1]
-	
-	m.characters = make(map[string]*character.Character)
-	return &m, nil
-}
-
-// LoadData loads module data
-func (m *Module) LoadData() error {
-	chars, err := data.GetCharactersFromXML(m.CharactersBasePath())
-	if err != nil {
-		return fmt.Errorf("fail_to_load_npcs_base:%v", err)
-	}
-	m.characters = chars
-	
-	return nil
+// NewModule creates new instance of module with specified configuration
+// and data.
+func NewModule(conf Conf, chapters []*Chapter) (*Module) {
+	m := new(Module)
+	m.conf = conf
+	m.chapters = chapters
+	return m
 }
 
 // Name returns module name
 func (m *Module) Name() string {
-	return m.name;
+	return m.conf.Name;
 }
 
-// Path returns path to PARENT module directory.
+// Path returns path to module parent directory.
 func (m *Module) Path() string {
-	return m.path;
+	return m.conf.Path
 }
 
-// FullPath returns path to module directory.
+// FullPath return full path to module directory.
 func (m *Module) FullPath() string {
 	return filepath.FromSlash(m.Path() + "/" + m.Name())
 }
 
-// ConfPath returns path to module configuration file.
-func (m *Module) ConfPath() string {
-	return filepath.FromSlash(m.FullPath() + "/mod.conf")
-}
-
 // CharactersBasePath returns path to XML document with module characters.
+/*
 func (m *Module) CharactersBasePath() string {
 	return filepath.FromSlash("data/modules/" + m.Name() + "/npcs/npcs.base")
 }
+*/
 
 // NewcharAttrsMin returns minimal amount of
 // attributes points for new characer.
 func (m *Module) NewcharAttrsMin() int {
-	return m.newcharAttrsMin
+	return m.conf.NewcharAttrsMin
 }
 
 // NewCharAttrsMax return maximal amount of
 // attributes points for new character.
 func (m *Module) NewcharAttrsMax() int {
-	return m.newcharAttrsMax
+	return m.conf.NewcharAttrsMax
 }
 
-// Checks if module is loaded.
-//func (m *Module) Loaded() bool {
-//	return m.name != "" && m.path != ""
-//}
-
-// GetCharacter returns loaded character with specified ID.
-func (m *Module) GetCharacter(id string) *character.Character {
-	return m.characters[id]
-}
-
-// AddCharacter adds character to module characters base.
-func (m *Module) AddCharacter(char *character.Character) {
-	m.characters[char.Id()] = char
+// Character return character with specified ID from module
+// character or nil if no such character found.
+func (m *Module) Character(id string) *character.Character {
+	// TODO: search module characters.
+	return nil
 }
 
 

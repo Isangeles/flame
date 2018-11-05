@@ -27,13 +27,34 @@ package data
 
 import (
 	"fmt"
-	
-	"github.com/isangeles/flame/core/game/object/character"
+	"path/filepath"
+	"os"
+
+	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/module"
 )
 
-// GetCharactersFromDoc retrieves characters saved in form of XML document
-// in specified path.
-func GetCharactersFromXML(xmlPath string) (map[string]*character.Character, error) {
-	// TODO retrieving data from doc
-	return nil, fmt.Errorf("unsupported_yet")
-} 
+// LoadMod loads module from specified path.
+func LoadMod(name, path string) (*module.Module, error) {
+	if _, err := os.Stat(path + string(os.PathSeparator) + name);
+	os.IsNotExist(err) {
+		return nil, fmt.Errorf("module_not_found:'%s' in:'%s'", name, path)
+	}
+	modConfPath := filepath.FromSlash(path + "/" + name + "/mod.conf")
+	confValues, err := text.ReadConfigInt(modConfPath, "new_char_attrs_min",
+		"new_char_attrs_max")
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_conf:%s", err)
+	}
+	conf := module.Conf{
+		Name:name,
+		Path:path,
+		NewcharAttrsMin:confValues[0],
+		NewcharAttrsMax:confValues[1],
+	}
+	chaps, err := make([]*module.Chapter, 1), nil//fmt.Errorf("unsupported_yet")
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_chapters:%v", err)
+	}
+	return module.NewModule(conf, chaps), nil
+}

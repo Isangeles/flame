@@ -1,5 +1,5 @@
 /*
- * chapter.go
+ * scenario.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,27 +21,10 @@
  * 
  */
 
-package module
+package scenario
 
-import (
-	"github.com/isangeles/flame/core/module/scenario"
-)
-
-// Chapter struct represents module chapter
-type Chapter struct {
-	id        string
-	scenarios []*scenario.Scenario
-} 
-
-// NewChapters creates new instance of module chapter.
-func NewChapter(id string, scenarios []*scenario.Scenario) *Chapter {
-	c := new(Chapter)
-	c.id = id
-	c.scenarios = scenarios
-	return c
-}
-
-// Id returns chapter ID.
-func (c *Chapter) Id() string {
-	return c.id
+// Scenario struct represents area scenario
+type Scenario struct {
+	id    string
+	areas []Area
 }
