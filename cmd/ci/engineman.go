@@ -29,7 +29,6 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/data"
 )
 
 // Handles specified engine command,
@@ -98,18 +97,18 @@ func loadEngineOption(cmd Command) (int, string) {
 		}
 
 		var (
+			m  *module.Module
 			err error
-			m   *module.Module
 		)
 		if len(cmd.Args()) > 1 {
-			m, err = data.LoadMod(cmd.Args()[0], cmd.Args()[1])
+			m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1])
 		} else {
-			m, err = data.LoadMod(cmd.Args()[0],
+			m, err = module.NewModule(cmd.Args()[0],
 				module.DefaultModulesPath())
 		}
 		if err != nil {
-			return 8, fmt.Sprintf("%s:module_load_fail:%s", ENGINE_MAN,
-				err)
+			return 8, fmt.Sprintf("%s:module_load_fail:%s",
+				ENGINE_MAN, err)
 		}
 		flame.SetModule(m)
 

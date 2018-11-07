@@ -43,7 +43,10 @@ func handleModuleCommand(cmd Command) (int, string) {
 	switch cmd.OptionArgs()[0] {
 	case "name":
 		return 0, flame.Mod().Name()
+	case "chapters":
+		return 0, fmt.Sprint(flame.Mod().ChaptersIds())
 	default:
-		return 4, fmt.Sprintf("%s:no_such_option:%s", MODULE_MAN, cmd.OptionArgs()[0])
+		return 4, fmt.Sprintf("%s:no_such_option:%s", MODULE_MAN,
+			cmd.OptionArgs()[0])
 	}
 }

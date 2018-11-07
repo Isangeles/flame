@@ -22,7 +22,6 @@
  */
  
 // Flame engine is modular RPG game engine.
-// @Isangeles
 package flame
 
 import (

@@ -1,5 +1,5 @@
 /*
- * data.go
+ * scenarioparser.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,21 +21,9 @@
  * 
  */
 
-// data package provides connection with external data files like items
-// base, savegames, etc.
-package data
+package parser
 
 import (
-	"fmt"
-	"os"
 
-	"github.com/isangeles/flame/core/module/scenario"
 )
 
-// Scenario parses file to scenario.
-func Scenario(path string) (*scenario.Scenario, error) {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
-	}
-	return new(scenario.Scenario), nil
-}

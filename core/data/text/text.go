@@ -46,6 +46,7 @@ const (
 // from sepcified path.
 // In case of error(file/ID not found) returns string with error message 
 // instead of text. 
+// TODO: function don't handles multiple parameters well.
 func ReadDisplayText(filePath string, textIDs ...string) (texts []string) {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -83,6 +84,7 @@ func ReadDisplayText(filePath string, textIDs ...string) (texts []string) {
 // ReadConfigValue retrives text(one or more) with specified IDs from file 
 // from sepcified path.
 // Returns error if file or at least one speicfied ID was not found.
+// TODO: function don't handles multiple parameters well.
 func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -90,16 +92,16 @@ func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 	}
 	defer file.Close()
 	
+	scan := bufio.NewScanner(file)
 	var texts []string
-	scann := bufio.NewScanner(file)
 	for _, id := range textIDs {
-		var found = false
-		for scann.Scan() {
-			line := scann.Text()
+		found := false
+		for scan.Scan() {
+			line := scan.Text()
 			if strings.HasPrefix(line, COMMENT_PREFIX) {
 				continue
 			}
-			
+
 			lineParts := strings.Split(line, ID_TEXT_SEP)
 			if lineParts[0] == id {
 				t := lineParts[1]
@@ -113,7 +115,6 @@ func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 			return nil, fmt.Errorf("TEXT_NOT_FONUD:%v", id)
 		}
 	}
-	
 	return texts, nil
 }
 

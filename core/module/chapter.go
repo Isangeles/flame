@@ -24,24 +24,72 @@
 package module
 
 import (
+	"fmt"
+	"path/filepath"
+	//"strings"
+
+	"github.com/isangeles/flame/core/data"
+	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module/scenario"
 )
 
 // Chapter struct represents module chapter
 type Chapter struct {
-	id        string
-	scenarios []*scenario.Scenario
+	id, path    string
+	scensIds    []string
+	startScenId string
+
+	scenario    *scenario.Scenario
+	loadedScens []*scenario.Scenario
 } 
 
 // NewChapters creates new instance of module chapter.
-func NewChapter(id string, scenarios []*scenario.Scenario) *Chapter {
+func NewChapter(id, path string) (*Chapter, error) {
 	c := new(Chapter)
 	c.id = id
-	c.scenarios = scenarios
-	return c
+	c.path = path
+	err := c.loadConf()
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_config:%v", err)
+	}
+	startScenarioPath := filepath.FromSlash(c.ScenariosPath() + "/" +
+		c.startScenId)
+	s, err := data.Scenario(startScenarioPath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
+	}
+	c.scenario = s
+	return c, nil
 }
 
 // Id returns chapter ID.
 func (c *Chapter) Id() string {
 	return c.id
+}
+
+// FullPath returns path to chapter directory.
+func (c *Chapter) FullPath() string {
+	return filepath.FromSlash(c.path + "/" + c.id)
+}
+
+// ConfPath returns path to chapter configuration file.
+func (c *Chapter) ConfPath() string {
+	return filepath.FromSlash(c.FullPath() + "/chapter.conf")
+}
+
+// ScenariosPath returns path to chapter
+// scenarios directory.
+func (c *Chapter) ScenariosPath() string {
+	return filepath.FromSlash(c.FullPath() + "/area/scenarios")
+}
+
+// loadConf loads configuration file for this chapter,
+// returns error if configuration not found or corrupted.
+func (c *Chapter) loadConf() error {
+	confValues, err := text.ReadConfigValue(c.ConfPath(), "start_scenario")
+	if err != nil {
+		return fmt.Errorf("fail_to_read_conf_values:%v", err)
+	}
+	c.startScenId = confValues[0]
+	return nil
 }

@@ -28,4 +28,5 @@ type Conf struct {
 	Name, Path      string
 	NewcharAttrsMax int
 	NewcharAttrsMin int
+	Chapters        []string
 }
