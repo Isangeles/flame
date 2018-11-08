@@ -41,12 +41,36 @@ func handleModuleCommand(cmd Command) (int, string) {
 	}
 
 	switch cmd.OptionArgs()[0] {
+	case "show":
+		return showModuleOption(cmd)
+	default:
+		return 4, fmt.Sprintf("%s:no_such_option:%s", MODULE_MAN,
+			cmd.OptionArgs()[0])
+	}
+}
+
+
+// showModuleOption handles show option for moduleman CI tool,
+// returns response code and message.
+func showModuleOption(cmd Command) (int, string) {
+	if len(cmd.TargetArgs()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", MODULE_MAN,
+			cmd.OptionArgs()[0])
+	}
+
+	switch cmd.TargetArgs()[0] {
 	case "name":
 		return 0, flame.Mod().Name()
 	case "chapters":
 		return 0, fmt.Sprint(flame.Mod().ChaptersIds())
+	case "scenario":
+		scen := flame.Mod().Scenario()
+		if scen == nil {
+			return 8, fmt.Sprintf("%s:no_current_scenario", MODULE_MAN)
+		}
+		return 0, fmt.Sprintf("%s(area:%s)", scen.Id(), scen.Area().Id())
 	default:
-		return 4, fmt.Sprintf("%s:no_such_option:%s", MODULE_MAN,
-			cmd.OptionArgs()[0])
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
+			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
 }

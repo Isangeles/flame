@@ -83,6 +83,11 @@ func (c *Chapter) ScenariosPath() string {
 	return filepath.FromSlash(c.FullPath() + "/area/scenarios")
 }
 
+// Scneario returns current chapter scenario.
+func (c *Chapter) Scenario() *scenario.Scenario {
+	return c.scenario
+}
+
 // loadConf loads configuration file for this chapter,
 // returns error if configuration not found or corrupted.
 func (c *Chapter) loadConf() error {

@@ -1,1 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
+<scenario id="area01_scen">
+  <mainarea id="area01_main" map="area01.tmx"></mainarea>
+</scenario>

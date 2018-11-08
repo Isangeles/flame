@@ -26,16 +26,11 @@
 package data
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/isangeles/flame/core/data/parse"
 	"github.com/isangeles/flame/core/module/scenario"
 )
 
 // Scenario parses file to scenario.
 func Scenario(path string) (*scenario.Scenario, error) {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
-	}
-	return new(scenario.Scenario), nil
+	return parse.ParseScenarioXML(path)
 }

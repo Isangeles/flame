@@ -198,7 +198,8 @@ func setEngineOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:not_enought_args_for:%s",
 				ENGINE_MAN, cmd.TargetArgs()[0])
 		}
-		dbgMode := cmd.Args()[0] == "true"
+		arg0 := cmd.Args()[0]
+		dbgMode := (arg0 == "true" || arg0 == "on")
 		flame.SetDebug(dbgMode)
 		return 0, ""
 	default:

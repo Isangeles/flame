@@ -1,5 +1,5 @@
 /*
- * characterparser.go
+ * scenarioparser.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,6 +21,37 @@
  * 
  */
 
-package parser
+package parse
 
-// TODO Game characters parser
+import (
+	"encoding/xml"
+	"fmt"
+	"os"
+	//"io/util"
+
+	"github.com/isangeles/flame/core/module/scenario"
+)
+
+// struct for XML scenario node.
+type XMLScenario struct {
+	XMLName  xml.Name `xml:"scenario"`
+	Id       string   `xml:"id, attr"`
+	Mainarea XMLArea  `xml:"mainarea"`
+}
+
+// struct for XML area node.
+type XMLArea struct {
+	Id string `xml:"id, attr"`
+}
+
+// ParseScenarioXML parses scenario from XML file in specified path.
+func ParseScenarioXML(xmlPath string) (*scenario.Scenario, error) {
+	xml, err := os.Open(xmlPath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
+	}
+	defer xml.Close()
+
+	return nil, fmt.Errorf("unsupported_yet")
+}
+

@@ -32,14 +32,14 @@ import (
 // Character struct represents game character.
 type Character struct {
 	// TODO add more parameters
-	id string
-	name string
-	level int
-	sex Gender
-	race Race
-	attitude Attitude
-	alignment Alignment
-	guild Guild
+	id         string
+	name       string
+	level      int
+	sex        Gender
+	race       Race
+	attitude   Attitude
+	alignment  Alignment
+	guild      Guild
 	attributes Attributes
 }
 

@@ -32,6 +32,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/scenario"
 )
 
 var (
@@ -89,6 +90,11 @@ func (m *Module) FullPath() string {
 // ChaptersPath returns path to module chapters.
 func (m *Module) ChaptersPath() string {
 	return filepath.FromSlash(m.FullPath() + "/chapters")
+}
+
+// Scenario returns current module scenario.
+func (m *Module) Scenario() *scenario.Scenario {
+	return m.chapter.Scenario()
 }
 
 // CharactersBasePath returns path to XML document with module characters.

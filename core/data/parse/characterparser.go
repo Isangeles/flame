@@ -1,5 +1,5 @@
 /*
- * scenario.go
+ * characterparser.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,10 +21,6 @@
  * 
  */
 
-package area
+package parse
 
-// Scenario struct represents area scenario
-type Scenario struct {
-	id    string
-	areas []Area
-}
+// TODO Game characters parser

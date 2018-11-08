@@ -1,5 +1,5 @@
 /*
- * area.go
+ * characterparser.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,15 +21,6 @@
  * 
  */
 
-// area package provides structs and functions for game world areas
-package area
+package xml
 
-import (
-	"github.com/isangeles/flame/core/game/object/character"
-)
-
-// Area struct represents game world area
-type Area struct {
-	id   string
-	npcs []character.Character
-}
+// TODO Game characters parser

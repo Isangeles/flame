@@ -21,15 +21,47 @@
  * 
  */
 
-// area package provides structs and functions for game world areas
 package scenario
 
 import (
 	"github.com/isangeles/flame/core/module/object/character"
 )
 
-// Area struct represents game world area
+// Area struct represents game world area.
 type Area struct {
-	id   string
-	npcs []character.Character
+	id    string
+	chars []*character.Character
+}
+
+// NewArea returns new instace of area.
+func NewArea(id string) (*Area) {
+	a := new(Area)
+	a.id = id
+	return a
+}
+
+// Id returns area ID.
+func (a *Area) Id() string {
+	return a.id
+}
+
+// AddCharacter adds specified character to area.
+func (a *Area) AddCharacter(c *character.Character) {
+	a.chars = append(a.chars, c)
+}
+
+// Chracters returns list with characters in area.
+func (a *Area) Characters() []*character.Character {
+	return a.chars
+}
+
+// ContainsCharacter checks whether area
+// contains specified character.
+func (a *Area) ContainsCharacter(char *character.Character) bool {
+	for _, c := range a.chars {
+		if char == c {
+			return true
+		}
+	}
+	return false
 }
