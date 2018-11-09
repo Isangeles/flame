@@ -171,7 +171,7 @@ func startEngineOption(cmd Command) (int, string) {
 		var pcs []*character.Character
 		pcs = append(pcs, pc)
 
-		err := flame.StartGame(pcs)
+		_, err := flame.StartGame(pcs)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:new_game_start_fail:%s",
 				ENGINE_MAN, err)

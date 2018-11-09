@@ -44,7 +44,7 @@ var (
 	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-debug>", 0)
 	
 	mod *module.Module
-	g   *core.Game
+	//g   *core.Game
 )
 
 // SetModule sets specified module as current module.
@@ -60,11 +60,11 @@ func Mod() *module.Module {
 // StartGame starts new game for loaded module with specified character
 // as PC.
 // Error: if no module is loaded.
-func StartGame(pcs []*character.Character) error {
+func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if mod == nil {
-		return fmt.Errorf("no_module_loaded")
+		return nil, fmt.Errorf("no_module_loaded")
 	}
 	
-	g = core.NewGame(mod, pcs)
-	return nil
+	g := core.NewGame(mod, pcs) 
+	return g, nil
 }

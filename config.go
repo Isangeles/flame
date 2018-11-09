@@ -68,11 +68,8 @@ func LoadConfig() error {
 	}
 	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", "debug")
 	if err != nil {
-		// Terrible hack(possible loop?).
-		SaveConfig()
-		return LoadConfig()
-		//errlog.Printf("fail_to_load_some_conf_values:%v\n", err)
-		//return err
+		SaveConfig() // replace 'corrupted' config with default config
+		return fmt.Errorf("fail_to_load_some_conf_values:%v", err)
 	}
 
 	langID = confValues[0]

@@ -27,7 +27,6 @@
 // All commands to be handle by CI must starts with generic sum sign($),
 // otherwise input is directly send to out(like 'echo')
 // Type '$close' to close CLI
-// @Isangeles
 package main
 
 import (
@@ -38,6 +37,7 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/cmd/ci"
 	"github.com/isangeles/flame/cmd/command"
@@ -55,6 +55,8 @@ var (
 	stdout *log.Logger = log.New(enginelog.InfLog, "flame-cli>", 0)
 	stderr *log.Logger = log.New(enginelog.ErrLog, "flame-cli>", 0)
 	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-cli-debug>", 0)
+
+	game *core.Game
 )
 
 // On init.
@@ -98,11 +100,12 @@ func main() {
 				}
 				playableChars = append(playableChars, createdChar)
 			case NEW_GAME_CMD:
-				err := newGameDialog()
+				g, err := newGameDialog()
 				if err != nil {
 					stderr.Printf("%s\n", err)
 					break
 				}
+				game = g
 			default:
 				cmd, err := command.NewStdCommand(input)
 				if err != nil {

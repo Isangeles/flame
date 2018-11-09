@@ -1,0 +1,17 @@
+MAJOR:
+* Combat system
+* Dialogs system
+* Quests system
+* Player-NPC interaction
+* NPC AI
+* Game data marshaling/unmarshaling
+* Save game system
+* Scripts processor
+* Moving player between areas/scenarios
+* Game characters inventory and equipment
+* Items
+* Skills
+MINOR:
+* More detiled readme
+* Tutorials
+* More tools/options for CI

@@ -30,6 +30,7 @@ import (
 	"strconv"
 
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object/character"
 )
@@ -39,12 +40,12 @@ var (
 )
 
 // newGameDialog starts CLI dialog for new game.
-func newGameDialog() error {
+func newGameDialog() (*core.Game, error) {
 	if flame.Mod() == nil {
-		return fmt.Errorf(lang.UIText("cli_no_mod_err"))
+		return nil, fmt.Errorf(lang.UIText("cli_no_mod_err"))
 	}
 	if len(playableChars) < 1 {
-		return fmt.Errorf(lang.UIText("cli_newgame_no_chars_err"))
+		return nil, fmt.Errorf(lang.UIText("cli_newgame_no_chars_err"))
 	}
 	var (
 		pc *character.Character
@@ -83,9 +84,9 @@ func newGameDialog() error {
 
 	var pcs []*character.Character
 	pcs = append(pcs, pc)
-	err := flame.StartGame(pcs)
+	g, err := flame.StartGame(pcs)
 	if err != nil {
 		err = fmt.Errorf("%s:%v", lang.UIText("cli_newgame_start_err"), err)
 	}
-	return err
+	return g, nil 
 }
