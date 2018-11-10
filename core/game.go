@@ -52,6 +52,11 @@ func NewGame(mod *module.Module, players []*character.Character) (*Game) {
 	return g
 }
 
+// Module returns game module.
+func (g *Game) Module() *module.Module {
+	return g.mod
+}
+
 // ChangePlayerArea moves player with specified ID to
 // specified area.
 func (g *Game) ChangePlayerArea(area *scenario.Area, pcId string) error {

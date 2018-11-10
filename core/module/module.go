@@ -92,6 +92,11 @@ func (m *Module) ChaptersPath() string {
 	return filepath.FromSlash(m.FullPath() + "/chapters")
 }
 
+// Chapter returns current module chapter.
+func (m *Module) Chapter() *Chapter {
+	return m.chapter
+}
+
 // Scenario returns current module scenario.
 func (m *Module) Scenario() *scenario.Scenario {
 	return m.chapter.Scenario()

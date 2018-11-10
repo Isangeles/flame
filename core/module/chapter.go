@@ -83,6 +83,12 @@ func (c *Chapter) ScenariosPath() string {
 	return filepath.FromSlash(c.FullPath() + "/area/scenarios")
 }
 
+// AreasPath returns path to chapter
+// areas directory.
+func (c *Chapter) AreasPath() string {
+	return filepath.FromSlash(c.FullPath() + "/area")
+}
+
 // Scneario returns current chapter scenario.
 func (c *Chapter) Scenario() *scenario.Scenario {
 	return c.scenario
