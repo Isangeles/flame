@@ -31,7 +31,6 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	// TODO add more parameters
 	id         string
 	name       string
 	level      int
@@ -41,6 +40,8 @@ type Character struct {
 	alignment  Alignment
 	guild      Guild
 	attributes Attributes
+	posX, posY float64
+	sight      float64
 }
 
 // NewCharacter returns new character with specified parameters.
@@ -57,6 +58,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 		guild: guild,
 		attributes: attributes,
 		alignment: alignment,
+		sight: 300,
 	}
 	return &c
 }
@@ -104,6 +106,22 @@ func (c *Character) Attributes() Attributes {
 // Alignment returns character alignment
 func (c *Character) Alignment() Alignment {
 	return c.alignment
+}
+
+// Position returns current character position.
+func (c *Character) Position() (float64, float64) {
+	return c.posX, c.posY
+}
+
+// SightRange returns current sight range.
+func (c *Character) SightRange() float64 {
+	return c.sight
+}
+
+// SetPosition sets specified XY position as current
+// position of character.
+func (c *Character) SetPosition(x, y float64) {
+	c.posX, c.posY = x, y
 }
 
 // String returns string with character parameters spearated by ', '.
