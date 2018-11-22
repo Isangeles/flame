@@ -57,6 +57,17 @@ func (g *Game) Module() *module.Module {
 	return g.mod
 }
 
+// Player returns player character with specified ID or
+// nil if no such player character was found.
+func (g *Game) Player(pcId string) (*character.Character) {
+	for _, c := range g.pcs {
+		if pcId == c.Id() {
+			return c
+		}
+	}
+	return nil
+}
+
 // ChangePlayerArea moves player with specified ID to
 // specified area.
 func (g *Game) ChangePlayerArea(area *scenario.Area, pcId string) error {
