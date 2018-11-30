@@ -1,5 +1,5 @@
 /*
- * characterparser.go
+ * characterparser_test.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,6 +21,24 @@
  * 
  */
 
-package xml
+package parse
 
-// TODO Game characters parser
+import (
+	"flag"
+	"testing"
+)
+
+var (
+	path = flag.String("path", "", "System path of characters XML base to test parse")
+)
+
+// Test for characters XML base parsing.
+// Use '-path' flag to point XML base to test.
+func TestParseCharactersBase(t *testing.T) {
+	chars, err := ParseCharactersBaseXML(*path)
+	if err != nil {
+		t.Errorf("parse_fail:%v\n", err)
+		return
+	}
+	t.Logf("parse_success:chars_base_size:%d\n", len(*chars)) 
+}

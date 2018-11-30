@@ -32,7 +32,7 @@ import (
 	"github.com/isangeles/flame/core/module/scenario"
 )
 
-// struct for XML scenario node.
+// Struct for XML scenario node.
 type XMLScenario struct {
 	XMLName  xml.Name `xml:"scenario"`
 	Id       string   `xml:"id,attr"`

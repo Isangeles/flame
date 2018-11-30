@@ -1,5 +1,5 @@
 /*
- * scenarioparser.go
+ * loggers.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,37 +21,18 @@
  * 
  */
 
-package parse
+// Package for engine loggers.
+package log
 
 import (
-	"encoding/xml"
-	"fmt"
-	"os"
-	//"io/util"
-
-	"github.com/isangeles/flame/core/module/scenario"
+	"log"
+	
+	"github.com/isangeles/flame/core/enginelog"
 )
 
-// struct for XML scenario node.
-type XMLScenario struct {
-	XMLName  xml.Name `xml:"scenario"`
-	Id       string   `xml:"id, attr"`
-	Mainarea XMLArea  `xml:"mainarea"`
-}
-
-// struct for XML area node.
-type XMLArea struct {
-	Id string `xml:"id, attr"`
-}
-
-// ParseScenarioXML parses scenario from XML file in specified path.
-func ParseScenarioXML(xmlPath string) (*scenario.Scenario, error) {
-	xml, err := os.Open(xmlPath)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
-	}
-	defer xml.Close()
-
-	return nil, fmt.Errorf("unsupported_yet")
-}
+var (
+	Inf *log.Logger = log.New(enginelog.InfLog, "flame-core>", 0)
+	Err *log.Logger = log.New(enginelog.ErrLog, "flame-core>", 0)
+	Dbg *log.Logger = log.New(enginelog.DbgLog, "flame-debug>", 0)
+)
 
