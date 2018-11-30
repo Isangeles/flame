@@ -26,11 +26,49 @@
 package data
 
 import (
+	"bufio"
+	"fmt"
+	"path/filepath"
+	"os"
+	
 	"github.com/isangeles/flame/core/data/parse"
 	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
-// Scenario parses file to scenario.
+const (
+	CHAR_FILE_PREFIX = ".xml"
+)
+
+// Scenario parses file on specified path
+// to scenario.
 func Scenario(path string) (*scenario.Scenario, error) {
-	return parse.ParseScenarioXML(path)
+	return parse.UnmarshalScenarioXML(path)
+}
+
+// Characters parses file on specified path to
+// game characters.
+func Characters(path string) (*[]*character.Character, error) {
+	return parse.UnmarshalCharactersBaseXML(path)
+}
+
+// ExportCharacter saves specified character to
+// [Module]/characters directory.
+func ExportCharacter(char *character.Character, dirPath string) error {
+	out, err := parse.MarshalCharacterXML(char)
+	if err != nil {
+		return fmt.Errorf("fail_to_export_char:%v", err)
+	}
+
+	f, err := os.Create(filepath.FromSlash(dirPath + "/" +
+		char.Id()) + CHAR_FILE_PREFIX)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_char_file:%v", err)
+	}
+	defer f.Close()
+
+	w := bufio.NewWriter(f)
+	w.Write(out)
+	w.Flush()
+	return nil
 }

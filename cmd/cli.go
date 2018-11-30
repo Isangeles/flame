@@ -48,6 +48,7 @@ const (
 	CLOSE_CMD       = "close"
 	NEW_CHAR_CMD    = "newchar"
 	NEW_GAME_CMD    = "newgame"
+	REPEAT_IN_CMD   = "!"
 	INPUT_INDICATOR = ">"
 )
 
@@ -57,6 +58,8 @@ var (
 	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-cli-debug>", 0)
 
 	game *core.Game
+
+	lastCommand string
 )
 
 // On init.
@@ -78,6 +81,7 @@ func main() {
 	for scan.Scan() {
 		input := scan.Text()
 		if strings.HasPrefix(input, COMMAND_PREFIX) {
+			lastCommand = input
 			input := strings.TrimPrefix(input, COMMAND_PREFIX)
 			switch input {
 			case CLOSE_CMD:
@@ -106,6 +110,8 @@ func main() {
 					break
 				}
 				game = g
+			case REPEAT_IN_CMD:
+				// TODO: handle repeat linput command.
 			default:
 				cmd, err := command.NewStdCommand(input)
 				if err != nil {

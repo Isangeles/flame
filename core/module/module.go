@@ -92,6 +92,12 @@ func (m *Module) ChaptersPath() string {
 	return filepath.FromSlash(m.FullPath() + "/chapters")
 }
 
+// CharactersPath returns path to directory for
+// exported characters.
+func (m *Module) CharactersPath() string {
+	return filepath.FromSlash(m.FullPath() + "/characters")
+}
+
 // Chapter returns current module chapter.
 func (m *Module) Chapter() *Chapter {
 	return m.chapter

@@ -26,19 +26,34 @@ package parse
 import (
 	"flag"
 	"testing"
+
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
 var (
 	path = flag.String("path", "", "System path of characters XML base to test parse")
 )
 
-// Test for characters XML base parsing.
+// Test for characters XML base unmarshaling.
 // Use '-path' flag to point XML base to test.
-func TestParseCharactersBase(t *testing.T) {
-	chars, err := ParseCharactersBaseXML(*path)
+func TestUnmarshalCharactersBase(t *testing.T) {
+	chars, err := UnmarshalCharactersBaseXML(*path)
 	if err != nil {
-		t.Errorf("parse_fail:%v\n", err)
+		t.Errorf("unmarshal_fail:%v\n", err)
 		return
 	}
-	t.Logf("parse_success:chars_base_size:%d\n", len(*chars)) 
+	t.Logf("unmarshal_success:chars_base_size:%d\n", len(*chars)) 
+}
+
+// Test for game character XML marshaling.
+func TestMarshalCharacter(t *testing.T) {
+	char := character.NewCharacter("test_01", "test", 1, character.MALE,
+		character.HUMAN, character.Friendly, character.NewGuild(""),
+		character.Attributes{1, 1, 1, 1, 1}, character.Lawful_good)
+	out, err := MarshalCharacterXML(char)
+	if err != nil {
+		t.Errorf("marshal_fail:%v\n", err)
+		return
+	}
+	t.Logf("marshal_success:\n%s\n", string(out[:]))
 }

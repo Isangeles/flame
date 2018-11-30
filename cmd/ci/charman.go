@@ -28,6 +28,7 @@ import (
 	"strconv"
 
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/core/data"
 )
 
 // handleCharCommand handles specified command for game
@@ -45,6 +46,8 @@ func handleCharCommand(cmd Command) (int, string) {
 		return setCharOption(cmd)
 	case "show":
 		return showCharOption(cmd)
+	case "export":
+		return exportCharOption(cmd)
 	default:
 		return 4, fmt.Sprintf("%s:no_such_option:%s", CHAR_MAN,
 			cmd.OptionArgs()[0])
@@ -107,4 +110,23 @@ func showCharOption(cmd Command) (int, string) {
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
 	}
+}
+
+// exportEngineOption handles 'export' option for engineman CI tool.
+func exportCharOption(cmd Command) (int, string) {
+	if len(cmd.TargetArgs()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			CHAR_MAN, cmd.OptionArgs()[0])
+	}
+	char := flame.Game().Player(cmd.TargetArgs()[0])
+	if char == nil {
+		return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
+			cmd.TargetArgs()[1])
+	}
+
+	err := data.ExportCharacter(char, flame.Game().Module().CharactersPath())
+	if err != nil {
+		return 8, fmt.Sprintf("%s:%v", CHAR_MAN, err)
+	}
+	return 0, ""
 }

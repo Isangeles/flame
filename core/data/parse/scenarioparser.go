@@ -44,8 +44,8 @@ type XMLArea struct {
 	Id string `xml:"id,attr"`
 }
 
-// ParseScenarioXML parses scenario from XML file in specified path.
-func ParseScenarioXML(xmlPath string) (*scenario.Scenario, error) {
+// UnmarshalScenarioXML parses scenario from XML file in specified path.
+func UnmarshalScenarioXML(xmlPath string) (*scenario.Scenario, error) {
 	doc, err := os.Open(xmlPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
