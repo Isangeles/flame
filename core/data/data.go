@@ -30,10 +30,13 @@ import (
 	"fmt"
 	"path/filepath"
 	"os"
+	"io/ioutil"
+	"strings"
 	
 	"github.com/isangeles/flame/core/data/parse"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/log"
 )
 
 const (
@@ -48,8 +51,33 @@ func Scenario(path string) (*scenario.Scenario, error) {
 
 // Characters parses file on specified path to
 // game characters.
-func Characters(path string) (*[]*character.Character, error) {
+func Characters(path string) ([]*character.Character, error) {
 	return parse.UnmarshalCharactersBaseXML(path)
+}
+
+// ImportCharacters parses all characters files from directory
+// with specified path.
+func ImportCharacters(dirPath string) ([]*character.Character, error) {
+	chars := make([]*character.Character, 0)
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return chars, fmt.Errorf("fail_to_read_dir:%v", err)
+	}
+	for _, fInfo := range files {
+		if !strings.HasSuffix(fInfo.Name(), CHAR_FILE_PREFIX) {
+			continue
+		}
+		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
+		impChars, err := Characters(charFilePath)
+		if err != nil {
+			log.Err.Printf("data_char_import:fail_to_parse_char_file:%v", err)
+			continue
+		}
+		for _, c := range impChars {
+			chars = append(chars, c)
+		}
+	}
+	return chars, nil
 }
 
 // ExportCharacter saves specified character to

@@ -42,7 +42,7 @@ func TestUnmarshalCharactersBase(t *testing.T) {
 		t.Errorf("unmarshal_fail:%v\n", err)
 		return
 	}
-	t.Logf("unmarshal_success:chars_base_size:%d\n", len(*chars)) 
+	t.Logf("unmarshal_success:chars_base_size:%d\n", len(chars)) 
 }
 
 // Test for game character XML marshaling.

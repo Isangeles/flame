@@ -39,6 +39,13 @@ Start new game:
   $newgame
 ```
 
+Export game character:
+```
+  $charman -o export -t [character ID]
+```
+Exports game character with specified ID to XML file in
+data/modules/[module]/characters directory. 
+
 ## Contact
 * Isangeles <<dev@isangeles.pl>>
 

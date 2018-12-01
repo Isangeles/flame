@@ -57,10 +57,11 @@ type XMLCharacter struct {
 
 // UnmarshalCharactersBaseXML parses characters base from XML file
 // in specified path.
-func UnmarshalCharactersBaseXML(xmlPath string) (*[]*character.Character, error) {
+func UnmarshalCharactersBaseXML(xmlPath string) ([]*character.Character, error) {
+	chars := make([]*character.Character, 0)
 	doc, err := os.Open(xmlPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_find_chars_base_file:%v", err)
+		return chars, fmt.Errorf("fail_to_find_chars_base_file:%v", err)
 	}
 	defer doc.Close()
 
@@ -68,59 +69,66 @@ func UnmarshalCharactersBaseXML(xmlPath string) (*[]*character.Character, error)
 	xmlCharsBase := new(XMLCharactersBase)
 	err = xml.Unmarshal(data, xmlCharsBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml:%v", err)
+		return chars, fmt.Errorf("xml:%s:fail_to_unmarshal_xml:%v",
+			xmlPath, err)
 	}
-
-	chars := make([]*character.Character, 0)
 	for _, charXML := range xmlCharsBase.Characters {
 		id := charXML.Id
 		name := charXML.Name
 		level, err := strconv.Atoi(charXML.Level)
 		if err != nil {
-			log.Err.Printf("parse:fail_to_parse_char_level:%v", err)
+			log.Err.Printf("xml:%s:parse:fail_to_parse_char_level:%v",
+			xmlPath, err)
 			continue
 		}
 		sex, err := parseGenderAttr(charXML.Gender)
 		if err != nil {
-			log.Err.Printf("parse:fail_to_parse_char_gender:%v", err)
+			log.Err.Printf("xml:%s:parse:fail_to_parse_char_gender:%v",
+			xmlPath, err)
 			continue
 		}
 		race, err := parseRaceAttr(charXML.Race)
 		if err != nil {
-			log.Err.Printf("parse:fail_to_parse_char_race:%v", err)
+			log.Err.Printf("xml:%s:parse:fail_to_parse_char_race:%v",
+			xmlPath, err)
 			continue
 		}
 		attitude, err := parseAttitudeAttr(charXML.Attitude)
 		if err != nil {
-			log.Err.Printf("parse:fail_to_parse_char_attitude:%v", err)
+			log.Err.Printf("xml:%s:parse:fail_to_parse_char_attitude:%v",
+			xmlPath, err)
 			continue
 		}
 		guild := character.NewGuild(charXML.Guild) // TODO: search and assign guild
 		attributes, err := parseAttributesAttr(charXML.Stats)
 		if err != nil {
-			log.Err.Printf("parse:fail_to_parse_char_attributes:%v", err)
+			log.Err.Printf("xml:%s:parse:fail_to_parse_char_attributes:%v",
+			xmlPath, err)
 			continue
 		}
 		alignment, err := parseAlignmentAttr(charXML.Alignment)
 		if err != nil {
-			log.Err.Printf("parse:fail_to_parse_char_alignment:%v", err)
+			log.Err.Printf("xml:%s:parse:fail_to_parse_char_alignment:%v",
+			xmlPath, err)
 			continue
 		}
 		char := character.NewCharacter(id, name, level, sex, race,
 			attitude, guild, attributes, alignment)
 		chars = append(chars, char)
 	}
-	return &chars, nil
+	return chars, nil
 }
 
 // MarshalCharacter parses game character to XML node
 // representation.
 func MarshalCharacterXML(char *character.Character) ([]byte, error) {
+	xmlCharBase := new(XMLCharactersBase)
 	xmlChar := new(XMLCharacter)
 	xmlChar.Id = char.Id()
 	xmlChar.Name = char.Name()
 	xmlChar.Level = fmt.Sprintf("%d", char.Level())
-	out, err := xml.Marshal(xmlChar)
+	xmlCharBase.Characters = append(xmlCharBase.Characters, *xmlChar)
+	out, err := xml.Marshal(xmlCharBase)
 	if err != nil {
 		return []byte{}, fmt.Errorf("fail_to_marshal_char:%v", err)
 	}
