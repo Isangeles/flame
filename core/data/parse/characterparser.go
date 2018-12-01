@@ -81,32 +81,32 @@ func UnmarshalCharactersBaseXML(xmlPath string) ([]*character.Character, error) 
 			xmlPath, err)
 			continue
 		}
-		sex, err := parseGenderAttr(charXML.Gender)
+		sex, err := attrToGender(charXML.Gender)
 		if err != nil {
 			log.Err.Printf("xml:%s:parse:fail_to_parse_char_gender:%v",
 			xmlPath, err)
 			continue
 		}
-		race, err := parseRaceAttr(charXML.Race)
+		race, err := attrToRace(charXML.Race)
 		if err != nil {
 			log.Err.Printf("xml:%s:parse:fail_to_parse_char_race:%v",
 			xmlPath, err)
 			continue
 		}
-		attitude, err := parseAttitudeAttr(charXML.Attitude)
+		attitude, err := attrToAttitude(charXML.Attitude)
 		if err != nil {
 			log.Err.Printf("xml:%s:parse:fail_to_parse_char_attitude:%v",
 			xmlPath, err)
 			continue
 		}
 		guild := character.NewGuild(charXML.Guild) // TODO: search and assign guild
-		attributes, err := parseAttributesAttr(charXML.Stats)
+		attributes, err := unmarshalAttributes(charXML.Stats)
 		if err != nil {
 			log.Err.Printf("xml:%s:parse:fail_to_parse_char_attributes:%v",
 			xmlPath, err)
 			continue
 		}
-		alignment, err := parseAlignmentAttr(charXML.Alignment)
+		alignment, err := attrToAlignment(charXML.Alignment)
 		if err != nil {
 			log.Err.Printf("xml:%s:parse:fail_to_parse_char_alignment:%v",
 			xmlPath, err)
@@ -127,6 +127,11 @@ func MarshalCharacterXML(char *character.Character) ([]byte, error) {
 	xmlChar.Id = char.Id()
 	xmlChar.Name = char.Name()
 	xmlChar.Level = fmt.Sprintf("%d", char.Level())
+	xmlChar.Gender = genderToAttr(char.Gender())
+	xmlChar.Race = raceToAttr(char.Race())
+	xmlChar.Attitude = attitudeToAttr(char.Attitude())
+	xmlChar.Alignment = alignmentToAttr(char.Alignment())
+	xmlChar.Stats = marshalAttributes(char.Attributes())
 	xmlCharBase.Characters = append(xmlCharBase.Characters, *xmlChar)
 	out, err := xml.Marshal(xmlCharBase)
 	if err != nil {
@@ -135,41 +140,154 @@ func MarshalCharacterXML(char *character.Character) ([]byte, error) {
 	return out, nil
 }
 
-// parseGenderAttr parses specified gender XML attribute,
-func parseGenderAttr(genderAttr string) (character.Gender, error) {
+// attrToGender parses specified gender XML attribute,
+func attrToGender(genderAttr string) (character.Gender, error) {
 	switch genderAttr {
 	case "male":
-		return character.MALE, nil
+		return character.Male, nil
 	case "female":
-		return character.FEMALE, nil
+		return character.Female, nil
 	default:
 		return -1, fmt.Errorf("fail to parse gender:%s", genderAttr)
 	}
 }
 
-// parseRaceAttr parses specified race XML attribute.
-func parseRaceAttr(raceAttr string) (character.Race, error) {
+// attrToRace parses specified race XML attribute.
+func attrToRace(raceAttr string) (character.Race, error) {
 	switch raceAttr {
 	case "human":
-		return character.HUMAN, nil
-	// TODO: handle all races.
+		return character.Human, nil
+	case "elf":
+		return character.Elf, nil
+	case "dwarf":
+		return character.Dwarf, nil
+	case "gnome":
+		return character.Gnome, nil
+	case "wolf":
+		return character.Wolf, nil
+	case "goblin":
+		return character.Goblin, nil
 	default:
-		return -1, fmt.Errorf("fail to parse race:%s", raceAttr)
+		return character.Race_unknown, nil//fmt.Errorf("fail to parse race:%s", raceAttr)
 	}
 }
 
-// parseAttitideAttr parses specified attitude XML attribute.
-func parseAttitudeAttr(attitudeAttr string) (character.Attitude, error) {
+// attrToAttitude parses specified attitude XML attribute.
+func attrToAttitude(attitudeAttr string) (character.Attitude, error) {
 	switch attitudeAttr {
 	case "friendly":
 		return character.Friendly, nil
+	case "neutral":
+		return character.Neutral, nil
+	case "hostile":
+		return character.Hostile, nil
 	default:
 		return -1, fmt.Errorf("fail to parse attitude:%s", attitudeAttr)
 	}
 }
 
-// parse AttributesAttr parses specified attributes XML attribute.
-func parseAttributesAttr(attributesAttr string) (character.Attributes, error) {
+// attrToAlignment parses specified alignemnt XML attribute.
+func attrToAlignment(aliAttr string) (character.Alignment, error) {
+	switch aliAttr {
+	case "lawful_good":
+		return character.Lawful_good, nil
+	case "neutral_good":
+		return character.Neutral_good, nil
+	case "chaotic_good":
+		return character.Chaotic_good, nil
+	case "lawful_neutral":
+		return character.Lawful_neutral, nil
+	case "true_neutral":
+		return character.True_neutral, nil
+	case "lawful_evil":
+		return character.Lawful_evil, nil
+	case "neutral_evil":
+		return character.Neutral_evil, nil
+	case "chaotic_evil":
+		return character.Chaotic_evil, nil
+	default:
+		return -1, fmt.Errorf("fail to parse alignment:%s", aliAttr)
+	}
+}
+
+// genderToAttr parses specified gender to gender XML
+// attribute value.
+func genderToAttr(sex character.Gender) string {
+	switch sex {
+	case character.Male:
+		return "male"
+	case character.Female:
+		return "female"
+	default:
+		return "male"
+	}
+}
+
+// raceToAttr parses specified race to race XML
+// attribute value.
+func raceToAttr(race character.Race) string {
+	switch race {
+	case character.Human:
+		return "human"
+	case character.Elf:
+		return "elf"
+	case character.Dwarf:
+		return "dwarf"
+	case character.Gnome:
+		return "gnome"
+	case character.Wolf:
+		return "wolf"
+	case character.Goblin:
+		return "goblin"
+	default:
+		return "unknown"
+	}
+}
+
+// attitudeToAttr parses specified attitude to attitude XML
+// attribute value.
+func attitudeToAttr(attitude character.Attitude) string {
+	switch attitude {
+	case character.Friendly:
+		return "friendly"
+	case character.Neutral:
+		return "neutral"
+	case character.Hostile:
+		return "hostile"
+	default:
+		return "unknown"
+	}
+}
+
+// alingmentToAttr parses specified alignment to alignment XML
+// attribute value.
+func alignmentToAttr(alignment character.Alignment) string {
+	switch alignment {
+	case character.Lawful_good:
+		return "lawful_good"
+	case character.Neutral_good:
+		return "neutral_good"
+	case character.Chaotic_good:
+		return "chaotic_good"
+	case character.Lawful_neutral:
+		return "lawful_neutral"
+	case character.True_neutral:
+		return "true_neutral"
+	case character.Chaotic_neutral:
+		return "chaotic_neutral"
+	case character.Lawful_evil:
+		return "lawful_evil"
+	case character.Neutral_evil:
+		return "neutral_evil"
+	case character.Chaotic_evil:
+		return "chaotic_evil"
+	default:
+		return "unknown"
+	}
+}
+
+// unmarshalAttributes parses specified attributes from XML doc.
+func unmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 	stats := strings.Split(attributesAttr, ";")
 	if len(stats) < 5 {
 		return character.Attributes{},
@@ -203,14 +321,10 @@ func parseAttributesAttr(attributesAttr string) (character.Attributes, error) {
 	return character.Attributes{str, con, dex, inte, wis}, nil
 }
 
-// parseAlignmentAttr parses specified alignemnt XML attribute.
-func parseAlignmentAttr(aliAttr string) (character.Alignment, error) {
-	switch aliAttr {
-	case "lawful_good":
-		return character.Lawful_good, nil
-	default:
-		return -1, fmt.Errorf("fail to parse alignment:%s", aliAttr)
-	}
+// marshalAttributes parses attributes to XML node value.
+func marshalAttributes(attrs character.Attributes) string {
+	return fmt.Sprintf("%d;%d;%d;%d;%d;", attrs.Str,
+		attrs.Con, attrs.Dex, attrs.Wis, attrs.Int)
 }
 
 

@@ -38,6 +38,12 @@ const (
 	Chaotic_evil
 )
 
+// String returns text representation of
+// alignement.
+func (a Alignment) String() string {
+	return a.Id()
+}
+
 // Id returns alignemnt ID.
 func (a Alignment) Id() string {
 	switch a {

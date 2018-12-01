@@ -32,6 +32,7 @@ import (
 // Character struct represents game character.
 type Character struct {
 	id         string
+	serial     string
 	name       string
 	level      int
 	sex        Gender
@@ -66,6 +67,12 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 // Id returns character ID.
 func (c *Character) Id() string {
 	return c.id
+}
+
+// SerialId returns character ID and serial value
+// in form: [ID]_[serial].
+func (c *Character) SerialId() string {
+	return fmt.Sprintf("%s_%s", c.Id(), c.serial)
 }
 
 // Name returns character name.
@@ -124,9 +131,15 @@ func (c *Character) SetPosition(x, y float64) {
 	c.posX, c.posY = x, y
 }
 
+// SetSerial sets specified serial value for this
+// character.
+func (c *Character) SetSerial(serial string) {
+	c.serial = serial
+}
+
 // String returns string with character parameters spearated by ', '.
 func (c *Character) String() string {
-	return fmt.Sprintf("%s, %d, %v, %v, %v, %s, %s",
+	return fmt.Sprintf("%s, %d, %v, %v, %v, %v, %s",
 		c.id, c.level, c.sex, c.race, c.attitude, c.guild, c.attributes,
 		c.alignment) 
 }

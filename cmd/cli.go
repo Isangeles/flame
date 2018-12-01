@@ -85,7 +85,7 @@ func main() {
 		if strings.HasPrefix(input, COMMAND_PREFIX) {
 			cmd := strings.TrimPrefix(input, COMMAND_PREFIX)
 			execute(cmd)
-			lastCommand = input
+			lastCommand = cmd
 		} else {
 			stdout.Println(input)
 		}

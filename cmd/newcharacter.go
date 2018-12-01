@@ -121,20 +121,20 @@ func raceDialog() character.Race {
 		input := scan.Text()
 		switch input {
 		case "1":
-			return character.HUMAN
+			return character.Human
 		case "2":
-			return character.ELF
+			return character.Elf
 		case "3":
-			return character.DWARF
+			return character.Dwarf
 		case "4":
-			return character.GNOME
+			return character.Gnome
 		default:
 			fmt.Printf("%s:%s\n", lang.UIText("cli_newchar_invalid_value_err"),
 				input)
 		}
 	}
 
-	return character.HUMAN
+	return character.Human
 }
 
 // genderDialog starts CLI dialog for game character gender.
@@ -154,16 +154,16 @@ func genderDialog() character.Gender {
 		input := scan.Text()
 		switch input {
 		case "1":
-			return character.MALE
+			return character.Male
 		case "2":
-			return character.FEMALE
+			return character.Female
 		default:
 			fmt.Printf("%s:%s\n", lang.UIText("cli_newchar_invalid_value_err"),
 				input)
 		}
 	}
 
-	return character.MALE
+	return character.Male
 }
 
 // newAttributesDialog Starts CLI dialog for game character attributes.

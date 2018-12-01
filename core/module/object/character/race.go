@@ -27,30 +27,31 @@ package character
 type Race int
 
 const (
-	HUMAN Race = iota
-	ELF
-	DWARF
-	GNOME
-	WOLF
-	GOBLIN
-	UNKNOWN
+
+	Human Race = iota
+	Elf
+	Dwarf
+	Gnome
+	Wolf
+	Goblin
+	Race_unknown
 	//...
 )
 
 // Id returns race ID.
 func (r Race) Id() string {
 	switch r {
-	case HUMAN:
+	case Human:
 		return "race_human"
-	case ELF:
+	case Elf:
 		return "race_elf"
-	case DWARF:
+	case Dwarf:
 		return "race_dwarf"
-	case GNOME:
+	case Gnome:
 		return "race_gnome"
-	case WOLF:
+	case Wolf:
 		return "race_wolf"
-	case GOBLIN:
+	case Goblin:
 		return "race_goblin"
 	default:
 		return "race_unknown"

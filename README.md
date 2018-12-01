@@ -44,7 +44,14 @@ Export game character:
   $charman -o export -t [character ID]
 ```
 Exports game character with specified ID to XML file in
-data/modules/[module]/characters directory. 
+data/modules/[module]/characters directory.
+
+Import exported characters:
+```
+  $importchars
+```
+Imports all characters from XML files in
+data/modules/[module]/characters directory.
 
 ## Contact
 * Isangeles <<dev@isangeles.pl>>
