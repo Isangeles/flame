@@ -65,14 +65,14 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 }
 
 // Id returns character ID.
-func (c *Character) Id() string {
+func (c *Character) ID() string {
 	return c.id
 }
 
 // SerialId returns character ID and serial value
 // in form: [ID]_[serial].
-func (c *Character) SerialId() string {
-	return fmt.Sprintf("%s_%s", c.Id(), c.serial)
+func (c *Character) SerialID() string {
+	return fmt.Sprintf("%s_%s", c.ID(), c.serial)
 }
 
 // Name returns character name.

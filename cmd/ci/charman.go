@@ -106,6 +106,10 @@ func showCharOption(cmd Command) (int, string) {
 	case "position":
 		x, y := char.Position()
 		return 0, fmt.Sprintf("%fx%f", x, y)
+	case "id":
+		return 0, char.ID()
+	case "serialid":
+		return 0, char.SerialID()
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])

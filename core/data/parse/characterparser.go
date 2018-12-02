@@ -124,7 +124,7 @@ func UnmarshalCharactersBaseXML(xmlPath string) ([]*character.Character, error) 
 func MarshalCharacterXML(char *character.Character) ([]byte, error) {
 	xmlCharBase := new(XMLCharactersBase)
 	xmlChar := new(XMLCharacter)
-	xmlChar.Id = char.Id()
+	xmlChar.Id = char.ID()
 	xmlChar.Name = char.Name()
 	xmlChar.Level = fmt.Sprintf("%d", char.Level())
 	xmlChar.Gender = genderToAttr(char.Gender())

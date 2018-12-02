@@ -89,7 +89,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	}
 
 	f, err := os.Create(filepath.FromSlash(dirPath + "/" +
-		char.Id()) + CHAR_FILE_PREFIX)
+		char.Name()) + CHAR_FILE_PREFIX)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_char_file:%v", err)
 	}

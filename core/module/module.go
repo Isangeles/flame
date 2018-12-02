@@ -133,11 +133,11 @@ func (m *Module) ChaptersIds() []string {
 	return m.conf.Chapters
 }
 
-// Character return character with specified ID from module
-// character or nil if no such character found.
-func (m *Module) Character(id string) *character.Character {
-	// TODO: search module characters.
-	return nil
+// Character return character with specified serial
+// ID from lodaed module characters or nil if no such
+// character was found.
+func (m *Module) Character(serialID string) *character.Character {
+	return m.Chapter().Character(serialID)
 }
 
 // loadModConf loads module configuration file

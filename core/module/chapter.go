@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
 // Chapter struct represents module chapter
@@ -92,6 +93,49 @@ func (c *Chapter) AreasPath() string {
 // Scneario returns current chapter scenario.
 func (c *Chapter) Scenario() *scenario.Scenario {
 	return c.scenario
+}
+
+// Characters returns list with all existing(loaded)
+// characters in chapter.
+func (c *Chapter) Characters() (chars []*character.Character) {
+	for _, s := range c.loadedScens {
+		for _, a := range s.Areas() {
+			for _, c := range a.Characters() {
+				chars = append(chars, c)
+			}
+		}
+	}
+	return
+}
+
+// CharactersWithID returns all existing characters with
+// specified ID.
+func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {
+	for _, s := range c.loadedScens {
+		for _, a := range s.Areas() {
+			for _, c := range a.Characters() {
+				if c.ID() == id {
+					chars = append(chars, c)
+				}
+			}
+		}
+	}
+	return
+}
+
+// Character returns existing game character with specified
+// serial ID or nil if no character with specified ID exists.
+func (c *Chapter) Character(serialID string) *character.Character {
+	for _, s := range c.loadedScens {
+		for _, a := range s.Areas() {
+			for _, c := range a.Characters() {
+				if c.SerialID() == serialID {
+					return c
+				}
+			}
+		}
+	}
+	return nil
 }
 
 // loadConf loads configuration file for this chapter,
