@@ -21,7 +21,7 @@
  * 
  */
 
-package parse
+package parsexml
 
 import (
 	"flag"

@@ -33,7 +33,7 @@ import (
 	"io/ioutil"
 	"strings"
 	
-	"github.com/isangeles/flame/core/data/parse"
+	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/log"
@@ -46,13 +46,13 @@ const (
 // Scenario parses file on specified path
 // to scenario.
 func Scenario(path string) (*scenario.Scenario, error) {
-	return parse.UnmarshalScenarioXML(path)
+	return parsexml.UnmarshalScenarioXML(path)
 }
 
 // Characters parses file on specified path to
 // game characters.
 func Characters(path string) ([]*character.Character, error) {
-	return parse.UnmarshalCharactersBaseXML(path)
+	return parsexml.UnmarshalCharactersBaseXML(path)
 }
 
 // ImportCharacters parses all characters files from directory
@@ -70,7 +70,8 @@ func ImportCharacters(dirPath string) ([]*character.Character, error) {
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
 		impChars, err := Characters(charFilePath)
 		if err != nil {
-			log.Err.Printf("data_char_import:fail_to_parse_char_file:%v", err)
+			log.Err.Printf("data_char_import:fail_to_parse_char_file:%v",
+				err)
 			continue
 		}
 		for _, c := range impChars {
@@ -83,7 +84,7 @@ func ImportCharacters(dirPath string) ([]*character.Character, error) {
 // ExportCharacter saves specified character to
 // [Module]/characters directory.
 func ExportCharacter(char *character.Character, dirPath string) error {
-	out, err := parse.MarshalCharacterXML(char)
+	xml, err := parsexml.MarshalCharacterXML(char)
 	if err != nil {
 		return fmt.Errorf("fail_to_export_char:%v", err)
 	}
@@ -96,7 +97,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	defer f.Close()
 
 	w := bufio.NewWriter(f)
-	w.Write(out)
+	w.WriteString(xml)
 	w.Flush()
 	return nil
 }

@@ -21,7 +21,7 @@
  * 
  */
 
-package parse
+package parsexml
 
 import (
 	"encoding/xml"
@@ -39,7 +39,7 @@ type XMLScenario struct {
 	Mainarea XMLArea  `xml:"mainarea"`
 }
 
-// struct for XML area node.
+// Struct for XML area node.
 type XMLArea struct {
 	Id string `xml:"id,attr"`
 }

@@ -21,7 +21,7 @@
  * 
  */
 
-package parse
+package parsexml
 
 import (
 	"encoding/xml"
@@ -121,7 +121,7 @@ func UnmarshalCharactersBaseXML(xmlPath string) ([]*character.Character, error) 
 
 // MarshalCharacter parses game character to XML node
 // representation.
-func MarshalCharacterXML(char *character.Character) ([]byte, error) {
+func MarshalCharacterXML(char *character.Character) (string, error) {
 	xmlCharBase := new(XMLCharactersBase)
 	xmlChar := new(XMLCharacter)
 	xmlChar.Id = char.ID()
@@ -135,9 +135,9 @@ func MarshalCharacterXML(char *character.Character) ([]byte, error) {
 	xmlCharBase.Characters = append(xmlCharBase.Characters, *xmlChar)
 	out, err := xml.Marshal(xmlCharBase)
 	if err != nil {
-		return []byte{}, fmt.Errorf("fail_to_marshal_char:%v", err)
+		return "", fmt.Errorf("fail_to_marshal_char:%v", err)
 	}
-	return out, nil
+	return string(out[:]), nil
 }
 
 // attrToGender parses specified gender XML attribute,
