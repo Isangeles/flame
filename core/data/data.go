@@ -40,7 +40,7 @@ import (
 )
 
 const (
-	CHAR_FILE_PREFIX = ".xml"
+	CHAR_FILE_PREFIX = ".characters"
 )
 
 // Scenario parses file on specified path
@@ -49,15 +49,18 @@ func Scenario(path string) (*scenario.Scenario, error) {
 	return parsexml.UnmarshalScenarioXML(path)
 }
 
-// Characters parses file on specified path to
-// game characters.
-func Characters(path string) ([]*character.Character, error) {
-	return parsexml.UnmarshalCharactersBaseXML(path)
+// ImportCharacters imports char file with specified path.
+func ImportCharacters(path string) ([]*character.Character, error) {
+	charFile, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
+	}
+	return parsexml.UnmarshalCharactersBaseXML(charFile)
 }
 
-// ImportCharacters parses all characters files from directory
+// ImportCharactersDir imports all characters files from directory
 // with specified path.
-func ImportCharacters(dirPath string) ([]*character.Character, error) {
+func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 	chars := make([]*character.Character, 0)
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -68,7 +71,7 @@ func ImportCharacters(dirPath string) ([]*character.Character, error) {
 			continue
 		}
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
-		impChars, err := Characters(charFilePath)
+		impChars, err := ImportCharacters(charFilePath)
 		if err != nil {
 			log.Err.Printf("data_char_import:fail_to_parse_char_file:%v",
 				err)

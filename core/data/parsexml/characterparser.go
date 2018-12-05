@@ -26,7 +26,7 @@ package parsexml
 import (
 	"encoding/xml"
 	"fmt"
-	"os"
+	"io"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -57,59 +57,53 @@ type XMLCharacter struct {
 
 // UnmarshalCharactersBaseXML parses characters base from XML file
 // in specified path.
-func UnmarshalCharactersBaseXML(xmlPath string) ([]*character.Character, error) {
+func UnmarshalCharactersBaseXML(data io.Reader) ([]*character.Character, error) {
 	chars := make([]*character.Character, 0)
-	doc, err := os.Open(xmlPath)
-	if err != nil {
-		return chars, fmt.Errorf("fail_to_find_chars_base_file:%v", err)
-	}
-	defer doc.Close()
-
-	data, _ := ioutil.ReadAll(doc)
+	doc, _ := ioutil.ReadAll(data)
 	xmlCharsBase := new(XMLCharactersBase)
-	err = xml.Unmarshal(data, xmlCharsBase)
+	err := xml.Unmarshal(doc, xmlCharsBase)
 	if err != nil {
-		return chars, fmt.Errorf("xml:%s:fail_to_unmarshal_xml:%v",
-			xmlPath, err)
+		return chars, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
+			err)
 	}
 	for _, charXML := range xmlCharsBase.Characters {
 		id := charXML.Id
 		name := charXML.Name
 		level, err := strconv.Atoi(charXML.Level)
 		if err != nil {
-			log.Err.Printf("xml:%s:parse:fail_to_parse_char_level:%v",
-			xmlPath, err)
+			log.Err.Printf("xml_unmarshal:fail_to_parse_char_level:%v",
+				err)
 			continue
 		}
 		sex, err := attrToGender(charXML.Gender)
 		if err != nil {
-			log.Err.Printf("xml:%s:parse:fail_to_parse_char_gender:%v",
-			xmlPath, err)
+			log.Err.Printf("xml_unmarshal:fail_to_parse_char_gender:%v",
+				err)
 			continue
 		}
 		race, err := attrToRace(charXML.Race)
 		if err != nil {
-			log.Err.Printf("xml:%s:parse:fail_to_parse_char_race:%v",
-			xmlPath, err)
+			log.Err.Printf("xml_unmarshal:fail_to_parse_char_race:%v",
+				err)
 			continue
 		}
 		attitude, err := attrToAttitude(charXML.Attitude)
 		if err != nil {
-			log.Err.Printf("xml:%s:parse:fail_to_parse_char_attitude:%v",
-			xmlPath, err)
+			log.Err.Printf("xml_unmarshal:fail_to_parse_char_attitude:%v",
+				err)
 			continue
 		}
 		guild := character.NewGuild(charXML.Guild) // TODO: search and assign guild
 		attributes, err := unmarshalAttributes(charXML.Stats)
 		if err != nil {
-			log.Err.Printf("xml:%s:parse:fail_to_parse_char_attributes:%v",
-			xmlPath, err)
+			log.Err.Printf("xml_unmarshal:fail_to_parse_char_attributes:%v",
+				err)
 			continue
 		}
 		alignment, err := attrToAlignment(charXML.Alignment)
 		if err != nil {
-			log.Err.Printf("xml:%s:parse:fail_to_parse_char_alignment:%v",
-			xmlPath, err)
+			log.Err.Printf("xml_unmarshal:fail_to_parse_char_alignment:%v",
+				err)
 			continue
 		}
 		char := character.NewCharacter(id, name, level, sex, race,
