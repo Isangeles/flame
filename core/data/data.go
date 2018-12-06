@@ -40,13 +40,18 @@ import (
 )
 
 const (
-	CHAR_FILE_PREFIX = ".characters"
+	CHAR_FILE_EXT = ".characters"
 )
 
 // Scenario parses file on specified path
 // to scenario.
 func Scenario(path string) (*scenario.Scenario, error) {
-	return parsexml.UnmarshalScenarioXML(path)
+	doc, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
+	}
+	defer doc.Close()
+	return parsexml.UnmarshalScenarioXML(doc)
 }
 
 // ImportCharacters imports char file with specified path.
@@ -55,6 +60,7 @@ func ImportCharacters(path string) ([]*character.Character, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
 	}
+	defer charFile.Close()
 	return parsexml.UnmarshalCharactersBaseXML(charFile)
 }
 
@@ -67,7 +73,7 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 		return chars, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
 	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), CHAR_FILE_PREFIX) {
+		if !strings.HasSuffix(fInfo.Name(), CHAR_FILE_EXT) {
 			continue
 		}
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
@@ -93,7 +99,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	}
 
 	f, err := os.Create(filepath.FromSlash(dirPath + "/" +
-		char.Name()) + CHAR_FILE_PREFIX)
+		char.Name()) + CHAR_FILE_EXT)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_char_file:%v", err)
 	}

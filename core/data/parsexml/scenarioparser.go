@@ -26,7 +26,7 @@ package parsexml
 import (
 	"encoding/xml"
 	"fmt"
-	"os"
+	"io"
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/module/scenario"
@@ -44,17 +44,11 @@ type XMLArea struct {
 	Id string `xml:"id,attr"`
 }
 
-// UnmarshalScenarioXML parses scenario from XML file in specified path.
-func UnmarshalScenarioXML(xmlPath string) (*scenario.Scenario, error) {
-	doc, err := os.Open(xmlPath)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
-	}
-	defer doc.Close()
-
-	data, _ := ioutil.ReadAll(doc)
+// UnmarshalScenarioXML parses scenario from XML data.
+func UnmarshalScenarioXML(data io.Reader) (*scenario.Scenario, error) {
+	doc, _ := ioutil.ReadAll(data)
 	xmlScen := new(XMLScenario)
-	err = xml.Unmarshal(data, xmlScen)
+	err := xml.Unmarshal(doc, xmlScen)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml:%v", err)
 	}
