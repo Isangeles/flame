@@ -71,7 +71,10 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if mod == nil {
 		return nil, fmt.Errorf("no_module_loaded")
 	}
-	mod.NextChapter() // move to start chapter
+	err := mod.NextChapter() // move to start chapter
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_start_game:%v", err)
+	}
 	game = core.NewGame(mod, pcs)
 	return game, nil
 }

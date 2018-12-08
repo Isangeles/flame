@@ -67,7 +67,7 @@ func (m *Module) NextChapter() error {
 	// TODO: for now only start chapter.
 	c, err := NewChapter(m.conf.Chapters[0], m.ChaptersPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_set_start_chapter:%v", err)
+		return fmt.Errorf("fail_to_set_next_chapter:%v", err)
 	}
 	m.chapter = c
 	return nil

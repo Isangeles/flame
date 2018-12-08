@@ -35,8 +35,8 @@ type Scenario struct {
 func NewScenario(id string, mainarea *Area, subareas []*Area) (*Scenario) {
 	s := new(Scenario)
 	s.id = id
-	s.areas = append(s.areas, subareas...)
 	s.areas = append(s.areas, mainarea)
+	s.areas = append(s.areas, subareas...)
 	s.currentArea = mainarea
 	return s
 }

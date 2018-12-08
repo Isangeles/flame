@@ -40,7 +40,6 @@ type ScenarioXML struct {
 
 // Struct for XML area node.
 type AreaXML struct {
-	XMLName string  `xml:"area"`
 	ID      string  `xml:"id,attr"`
 	NPCs    NpcsXML `xml:"npcs"`
 }
