@@ -28,34 +28,44 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-
-	"github.com/isangeles/flame/core/module/scenario"
 )
 
 // Struct for XML scenario node.
-type XMLScenario struct {
-	XMLName  xml.Name `xml:"scenario"`
-	Id       string   `xml:"id,attr"`
-	Mainarea XMLArea  `xml:"mainarea"`
+type ScenarioXML struct {
+	XMLName  xml.Name  `xml:"scenario"`
+	ID       string    `xml:"id,attr"`
+	Mainarea AreaXML   `xml:"mainarea"`
+	Subareas []AreaXML `xml:"area"`
 }
 
 // Struct for XML area node.
-type XMLArea struct {
-	Id string `xml:"id,attr"`
+type AreaXML struct {
+	XMLName string  `xml:"area"`
+	ID      string  `xml:"id,attr"`
+	NPCs    NpcsXML `xml:"npcs"`
 }
 
-// UnmarshalScenarioXML parses scenario from XML data.
-func UnmarshalScenarioXML(data io.Reader) (*scenario.Scenario, error) {
+// Struct for XML npcs node.
+type NpcsXML struct {
+	XMLName    xml.Name      `xml:"npcs"`
+	Characters []AreaCharXML `xml:"char"`
+}
+
+// Struct for XML area character node.
+type AreaCharXML struct {
+	XMLName  xml.Name `xml:"char"`
+	ID       string   `xml:"char,value"`
+	Position string   `xml:"position,attr"`
+}
+
+// UnmarshalScenario parses scenario from XML data.
+func UnmarshalScenario(data io.Reader) (*ScenarioXML, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlScen := new(XMLScenario)
+	xmlScen := new(ScenarioXML)
 	err := xml.Unmarshal(doc, xmlScen)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml:%v", err)
 	}
-
-	mainarea := scenario.NewArea(xmlScen.Mainarea.Id)
-	scen := scenario.NewScenario(xmlScen.Id, mainarea, []*scenario.Area{})
-
-	return scen, nil
+	return xmlScen, nil
 }
 

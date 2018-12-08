@@ -3,7 +3,7 @@
   
   The main goal is to create simple, flexible, extensible and completely modular game engine. Engine provides build-in CLI frontend to easy run and debug modules.
   
-  The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine, senlin modules should be compatible with Flame.
+  The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine, Senlin modules should be compatible with Flame(with some modifications).
   
   Currently in a very early development stage.
 

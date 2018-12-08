@@ -41,8 +41,8 @@ func NewScenario(id string, mainarea *Area, subareas []*Area) (*Scenario) {
 	return s
 }
 
-// Id returns scenario id.
-func (s *Scenario) Id() string {
+// ID returns scenario id.
+func (s *Scenario) ID() string {
 	return s.id
 }
 

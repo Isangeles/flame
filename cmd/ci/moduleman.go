@@ -68,7 +68,7 @@ func showModuleOption(cmd Command) (int, string) {
 		if scen == nil {
 			return 8, fmt.Sprintf("%s:no_current_scenario", MODULE_MAN)
 		}
-		return 0, fmt.Sprintf("%s(area:%s)", scen.Id(), scen.Area().Id())
+		return 0, fmt.Sprintf("%s(area:%s)", scen.ID(), scen.Area().ID())
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])

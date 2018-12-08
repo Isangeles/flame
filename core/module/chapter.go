@@ -37,7 +37,7 @@ import (
 // Chapter struct represents module chapter
 type Chapter struct {
 	id, path    string
-	scensIds    []string
+	scensIDs    []string
 	startScenId string
 
 	scenario    *scenario.Scenario
@@ -63,8 +63,8 @@ func NewChapter(id, path string) (*Chapter, error) {
 	return c, nil
 }
 
-// Id returns chapter ID.
-func (c *Chapter) Id() string {
+// ID returns chapter ID.
+func (c *Chapter) ID() string {
 	return c.id
 }
 
@@ -99,6 +99,29 @@ func (c *Chapter) AreasPath() string {
 // Scneario returns current chapter scenario.
 func (c *Chapter) Scenario() *scenario.Scenario {
 	return c.scenario
+}
+
+// ChangeScenario changes current scenario to scenario
+// with specified ID.
+func (c *Chapter) ChangeScenario(scenID string) error {
+	for _, s := range c.loadedScens {
+		if s.ID() == scenID {
+			c.scenario = s
+			return nil
+		}
+	}
+	for _, sID := range c.scensIDs {
+		if sID == scenID {
+			s, err := data.Scenario(sID)
+			if err != nil {
+				return fmt.Errorf("fail_to_retrieve_scenario:%v", err)
+			}
+			c.scenario = s
+			c.loadedScens = append(c.loadedScens, s)
+			return nil
+		}
+	}
+	return fmt.Errorf("scenario_not_found:%s", scenID)
 }
 
 // Characters returns list with all existing(loaded)

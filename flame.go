@@ -43,8 +43,8 @@ var (
 	errlog *log.Logger = log.New(enginelog.ErrLog, "flame-core>", 0)
 	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-debug>", 0)
 	
-	mod *module.Module
-	g   *core.Game
+	mod  *module.Module
+	game *core.Game
 )
 
 // SetModule sets specified module as current module.
@@ -61,7 +61,7 @@ func Mod() *module.Module {
 // Game returns currently active game or nil
 // if no game is active.
 func Game() *core.Game {
-	return g
+	return game
 }
 
 // StartGame starts new game for loaded module with specified character
@@ -71,7 +71,7 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if mod == nil {
 		return nil, fmt.Errorf("no_module_loaded")
 	}
-	
-	g = core.NewGame(mod, pcs) 
-	return g, nil
+	mod.NextChapter() // move to start chapter
+	game = core.NewGame(mod, pcs)
+	return game, nil
 }

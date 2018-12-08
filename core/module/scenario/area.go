@@ -41,7 +41,7 @@ func NewArea(id string) (*Area) {
 }
 
 // Id returns area ID.
-func (a *Area) Id() string {
+func (a *Area) ID() string {
 	return a.id
 }
 

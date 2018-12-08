@@ -44,14 +44,26 @@ const (
 )
 
 // Scenario parses file on specified path
-// to scenario.
+// to chapter scenario.
 func Scenario(path string) (*scenario.Scenario, error) {
 	doc, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_find_scen_file:%v", err)
+		return nil, fmt.Errorf("fail_to_open_scenario_file:%v", err)
 	}
 	defer doc.Close()
-	return parsexml.UnmarshalScenarioXML(doc)
+	xmlScen, err := parsexml.UnmarshalScenario(doc)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_scenario_file:%v", err)
+	}
+	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
+	subareas := make([]*scenario.Area, 0)
+	for _, xmlArea := range xmlScen.Subareas {
+		area := scenario.NewArea(xmlArea.ID)
+		// TODO: area NPCs.
+		subareas = append(subareas, area)
+	}
+	scen := scenario.NewScenario(xmlScen.ID, mainarea, subareas)
+	return scen, nil
 }
 
 // ImportCharacters imports char file with specified path.

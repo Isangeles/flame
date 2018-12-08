@@ -59,17 +59,18 @@ func NewModule(name, path string) (*Module, error) {
 		return nil, fmt.Errorf("fail_to_load_config:%v", err)
 	}
 	m.conf = conf
-	c, err := NewChapter(m.conf.Chapters[0], m.ChaptersPath())
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_set_start_chapter:%v", err)
-	}
-	m.chapter = c
 	return m, nil
 }
 
 // Jumps to next module chapter.
 func (m *Module) NextChapter() error {
-	return fmt.Errorf("unsupported_yet")
+	// TODO: for now only start chapter.
+	c, err := NewChapter(m.conf.Chapters[0], m.ChaptersPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_set_start_chapter:%v", err)
+	}
+	m.chapter = c
+	return nil
 }
 
 // Name returns module name
