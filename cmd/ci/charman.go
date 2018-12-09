@@ -60,7 +60,7 @@ func setCharOption(cmd Command) (int, string) {
 		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", CHAR_MAN,
 			cmd.OptionArgs()[0])
 	}
-	char := flame.Game().Player(cmd.TargetArgs()[1])
+	char := flame.Game().Module().Character(cmd.TargetArgs()[1])
 	if char == nil {
 		return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
 			cmd.TargetArgs()[1])
@@ -96,7 +96,7 @@ func showCharOption(cmd Command) (int, string) {
 		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", CHAR_MAN,
 			cmd.OptionArgs()[0])
 	}
-	char := flame.Game().Player(cmd.TargetArgs()[1])
+	char := flame.Game().Module().Character(cmd.TargetArgs()[1])
 	if char == nil {
 		return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
 			cmd.TargetArgs()[1])

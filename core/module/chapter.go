@@ -42,6 +42,7 @@ type Chapter struct {
 
 	scenario    *scenario.Scenario
 	loadedScens []*scenario.Scenario
+	npcs        []*character.Character
 } 
 
 // NewChapters creates new instance of module chapter.
@@ -55,10 +56,11 @@ func NewChapter(id, path string) (*Chapter, error) {
 	}
 	startScenarioPath := filepath.FromSlash(c.ScenariosPath() + "/" +
 		c.startScenId)
-	s, err := data.Scenario(startScenarioPath)
+	s, err := data.Scenario(startScenarioPath, c.NPCPath())
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
 	}
+	c.loadedScens = append(c.loadedScens, s)
 	c.scenario = s
 	return c, nil
 }
@@ -112,7 +114,9 @@ func (c *Chapter) ChangeScenario(scenID string) error {
 	}
 	for _, sID := range c.scensIDs {
 		if sID == scenID {
-			s, err := data.Scenario(sID)
+			scenPath := filepath.FromSlash(c.ScenariosPath() + "/" +
+				sID)
+			s, err := data.Scenario(scenPath, c.NPCPath())
 			if err != nil {
 				return fmt.Errorf("fail_to_retrieve_scenario:%v", err)
 			}

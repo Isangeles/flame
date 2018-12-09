@@ -38,6 +38,7 @@ type Serializer interface {
 	ID() string
 	SerialID() string
 	SetSerial(serial string)
+	HasSerial() bool
 }
 
 // Struct for representation of game.
@@ -55,7 +56,7 @@ func NewGame(mod *module.Module, players []*character.Character) *Game {
 	// All players to start area.
 	startArea := mod.Scenario().Area()
 	for _, pc := range g.pcs {
-		g.GenerateSerial(pc)
+		g.GenerateCharacterSerial(pc)
 		g.ChangePlayerArea(startArea, pc.SerialID())
 	}
 	return g
@@ -90,7 +91,6 @@ func (g *Game) ChangePlayerArea(area *scenario.Area, serialID string) error {
 	if pc == nil {
 		return fmt.Errorf("player_not_found:%v", serialID)
 	}
-
 	area.AddCharacter(pc)
 	return nil
 }
@@ -116,9 +116,17 @@ func (g *Game) PlayerArea(serialID string) (*scenario.Area, error) {
 	return nil, fmt.Errorf("player_not_found_in_any_scenario_area:%v", serialID)
 }
 
+// AreaCharacters returns all characters in current
+// area.
+func (g *Game) AreaCharacters() []*character.Character {
+	return g.Module().Chapter().Scenario().Area().Characters()
+}
+
 // GenerateSerial sets unique serial value for specified
 // object with serial ID.
-func (g *Game) GenerateSerial(object Serializer) {
+func (g *Game) GenerateCharacterSerial(object *character.Character) {
 	chars := g.Module().Chapter().CharactersWithID(object.ID())
-	object.SetSerial(fmt.Sprintf("%d", len(chars)))
+	serial := len(chars)
+	// TODO: ensure serial uniqueness.
+	object.SetSerial(fmt.Sprintf("%d", serial))
 }

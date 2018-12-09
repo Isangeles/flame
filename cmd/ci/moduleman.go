@@ -63,6 +63,15 @@ func showModuleOption(cmd Command) (int, string) {
 		return 0, flame.Mod().Name()
 	case "chapters":
 		return 0, fmt.Sprint(flame.Mod().ChaptersIds())
+	case "areachars":
+		if flame.Game() == nil {
+			return 8, fmt.Sprintf("%s:no_game_loaded", MODULE_MAN)
+		}
+		charsIDs := ""
+		for _, c := range flame.Game().AreaCharacters() { 
+			charsIDs = charsIDs + c.SerialID() + ","
+		}
+		return 0, charsIDs
 	case "scenario":
 		scen := flame.Mod().Scenario()
 		if scen == nil {

@@ -2,7 +2,7 @@
 <scenario id="area01_scen">
   <mainarea id="area01_main" map="area01.tmx">
     <npcs>
-      <char position="">test01</char>
+      <char position="500x300">testchar</char>
     </npcs>
     <subareas>
     </subareas>

@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
+`1 * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
@@ -45,17 +45,34 @@ const (
 
 // Scenario parses file on specified path
 // to chapter scenario.
-func Scenario(path string) (*scenario.Scenario, error) {
-	doc, err := os.Open(path)
+func Scenario(scenPath, npcsDirPath string) (*scenario.Scenario, error) {
+	docScen, err := os.Open(scenPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_scenario_file:%v", err)
 	}
-	defer doc.Close()
-	xmlScen, err := parsexml.UnmarshalScenario(doc)
+	defer docScen.Close()
+	npcsBasePath := filepath.FromSlash(npcsDirPath + "/npc" + CHAR_FILE_EXT)
+	docNPCs, err := os.Open(npcsBasePath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_open_characters_base_file:%", err)
+	}
+	defer docNPCs.Close()
+	
+	xmlScen, err := parsexml.UnmarshalScenario(docScen)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_parse_scenario_file:%v", err)
 	}
 	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
+	for _, xmlAreaChar := range xmlScen.Mainarea.NPCs.Characters {
+		char, err := parsexml.UnmarshalCharacter(docNPCs, xmlAreaChar.ID)
+		if err != nil {
+			log.Err.Printf("fail_to_create_scenario_npc:%s:%v",
+				xmlAreaChar.ID, err)
+			continue
+		}
+		// TODO: set NPC position.
+		mainarea.AddCharacter(char)
+	}
 	subareas := make([]*scenario.Area, 0)
 	for _, xmlArea := range xmlScen.Subareas {
 		area := scenario.NewArea(xmlArea.ID)
@@ -66,6 +83,21 @@ func Scenario(path string) (*scenario.Scenario, error) {
 	return scen, nil
 }
 
+// Character parses specified characters base and creates
+// game character.
+func Character(basePath, charID string) (*character.Character, error) {
+	doc, err := os.Open(basePath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_open_characters_base_file:%v", err)
+	}
+	defer doc.Close()
+	char, err := parsexml.UnmarshalCharacter(doc, charID)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_character:%v", err)
+	}
+	return char, nil
+}
+
 // ImportCharacters imports char file with specified path.
 func ImportCharacters(path string) ([]*character.Character, error) {
 	charFile, err := os.Open(path)
@@ -73,7 +105,7 @@ func ImportCharacters(path string) ([]*character.Character, error) {
 		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
 	}
 	defer charFile.Close()
-	return parsexml.UnmarshalCharactersBaseXML(charFile)
+	return parsexml.UnmarshalCharactersBase(charFile)
 }
 
 // ImportCharactersDir imports all characters files from directory
@@ -105,7 +137,7 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 // ExportCharacter saves specified character to
 // [Module]/characters directory.
 func ExportCharacter(char *character.Character, dirPath string) error {
-	xml, err := parsexml.MarshalCharacterXML(char)
+	xml, err := parsexml.MarshalCharacter(char)
 	if err != nil {
 		return fmt.Errorf("fail_to_export_char:%v", err)
 	}

@@ -1,0 +1,5 @@
+<base>
+	<char id="testchar" gender="male" race="human" attitude="friendly" alignment="chaotic_good" guild="" level="1">
+      	      <stats>4;4;3;1;0;</stats>
+	</char>
+</base>
