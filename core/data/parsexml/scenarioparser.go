@@ -53,7 +53,7 @@ type NpcsXML struct {
 // Struct for XML area character node.
 type AreaCharXML struct {
 	XMLName  xml.Name `xml:"char"`
-	ID       string   `xml:"char,value"`
+	ID       string   `xml:"id,attr"`
 	Position string   `xml:"position,attr"`
 }
 

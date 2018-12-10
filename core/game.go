@@ -21,7 +21,7 @@
  *
  */
 
-// game package provides game struct representation.
+// core package provides game struct representation.
 package core
 
 import (
@@ -32,17 +32,9 @@ import (
 	"github.com/isangeles/flame/core/module/scenario"
 )
 
-// Interface for all game objects with unique
-// serial ID.
-type Serializer interface {
-	ID() string
-	SerialID() string
-	SetSerial(serial string)
-	HasSerial() bool
-}
-
-// Struct for representation of game.
-// Contains game module and PCs.
+// Struct game representation. Contains game module and PCs.
+// Also handles generating of unique serial values for
+// all game objects like characters, items, etc.
 type Game struct {
 	mod *module.Module
 	pcs []*character.Character
@@ -54,10 +46,10 @@ func NewGame(mod *module.Module, players []*character.Character) *Game {
 	g.mod = mod
 	g.pcs = players
 	// All players to start area.
-	startArea := mod.Scenario().Area()
+	startArea := g.Module().Scenario().Area()
 	for _, pc := range g.pcs {
-		g.GenerateCharacterSerial(pc)
 		g.ChangePlayerArea(startArea, pc.SerialID())
+		g.Module().Chapter().GenerateCharacterSerial(pc)
 	}
 	return g
 }
@@ -120,13 +112,4 @@ func (g *Game) PlayerArea(serialID string) (*scenario.Area, error) {
 // area.
 func (g *Game) AreaCharacters() []*character.Character {
 	return g.Module().Chapter().Scenario().Area().Characters()
-}
-
-// GenerateSerial sets unique serial value for specified
-// object with serial ID.
-func (g *Game) GenerateCharacterSerial(object *character.Character) {
-	chars := g.Module().Chapter().CharactersWithID(object.ID())
-	serial := len(chars)
-	// TODO: ensure serial uniqueness.
-	object.SetSerial(fmt.Sprintf("%d", serial))
 }

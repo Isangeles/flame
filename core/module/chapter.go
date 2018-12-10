@@ -40,16 +40,18 @@ type Chapter struct {
 	scensIDs    []string
 	startScenId string
 
+	module      *Module
 	scenario    *scenario.Scenario
 	loadedScens []*scenario.Scenario
 	npcs        []*character.Character
 } 
 
 // NewChapters creates new instance of module chapter.
-func NewChapter(id, path string) (*Chapter, error) {
+func NewChapter(mod *Module, id string) (*Chapter, error) {
 	c := new(Chapter)
 	c.id = id
-	c.path = path
+	c.path = mod.ChaptersPath()
+	c.module = mod
 	err := c.loadConf()
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_config:%v", err)
@@ -62,6 +64,7 @@ func NewChapter(id, path string) (*Chapter, error) {
 	}
 	c.loadedScens = append(c.loadedScens, s)
 	c.scenario = s
+	c.generateSerials()
 	return c, nil
 }
 
@@ -98,6 +101,11 @@ func (c *Chapter) AreasPath() string {
 	return filepath.FromSlash(c.FullPath() + "/area")
 }
 
+// Module returns chapter module.
+func (c *Chapter) Module() *Module {
+	return c.module
+}
+
 // Scneario returns current chapter scenario.
 func (c *Chapter) Scenario() *scenario.Scenario {
 	return c.scenario
@@ -122,6 +130,7 @@ func (c *Chapter) ChangeScenario(scenID string) error {
 			}
 			c.scenario = s
 			c.loadedScens = append(c.loadedScens, s)
+			c.generateSerials()
 			return nil
 		}
 	}
@@ -169,6 +178,31 @@ func (c *Chapter) Character(serialID string) *character.Character {
 		}
 	}
 	return nil
+}
+
+// GenerateSerial sets unique serial value for specified
+// object with serial ID.
+func (c *Chapter) GenerateCharacterSerial(char *character.Character) {
+	chars := c.CharactersWithID(char.ID())
+	objects := make([]Serializer, 0)
+	for _, c := range chars {
+		objects = append(objects, c)
+	}
+	serial := uniqueSerial(objects)
+	// Assing serial value to char.
+	char.SetSerial(serial)
+}
+
+// generateSerials generates unique serial values
+// for all chapter objects without serial value.
+func (c *Chapter) generateSerials() {
+	// Characters.
+	for _, char := range c.Characters() {
+		if char.HasSerial() { // assumes assigned serial uniqueness
+			continue
+		}
+		c.GenerateCharacterSerial(char)
+	}
 }
 
 // loadConf loads configuration file for this chapter,

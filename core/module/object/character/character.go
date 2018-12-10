@@ -69,6 +69,11 @@ func (c *Character) ID() string {
 	return c.id
 }
 
+// Serial returns serial value.
+func (c *Character) Serial() string {
+	return c.serial
+}
+
 // SerialId returns character ID and serial value
 // in form: [ID]_[serial].
 func (c *Character) SerialID() string {
@@ -140,7 +145,7 @@ func (c *Character) SetSerial(serial string) {
 // HasSerial checks whether character has
 // serial value.
 func (c *Character) HasSerial() bool {
-	return c.serial != ""
+	return c.Serial() != ""
 }
 
 // String returns string with character parameters spearated by ', '.

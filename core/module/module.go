@@ -65,7 +65,7 @@ func NewModule(name, path string) (*Module, error) {
 // Jumps to next module chapter.
 func (m *Module) NextChapter() error {
 	// TODO: for now only start chapter.
-	c, err := NewChapter(m.conf.Chapters[0], m.ChaptersPath())
+	c, err := NewChapter(m, m.conf.Chapters[0])
 	if err != nil {
 		return fmt.Errorf("fail_to_set_next_chapter:%v", err)
 	}
