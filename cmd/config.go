@@ -29,6 +29,7 @@ import (
 	"bufio"
 	
 	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/cmd/log"
 )
 
 const (
@@ -47,7 +48,7 @@ func loadConfig() error {
 	}
 	
 	restrictMode = confValues[0] == "true"
-	dbglog.Println("config_file_loaded")
+	log.Dbg.Println("config file loaded")
 	return nil
 }
 
@@ -64,6 +65,6 @@ func saveConfig() error {
 	w.WriteString(fmt.Sprintf("restrict_mode:%v;\n", restrictMode))
 	
 	w.Flush()
-	dbglog.Println("config_file_loaded")
+	log.Dbg.Println("config file saved")
 	return nil
 }

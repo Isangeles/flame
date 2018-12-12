@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
-`1 * You should have received a copy of the GNU General Public License
+`* You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
@@ -31,6 +31,7 @@ import (
 	"path/filepath"
 	"os"
 	"io/ioutil"
+	"strconv"
 	"strings"
 	
 	"github.com/isangeles/flame/core/data/parsexml"
@@ -40,7 +41,7 @@ import (
 )
 
 const (
-	CHAR_FILE_EXT = ".characters"
+	CHARS_FILE_EXT = ".characters"
 )
 
 // Scenario parses file on specified path
@@ -51,10 +52,10 @@ func Scenario(scenPath, npcsDirPath string) (*scenario.Scenario, error) {
 		return nil, fmt.Errorf("fail_to_open_scenario_file:%v", err)
 	}
 	defer docScen.Close()
-	npcsBasePath := filepath.FromSlash(npcsDirPath + "/npc" + CHAR_FILE_EXT)
+	npcsBasePath := filepath.FromSlash(npcsDirPath + "/npc" + CHARS_FILE_EXT)
 	docNPCs, err := os.Open(npcsBasePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_characters_base_file:%", err)
+		return nil, fmt.Errorf("fail_to_open_characters_base_file:%v", err)
 	}
 	defer docNPCs.Close()
 	
@@ -64,13 +65,24 @@ func Scenario(scenPath, npcsDirPath string) (*scenario.Scenario, error) {
 	}
 	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
 	for _, xmlAreaChar := range xmlScen.Mainarea.NPCs.Characters {
-		char, err := parsexml.UnmarshalCharacter(docNPCs, xmlAreaChar.ID)
+		charXML, err := parsexml.UnmarshalCharacter(docNPCs, xmlAreaChar.ID)
 		if err != nil {
-			log.Err.Printf("fail_to_create_scenario_npc:%s:%v",
+			log.Err.Printf("data_scenario_unmarshal_npc:%s:fail:%v",
 				xmlAreaChar.ID, err)
 			continue
 		}
-		// TODO: set NPC position.
+		char, err := buildXMLCharacter(&charXML)
+		if err != nil {
+			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",
+				xmlAreaChar.ID, err)
+		}
+		x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)
+		if err != nil {
+			log.Err.Printf("data_scenario_spawn_npc:%s:unmarshal_position_fail:%v",
+				xmlAreaChar.ID, err)
+			continue
+		}
+		char.SetPosition(x, y)
 		mainarea.AddCharacter(char)
 	}
 	subareas := make([]*scenario.Area, 0)
@@ -91,9 +103,13 @@ func Character(basePath, charID string) (*character.Character, error) {
 		return nil, fmt.Errorf("fail_to_open_characters_base_file:%v", err)
 	}
 	defer doc.Close()
-	char, err := parsexml.UnmarshalCharacter(doc, charID)
+	charXML, err := parsexml.UnmarshalCharacter(doc, charID)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_character:%v", err)
+	}
+	char, err := buildXMLCharacter(&charXML)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_build_character_from_xml:%v", err)
 	}
 	return char, nil
 }
@@ -105,7 +121,21 @@ func ImportCharacters(path string) ([]*character.Character, error) {
 		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
 	}
 	defer charFile.Close()
-	return parsexml.UnmarshalCharactersBase(charFile)
+	charsXML, err := parsexml.UnmarshalCharactersBase(charFile)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_chars_base:%v", err)
+	}
+	chars := make([]*character.Character, 0)
+	for _, charXML := range charsXML {
+		char, err := buildXMLCharacter(&charXML)
+		if err != nil {
+			log.Err.Printf("data_import_chars:%s:fail_to_build_char:%s:%v",
+				path, charXML.ID, err)
+			continue
+		}
+		chars = append(chars, char)
+	}
+	return chars, nil
 }
 
 // ImportCharactersDir imports all characters files from directory
@@ -117,7 +147,7 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 		return chars, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
 	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), CHAR_FILE_EXT) {
+		if !strings.HasSuffix(fInfo.Name(), CHARS_FILE_EXT) {
 			continue
 		}
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
@@ -143,7 +173,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	}
 
 	f, err := os.Create(filepath.FromSlash(dirPath + "/" +
-		char.Name()) + CHAR_FILE_EXT)
+		char.Name()) + CHARS_FILE_EXT)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_char_file:%v", err)
 	}
@@ -153,4 +183,45 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	w.WriteString(xml)
 	w.Flush()
 	return nil
+}
+
+// buildXMLCharacter creates new game character from XML
+// character data.
+func buildXMLCharacter(charXML *parsexml.CharacterXML) (*character.Character, error) {
+	id := charXML.ID
+	name := charXML.Name
+	level, err := strconv.Atoi(charXML.Level)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_char_level:%v",
+			err)
+	}
+	sex, err := parsexml.UnmarshalGender(charXML.Gender)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_char_gender:%v",
+			err)
+	}
+	race, err := parsexml.UnmarshalRace(charXML.Race)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_char_race:%v",
+			err)
+	}
+	attitude, err := parsexml.UnmarshalAttitude(charXML.Attitude)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_char_attitude:%v",
+			err)
+	}
+	guild := character.NewGuild(charXML.Guild) // TODO: search and assign guild
+	attributes, err := parsexml.UnmarshalAttributes(charXML.Stats)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_char_attributes:%v",
+			err)
+	}
+	alignment, err := parsexml.UnmarshalAlignment(charXML.Alignment)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_char_alignment:%v",
+			err)
+	}
+	char := character.NewCharacter(id, name, level, sex, race,
+		attitude, guild, attributes, alignment)
+	return char, nil
 }

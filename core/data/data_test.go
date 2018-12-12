@@ -26,22 +26,35 @@ package data
 import (
 	"flag"
 	"testing"
-
-	//"github.com/isangeles/flame/core/module/object/character"
 )
 
 var (
-	path = flag.String("path", "", "System path to directory with chracters files")
+	file = flag.String("file", "", "System path to characters base file")
+	dir  = flag.String("dir", "", "System path to directory with characters bases")
 )
 
-// Test for importing characters from files in directory.
-// Use '-path' flag to point directory with characters
-// files to test.
+// Test for importing characters from characters base file.
+// Use '-file' flag to point file with characters
+// to test.
 func TestImportCharacters(t *testing.T) {
-	chars, err := ImportCharacters(*path)
+	chars, err := ImportCharacters(*file)
 	if err != nil {
 		t.Errorf("fail_to_import_characters:%v\n", err)
 		return
 	}
-	t.Logf("imported_characters:%d\n", len(chars))
+	t.Logf("import_charasters_file_success_imported_characters:%d\n",
+		len(chars))
+}
+
+// Test for importing characters from file in directory.
+// Use '-dir' flag to point directory with characters
+// bases to test.
+func TestImportCharactersDir(t *testing.T) {
+	chars, err := ImportCharactersDir(*dir)
+	if err != nil {
+		t.Errorf("fail_to_import_characters_dir:%v\n", err)
+		return
+	}
+	t.Logf("import_characters_dir_success:imported_chars:%d\n",
+		len(chars))
 }

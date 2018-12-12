@@ -33,6 +33,7 @@ import (
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/log"
 )
 
 const (
@@ -75,7 +76,7 @@ func LoadConfig() error {
 	langID = confValues[0]
 	enginelog.EnableDebug(confValues[1] == "true")
 	
-	dbglog.Print("config_file_loaded")
+	log.Dbg.Print("config file loaded")
 	return nil
 }
 
@@ -98,7 +99,7 @@ func SaveConfig() error {
 	w.WriteString(fmt.Sprintf("debug:%v;\n", enginelog.IsDebug()))
 	w.Flush()
 	
-	dbglog.Print("config_file_saved")
+	log.Dbg.Print("config file saved")
 	//debug.PrintStack()
 	return nil
 }

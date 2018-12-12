@@ -7,7 +7,6 @@ MAJOR:
 * Game data marshaling/unmarshaling
 * Save game system
 * Scripts processor
-* Moving player between areas/scenarios
 * Game characters inventory and equipment
 * Items
 * Skills

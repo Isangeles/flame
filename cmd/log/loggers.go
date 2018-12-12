@@ -21,18 +21,17 @@
  * 
  */
 
-// Package for engine loggers.
+// Package for CLI loggers.
 package log
 
 import (
 	"log"
-	
+
 	"github.com/isangeles/flame/core/enginelog"
 )
 
 var (
-	Inf *log.Logger = log.New(enginelog.InfLog, "flame-core:", 0)
-	Err *log.Logger = log.New(enginelog.ErrLog, "flame-core:", 0)
-	Dbg *log.Logger = log.New(enginelog.DbgLog, "flame-debug:", 0)
+	Inf *log.Logger = log.New(enginelog.InfLog, "flame-cli:", 0)
+	Err *log.Logger = log.New(enginelog.ErrLog, "flame-cli-err:", 0)
+	Dbg *log.Logger = log.New(enginelog.DbgLog, "flame-cli-debug:", 0)
 )
-

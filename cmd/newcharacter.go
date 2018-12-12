@@ -66,14 +66,11 @@ func newCharacterDialog() (*character.Character, error) {
 				fmt.Printf("%s:", lang.UIText("cli_newchar_name"))
 			}
 		}
-
-		// Race
+		// Race.
 		race = raceDialog()
-
-		// Gender
+		// Gender.
 		sex = genderDialog()
-
-		// Attributes
+		// Attributes.
 		var accept = false
 		for !accept {
 			attrs = newAttributesDialog(attrsPoints)
@@ -86,8 +83,7 @@ func newCharacterDialog() (*character.Character, error) {
 				accept = true
 			}
 		}
-
-		// Summary
+		// Summary.
 		c = character.NewCharacter("player", name, 1, sex, race,
 			character.Friendly, character.NewGuild("none"), attrs,
 			character.True_neutral)
@@ -114,7 +110,6 @@ func raceDialog() character.Race {
 	for i, v := range racesNames {
 		s[i] = v
 	}
-
 	for true {
 		fmt.Printf("[1 - %s, 2 - %s, 3 - %s, 4 - %s]:", s...)
 		scan.Scan()
@@ -133,7 +128,6 @@ func raceDialog() character.Race {
 				input)
 		}
 	}
-
 	return character.Human
 }
 
@@ -147,7 +141,6 @@ func genderDialog() character.Gender {
 	for i, v := range genderNames {
 		s[i] = v
 	}
-
 	for true {
 		fmt.Printf("[1 - %s, 2 - %s]:", s...)
 		scan.Scan()
@@ -162,7 +155,6 @@ func genderDialog() character.Gender {
 				input)
 		}
 	}
-
 	return character.Male
 }
 
@@ -172,7 +164,7 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 	scan := bufio.NewScanner(os.Stdin)
 	fmt.Printf("%s:\n", lang.UIText("cli_newchar_attrs"))
 	for attrsPoints > 0 {
-
+		// Strenght.
 		for true {
 			fmt.Printf("%s[%s = %d, %s = %d]+", lang.UIText("attr_str"),
 				lang.UIText("cli_newchar_value"), attrs.Str,
@@ -181,19 +173,20 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 			input := scan.Text()
 			attr, err := strconv.Atoi(input)
 			if err != nil {
-				fmt.Printf("%s:%s\n", lang.UIText("cli_newchar_nan_error"),
-					input)
+				fmt.Printf("%s:%s\n",
+					lang.UIText("cli_newchar_nan_error"), input)
 			} else {
 				if attrsPoints-attr >= 0 {
 					attrs.Str += attr
 					attrsPoints -= attr
 					break
 				} else {
-					fmt.Printf("%s\n", lang.UIText("cli_newchar_no_pts_error"))
+					fmt.Printf("%s\n",
+						lang.UIText("cli_newchar_no_pts_error"))
 				}
 			}
 		}
-
+		// Constitution.
 		for true {
 			fmt.Printf("%s[%s = %d, %s = %d]+", lang.UIText("attr_con"),
 				lang.UIText("cli_newchar_value"), attrs.Con,
@@ -202,20 +195,21 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 			input := scan.Text()
 			attr, err := strconv.Atoi(input)
 			if err != nil {
-				fmt.Printf("%s:%s\n", lang.UIText("cli_newchar_nan_error"),
-					input)
+				fmt.Printf("%s:%s\n",
+					lang.UIText("cli_newchar_nan_error"), input)
 			} else {
 				if attrsPoints-attr >= 0 {
 					attrs.Con += attr
 					attrsPoints -= attr
 					break
 				} else {
-					fmt.Printf("%s\n", lang.UIText("cli_newchar_no_pts_error"))
+					fmt.Printf("%s\n",
+						lang.UIText("cli_newchar_no_pts_error"))
 				}
 			}
 
 		}
-
+		// Dexterity.
 		for true {
 			fmt.Printf("%s[%s = %d, %s = %d]+", lang.UIText("attr_dex"),
 				lang.UIText("cli_newchar_value"), attrs.Dex,
@@ -224,19 +218,20 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 			input := scan.Text()
 			attr, err := strconv.Atoi(input)
 			if err != nil {
-				fmt.Printf("%s:%s\n", lang.UIText("cli_newchar_nan_error"),
-					input)
+				fmt.Printf("%s:%s\n",
+					lang.UIText("cli_newchar_nan_error"), input)
 			} else {
 				if attrsPoints-attr >= 0 {
 					attrs.Dex += attr
 					attrsPoints -= attr
 					break
 				} else {
-					fmt.Printf("%s\n", lang.UIText("cli_newchar_no_pts_error"))
+					fmt.Printf("%s\n",
+						lang.UIText("cli_newchar_no_pts_error"))
 				}
 			}
 		}
-
+		// Wisdom.
 		for true {
 			fmt.Printf("%s[%s = %d, %s = %d]+", lang.UIText("attr_wis"),
 				lang.UIText("cli_newchar_value"), attrs.Wis,
@@ -245,19 +240,20 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 			input := scan.Text()
 			attr, err := strconv.Atoi(input)
 			if err != nil {
-				fmt.Printf("%s:%s\n", lang.UIText("cli_newchar_nan_error"),
-					input)
+				fmt.Printf("%s:%s\n",
+					lang.UIText("cli_newchar_nan_error"), input)
 			} else {
 				if attrsPoints-attr >= 0 {
 					attrs.Wis += attr
 					attrsPoints -= attr
 					break
 				} else {
-					fmt.Printf("%s\n", lang.UIText("cli_newchar_no_pts_error"))
+					fmt.Printf("%s\n",
+						lang.UIText("cli_newchar_no_pts_error"))
 				}
 			}
 		}
-
+		// Inteligence.
 		for true {
 			fmt.Printf("%s[%s = %d, %s = %d]+", lang.UIText("attr_int"),
 				lang.UIText("cli_newchar_value"), attrs.Int,
@@ -274,7 +270,8 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 					attrsPoints -= attr
 					break
 				} else {
-					fmt.Printf("%s\n", lang.UIText("cli_newchar_no_pts_error"))
+					fmt.Printf("%s\n",
+						lang.UIText("cli_newchar_no_pts_error"))
 				}
 			}
 		}

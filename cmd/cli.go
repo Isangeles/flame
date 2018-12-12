@@ -32,16 +32,15 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/cmd/ci"
 	"github.com/isangeles/flame/cmd/command"
+	"github.com/isangeles/flame/cmd/log"
 )
 
 const (
@@ -55,12 +54,7 @@ const (
 )
 
 var (
-	stdout *log.Logger = log.New(enginelog.InfLog, "flame-cli>", 0)
-	stderr *log.Logger = log.New(enginelog.ErrLog, "flame-cli>", 0)
-	dbglog *log.Logger = log.New(enginelog.DbgLog, "flame-cli-debug>", 0)
-
-	game *core.Game
-
+	game        *core.Game
 	lastCommand string
 )
 
@@ -68,11 +62,11 @@ var (
 func init() {
 	err := flame.LoadConfig()
 	if err != nil {
-		stderr.Printf("fail_to_load_flame_config:%v", err)
+		log.Err.Printf("fail_to_load_flame_config:%v", err)
 	}
 	err = loadConfig()
 	if err != nil {
-		stderr.Printf("fail_to_load_config:%v", err)
+		log.Err.Printf("fail_to_load_config:%v", err)
 	}
 }
 
@@ -87,12 +81,12 @@ func main() {
 			execute(cmd)
 			lastCommand = cmd
 		} else {
-			stdout.Println(input)
+			log.Inf.Println(input)
 		}
 		fmt.Print(INPUT_INDICATOR)
 	}
 	if err := scan.Err(); err != nil {
-		fmt.Printf("input_scanner_init_fail_msg:%v\n", err)
+		log.Err.Printf("input_scanner_init_fail_msg:%v\n", err)
 	}
 }
 
@@ -102,40 +96,40 @@ func execute(input string) {
 	case CLOSE_CMD:
 		err := flame.SaveConfig()
 		if err != nil {
-			stderr.Printf("engine_config_save_fail:%v",
+			log.Err.Printf("engine_config_save_fail:%v",
 				err)
 		}
 		err = saveConfig()
 		if err != nil {
-			stderr.Printf("config_save_fail:%v", err)
+			log.Err.Printf("config_save_fail:%v", err)
 		}
 
 		os.Exit(0)
 	case NEW_CHAR_CMD:
 		createdChar, err := newCharacterDialog()
 		if err != nil {
-			stderr.Printf("%s\n", err)
+			log.Err.Printf("%s\n", err)
 			break
 		}
 		playableChars = append(playableChars, createdChar)
 	case NEW_GAME_CMD:
 		g, err := newGameDialog()
 		if err != nil {
-			stderr.Printf("%s\n", err)
+			log.Err.Printf("%s\n", err)
 			break
 		}
 		game = g
 	case IMPORT_CHARS_CMD:
 		if flame.Mod() == nil {
-			stderr.Printf("no_module_loaded")
+			log.Err.Printf("no_module_loaded")
 			break
 		}
 		chars, err := data.ImportCharactersDir(flame.Mod().CharactersPath())
 		if err != nil {
-			stderr.Printf("fail_to_import_module_characters:%v\n", err)
+			log.Err.Printf("fail_to_import_module_characters:%v\n", err)
 			break
 		}
-		stdout.Printf("imported_chars:%d\n", len(chars))
+		log.Inf.Printf("imported_chars:%d\n", len(chars))
 		for _, c := range chars {
 			playableChars = append(playableChars, c)
 		}
@@ -145,9 +139,9 @@ func execute(input string) {
 	default:
 		cmd, err := command.NewStdCommand(input)
 		if err != nil {
-			stderr.Printf("command_build_error:%v", err)
+			log.Err.Printf("command_build_error:%v", err)
 		}
 		code, msg := ci.HandleCommand(cmd)
-		stdout.Printf("CI[%d]:%s\n", code, msg)
+		log.Inf.Printf("CI[%d]:%s\n", code, msg)
 	}
 }

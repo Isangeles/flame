@@ -26,6 +26,7 @@ package parsexml
 import (
 	"flag"
 	"testing"
+	"os"
 
 	"github.com/isangeles/flame/core/module/object/character"
 )
@@ -34,10 +35,15 @@ var (
 	path = flag.String("path", "", "System path of characters XML base to test parse")
 )
 
-// Test for characters XML base unmarshaling.
+// Test for unmarshaling of characters base.
 // Use '-path' flag to point XML base to test.
 func TestUnmarshalCharactersBase(t *testing.T) {
-	chars, err := UnmarshalCharactersBaseXML(*path)
+	doc, err := os.Open(*path)
+	if err != nil {
+		t.Errorf("base_file_not_found:%s\n", *path)
+		return
+	}
+	chars, err := UnmarshalCharactersBase(doc)
 	if err != nil {
 		t.Errorf("unmarshal_fail:%v\n", err)
 		return
@@ -45,15 +51,15 @@ func TestUnmarshalCharactersBase(t *testing.T) {
 	t.Logf("unmarshal_success:chars_base_size:%d\n", len(chars)) 
 }
 
-// Test for game character XML marshaling.
+// Test for marshaling of game character.
 func TestMarshalCharacter(t *testing.T) {
-	char := character.NewCharacter("test_01", "test", 1, character.MALE,
-		character.HUMAN, character.Friendly, character.NewGuild(""),
+	char := character.NewCharacter("test_01", "test", 1, character.Male,
+		character.Human, character.Friendly, character.NewGuild(""),
 		character.Attributes{1, 1, 1, 1, 1}, character.Lawful_good)
-	out, err := MarshalCharacterXML(char)
+	xml, err := MarshalCharacter(char)
 	if err != nil {
 		t.Errorf("marshal_fail:%v\n", err)
 		return
 	}
-	t.Logf("marshal_success:\n%s\n", string(out[:]))
+	t.Logf("marshal_success:\n%s\n", xml)
 }

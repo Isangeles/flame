@@ -1,7 +1,7 @@
 ## Introduction
   Flame is RPG game engine written from scratch in Go.
   
-  The main goal is to create simple, flexible, extensible and completely modular game engine. Engine provides build-in CLI frontend to easy run and debug modules.
+  The main goal is to create simple, flexible, extensible and completely modular game engine. Engine provides build-in CLI frontend to easy run and debug modules. Engine does not come with any graphical interface, instead is designed to be used with external GUI's(e.g. [Mural](https://github.com/isangeles/mural)).
   
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine, Senlin modules should be compatible with Flame(with some modifications).
   
