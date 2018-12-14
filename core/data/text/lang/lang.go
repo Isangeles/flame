@@ -22,7 +22,6 @@
  */
 
 // Package for connection with transalation data files.
-// @Isangeles
 package lang
 
 import (

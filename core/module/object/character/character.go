@@ -130,6 +130,12 @@ func (c *Character) SightRange() float64 {
 	return c.sight
 }
 
+// SetName sets specified text as character
+// display name.
+func (c *Character) SetName(name string) {
+	c.name = name
+}
+
 // SetPosition sets specified XY position as current
 // position of character.
 func (c *Character) SetPosition(x, y float64) {

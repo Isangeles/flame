@@ -41,6 +41,7 @@ var (
 
 // Module struct represents engine module.
 type Module struct {
+	lang    string
 	conf    Conf
 	chapter *Chapter
 }
@@ -52,13 +53,15 @@ func DefaultModulesPath() string {
 
 // NewModule creates new instance of module with specified configuration
 // and data.
-func NewModule(name, path string) (*Module, error) {
+func NewModule(name, path, lang string) (*Module, error) {
 	m := new(Module)
 	conf, err := loadModConf(name, path)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_config:%v", err)
 	}
 	m.conf = conf
+	// TODO: validate whether lang is supported.
+	m.lang = lang
 	return m, nil
 }
 
@@ -107,6 +110,12 @@ func (m *Module) Chapter() *Chapter {
 // Scenario returns current module scenario.
 func (m *Module) Scenario() *scenario.Scenario {
 	return m.chapter.Scenario()
+}
+
+// LangID return ID of current module
+// language.
+func (m *Module) LangID() string {
+	return m.lang
 }
 
 // CharactersBasePath returns path to XML document with module characters.

@@ -37,6 +37,8 @@ import (
 )
 
 const (
+	LANG_FILE_EXT = ".lang"
+	
 	ID_TEXT_SEP = ":"
 	LINE_TERMINATOR = ";"
 	COMMENT_PREFIX = "#"

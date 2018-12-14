@@ -41,7 +41,8 @@ const (
 )
 
 var (
-	langID = "english" // default eng
+	langID       = "english" // default eng
+	savegamesDir = "/savegames"
 )
 
 // loadConfig loads engine configuration file.
@@ -49,23 +50,6 @@ func LoadConfig() error {
 	confModVal, err := text.ReadConfigValue(CONFIG_FILE_NAME, "module")
 	if err != nil {
 		return err
-	}
-	modNamePath := strings.Split(confModVal[0], ";")
-	if modNamePath[0] != "" {
-		var m *module.Module
-		if len(modNamePath) < 2 {
-			m, err = module.NewModule(modNamePath[0],
-				module.DefaultModulesPath())
-		} else {
-			m, err = module.NewModule(modNamePath[0], modNamePath[1])
-		}
-		if err != nil {
-			return err
-		}
-		SetModule(m)
-		if err != nil {
-			return err
-		}
 	}
 	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", "debug")
 	if err != nil {
@@ -75,6 +59,25 @@ func LoadConfig() error {
 
 	langID = confValues[0]
 	enginelog.EnableDebug(confValues[1] == "true")
+	// Auto load module.
+	modNamePath := strings.Split(confModVal[0], ";")
+	if modNamePath[0] != "" {
+		var m *module.Module
+		if len(modNamePath) < 2 {
+			m, err = module.NewModule(modNamePath[0],
+				module.DefaultModulesPath(), langID)
+		} else {
+			m, err = module.NewModule(modNamePath[0],
+				modNamePath[1], langID)
+		}
+		if err != nil {
+			return err
+		}
+		SetModule(m)
+		if err != nil {
+			return err
+		}
+	}
 	
 	log.Dbg.Print("config file loaded")
 	return nil

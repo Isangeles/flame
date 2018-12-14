@@ -101,10 +101,11 @@ func loadEngineOption(cmd Command) (int, string) {
 			err error
 		)
 		if len(cmd.Args()) > 1 {
-			m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1])
+			m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1],
+				flame.LangID())
 		} else {
 			m, err = module.NewModule(cmd.Args()[0],
-				module.DefaultModulesPath())
+				module.DefaultModulesPath(), flame.LangID())
 		}
 		if err != nil {
 			return 8, fmt.Sprintf("%s:module_load_fail:%s",

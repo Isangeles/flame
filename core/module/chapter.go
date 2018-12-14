@@ -40,7 +40,7 @@ type Chapter struct {
 	scensIDs    []string
 	startScenId string
 
-	module      *Module
+	mod         *Module
 	scenario    *scenario.Scenario
 	loadedScens []*scenario.Scenario
 	npcs        []*character.Character
@@ -51,14 +51,14 @@ func NewChapter(mod *Module, id string) (*Chapter, error) {
 	c := new(Chapter)
 	c.id = id
 	c.path = mod.ChaptersPath()
-	c.module = mod
+	c.mod = mod
 	err := c.loadConf()
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_config:%v", err)
 	}
 	startScenarioPath := filepath.FromSlash(c.ScenariosPath() + "/" +
 		c.startScenId)
-	s, err := data.Scenario(startScenarioPath, c.NPCPath())
+	s, err := data.Scenario(startScenarioPath, c.NPCPath(), c.LangPath())
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
 	}
@@ -89,6 +89,13 @@ func (c *Chapter) ScenariosPath() string {
 	return filepath.FromSlash(c.FullPath() + "/area/scenarios")
 }
 
+// LangPath returns path to chapter
+// lang directory.
+func (c *Chapter) LangPath() string {
+	return filepath.FromSlash(c.FullPath() + "/lang" +
+		c.mod.LangID())
+}
+
 // NPCPath returns path to chapter NPCs
 // directory.
 func (c *Chapter) NPCPath() string {
@@ -103,7 +110,7 @@ func (c *Chapter) AreasPath() string {
 
 // Module returns chapter module.
 func (c *Chapter) Module() *Module {
-	return c.module
+	return c.mod
 }
 
 // Scneario returns current chapter scenario.
@@ -124,7 +131,7 @@ func (c *Chapter) ChangeScenario(scenID string) error {
 		if sID == scenID {
 			scenPath := filepath.FromSlash(c.ScenariosPath() + "/" +
 				sID)
-			s, err := data.Scenario(scenPath, c.NPCPath())
+			s, err := data.Scenario(scenPath, c.NPCPath(), c.LangPath())
 			if err != nil {
 				return fmt.Errorf("fail_to_retrieve_scenario:%v", err)
 			}

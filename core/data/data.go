@@ -35,6 +35,7 @@ import (
 	"strings"
 	
 	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/log"
@@ -46,7 +47,7 @@ const (
 
 // Scenario parses file on specified path
 // to chapter scenario.
-func Scenario(scenPath, npcsDirPath string) (*scenario.Scenario, error) {
+func Scenario(scenPath, npcsDirPath, langDirPath string) (*scenario.Scenario, error) {
 	docScen, err := os.Open(scenPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_scenario_file:%v", err)
@@ -58,7 +59,7 @@ func Scenario(scenPath, npcsDirPath string) (*scenario.Scenario, error) {
 		return nil, fmt.Errorf("fail_to_open_characters_base_file:%v", err)
 	}
 	defer docNPCs.Close()
-	
+	npcsLangPath := filepath.FromSlash(langDirPath + "/npc" + text.LANG_FILE_EXT)
 	xmlScen, err := parsexml.UnmarshalScenario(docScen)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_parse_scenario_file:%v", err)
@@ -83,6 +84,8 @@ func Scenario(scenPath, npcsDirPath string) (*scenario.Scenario, error) {
 			continue
 		}
 		char.SetPosition(x, y)
+		name := text.ReadDisplayText(npcsLangPath, char.ID())
+		char.SetName(name[0])
 		mainarea.AddCharacter(char)
 	}
 	subareas := make([]*scenario.Area, 0)
