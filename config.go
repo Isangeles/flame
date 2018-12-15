@@ -62,17 +62,18 @@ func LoadConfig() error {
 	// Auto load module.
 	modNamePath := strings.Split(confModVal[0], ";")
 	if modNamePath[0] != "" {
-		var m *module.Module
+		var mc module.Conf
 		if len(modNamePath) < 2 {
-			m, err = module.NewModule(modNamePath[0],
+			mc, err = module.ModConf(modNamePath[0],
 				module.DefaultModulesPath(), langID)
 		} else {
-			m, err = module.NewModule(modNamePath[0],
+			mc, err = module.ModConf(modNamePath[0],
 				modNamePath[1], langID)
 		}
 		if err != nil {
 			return err
 		}
+		m := module.NewModule(mc)
 		SetModule(m)
 		if err != nil {
 			return err

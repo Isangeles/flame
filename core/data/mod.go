@@ -1,5 +1,5 @@
 /*
- * conf.go
+ * mod.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -21,32 +21,5 @@
  * 
  */
 
-package module
+package data
 
-import (
-	"path/filepath"
-)
-
-// Conf struct represents module configuration.
-type Conf struct {
-	Name, Path, Lang string
-	NewcharAttrsMax  int
-	NewcharAttrsMin  int
-	Chapters         []string
-}
-
-// FullPath return full path to module directory.
-func (c Conf) FullPath() string {
-	return filepath.FromSlash(c.Path + "/" + c.Name)
-}
-
-// ChaptersPath returns path to module chapters.
-func (c Conf) ChaptersPath() string {
-	return filepath.FromSlash(c.FullPath() + "/chapters")
-}
-
-// CharactersPath returns path to directory for
-// exported characters.
-func (c Conf) CharactersPath() string {
-	return filepath.FromSlash(c.FullPath() + "/characters")
-}

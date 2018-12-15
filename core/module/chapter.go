@@ -36,10 +36,7 @@ import (
 
 // Chapter struct represents module chapter
 type Chapter struct {
-	id, path    string
-	scensIDs    []string
-	startScenId string
-
+	conf        ChapterConf
 	mod         *Module
 	scenario    *scenario.Scenario
 	loadedScens []*scenario.Scenario
@@ -47,17 +44,12 @@ type Chapter struct {
 } 
 
 // NewChapters creates new instance of module chapter.
-func NewChapter(mod *Module, id string) (*Chapter, error) {
+func NewChapter(mod *Module, conf ChapterConf) (*Chapter, error) {
 	c := new(Chapter)
-	c.id = id
-	c.path = mod.ChaptersPath()
 	c.mod = mod
-	err := c.loadConf()
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_config:%v", err)
-	}
+	c.conf = conf
 	startScenarioPath := filepath.FromSlash(c.ScenariosPath() + "/" +
-		c.startScenId)
+		c.conf.StartScenID)
 	s, err := data.Scenario(startScenarioPath, c.NPCPath(), c.LangPath())
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
@@ -70,12 +62,12 @@ func NewChapter(mod *Module, id string) (*Chapter, error) {
 
 // ID returns chapter ID.
 func (c *Chapter) ID() string {
-	return c.id
+	return c.conf.ID
 }
 
 // FullPath returns path to chapter directory.
 func (c *Chapter) FullPath() string {
-	return filepath.FromSlash(c.path + "/" + c.id)
+	return filepath.FromSlash(c.conf.Path)
 }
 
 // ConfPath returns path to chapter configuration file.
@@ -127,7 +119,7 @@ func (c *Chapter) ChangeScenario(scenID string) error {
 			return nil
 		}
 	}
-	for _, sID := range c.scensIDs {
+	for _, sID := range c.conf.Scenarios {
 		if sID == scenID {
 			scenPath := filepath.FromSlash(c.ScenariosPath() + "/" +
 				sID)
@@ -212,13 +204,18 @@ func (c *Chapter) generateSerials() {
 	}
 }
 
-// loadConf loads configuration file for this chapter,
+// ChapterConf loads chapter configuration file,
 // returns error if configuration not found or corrupted.
-func (c *Chapter) loadConf() error {
-	confValues, err := text.ReadConfigValue(c.ConfPath(), "start_scenario")
+func LoadChapterConf(chapterPath string) (ChapterConf, error) {
+	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
+	confValues, err := text.ReadConfigValue(confPath, "start_scenario")
 	if err != nil {
-		return fmt.Errorf("fail_to_read_conf_values:%v", err)
+		return ChapterConf{}, fmt.Errorf("fail_to_read_conf_values:%v",
+			err)
 	}
-	c.startScenId = confValues[0]
-	return nil
+	conf := ChapterConf{
+		Path:chapterPath,
+		StartScenID:confValues[0],
+	}
+	return conf, nil
 }

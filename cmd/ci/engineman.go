@@ -97,20 +97,21 @@ func loadEngineOption(cmd Command) (int, string) {
 		}
 
 		var (
-			m  *module.Module
+			mc  module.Conf
 			err error
 		)
 		if len(cmd.Args()) > 1 {
-			m, err = module.NewModule(cmd.Args()[0], cmd.Args()[1],
+			mc, err = module.ModConf(cmd.Args()[0], cmd.Args()[1],
 				flame.LangID())
 		} else {
-			m, err = module.NewModule(cmd.Args()[0],
+			mc, err = module.ModConf(cmd.Args()[0],
 				module.DefaultModulesPath(), flame.LangID())
 		}
 		if err != nil {
 			return 8, fmt.Sprintf("%s:module_load_fail:%s",
 				ENGINE_MAN, err)
 		}
+		m := module.NewModule(mc)
 		flame.SetModule(m)
 
 		return 0, ""

@@ -41,7 +41,6 @@ var (
 
 // Module struct represents engine module.
 type Module struct {
-	lang    string
 	conf    Conf
 	chapter *Chapter
 }
@@ -53,22 +52,24 @@ func DefaultModulesPath() string {
 
 // NewModule creates new instance of module with specified configuration
 // and data.
-func NewModule(name, path, lang string) (*Module, error) {
+func NewModule(conf Conf) *Module {
 	m := new(Module)
-	conf, err := loadModConf(name, path)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_config:%v", err)
-	}
 	m.conf = conf
-	// TODO: validate whether lang is supported.
-	m.lang = lang
-	return m, nil
+	return m
 }
 
 // Jumps to next module chapter.
 func (m *Module) NextChapter() error {
 	// TODO: for now only start chapter.
-	c, err := NewChapter(m, m.conf.Chapters[0])
+	chapPath := filepath.FromSlash(m.ChaptersPath() +
+		"/" + m.conf.Chapters[0])
+	chapConf, err := LoadChapterConf(chapPath)
+	if err != nil {
+		return fmt.Errorf("fail_to_read_chapter_conf:%s:%v",
+			chapPath, err)
+	}
+	chapConf.ID = m.conf.Chapters[0]
+	c, err := NewChapter(m, chapConf)
 	if err != nil {
 		return fmt.Errorf("fail_to_set_next_chapter:%v", err)
 	}
@@ -88,18 +89,18 @@ func (m *Module) Path() string {
 
 // FullPath return full path to module directory.
 func (m *Module) FullPath() string {
-	return filepath.FromSlash(m.Path() + "/" + m.Name())
+	return m.conf.FullPath()
 }
 
 // ChaptersPath returns path to module chapters.
 func (m *Module) ChaptersPath() string {
-	return filepath.FromSlash(m.FullPath() + "/chapters")
+	return m.conf.ChaptersPath()
 }
 
 // CharactersPath returns path to directory for
 // exported characters.
 func (m *Module) CharactersPath() string {
-	return filepath.FromSlash(m.FullPath() + "/characters")
+	return m.conf.CharactersPath()
 }
 
 // Chapter returns current module chapter.
@@ -115,7 +116,7 @@ func (m *Module) Scenario() *scenario.Scenario {
 // LangID return ID of current module
 // language.
 func (m *Module) LangID() string {
-	return m.lang
+	return m.conf.Lang
 }
 
 // CharactersBasePath returns path to XML document with module characters.
@@ -150,9 +151,9 @@ func (m *Module) Character(serialID string) *character.Character {
 	return m.Chapter().Character(serialID)
 }
 
-// loadModConf loads module configuration file
+// ModConf loads module configuration file
 // from specified path.
-func loadModConf(name, path string) (Conf, error) {
+func ModConf(name, path, lang string) (Conf, error) {
 	if _, err := os.Stat(path + string(os.PathSeparator) + name);
 	os.IsNotExist(err) {
 		return Conf{}, fmt.Errorf("module_not_found:'%s' in:'%s'",
@@ -177,11 +178,10 @@ func loadModConf(name, path string) (Conf, error) {
 	conf := Conf{
 		Name:name,
 		Path:path,
+		Lang:lang,
 		NewcharAttrsMin:confValues[0],
 		NewcharAttrsMax:confValues[1],
 		Chapters:chapters,
 	}
 	return conf, nil
 }
-
-
