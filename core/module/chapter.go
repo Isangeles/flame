@@ -27,9 +27,7 @@ import (
 	"fmt"
 	"path/filepath"
 	//"strings"
-
-	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/data/text"
+	
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/object/character"
 )
@@ -38,7 +36,6 @@ import (
 type Chapter struct {
 	conf        ChapterConf
 	mod         *Module
-	scenario    *scenario.Scenario
 	loadedScens []*scenario.Scenario
 	npcs        []*character.Character
 } 
@@ -48,15 +45,6 @@ func NewChapter(mod *Module, conf ChapterConf) (*Chapter, error) {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = conf
-	startScenarioPath := filepath.FromSlash(c.ScenariosPath() + "/" +
-		c.conf.StartScenID)
-	s, err := data.Scenario(startScenarioPath, c.NPCPath(), c.LangPath())
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
-	}
-	c.loadedScens = append(c.loadedScens, s)
-	c.scenario = s
-	c.generateSerials()
 	return c, nil
 }
 
@@ -68,11 +56,6 @@ func (c *Chapter) ID() string {
 // FullPath returns path to chapter directory.
 func (c *Chapter) FullPath() string {
 	return filepath.FromSlash(c.conf.Path)
-}
-
-// ConfPath returns path to chapter configuration file.
-func (c *Chapter) ConfPath() string {
-	return filepath.FromSlash(c.FullPath() + "/chapter.conf")
 }
 
 // ScenariosPath returns path to chapter
@@ -105,35 +88,31 @@ func (c *Chapter) Module() *Module {
 	return c.mod
 }
 
-// Scneario returns current chapter scenario.
-func (c *Chapter) Scenario() *scenario.Scenario {
-	return c.scenario
+// Scenario returns active(loaded) scenario with specified ID,
+// or error if no such scenario was found.
+func (c *Chapter) Scenario(scenID string) (*scenario.Scenario, error) {
+	for _, s := range c.loadedScens {
+		return s, nil
+	}
+	return nil, fmt.Errorf("loaded_scenario_not_found:%s", scenID)
 }
 
-// ChangeScenario changes current scenario to scenario
-// with specified ID.
-func (c *Chapter) ChangeScenario(scenID string) error {
-	for _, s := range c.loadedScens {
-		if s.ID() == scenID {
-			c.scenario = s
-			return nil
+// AddScenario add specified scenario to loaded
+// scenarios list.
+func (c *Chapter) AddScenario(scen *scenario.Scenario) error {
+	for _, s := range c.loadedScens { // check if scenario is already added
+		if s.ID() == scen.ID() { // prevent scenrios duplication
+			return fmt.Errorf("scenario_already_added:%s", scen.ID())
 		}
 	}
-	for _, sID := range c.conf.Scenarios {
-		if sID == scenID {
-			scenPath := filepath.FromSlash(c.ScenariosPath() + "/" +
-				sID)
-			s, err := data.Scenario(scenPath, c.NPCPath(), c.LangPath())
-			if err != nil {
-				return fmt.Errorf("fail_to_retrieve_scenario:%v", err)
-			}
-			c.scenario = s
-			c.loadedScens = append(c.loadedScens, s)
-			c.generateSerials()
-			return nil
-		}
-	}
-	return fmt.Errorf("scenario_not_found:%s", scenID)
+	c.loadedScens = append(c.loadedScens, scen)
+	c.generateSerials() // generate serials for all new objects
+	return nil
+}
+
+// Conf returns chapter configuration.
+func (c *Chapter) Conf() ChapterConf {
+	return c.conf
 }
 
 // Characters returns list with all existing(loaded)
@@ -179,6 +158,21 @@ func (c *Chapter) Character(serialID string) *character.Character {
 	return nil
 }
 
+// CharacterArea returns area where specified character
+// is present, or error if there is no such area.
+func (c *Chapter) CharacterArea(char *character.Character) (*scenario.Area, error) {
+	for _, s := range c.loadedScens {
+		for _, a := range s.Areas() {
+			for _, c := range a.Characters() {
+				if c.SerialID() == char.SerialID() {
+					return a, nil
+				}
+			}
+		}
+	}
+	return nil, fmt.Errorf("character not found in any active scenario")
+}
+
 // GenerateSerial sets unique serial value for specified
 // object with serial ID.
 func (c *Chapter) GenerateCharacterSerial(char *character.Character) {
@@ -202,20 +196,4 @@ func (c *Chapter) generateSerials() {
 		}
 		c.GenerateCharacterSerial(char)
 	}
-}
-
-// ChapterConf loads chapter configuration file,
-// returns error if configuration not found or corrupted.
-func LoadChapterConf(chapterPath string) (ChapterConf, error) {
-	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
-	confValues, err := text.ReadConfigValue(confPath, "start_scenario")
-	if err != nil {
-		return ChapterConf{}, fmt.Errorf("fail_to_read_conf_values:%v",
-			err)
-	}
-	conf := ChapterConf{
-		Path:chapterPath,
-		StartScenID:confValues[0],
-	}
-	return conf, nil
 }

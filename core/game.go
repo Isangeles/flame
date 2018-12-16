@@ -26,7 +26,9 @@ package core
 
 import (
 	"fmt"
+	"path/filepath"
 
+	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
@@ -41,17 +43,34 @@ type Game struct {
 }
 
 // NewGame returns new instance of game struct.
-func NewGame(mod *module.Module, players []*character.Character) *Game {
+func NewGame(mod *module.Module, players []*character.Character) (*Game, error) {
 	g := new(Game)
 	g.mod = mod
 	g.pcs = players
-	// All players to start area.
-	startArea := g.Module().Scenario().Area()
-	for _, pc := range g.pcs {
-		g.ChangePlayerArea(startArea, pc.SerialID())
-		g.Module().Chapter().GenerateCharacterSerial(pc)
+	// Load start scenario.
+	chapter := g.Module().Chapter()
+	startScenarioPath := filepath.FromSlash(chapter.ScenariosPath() + "/" +
+		chapter.Conf().StartScenID)
+	startScen, err := data.Scenario(startScenarioPath, chapter.NPCPath(), chapter.LangPath())
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
 	}
-	return g
+	// All players to start area.
+	startArea := startScen.Area()
+	for _, pc := range g.pcs {
+		err := g.ChangePlayerArea(startArea, pc.SerialID())
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_change_player_area:%v",
+				err)
+		}
+		chapter.GenerateCharacterSerial(pc)
+	}
+	err = chapter.AddScenario(startScen)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_add_start_scenario_to_chapter:%v",
+			err)
+	}
+	return g, nil
 }
 
 // Module returns game module.
@@ -100,16 +119,10 @@ func (g *Game) PlayerArea(serialID string) (*scenario.Area, error) {
 		return nil, fmt.Errorf("player_not_found:%v", serialID)
 	}
 
-	for _, a := range g.mod.Scenario().Areas() {
-		if a.ContainsCharacter(pc) {
-			return a, nil
-		}
+	area, err := g.Module().Chapter().CharacterArea(pc)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_retrive_player_area:%v",
+			err)
 	}
-	return nil, fmt.Errorf("player_not_found_in_any_scenario_area:%v", serialID)
-}
-
-// AreaCharacters returns all characters in current
-// area.
-func (g *Game) AreaCharacters() []*character.Character {
-	return g.Module().Chapter().Scenario().Area().Characters()
+	return area, nil
 }

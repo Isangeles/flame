@@ -25,14 +25,9 @@
 package module
 
 import (
-	"fmt"
 	"path/filepath"
-	"os"
-	"strings"
 
-	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/scenario"
 )
 
 var (
@@ -41,7 +36,7 @@ var (
 
 // Module struct represents engine module.
 type Module struct {
-	conf    Conf
+	conf    ModConf
 	chapter *Chapter
 }
 
@@ -52,15 +47,16 @@ func DefaultModulesPath() string {
 
 // NewModule creates new instance of module with specified configuration
 // and data.
-func NewModule(conf Conf) *Module {
+func NewModule(conf ModConf) *Module {
 	m := new(Module)
 	m.conf = conf
 	return m
 }
 
 // Jumps to next module chapter.
-func (m *Module) NextChapter() error {
+func (m *Module) SetChapter(chapter *Chapter) error {
 	// TODO: for now only start chapter.
+	/*
 	chapPath := filepath.FromSlash(m.ChaptersPath() +
 		"/" + m.conf.Chapters[0])
 	chapConf, err := LoadChapterConf(chapPath)
@@ -73,7 +69,8 @@ func (m *Module) NextChapter() error {
 	if err != nil {
 		return fmt.Errorf("fail_to_set_next_chapter:%v", err)
 	}
-	m.chapter = c
+        */
+	m.chapter = chapter
 	return nil
 }
 
@@ -89,7 +86,7 @@ func (m *Module) Path() string {
 
 // FullPath return full path to module directory.
 func (m *Module) FullPath() string {
-	return m.conf.FullPath()
+	return m.conf.Path
 }
 
 // ChaptersPath returns path to module chapters.
@@ -108,9 +105,9 @@ func (m *Module) Chapter() *Chapter {
 	return m.chapter
 }
 
-// Scenario returns current module scenario.
-func (m *Module) Scenario() *scenario.Scenario {
-	return m.chapter.Scenario()
+// Conf returns module configuration.
+func (m *Module) Conf() ModConf {
+	return m.conf
 }
 
 // LangID return ID of current module
@@ -149,39 +146,4 @@ func (m *Module) ChaptersIds() []string {
 // character was found.
 func (m *Module) Character(serialID string) *character.Character {
 	return m.Chapter().Character(serialID)
-}
-
-// ModConf loads module configuration file
-// from specified path.
-func ModConf(name, path, lang string) (Conf, error) {
-	if _, err := os.Stat(path + string(os.PathSeparator) + name);
-	os.IsNotExist(err) {
-		return Conf{}, fmt.Errorf("module_not_found:'%s' in:'%s'",
-			name, path)
-	}
-	modConfPath := filepath.FromSlash(path + "/" + name + "/mod.conf")
-	confValues, err := text.ReadConfigInt(modConfPath, "new_char_attrs_min",
-		"new_char_attrs_max")
-	if err != nil {
-		return Conf{}, fmt.Errorf("fail_to_retrieve_int_values:%s",
-			err)
-	}
-	confChapters, err := text.ReadConfigValue(modConfPath, "chapters")
-	if err != nil {
-		return Conf{}, fmt.Errorf("fail_to_retrieve_chapters_ids:%s",
-			err)
-	}
-	chapters := strings.Split(confChapters[0], ";")
-	if len(chapters) < 1 {
-		return Conf{}, fmt.Errorf("no_chapters_specified")
-	}
-	conf := Conf{
-		Name:name,
-		Path:path,
-		Lang:lang,
-		NewcharAttrsMin:confValues[0],
-		NewcharAttrsMax:confValues[1],
-		Chapters:chapters,
-	}
-	return conf, nil
 }

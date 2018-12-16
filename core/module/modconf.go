@@ -1,5 +1,5 @@
 /*
- * chapterconf.go
+ * modconf.go
  * 
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  * 
@@ -23,10 +23,25 @@
 
 package module
 
-type ChapterConf struct {
-	ID          string
-	StartScenID string
-	Scenarios   []string
+import (
+	"path/filepath"
+)
+
+// ModConf struct represents module configuration.
+type ModConf struct {
+	Name, Path, Lang string
+	NewcharAttrsMax  int
+	NewcharAttrsMin  int
+	Chapters         []string
 }
 
-func 
+// ChaptersPath returns path to module chapters.
+func (c ModConf) ChaptersPath() string {
+	return filepath.FromSlash(c.Path + "/chapters")
+}
+
+// CharactersPath returns path to directory for
+// exported characters.
+func (c ModConf) CharactersPath() string {
+	return filepath.FromSlash(c.Path + "/characters")
+}

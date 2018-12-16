@@ -25,10 +25,12 @@ package ci
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
 // Handles specified engine command,
@@ -96,17 +98,15 @@ func loadEngineOption(cmd Command) (int, string) {
 				ENGINE_MAN, cmd.OptionArgs()[1])
 		}
 
-		var (
-			mc  module.Conf
-			err error
-		)
+		var modPath string
 		if len(cmd.Args()) > 1 {
-			mc, err = module.ModConf(cmd.Args()[0], cmd.Args()[1],
-				flame.LangID())
+			modPath = filepath.FromSlash(cmd.Args()[1] + "/" +
+				cmd.Args()[0])
 		} else {
-			mc, err = module.ModConf(cmd.Args()[0],
-				module.DefaultModulesPath(), flame.LangID())
+			modPath = filepath.FromSlash(module.DefaultModulesPath() + "/" +
+				cmd.Args()[0])
 		}
+		mc, err := data.LoadModConf(modPath, flame.LangID())
 		if err != nil {
 			return 8, fmt.Sprintf("%s:module_load_fail:%s",
 				ENGINE_MAN, err)

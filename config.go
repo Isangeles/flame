@@ -28,8 +28,10 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"path/filepath"
 	//"runtime/debug"
 
+	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/core/module"
@@ -62,16 +64,17 @@ func LoadConfig() error {
 	// Auto load module.
 	modNamePath := strings.Split(confModVal[0], ";")
 	if modNamePath[0] != "" {
-		var mc module.Conf
+		var modPath string
 		if len(modNamePath) < 2 {
-			mc, err = module.ModConf(modNamePath[0],
-				module.DefaultModulesPath(), langID)
+			modPath = filepath.FromSlash(module.DefaultModulesPath() +
+				"/" + modNamePath[0])
 		} else {
-			mc, err = module.ModConf(modNamePath[0],
-				modNamePath[1], langID)
+			modPath = filepath.FromSlash(modNamePath[1])
 		}
+		mc, err := data.LoadModConf(modPath, LangID())
 		if err != nil {
-			return err
+			return fmt.Errorf("fail_to_load_module_config:%v",
+				err)
 		}
 		m := module.NewModule(mc)
 		SetModule(m)

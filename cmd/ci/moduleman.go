@@ -67,17 +67,9 @@ func showModuleOption(cmd Command) (int, string) {
 		if flame.Game() == nil {
 			return 8, fmt.Sprintf("%s:no_game_loaded", MODULE_MAN)
 		}
-		charsIDs := ""
-		for _, c := range flame.Game().AreaCharacters() { 
-			charsIDs = charsIDs + c.SerialID() + ","
-		}
-		return 0, charsIDs
+		return 10, "unsupported yet"
 	case "scenario":
-		scen := flame.Mod().Scenario()
-		if scen == nil {
-			return 8, fmt.Sprintf("%s:no_current_scenario", MODULE_MAN)
-		}
-		return 0, fmt.Sprintf("%s(area:%s)", scen.ID(), scen.Area().ID())
+		return 10, "unsupported yet"
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
