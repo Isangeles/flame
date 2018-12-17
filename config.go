@@ -71,12 +71,11 @@ func LoadConfig() error {
 		} else {
 			modPath = filepath.FromSlash(modNamePath[1])
 		}
-		mc, err := data.LoadModConf(modPath, LangID())
+		m, err := data.Module(modPath, LangID())
 		if err != nil {
-			return fmt.Errorf("fail_to_load_module_config:%v",
+			return fmt.Errorf("fail_to_load_module:%v",
 				err)
 		}
-		m := module.NewModule(mc)
 		SetModule(m)
 		if err != nil {
 			return err

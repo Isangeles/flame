@@ -29,13 +29,120 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/scenario"
 )
 
-// LoadModConf loads module configuration file
+// Module creates new module from specified path.
+func Module(path, langID string) (*module.Module, error) {
+	// Load module config file.
+	mc, err := modConf(path, langID)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_config:%v",
+			err)
+	}
+	// Create module.
+	m := module.NewModule(mc)
+	return m, nil
+}
+
+// LoadChapter loads module chapter with
+// specified ID.
+func LoadChapter(mod *module.Module, id string) error {
+	// Load chapter config file.
+	chapPath := filepath.FromSlash(mod.ChaptersPath() +
+		"/" + mod.Conf().Chapters[0])
+	chapConf, err := chapterConf(chapPath)
+	if err != nil {
+		return fmt.Errorf("fail_to_read_chapter_conf:%s:%v",
+			chapPath, err)
+	}
+	chapConf.ID = id
+	// Create chapter & set as current module
+	// chapter.
+	startChap := module.NewChapter(mod, chapConf)
+	err = mod.SetChapter(startChap) // move to start chapter
+	if err != nil {
+		return fmt.Errorf("fail_to_mod_chapter:%v",
+			err)
+	}
+	return nil
+}
+
+// LoadScenario loads scenario with specified
+// ID for current module chapter.
+func LoadScenario(mod *module.Module, id string) error {
+	// Check whether mod has active chapter.
+	chap := mod.Chapter()
+	if chap == nil {
+		return fmt.Errorf("no module chapter set")
+	}
+	// Create scenario.
+	scenPath := filepath.FromSlash(chap.ScenariosPath() + "/" +
+		id)
+	docScen, err := os.Open(scenPath)
+	if err != nil {
+		return fmt.Errorf("fail_to_open_scenario_file:%v", err)
+	}
+	defer docScen.Close()
+	npcsBasePath := filepath.FromSlash(chap.NPCPath() + "/npc" + CHARS_FILE_EXT)
+	docNPCs, err := os.Open(npcsBasePath)
+	if err != nil {
+		return fmt.Errorf("fail_to_open_characters_base_file:%v", err)
+	}
+	defer docNPCs.Close()
+	npcsLangPath := filepath.FromSlash(chap.LangPath() + "/npc" + text.LANG_FILE_EXT)
+	xmlScen, err := parsexml.UnmarshalScenario(docScen)
+	if err != nil {
+		return fmt.Errorf("fail_to_parse_scenario_file:%v", err)
+	}
+	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
+	for _, xmlAreaChar := range xmlScen.Mainarea.NPCs.Characters {
+		charXML, err := parsexml.UnmarshalCharacter(docNPCs, xmlAreaChar.ID)
+		if err != nil {
+			log.Err.Printf("data_scenario_unmarshal_npc:%s:fail:%v",
+				xmlAreaChar.ID, err)
+			continue
+		}
+		char, err := buildXMLCharacter(&charXML)
+		if err != nil {
+			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",
+				xmlAreaChar.ID, err)
+		}
+		x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)
+		if err != nil {
+			log.Err.Printf("data_scenario_spawn_npc:%s:unmarshal_position_fail:%v",
+				xmlAreaChar.ID, err)
+			continue
+		}
+		char.SetPosition(x, y)
+		name := text.ReadDisplayText(npcsLangPath, char.ID())
+		char.SetName(name[0])
+		mod.AssignSerial(char)
+		mainarea.AddCharacter(char)
+	}
+	subareas := make([]*scenario.Area, 0)
+	for _, xmlArea := range xmlScen.Subareas {
+		area := scenario.NewArea(xmlArea.ID)
+		// TODO: area NPCs.
+		subareas = append(subareas, area)
+	}
+	scen := scenario.NewScenario(xmlScen.ID, mainarea, subareas)
+	// Add scenario to active module chapter.
+	err = chap.AddScenario(scen)
+	if err != nil {
+		return fmt.Errorf("fail_to_add_scenario_to_chapter:%v",
+			err)
+	}
+	return nil
+}
+
+// modConf loads module configuration file
 // from specified path.
-func LoadModConf(path, lang string) (module.ModConf, error) {
+func modConf(path, lang string) (module.ModConf, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return module.ModConf{}, fmt.Errorf("module_not_found:'%s':%v",
 			path, err)
@@ -67,9 +174,9 @@ func LoadModConf(path, lang string) (module.ModConf, error) {
 	return conf, nil
 }
 
-// ChapterConf loads chapter configuration file,
+// chapterConf loads chapter configuration file,
 // returns error if configuration not found or corrupted.
-func LoadChapterConf(chapterPath string) (module.ChapterConf, error) {
+func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
 	confValues, err := text.ReadConfigValue(confPath, "start_scenario")
 	if err != nil {

@@ -26,7 +26,6 @@ package core
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
@@ -49,26 +48,26 @@ func NewGame(mod *module.Module, players []*character.Character) (*Game, error) 
 	g.pcs = players
 	// Load start scenario.
 	chapter := g.Module().Chapter()
-	startScenarioPath := filepath.FromSlash(chapter.ScenariosPath() + "/" +
+	err := data.LoadScenario(g.Module(),
 		chapter.Conf().StartScenID)
-	startScen, err := data.Scenario(startScenarioPath, chapter.NPCPath(), chapter.LangPath())
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
+		return nil, fmt.Errorf("fail_to_load_stars_scenario:%v",
+			err)
 	}
-	// All players to start area.
-	startArea := startScen.Area()
+	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_retrieve_start_scenario:%v",
+			err)
+	}
+	// All players to main area of start scenario.
+	startArea := startScen.Mainarea()
 	for _, pc := range g.pcs {
+		g.Module().AssignSerial(pc)
 		err := g.ChangePlayerArea(startArea, pc.SerialID())
 		if err != nil {
 			return nil, fmt.Errorf("fail_to_change_player_area:%v",
 				err)
 		}
-		chapter.GenerateCharacterSerial(pc)
-	}
-	err = chapter.AddScenario(startScen)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_add_start_scenario_to_chapter:%v",
-			err)
 	}
 	return g, nil
 }

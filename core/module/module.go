@@ -25,6 +25,7 @@
 package module
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/isangeles/flame/core/module/object/character"
@@ -146,4 +147,21 @@ func (m *Module) ChaptersIds() []string {
 // character was found.
 func (m *Module) Character(serialID string) *character.Character {
 	return m.Chapter().Character(serialID)
+}
+
+// AssignSerial sets unique serial value for
+// specified object with serial value.
+// Returns error if no active chapter set.
+func (m *Module) AssignSerial(ob Serializer) error {
+	chapter := m.Chapter()
+	if chapter == nil {
+		return fmt.Errorf("no active chapter set")
+	}
+	// TODO: proper reflect switch.
+	switch ob.(type) {
+	case *character.Character:
+		char, _ := ob.(*character.Character)
+		m.Chapter().AssignCharacterSerial(char)	
+	}
+	return nil
 }

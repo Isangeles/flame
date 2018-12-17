@@ -35,8 +35,6 @@ import (
 	"strings"
 	
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/data/text"
-	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/log"
 )
@@ -44,59 +42,6 @@ import (
 const (
 	CHARS_FILE_EXT = ".characters"
 )
-
-// Scenario parses file on specified path
-// to chapter scenario.
-func Scenario(scenPath, npcsDirPath, langDirPath string) (*scenario.Scenario, error) {
-	docScen, err := os.Open(scenPath)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_scenario_file:%v", err)
-	}
-	defer docScen.Close()
-	npcsBasePath := filepath.FromSlash(npcsDirPath + "/npc" + CHARS_FILE_EXT)
-	docNPCs, err := os.Open(npcsBasePath)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_characters_base_file:%v", err)
-	}
-	defer docNPCs.Close()
-	npcsLangPath := filepath.FromSlash(langDirPath + "/npc" + text.LANG_FILE_EXT)
-	xmlScen, err := parsexml.UnmarshalScenario(docScen)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_scenario_file:%v", err)
-	}
-	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
-	for _, xmlAreaChar := range xmlScen.Mainarea.NPCs.Characters {
-		charXML, err := parsexml.UnmarshalCharacter(docNPCs, xmlAreaChar.ID)
-		if err != nil {
-			log.Err.Printf("data_scenario_unmarshal_npc:%s:fail:%v",
-				xmlAreaChar.ID, err)
-			continue
-		}
-		char, err := buildXMLCharacter(&charXML)
-		if err != nil {
-			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",
-				xmlAreaChar.ID, err)
-		}
-		x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)
-		if err != nil {
-			log.Err.Printf("data_scenario_spawn_npc:%s:unmarshal_position_fail:%v",
-				xmlAreaChar.ID, err)
-			continue
-		}
-		char.SetPosition(x, y)
-		name := text.ReadDisplayText(npcsLangPath, char.ID())
-		char.SetName(name[0])
-		mainarea.AddCharacter(char)
-	}
-	subareas := make([]*scenario.Area, 0)
-	for _, xmlArea := range xmlScen.Subareas {
-		area := scenario.NewArea(xmlArea.ID)
-		// TODO: area NPCs.
-		subareas = append(subareas, area)
-	}
-	scen := scenario.NewScenario(xmlScen.ID, mainarea, subareas)
-	return scen, nil
-}
 
 // Character parses specified characters base and creates
 // game character.

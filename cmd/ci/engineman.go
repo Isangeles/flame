@@ -106,12 +106,11 @@ func loadEngineOption(cmd Command) (int, string) {
 			modPath = filepath.FromSlash(module.DefaultModulesPath() + "/" +
 				cmd.Args()[0])
 		}
-		mc, err := data.LoadModConf(modPath, flame.LangID())
+		m, err := data.Module(modPath, flame.LangID())
 		if err != nil {
 			return 8, fmt.Sprintf("%s:module_load_fail:%s",
 				ENGINE_MAN, err)
 		}
-		m := module.NewModule(mc)
 		flame.SetModule(m)
 
 		return 0, ""

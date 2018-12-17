@@ -21,34 +21,50 @@
  * 
  */
 
-// scenario package provides structs and functions for game world areas.
+// scenario package provides structs and functions for
+// game world areas.
 package scenario
+
+import (
+	"fmt"
+)
 
 // Scenario struct represents area scenario
 type Scenario struct {
-	id          string
-	areas       []*Area
-	currentArea *Area
+	id       string
+	mainarea *Area
+	areas    []*Area
 }
 
 // NewScenario returns new instance of scenario.
 func NewScenario(id string, mainarea *Area, subareas []*Area) (*Scenario) {
 	s := new(Scenario)
 	s.id = id
-	s.areas = append(s.areas, mainarea)
+	s.mainarea = mainarea
+	s.areas = append(s.areas, s.Mainarea())
 	s.areas = append(s.areas, subareas...)
-	s.currentArea = mainarea
 	return s
 }
 
-// ID returns scenario id.
+// ID returns scenario ID.
 func (s *Scenario) ID() string {
 	return s.id
 }
 
+// Mainarea returns main area of
+// scenario.
+func (s *Scenario) Mainarea() *Area {
+	return s.mainarea
+}
+
 // Area returns current scenario area.
-func (s *Scenario) Area() *Area {
-	return s.currentArea
+func (s *Scenario) Area(id string) (*Area, error) {
+	for _, a := range s.areas {
+		if a.ID() == id {
+			return a, nil
+		}
+	}
+	return nil, fmt.Errorf("area_not_found:%s", id)
 }
 
 // Areas returns all scenario areas.

@@ -27,7 +27,7 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame"
-	//"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/scenario"
 )
 
 // Handles specified module command,
@@ -64,10 +64,32 @@ func showModuleOption(cmd Command) (int, string) {
 	case "chapters":
 		return 0, fmt.Sprint(flame.Mod().ChaptersIds())
 	case "areachars":
-		if flame.Game() == nil {
+		if flame.Game() == nil { // TODO: better check whether mod has chapter set.
 			return 8, fmt.Sprintf("%s:no_game_loaded", MODULE_MAN)
 		}
-		return 10, "unsupported yet"
+		if len(cmd.TargetArgs()) < 2 {
+			return 8, fmt.Sprintf("%s:no_enought_target_args_for%s",
+				MODULE_MAN, cmd.TargetArgs()[0])
+		}
+		areaID := cmd.TargetArgs()[1]
+		var area *scenario.Area
+		for _, s := range flame.Mod().Chapter().Scenarios() {
+			for _, a := range s.Areas() {
+				if a.ID() == areaID {
+					area = a
+				}
+			}
+		}
+		if area == nil {
+			return 9, fmt.Sprintf("%s:area_not_found:%s",
+				MODULE_MAN, areaID)
+		}
+		charsList := ""
+		for _, c := range area.Characters() {
+			charsList = fmt.Sprintf("%s %s", charsList,
+				c.SerialID())
+		}
+		return 0, charsList
 	case "scenario":
 		return 10, "unsupported yet"
 	default:

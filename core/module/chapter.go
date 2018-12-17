@@ -41,11 +41,11 @@ type Chapter struct {
 } 
 
 // NewChapters creates new instance of module chapter.
-func NewChapter(mod *Module, conf ChapterConf) (*Chapter, error) {
+func NewChapter(mod *Module, conf ChapterConf) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = conf
-	return c, nil
+	return c
 }
 
 // ID returns chapter ID.
@@ -95,6 +95,11 @@ func (c *Chapter) Scenario(scenID string) (*scenario.Scenario, error) {
 		return s, nil
 	}
 	return nil, fmt.Errorf("loaded_scenario_not_found:%s", scenID)
+}
+
+// Scenarios returns all active(loaded) scenarios.
+func (c *Chapter) Scenarios() []*scenario.Scenario {
+	return c.loadedScens
 }
 
 // AddScenario add specified scenario to loaded
@@ -173,9 +178,9 @@ func (c *Chapter) CharacterArea(char *character.Character) (*scenario.Area, erro
 	return nil, fmt.Errorf("character not found in any active scenario")
 }
 
-// GenerateSerial sets unique serial value for specified
+// AssignCharacterSerial sets unique serial value for specified
 // object with serial ID.
-func (c *Chapter) GenerateCharacterSerial(char *character.Character) {
+func (c *Chapter) AssignCharacterSerial(char *character.Character) {
 	chars := c.CharactersWithID(char.ID())
 	objects := make([]Serializer, 0)
 	for _, c := range chars {
@@ -194,6 +199,6 @@ func (c *Chapter) generateSerials() {
 		if char.HasSerial() { // assumes assigned serial uniqueness
 			continue
 		}
-		c.GenerateCharacterSerial(char)
+		c.AssignCharacterSerial(char)
 	}
 }

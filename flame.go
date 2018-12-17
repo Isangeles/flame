@@ -26,7 +26,6 @@ package flame
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
@@ -60,30 +59,15 @@ func Game() *core.Game {
 	return game
 }
 
-// StartGame starts new game for loaded module with specified character
-// as PC.
-// Error: if no module is loaded.
+// StartGame starts new game for loaded module with specified
+// characters as PCs.
 func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if Mod() == nil {
-		return nil, fmt.Errorf("no_module_loaded")
+		return nil, fmt.Errorf("no module loaded")
 	}
-	// Load start chapter.
-	chapPath := filepath.FromSlash(Mod().ChaptersPath() +
-		"/" + Mod().Conf().Chapters[0])
-	chapConf, err := data.LoadChapterConf(chapPath)
+	err := data.LoadChapter(mod, Mod().Conf().Chapters[0])
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_start_chapter_conf:%s:%v",
-			chapPath, err)
-	}
-	chapConf.ID = Mod().Conf().Chapters[0]
-	startChap, err := module.NewChapter(Mod(), chapConf)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_set_mod_start_chapter:%v",
-			err)
-	}
-	err = mod.SetChapter(startChap) // move to start chapter
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_move_mod_to_start_chapter:%v",
+		return nil, fmt.Errorf("fail_to_load_start_chapter:%v",
 			err)
 	}
 	game, err = core.NewGame(mod, pcs)
