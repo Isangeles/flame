@@ -65,11 +65,20 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if Mod() == nil {
 		return nil, fmt.Errorf("no module loaded")
 	}
-	err := data.LoadChapter(mod, Mod().Conf().Chapters[0])
+	// Load start chapter for module.
+	err := data.LoadChapter(Mod(), Mod().Conf().Chapters[0])
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_start_chapter:%v",
 			err)
 	}
+	// Load start scenario for module.
+	chapter := Mod().Chapter()
+	err = data.LoadScenario(Mod(), chapter.Conf().StartScenID)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_start_scenario:%v",
+			err)
+	}
+	// Create new game.
 	game, err = core.NewGame(mod, pcs)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_create_new_game:%v",

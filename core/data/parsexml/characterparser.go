@@ -86,6 +86,18 @@ func UnmarshalCharacter(data io.Reader, charID string) (CharacterXML, error) {
 // base.
 func MarshalCharacter(char *character.Character) (string, error) {
 	xmlCharBase := new(CharactersBaseXML)
+	xmlChar := xmlCharacter(char)
+	xmlCharBase.Characters = append(xmlCharBase.Characters, *xmlChar)
+	out, err := xml.Marshal(xmlCharBase)
+	if err != nil {
+		return "", fmt.Errorf("fail_to_marshal_char:%v", err)
+	}
+	return string(out[:]), nil
+}
+
+// xmlCharacter parses specified game character to
+// XML character struct.
+func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar := new(CharacterXML)
 	xmlChar.ID = char.ID()
 	xmlChar.Name = char.Name()
@@ -95,11 +107,6 @@ func MarshalCharacter(char *character.Character) (string, error) {
 	xmlChar.Attitude = marshalAttitude(char.Attitude())
 	xmlChar.Alignment = marshalAlignment(char.Alignment())
 	xmlChar.Stats = marshalAttributes(char.Attributes())
-	xmlCharBase.Characters = append(xmlCharBase.Characters, *xmlChar)
-	out, err := xml.Marshal(xmlCharBase)
-	if err != nil {
-		return "", fmt.Errorf("fail_to_marshal_char:%v", err)
-	}
-	return string(out[:]), nil
+	return xmlChar
 }
 

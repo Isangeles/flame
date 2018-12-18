@@ -157,7 +157,6 @@ func (m *Module) AssignSerial(ob Serializer) error {
 	if chapter == nil {
 		return fmt.Errorf("no active chapter set")
 	}
-	// TODO: proper reflect switch.
 	switch ob.(type) {
 	case *character.Character:
 		char, _ := ob.(*character.Character)

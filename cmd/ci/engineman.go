@@ -62,6 +62,8 @@ func handleEngineCommand(cmd Command) (int, string) {
 		return startEngineOption(cmd)
 	case "set":
 		return setEngineOption(cmd)
+	case "save":
+		return saveEngineOption(cmd)
 	default:
 		return 4, fmt.Sprintf("%s:no_such_option:%s", ENGINE_MAN,
 			cmd.OptionArgs()[0])
@@ -139,6 +141,23 @@ func saveEngineOption(cmd Command) (int, string) {
 				ENGINE_MAN, err)
 		}
 
+		return 0, ""
+	case "game":
+		if len(cmd.Args()) < 1 {
+			return 7, fmt.Sprintf("%s:not_enought_args_for:%s",
+				ENGINE_MAN, cmd.TargetArgs()[0])
+		}
+		savePath, err := flame.SavegamesPath()
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_retrieve_savegames_path:%v",
+				ENGINE_MAN, err)
+		}
+		saveName := cmd.Args()[0]
+		err = data.SaveGame(flame.Game(), savePath, saveName)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_save_game:%v",
+				ENGINE_MAN, err)
+		}
 		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'",

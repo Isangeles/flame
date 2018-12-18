@@ -115,18 +115,19 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 // ExportCharacter saves specified character to
 // [Module]/characters directory.
 func ExportCharacter(char *character.Character, dirPath string) error {
+	// Parse character data.
 	xml, err := parsexml.MarshalCharacter(char)
 	if err != nil {
 		return fmt.Errorf("fail_to_export_char:%v", err)
 	}
-
+	// Create character file.
 	f, err := os.Create(filepath.FromSlash(dirPath + "/" +
 		char.Name()) + CHARS_FILE_EXT)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_char_file:%v", err)
 	}
 	defer f.Close()
-
+	// Write data to file.
 	w := bufio.NewWriter(f)
 	w.WriteString(xml)
 	w.Flush()

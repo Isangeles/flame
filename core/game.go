@@ -27,7 +27,6 @@ package core
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
@@ -46,14 +45,8 @@ func NewGame(mod *module.Module, players []*character.Character) (*Game, error) 
 	g := new(Game)
 	g.mod = mod
 	g.pcs = players
-	// Load start scenario.
+	// Get start scenario.
 	chapter := g.Module().Chapter()
-	err := data.LoadScenario(g.Module(),
-		chapter.Conf().StartScenID)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_stars_scenario:%v",
-			err)
-	}
 	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_retrieve_start_scenario:%v",

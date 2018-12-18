@@ -53,6 +53,12 @@ Import exported characters:
 Imports all characters from XML files in
 data/modules/[module]/characters directory.
 
+Save game:
+```
+  $engineman -o save -t game -a [save file name]
+```
+Saves current game to 'savegames/[module]' directory.
+
 ## Contact
 * Isangeles <<dev@isangeles.pl>>
 
