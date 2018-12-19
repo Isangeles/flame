@@ -117,8 +117,24 @@ func loadEngineOption(cmd Command) (int, string) {
 
 		return 0, ""
 	case "game":
-		// TODO game load
-		return 9, "TODO"
+		if len(cmd.Args()) < 1 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				ENGINE_MAN, cmd.OptionArgs()[1])
+		}
+		savesPath, err := flame.SavegamesPath()
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_retrieve_saves_path:%v",
+				ENGINE_MAN, err)
+		}
+		saveName := cmd.Args()[0]
+		g, err := data.LoadGame(flame.Mod(), savesPath, saveName)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_load_game:%v",
+				ENGINE_MAN, err)
+		}
+		flame.SetGame(g)
+		return 0, ""
+		
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])

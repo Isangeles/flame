@@ -42,6 +42,7 @@ type CharactersBaseXML struct {
 type CharacterXML struct {
 	XMLName   xml.Name `xml:"char"`
 	ID        string   `xml:"id,attr"`
+	Serial    string   `xml:"serial,attr"`
 	Name      string   `xml:"name,attr"`
 	Gender    string   `xml:"gender,attr"`
 	Race      string   `xml:"race,attr"`
@@ -50,6 +51,8 @@ type CharacterXML struct {
 	Guild     string   `xml:"guild,attr"`
 	Level     string   `xml:"level,attr"`
 	Stats     string   `xml:"stats,value"`
+	PC        bool     `xml:"pc,attr"`
+	Position  string   `xml:"position,value"`
 }
 
 // UnmarshalCharactersBaseXML parses characters base from XML data.
@@ -100,6 +103,7 @@ func MarshalCharacter(char *character.Character) (string, error) {
 func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar := new(CharacterXML)
 	xmlChar.ID = char.ID()
+	xmlChar.Serial = char.Serial()
 	xmlChar.Name = char.Name()
 	xmlChar.Level = fmt.Sprintf("%d", char.Level())
 	xmlChar.Gender = marshalGender(char.Gender())
@@ -107,6 +111,8 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Attitude = marshalAttitude(char.Attitude())
 	xmlChar.Alignment = marshalAlignment(char.Alignment())
 	xmlChar.Stats = marshalAttributes(char.Attributes())
+	posX, posY := char.Position()
+	xmlChar.Position = fmt.Sprintf("%fx%f", posX, posY)
 	return xmlChar
 }
 

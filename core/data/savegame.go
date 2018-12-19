@@ -31,6 +31,10 @@ import (
 
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/log"
 )
 
 var (
@@ -52,8 +56,9 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 		return fmt.Errorf("fail_to_create_savegames_dir:%v",
 			err)
 	}
-	f, err := os.Create(filepath.FromSlash(dirPath + "/" +
-		saveName + SAVEGAME_FILE_EXT))
+	filePath := filepath.FromSlash(dirPath + "/" +
+		saveName + SAVEGAME_FILE_EXT)
+	f, err := os.Create(filePath)
 	if err != nil {
 		return fmt.Errorf("fail_to_write_savegame_file:%v",
 			err)
@@ -63,5 +68,91 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 	w := bufio.NewWriter(f)
 	w.WriteString(xml)
 	w.Flush()
+	log.Dbg.Printf("game_saved_in:%s", filePath)
 	return nil
+}
+
+// LoadGame loads game from save file with specified name in
+// specified dir.
+func LoadGame(mod *module.Module, dirPath, fileName string) (*core.Game, error) { 
+	filePath := filepath.FromSlash(dirPath + "/" + fileName +
+		SAVEGAME_FILE_EXT)
+	doc, err := os.Open(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_open_savegame_file:%v",
+			err)
+	}
+	xmlGame, err := parsexml.UnmarshalGame(doc)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_savegame_data:%v",
+			err)
+	}
+	game, err := buildXMLSavedGame(mod, &xmlGame)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_build_game_from_saved_data:%v",
+			err)
+	}
+	return game, nil
+}
+
+// buildXMLSavedGame build game from data in specified
+// saved game XML struct.
+func buildXMLSavedGame(mod *module.Module,
+	xmlGame *parsexml.SavedGameXML) (*core.Game, error) {
+	xmlChapter := &xmlGame.Chapter
+	// Load chapter with ID from save.
+	err := LoadChapter(mod, xmlChapter.ID)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_chapter:%v",
+			err)
+	}
+	mod.Chapter().ClearScenarios() // to remove start scenario
+	pcs := make([]*character.Character, 0)
+	// Build chapter scenarios from save.
+	for _, xmlScen := range xmlChapter.Scenarios {
+		subareas := make([]*scenario.Area, 0)
+		var mainarea *scenario.Area
+		for _, xmlArea := range xmlScen.AreasNode.Areas {
+			area := scenario.NewArea(xmlArea.ID)
+			for _, xmlChar := range xmlArea.CharsNode.Characters {
+				// Build chapter NPC.
+				char, err := buildXMLCharacter(&xmlChar)
+				if err != nil {
+					log.Err.Printf("data_build_saved_game:build_char:%s:fail:%v",
+						xmlChar.ID, err)
+					continue
+				}
+				posX, posY, err := parsexml.UnmarshalPosition(
+					xmlChar.Position)
+				if err != nil {
+					log.Err.Printf("data_build_saved_game:set_char_pos:%s:fail:%v",
+						xmlChar.ID, err)
+					continue
+				}
+				char.SetPosition(posX, posY)
+				if xmlChar.PC {
+					pcs = append(pcs, char)
+				}
+				area.AddCharacter(char)
+			}
+			if xmlArea.Mainarea {
+				mainarea = area
+			} else {
+				subareas = append(subareas, area)
+			}
+		}
+		// Create scenario from saved data.
+		scen := scenario.NewScenario(xmlScen.ID, mainarea, subareas)
+		err := mod.Chapter().AddScenario(scen)
+		if err != nil {
+			log.Err.Printf("data_build_saved_game:add_chapter_scenario:%s:fail:%v",
+				xmlScen.ID, err)
+		}
+	}
+	// Create game from saved data.
+	game, err := core.NewGame(mod, pcs)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_create_saved_game:%v", err)
+	}
+	return game, nil
 }

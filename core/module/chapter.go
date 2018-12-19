@@ -61,14 +61,15 @@ func (c *Chapter) FullPath() string {
 // ScenariosPath returns path to chapter
 // scenarios directory.
 func (c *Chapter) ScenariosPath() string {
-	return filepath.FromSlash(c.FullPath() + "/area/scenarios")
+	return filepath.FromSlash(c.FullPath() +
+		"/area/scenarios")
 }
 
 // LangPath returns path to chapter
 // lang directory.
 func (c *Chapter) LangPath() string {
 	return filepath.FromSlash(c.FullPath() + "/lang" +
-		c.mod.LangID())
+		"/" + c.mod.LangID())
 }
 
 // NPCPath returns path to chapter NPCs
@@ -100,6 +101,12 @@ func (c *Chapter) Scenario(scenID string) (*scenario.Scenario, error) {
 // Scenarios returns all active(loaded) scenarios.
 func (c *Chapter) Scenarios() []*scenario.Scenario {
 	return c.loadedScens
+}
+
+// ClearScenarios removes all loaded scenarios
+// from chapter.
+func (c *Chapter) ClearScenarios() {
+	c.loadedScens = make([]*scenario.Scenario, 0)
 }
 
 // AddScenario add specified scenario to loaded

@@ -26,8 +26,11 @@ package parsexml
 import (
 	"encoding/xml"
 	"fmt"
+	"io"
+	"io/ioutil"
 
 	"github.com/isangeles/flame/core"
+	"github.com/isangeles/flame/core/module"
 )
 
 // Struct for saved game XML node.
@@ -39,12 +42,14 @@ type SavedGameXML struct {
 // Struct for saved chapter XML node.
 type SavedChapterXML struct {
 	XMLName   xml.Name           `xml:"chapter"`
+	ID        string             `xml:"id,attr"`
 	Scenarios []SavedScenarioXML `xml:"scenario"`
 }
 
 // Struct for saved scenario XML node.
 type SavedScenarioXML struct {
 	XMLName   xml.Name      `xml:"scenario"`
+	ID        string        `xml:"id,attr"`
 	AreasNode SavedAreasXML `xml:"areas"`
 }
 
@@ -57,6 +62,8 @@ type SavedAreasXML struct {
 // Struct for saved scenario area XML node.
 type SavedAreaXML struct {
 	XMLName   xml.Name           `xml:"area"`
+	ID        string             `xml:id,attr"`
+	Mainarea  bool               `xml:"mainarea,attr"`
 	CharsNode SavedCharactersXML `xml:"characters"`
 }
 
@@ -70,15 +77,30 @@ type SavedCharactersXML struct {
 // savegame data.
 func MarshalGame(game *core.Game) (string, error) {
 	xmlGame := new(SavedGameXML)
+	chapter := game.Module().Chapter()
+	if chapter == nil {
+		return "", fmt.Errorf("no game chapter set")
+	}
 	xmlChapter := &xmlGame.Chapter
-	for _, s := range game.Module().Chapter().Scenarios() {
+	xmlChapter.ID = chapter.Conf().ID
+	for _, s := range chapter.Scenarios() {
 		xmlScenario := SavedScenarioXML{}
+		xmlScenario.ID = s.ID()
 		xmlAreas := &xmlScenario.AreasNode
 		for _, a := range s.Areas() {
 			xmlArea := SavedAreaXML{}
+			xmlArea.ID = a.ID()
+			if a.ID() == s.Mainarea().ID() {
+				xmlArea.Mainarea = true
+			}
 			xmlChars := &xmlArea.CharsNode
 			for _, c := range a.Characters() {
 				xmlChar := xmlCharacter(c)
+				charSerialID := module.FullSerial(xmlChar.ID,
+					xmlChar.Serial)
+				if game.Player(charSerialID) != nil {
+					xmlChar.PC = true
+				}
 				xmlChars.Characters = append(xmlChars.Characters,
 					*xmlChar)
 			}
@@ -92,4 +114,17 @@ func MarshalGame(game *core.Game) (string, error) {
 		return "", fmt.Errorf("fail_to_marshal_game")
 	}
 	return string(out[:]), nil
+}
+
+// UnmarshalGame parses specified XML data to saved game
+// XML struct.
+func UnmarshalGame(data io.Reader) (SavedGameXML, error) {
+	doc, _ := ioutil.ReadAll(data)
+	xmlGame := new(SavedGameXML)
+	err := xml.Unmarshal(doc, xmlGame)
+	if err != nil {
+		return SavedGameXML{}, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
+			err)
+	}
+	return *xmlGame, nil
 }

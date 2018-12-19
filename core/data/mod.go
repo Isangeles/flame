@@ -66,7 +66,7 @@ func LoadChapter(mod *module.Module, id string) error {
 	startChap := module.NewChapter(mod, chapConf)
 	err = mod.SetChapter(startChap) // move to start chapter
 	if err != nil {
-		return fmt.Errorf("fail_to_mod_chapter:%v",
+		return fmt.Errorf("fail_to_set_mod_chapter:%v",
 			err)
 	}
 	return nil
@@ -80,7 +80,7 @@ func LoadScenario(mod *module.Module, id string) error {
 	if chap == nil {
 		return fmt.Errorf("no module chapter set")
 	}
-	// Create scenario.
+	// Load files.
 	scenPath := filepath.FromSlash(chap.ScenariosPath() + "/" +
 		id)
 	docScen, err := os.Open(scenPath)
@@ -95,18 +95,22 @@ func LoadScenario(mod *module.Module, id string) error {
 	}
 	defer docNPCs.Close()
 	npcsLangPath := filepath.FromSlash(chap.LangPath() + "/npc" + text.LANG_FILE_EXT)
+	// Unmarshal scenario file.
 	xmlScen, err := parsexml.UnmarshalScenario(docScen)
 	if err != nil {
 		return fmt.Errorf("fail_to_parse_scenario_file:%v", err)
 	}
+	// Build scenario mainarea.
 	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
 	for _, xmlAreaChar := range xmlScen.Mainarea.NPCs.Characters {
+		// Unmarshal area NPC.
 		charXML, err := parsexml.UnmarshalCharacter(docNPCs, xmlAreaChar.ID)
 		if err != nil {
 			log.Err.Printf("data_scenario_unmarshal_npc:%s:fail:%v",
 				xmlAreaChar.ID, err)
 			continue
 		}
+		// Build area NPC.
 		char, err := buildXMLCharacter(&charXML)
 		if err != nil {
 			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",

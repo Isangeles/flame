@@ -59,6 +59,12 @@ func Game() *core.Game {
 	return game
 }
 
+// SetGame sets specified game as
+// current game.
+func SetGame(g *core.Game) {
+	game = g
+}
+
 // StartGame starts new game for loaded module with specified
 // characters as PCs.
 func StartGame(pcs []*character.Character) (*core.Game, error) {

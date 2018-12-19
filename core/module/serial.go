@@ -37,6 +37,12 @@ type Serializer interface {
 	HasSerial() bool
 }
 
+// FullSerial retruns full serial ID string
+// with specified ID and serial value.
+func FullSerial(id, serial string) string {
+	return fmt.Sprintf("%s_%s", id, serial)
+}
+
 // uinqueSerial generates unique serial value accross
 // specified group of objects with serial value.
 func uniqueSerial(group []Serializer) string {
