@@ -87,7 +87,8 @@ func newCharacterDialog() (*character.Character, error) {
 		c = character.NewCharacter("player", name, 1, sex, race,
 			character.Friendly, character.NewGuild("none"), attrs,
 			character.True_neutral)
-		fmt.Printf("%s: %s\n", lang.UIText("cli_newchar_summary"), c)
+		fmt.Printf("%s: %s\n", lang.UIText("cli_newchar_summary"),
+			charDisplayString(c))
 		fmt.Printf("%s:", lang.UIText("cli_accept_dialog"))
 		scan.Scan()
 		input := scan.Text()

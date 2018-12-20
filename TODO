@@ -10,8 +10,10 @@ MAJOR:
 * Game characters inventory and equipment
 * Items
 * Skills
-* Generating of unique serial IDs for game objects.
+* Game objects
+* Generating of unique serial IDs for game objects
 MINOR:
 * More detiled readme
 * Tutorials
 * More tools/options for CI
+* Command pipe('|') handling for CI

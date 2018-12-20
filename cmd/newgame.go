@@ -56,7 +56,7 @@ func newGameDialog() (*core.Game, error) {
 	for !accept {
 		fmt.Printf("%s:\n", lang.UIText("cli_newgame_chars"))
 		for i, c := range playableChars {
-			fmt.Printf("[%d]%v\n", i, c)
+			fmt.Printf("[%d]%v\n", i, charDisplayString(c))
 		}
 
 		fmt.Printf("%s:", lang.UIText("cli_newgame_select_char"))
@@ -73,7 +73,8 @@ func newGameDialog() (*core.Game, error) {
 			}
 		}
 
-		fmt.Printf("%s:%v\n", lang.UIText("cli_newgame_summary"), pc)
+		fmt.Printf("%s:%v\n", lang.UIText("cli_newgame_summary"),
+			charDisplayString(pc))
 		fmt.Printf("%s:", lang.UIText("cli_accept_dialog"))
 		scan.Scan()
 		input := scan.Text()

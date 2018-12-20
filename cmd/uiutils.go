@@ -1,5 +1,5 @@
 /*
- * savegame.go
+ * uiutils.go
  *
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,42 +21,21 @@
  *
  */
 
-package data
+package main
 
 import (
-	"bufio"
 	"fmt"
-	"path/filepath"
-	"os"
 
-	"github.com/isangeles/flame/core"
-	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
-var (
-	SAVEGAME_FILE_EXT = ".savegame"
-)
 
-// SaveGame saves specified game to savegame
-// file.
-func SaveGame(game *core.Game, dirPath, saveName string) error {
-	// Parse game data.
-	xml, err := parsexml.MarshalGame(game)
-	if err != nil {
-		return fmt.Errorf("fail_to_marshal_game:%v",
-			err)
-	}
-	// Create savegame file.
-	f, err := os.Create(filepath.FromSlash(dirPath + "/" +
-		saveName + SAVEGAME_FILE_EXT))
-	if err != nil {
-		return fmt.Errorf("fail_to_write_savegame_file:%v",
-			err)
-	}
-	defer f.Close()
-	// Write data to file.
-	w := bufio.NewWriter(f)
-	w.WriteString(xml)
-	w.Flush()
-	return nil
+// charDisplayString returns string with character
+// stats and info.
+func charDisplayString(char *character.Character) string {
+	return fmt.Sprintf("%s:%s,%s,%s:%d,%d,%d,%d,%d",
+		char.Name(), char.Race().ID(), char.Gender().ID(),
+		"Stats", char.Attributes().Str, char.Attributes().Con,
+		char.Attributes().Dex, char.Attributes().Wis,
+		char.Attributes().Int)
 }

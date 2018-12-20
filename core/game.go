@@ -65,6 +65,15 @@ func NewGame(mod *module.Module, players []*character.Character) (*Game, error) 
 	return g, nil
 }
 
+// LoadGame creates game from loaded module
+// state and PCs.
+func LoadGame(mod *module.Module, pcs []*character.Character) *Game {
+	g := new(Game)
+	g.mod = mod
+	g.pcs = pcs
+	return g
+}
+
 // Module returns game module.
 func (g *Game) Module() *module.Module {
 	return g.mod

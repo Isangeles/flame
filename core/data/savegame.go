@@ -133,6 +133,7 @@ func buildXMLSavedGame(mod *module.Module,
 				if xmlChar.PC {
 					pcs = append(pcs, char)
 				}
+				char.SetSerial(xmlChar.Serial)
 				area.AddCharacter(char)
 			}
 			if xmlArea.Mainarea {
@@ -150,9 +151,6 @@ func buildXMLSavedGame(mod *module.Module,
 		}
 	}
 	// Create game from saved data.
-	game, err := core.NewGame(mod, pcs)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_create_saved_game:%v", err)
-	}
+	game := core.LoadGame(mod, pcs)
 	return game, nil
 }

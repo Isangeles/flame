@@ -38,8 +38,8 @@ const (
 	//...
 )
 
-// Id returns race ID.
-func (r Race) Id() string {
+// ID returns race ID.
+func (r Race) ID() string {
 	switch r {
 	case Human:
 		return "race_human"

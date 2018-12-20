@@ -29,6 +29,7 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
+	"github.com/isangeles/flame/core/module/object/character"
 )
 
 // handleCharCommand handles specified command for game
@@ -96,20 +97,29 @@ func showCharOption(cmd Command) (int, string) {
 		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", CHAR_MAN,
 			cmd.OptionArgs()[0])
 	}
-	char := flame.Game().Module().Character(cmd.TargetArgs()[1])
-	if char == nil {
-		return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-			cmd.TargetArgs()[1])
+	chars := make([]*character.Character, 0)
+	for _, id := range cmd.TargetArgs()[1:] {
+		char := flame.Game().Module().Character(id)
+		if char == nil {
+			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
+				id)
+		}
+		chars = append(chars, char)
 	}
 
 	switch cmd.TargetArgs()[0] {
 	case "position":
-		x, y := char.Position()
-		return 0, fmt.Sprintf("%fx%f", x, y)
+		out := ""
+		for _, char := range chars {		
+			x, y := char.Position()
+			out = fmt.Sprintf("%s%fx%f ", out,
+				x, y)
+		}
+		return 0, out
 	case "id":
-		return 0, char.ID()
+		return 0, chars[0].ID()
 	case "serialid":
-		return 0, char.SerialID()
+		return 0, chars[0].SerialID()
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])

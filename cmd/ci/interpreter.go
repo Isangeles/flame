@@ -21,9 +21,13 @@
  * 
  */
 
-// Flame engine commands interpreter
-// @Isangeles
+// Flame engine commands interpreter.
 package ci
+
+import (
+	"fmt"
+	"strings"
+)
 
 // Command interface for all commands interpreted by CI.
 type Command interface {
@@ -32,6 +36,8 @@ type Command interface {
 	TargetArgs() []string
 	OptionArgs() []string
 	Args()	     []string
+	AddArgs(args ...string)
+	AddTargetArgs(args ...string)
 }
 
 const (
@@ -40,7 +46,7 @@ const (
 	CHAR_MAN   = "charman"
 )
 
-// Handles specified command,
+// HandleCommand handles specified command,
 // returns response code and message.
 func HandleCommand(cmd Command) (int, string) {
 	switch cmd.Tool() {
@@ -51,6 +57,53 @@ func HandleCommand(cmd Command) (int, string) {
 	case CHAR_MAN:
 		return handleCharCommand(cmd)
 	default:
-		return 2, "ERROR_no_such_ci_tool_found:" + cmd.Tool()
+		return 2, fmt.Sprintf("cmd:%s:ERROR_no_such_ci_tool_found:'%s'",
+			cmd, cmd.Tool())
 	}
+}
+
+// HandleArgsPipe handles specified commands
+// connected with pipe('|').
+// Pipe pushes out from command on the left to
+// command on right as arguments.
+func HandleArgsPipe(cmds ...Command) (res int, out string) {
+	for _, cmd := range cmds {
+		res, out = pipeArgs(cmd, out)
+		if res != 0 {
+			return res, out
+		}
+	}
+	return
+}
+
+// HandleTargetArgsPipe handles specified commands
+// connected with pipe('|').
+// Pipe pushes out from command on the left to
+// command on right as target arguments. 
+func HandleTargetArgsPipe(cmds ...Command) (res int, out string) {
+	for _, cmd := range cmds {
+		res, out = pipeTargetArgs(cmd, out)
+		if res != 0 {
+			return res, out
+		}
+	}
+	return
+}
+
+// pipeArgs pushes specified text(out from previous command)
+// to specified command as arguments, and executes
+// specified command.
+func pipeArgs(cmd Command, out string) (int, string) {
+	args := strings.Split(strings.TrimSpace(out), " ")
+	cmd.AddArgs(args...)
+	return HandleCommand(cmd)
+}
+
+// pipeTargetArgs pushes specified text(out from previous command)
+// to specified command as target arguments, and executes
+// specified command.
+func pipeTargetArgs(cmd Command, out string) (int, string) {
+	args := strings.Split(strings.TrimSpace(out), " ")
+	cmd.AddTargetArgs(args...)
+	return HandleCommand(cmd)
 }

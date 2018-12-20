@@ -97,7 +97,7 @@ func loadEngineOption(cmd Command) (int, string) {
 	case "module":
 		if len(cmd.Args()) < 1 {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
-				ENGINE_MAN, cmd.OptionArgs()[1])
+				ENGINE_MAN, cmd.TargetArgs()[1])
 		}
 
 		var modPath string
@@ -119,7 +119,7 @@ func loadEngineOption(cmd Command) (int, string) {
 	case "game":
 		if len(cmd.Args()) < 1 {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
-				ENGINE_MAN, cmd.OptionArgs()[1])
+				ENGINE_MAN, cmd.TargetArgs()[0])
 		}
 		savesPath, err := flame.SavegamesPath()
 		if err != nil {

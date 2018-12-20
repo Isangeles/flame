@@ -147,16 +147,3 @@ func (c *Character) SetPosition(x, y float64) {
 func (c *Character) SetSerial(serial string) {
 	c.serial = serial
 }
-
-// HasSerial checks whether character has
-// serial value.
-func (c *Character) HasSerial() bool {
-	return c.Serial() != ""
-}
-
-// String returns string with character parameters spearated by ', '.
-func (c *Character) String() string {
-	return fmt.Sprintf("%s, %d, %v, %v, %v, %v, %s",
-		c.id, c.level, c.sex, c.race, c.attitude, c.guild, c.attributes,
-		c.alignment) 
-}

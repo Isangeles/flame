@@ -29,7 +29,8 @@ import (
 )
 
 // Struct for CLI standard commands.
-// Standard commands structure: '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
+// Standard commands structure:
+// '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
 type StdCommand struct {
 	text, tool string
 	targetArgs, optionArgs, args []string
@@ -37,10 +38,11 @@ type StdCommand struct {
 }
 
 // Creates new standard command from specified text input.
-// Standard command structure: '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
+// Standard command structure:
+// '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
 // Error: If specified input text is not valid text command.
-func NewStdCommand(text string) (StdCommand, error) {
-	var c StdCommand
+func NewStdCommand(text string) (*StdCommand, error) {
+	c := new(StdCommand)
 	c.text = text		
 	c.commandParts = strings.Split(c.text, " ")
 	
@@ -50,7 +52,7 @@ func NewStdCommand(text string) (StdCommand, error) {
 	
 	c.tool = c.commandParts[0]
 	for i := 1; i < len(c.commandParts); i++ {
-		cPart := c.commandParts[i]
+		cPart := strings.TrimSpace(c.commandParts[i])
 		switch cPart {
 		case "-t", "--target":
 			for j := i+1; j < len(c.commandParts); j++ {
@@ -84,27 +86,55 @@ func NewStdCommand(text string) (StdCommand, error) {
 	return c, nil
 }
 
+// NewStdCommands creates new commands from specified text
+// with commands separated by specified separator.
+func NewStdCommands(text string, sep string) ([]*StdCommand, error) {
+	cmds := make([]*StdCommand, 0)
+	cmdsText := strings.Split(text, sep)
+	for _, cmdText := range cmdsText {
+		cmd, err := NewStdCommand(strings.TrimSpace(cmdText))
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_parse_command:%v",
+			err)
+		}
+		cmds = append(cmds, cmd)
+	}
+	return cmds, nil
+}
+
 // Tool return command tool name.
-func (c StdCommand) Tool() string {
+func (c *StdCommand) Tool() string {
 	return c.tool
 }
 
 // TargetArgs returns slice with target arguments of command.
-func (c StdCommand) TargetArgs() []string {
+func (c *StdCommand) TargetArgs() []string {
 	return c.targetArgs
 }
 
 // OptionArgs returns slice with options arguments of command.
-func (c StdCommand) OptionArgs() []string {
+func (c *StdCommand) OptionArgs() []string {
 	return c.optionArgs
 }
 
 // Args returns slice with command arguments.
-func (c StdCommand) Args() []string {
+func (c *StdCommand) Args() []string {
 	return c.args
 }
 
+// AddArgs adds specified text values as
+// command args.
+func (c *StdCommand) AddArgs(args ...string) {
+	c.args = append(c.args, args...)
+}
+
+// AddTargetArgs adds specified text values
+// as command target args.
+func (c *StdCommand) AddTargetArgs(args ...string) {
+	c.targetArgs = append(c.targetArgs, args...)
+}
+
 // String return full command text
-func (c StdCommand) String() string {
+func (c *StdCommand) String() string {
 	return c.text
 }

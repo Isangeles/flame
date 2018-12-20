@@ -41,11 +41,11 @@ const (
 // String returns text representation of
 // alignement.
 func (a Alignment) String() string {
-	return a.Id()
+	return a.ID()
 }
 
 // Id returns alignemnt ID.
-func (a Alignment) Id() string {
+func (a Alignment) ID() string {
 	switch a {
 	case Lawful_good:
 		return "ali_law_good"

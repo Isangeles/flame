@@ -203,7 +203,7 @@ func (c *Chapter) AssignCharacterSerial(char *character.Character) {
 func (c *Chapter) generateSerials() {
 	// Characters.
 	for _, char := range c.Characters() {
-		if char.HasSerial() { // assumes assigned serial uniqueness
+		if char.Serial() != "" { // assumes assigned serial uniqueness
 			continue
 		}
 		c.AssignCharacterSerial(char)

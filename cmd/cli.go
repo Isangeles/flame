@@ -51,6 +51,7 @@ const (
 	IMPORT_CHARS_CMD = "importchars"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
+	ARGS_PIPE        = "|"
 )
 
 var (
@@ -137,11 +138,26 @@ func execute(input string) {
 		execute(lastCommand)
 		return
 	default:
-		cmd, err := command.NewStdCommand(input)
+		if strings.Contains(input, ARGS_PIPE) {
+			
+		}
+		cmds, err := command.NewStdCommands(input, ARGS_PIPE)
 		if err != nil {
 			log.Err.Printf("command_build_error:%v", err)
 		}
-		code, msg := ci.HandleCommand(cmd)
-		log.Inf.Printf("CI[%d]:%s\n", code, msg)
+		var (
+			res int
+			out string
+		)
+		if len(cmds) < 2 {
+		 	res, out = ci.HandleCommand(cmds[0])
+		} else {
+			pipeCmds := make([]ci.Command, 0)
+			for _, cmd := range cmds {
+				pipeCmds = append(pipeCmds, cmd)
+			}
+			res, out = ci.HandleTargetArgsPipe(pipeCmds...)
+		}
+		log.Inf.Printf("CI[%d]:%s\n", res, out)	
 	}
 }

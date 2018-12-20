@@ -34,7 +34,6 @@ type Serializer interface {
 	Serial() string
 	SerialID() string
 	SetSerial(serial string)
-	HasSerial() bool
 }
 
 // FullSerial retruns full serial ID string
