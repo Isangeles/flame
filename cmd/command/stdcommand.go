@@ -1,24 +1,24 @@
 /*
  * stdcommand.go
- * 
+ *
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 package command
@@ -32,9 +32,9 @@ import (
 // Standard commands structure:
 // '[tool name] -t[target args ...] -o[option args ...] -a[args ...]'.
 type StdCommand struct {
-	text, tool string
+	text, tool                   string
 	targetArgs, optionArgs, args []string
-	commandParts []string
+	commandParts                 []string
 }
 
 // Creates new standard command from specified text input.
@@ -43,46 +43,46 @@ type StdCommand struct {
 // Error: If specified input text is not valid text command.
 func NewStdCommand(text string) (*StdCommand, error) {
 	c := new(StdCommand)
-	c.text = text		
+	c.text = text
 	c.commandParts = strings.Split(c.text, " ")
-	
+
 	if len(c.commandParts) < 1 {
 		return c, fmt.Errorf("command_to_short:'%s'", text)
 	}
-	
+
 	c.tool = c.commandParts[0]
 	for i := 1; i < len(c.commandParts); i++ {
 		cPart := strings.TrimSpace(c.commandParts[i])
 		switch cPart {
 		case "-t", "--target":
-			for j := i+1; j < len(c.commandParts); j++ {
+			for j := i + 1; j < len(c.commandParts); j++ {
 				cPartArg := c.commandParts[j]
 				if strings.HasPrefix(cPartArg, "-") {
-					break;
-				} 
+					break
+				}
 				c.targetArgs = append(c.targetArgs, cPartArg)
 			}
 		case "-o", "--option":
-			for j := i+1; j < len(c.commandParts); j++ {
+			for j := i + 1; j < len(c.commandParts); j++ {
 				cPartArg := c.commandParts[j]
 				if strings.HasPrefix(cPartArg, "-") {
-					break;
-				} 
+					break
+				}
 				c.optionArgs = append(c.optionArgs, cPartArg)
 			}
 		case "-a", "--args":
-			for j := i+1; j < len(c.commandParts); j++ {
+			for j := i + 1; j < len(c.commandParts); j++ {
 				cPartArg := c.commandParts[j]
 				if strings.HasPrefix(cPartArg, "-") {
-					break;
-				} 
+					break
+				}
 				c.args = append(c.args, cPartArg)
 			}
 		default:
 			continue
 		}
 	}
-	
+
 	return c, nil
 }
 
@@ -95,7 +95,7 @@ func NewStdCommands(text string, sep string) ([]*StdCommand, error) {
 		cmd, err := NewStdCommand(strings.TrimSpace(cmdText))
 		if err != nil {
 			return nil, fmt.Errorf("fail_to_parse_command:%v",
-			err)
+				err)
 		}
 		cmds = append(cmds, cmd)
 	}
@@ -134,7 +134,7 @@ func (c *StdCommand) AddTargetArgs(args ...string) {
 	c.targetArgs = append(c.targetArgs, args...)
 }
 
-// String return full command text
+// String return full command text.
 func (c *StdCommand) String() string {
 	return c.text
 }
