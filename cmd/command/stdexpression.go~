@@ -1,0 +1,69 @@
+/*
+ * stdexpression.go
+ *
+ * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
+package command
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/isangeles/flame/cmd/ci"
+)
+
+// Type for standard expressions.
+type StdExpression struct {
+	text     string
+	commands []ci.Command
+	exptype  ci.ExpressionType
+}
+
+// NewStdExpression creates new standard expression from
+// specified text.
+func NewStdExpression(text string) (StdExpression, error) {
+	var exp StdExpression
+	if strings.Contains(text, " | ") {
+		exp.text = text
+		exp.exptype = ci.PIPE_TAR_ARG_EXP
+		cmdsText := strings.Split(text, " | ")
+		for _, cmdText := range cmdsText {
+			cmd, err := NewStdCommand(strings.TrimSpace(cmdText))
+			if err != nil {
+				return exp, fmt.Errorf("command:%s:fail_to_buil_expression_command:%v",
+					cmdText, err)
+			}
+			exp.commands = append(exp.commands, cmd)
+		}
+		return exp, nil
+	}
+	return exp, fmt.Errorf("unknown expression format")
+}
+
+// Commands returns all expression commands.
+func (exp StdExpression) Commands() []ci.Command {
+	return exp.commands
+}
+
+// Retruns expression text.
+func (exp StdExpression) String() string {
+	return exp.text
+}

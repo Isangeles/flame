@@ -40,10 +40,27 @@ type Command interface {
 	AddTargetArgs(args ...string)
 }
 
+// Interaface for all expressions interpreted by CI.
+// Expression is multiple commands connected by
+// special character(e.g. pipe).
+type Expression interface {
+	Commands() []Command
+	Type() ExpressionType
+	String() string
+}
+
+// Type for expression type.
+type ExpressionType int
+
 const (
 	ENGINE_MAN = "engineman"
 	MODULE_MAN = "moduleman"
 	CHAR_MAN   = "charman"
+	
+	PIPE_ARG_EXP ExpressionType = iota
+	PIPE_TAR_ARG_EXP
+	SEQ_EXP
+	NO_EXP
 )
 
 var (
@@ -70,10 +87,20 @@ func HandleCommand(cmd Command) (int, string) {
 		cmd, cmd.Tool())
 }
 
-// AddToolHandler adds specified command handling function as
-// CI tool with specified name.
-func AddToolHandler(name string, handler func(cmd Command) (int, string)) {
-	tools[name] = handler
+// HandleExpression handles specified expression,
+// returns response code and massage.
+func HandleExpression(exp Expression) (int, string) {
+	switch(exp.Type()) {
+	case PIPE_ARG_EXP:
+		return HandleArgsPipe(exp.Commands()...)
+	case PIPE_TAR_ARG_EXP:
+		return HandleTargetArgsPipe(exp.Commands()...)
+	case NO_EXP:
+		return HandleCommand(exp.Commands()[0])
+	default:
+		return 2, fmt.Sprintf("exp:%s:error:unknow_expression_type",
+			exp)
+	}
 }
 
 // HandleArgsPipe handles specified commands
@@ -102,6 +129,12 @@ func HandleTargetArgsPipe(cmds ...Command) (res int, out string) {
 		}
 	}
 	return
+}
+
+// AddToolHandler adds specified command handling function as
+// CI tool with specified name.
+func AddToolHandler(name string, handler func(cmd Command) (int, string)) {
+	tools[name] = handler
 }
 
 // pipeArgs pushes specified text(out from previous command)

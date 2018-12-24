@@ -24,7 +24,7 @@
 // Command line interface for flame engine.
 // Uses flame command interpreter(CI) to handle user input and communicate
 // with Flame Engine.
-// All commands to be handle by CI must starts with generic sum sign($),
+// All commands to be handle by CI must starts with dollar sign($),
 // otherwise input is directly send to out(like 'echo').
 // Type '$close' to close CLI.
 package main
@@ -51,7 +51,6 @@ const (
 	IMPORT_CHARS_CMD = "importchars"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
-	ARGS_PIPE        = "|"
 )
 
 var (
@@ -138,26 +137,11 @@ func execute(input string) {
 		execute(lastCommand)
 		return
 	default:
-		if strings.Contains(input, ARGS_PIPE) {
-			
-		}
-		cmds, err := command.NewStdCommands(input, ARGS_PIPE)
+		exp, err := command.NewSTDExpression(input)
 		if err != nil {
 			log.Err.Printf("command_build_error:%v", err)
 		}
-		var (
-			res int
-			out string
-		)
-		if len(cmds) < 2 {
-		 	res, out = ci.HandleCommand(cmds[0])
-		} else {
-			pipeCmds := make([]ci.Command, 0)
-			for _, cmd := range cmds {
-				pipeCmds = append(pipeCmds, cmd)
-			}
-			res, out = ci.HandleTargetArgsPipe(pipeCmds...)
-		}
+		res, out := ci.HandleExpression(exp)
 		log.Inf.Printf("CI[%d]:%s\n", res, out)	
 	}
 }
