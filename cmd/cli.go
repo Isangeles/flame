@@ -38,8 +38,8 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/cmd/ci"
-	"github.com/isangeles/flame/cmd/command"
+	"github.com/isangeles/flame/cmd/burn"
+	"github.com/isangeles/flame/cmd/burn/syntax"
 	"github.com/isangeles/flame/cmd/log"
 )
 
@@ -137,11 +137,11 @@ func execute(input string) {
 		execute(lastCommand)
 		return
 	default:
-		exp, err := command.NewSTDExpression(input)
+		exp, err := syntax.NewSTDExpression(input)
 		if err != nil {
 			log.Err.Printf("command_build_error:%v", err)
 		}
-		res, out := ci.HandleExpression(exp)
-		log.Inf.Printf("CI[%d]:%s\n", res, out)	
+		res, out := burn.HandleExpression(exp)
+		log.Inf.Printf("burn[%d]:%s\n", res, out)	
 	}
 }

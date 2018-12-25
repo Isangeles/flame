@@ -1,5 +1,5 @@
 /*
- * interpreter.go
+ * burn.go
  *
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,8 +21,8 @@
  *
  */
 
-// Flame engine commands interpreter.
-package ci
+// Burn is Flame engine commands interpreter.
+package burn
 
 import (
 	"fmt"
@@ -42,7 +42,7 @@ type Command interface {
 
 // Interaface for all expressions interpreted by CI.
 // Expression is multiple commands connected by
-// special character(e.g. pipe).
+// special character(e.g. pipe). 
 type Expression interface {
 	Commands() []Command
 	Type() ExpressionType
@@ -73,6 +73,12 @@ func init() {
 	tools[ENGINE_MAN] = handleEngineCommand
 	tools[MODULE_MAN] = handleModuleCommand
 	tools[CHAR_MAN] = handleCharCommand
+}
+
+// AddToolHandler adds specified command handling function as
+// CI tool with specified name.
+func AddToolHandler(name string, handler func(cmd Command) (int, string)) {
+	tools[name] = handler
 }
 
 // HandleCommand handles specified command,
@@ -123,18 +129,13 @@ func HandleArgsPipe(cmds ...Command) (res int, out string) {
 // command on right as target arguments.
 func HandleTargetArgsPipe(cmds ...Command) (res int, out string) {
 	for _, cmd := range cmds {
+		fmt.Printf("pipe_cmd:%v\n", cmd)
 		res, out = pipeTargetArgs(cmd, out)
 		if res != 0 {
 			return res, out
 		}
 	}
 	return
-}
-
-// AddToolHandler adds specified command handling function as
-// CI tool with specified name.
-func AddToolHandler(name string, handler func(cmd Command) (int, string)) {
-	tools[name] = handler
 }
 
 // pipeArgs pushes specified text(out from previous command)

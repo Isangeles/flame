@@ -5,14 +5,16 @@ MAJOR:
 * Player-NPC interaction
 * NPC AI
 * Game data marshaling/unmarshaling
-* Save game system
 * Scripts processor
 * Game characters inventory and equipment
 * Items
 * Skills
 * Game objects
-* Generating of unique serial IDs for game objects
 MINOR:
 * More detiled readme
 * Tutorials
 * More tools/options for CI
+DONE:
+* Generating of unique serial IDs for game objects
+* Save/load game mechanism
+

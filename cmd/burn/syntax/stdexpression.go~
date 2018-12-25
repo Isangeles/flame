@@ -49,8 +49,8 @@ type STDExpression struct {
 
 // NewStdExpression creates new standard expression from
 // specified text.
-func NewSTDExpression(text string) (STDExpression, error) {
-	var exp STDExpression
+func NewSTDExpression(text string) (*STDExpression, error) {
+	exp := new(STDExpression)
 	exp.text = text
 	switch {	
 	case strings.Contains(text, STD_TAR_ARG_PIPE):
@@ -78,16 +78,16 @@ func NewSTDExpression(text string) (STDExpression, error) {
 }
 
 // Commands returns all expression commands.
-func (exp STDExpression) Commands() []ci.Command {
+func (exp *STDExpression) Commands() []ci.Command {
 	return exp.commands
 }
 
 // Type returns expression type.
-func (exp STDExpression) Type() ci.ExpressionType {
+func (exp *STDExpression) Type() ci.ExpressionType {
 	return exp.etype
 }
 
 // Retruns expression text.
-func (exp STDExpression) String() string {
+func (exp *STDExpression) String() string {
 	return exp.text
 }

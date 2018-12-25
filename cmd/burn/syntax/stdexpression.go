@@ -21,32 +21,43 @@
  *
  */
 
-package command
+package syntax
 
 import (
 	"fmt"
 	"strings"
 
-	"github.com/isangeles/flame/cmd/ci"
+	"github.com/isangeles/flame/cmd/burn"
+)
+
+const (
+	STD_ARG_PIPE = " |a "
+	STD_TAR_ARG_PIPE = " |t "
 )
 
 // Type for standard expressions.
-type StdExpression struct {
+// Syntax:
+// Arg pipe delimiter: ' |a '.
+// Target arg pipe delimiter: ' |t ',
+// e.g. 'moduleman -o show -t areachars [area ID] |t charman -o show -t position' - shows
+// positions of all characters in area with specified ID.
+type STDExpression struct {
 	text     string
-	commands []ci.Command
-	exptype  ci.ExpressionType
+	commands []burn.Command
+	etype    burn.ExpressionType
 }
 
 // NewStdExpression creates new standard expression from
 // specified text.
-func NewStdExpression(text string) (StdExpression, error) {
-	var exp StdExpression
-	if strings.Contains(text, " | ") {
-		exp.text = text
-		exp.exptype = ci.PIPE_TAR_ARG_EXP
-		cmdsText := strings.Split(text, " | ")
+func NewSTDExpression(text string) (*STDExpression, error) {
+	exp := new(STDExpression)
+	exp.text = text
+	switch {	
+	case strings.Contains(text, STD_TAR_ARG_PIPE):
+		exp.etype = burn.PIPE_TAR_ARG_EXP
+		cmdsText := strings.Split(text, STD_TAR_ARG_PIPE)
 		for _, cmdText := range cmdsText {
-			cmd, err := NewStdCommand(strings.TrimSpace(cmdText))
+			cmd, err := NewSTDCommand(strings.TrimSpace(cmdText))
 			if err != nil {
 				return exp, fmt.Errorf("command:%s:fail_to_buil_expression_command:%v",
 					cmdText, err)
@@ -54,16 +65,29 @@ func NewStdExpression(text string) (StdExpression, error) {
 			exp.commands = append(exp.commands, cmd)
 		}
 		return exp, nil
+	default:
+		exp.etype = burn.NO_EXP
+		cmd, err := NewSTDCommand(strings.TrimSpace(text))
+		if err != nil {
+			return exp, fmt.Errorf("command:%s:fail_to_buil_expression_command:%v",
+				text, err)
+		}
+		exp.commands = append(exp.commands, cmd)
+		return exp, nil
 	}
-	return exp, fmt.Errorf("unknown expression format")
 }
 
 // Commands returns all expression commands.
-func (exp StdExpression) Commands() []ci.Command {
+func (exp *STDExpression) Commands() []burn.Command {
 	return exp.commands
 }
 
+// Type returns expression type.
+func (exp *STDExpression) Type() burn.ExpressionType {
+	return exp.etype
+}
+
 // Retruns expression text.
-func (exp StdExpression) String() string {
+func (exp *STDExpression) String() string {
 	return exp.text
 }
