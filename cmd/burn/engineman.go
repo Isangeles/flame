@@ -28,6 +28,7 @@ import (
 	"path/filepath"
 
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
@@ -121,17 +122,18 @@ func loadEngineOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
 				ENGINE_MAN, cmd.TargetArgs()[0])
 		}
-		savesPath, err := flame.SavegamesPath()
-		if err != nil {
-			return 8, fmt.Sprintf("%s:fail_to_retrieve_saves_path:%v",
-				ENGINE_MAN, err)
+		if flame.Mod() == nil {
+			return 7, fmt.Sprintf("%s:no_module_loaded",
+				ENGINE_MAN)
 		}
+		savesPath := flame.SavegamesPath()
 		saveName := cmd.Args()[0]
-		g, err := data.LoadGame(flame.Mod(), savesPath, saveName)
+		sav, err := data.LoadSavedGame(flame.Mod(), savesPath, saveName)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:fail_to_load_game:%v",
 				ENGINE_MAN, err)
 		}
+		g := core.LoadGame(sav)
 		flame.SetGame(g)
 		return 0, ""
 		
@@ -163,13 +165,13 @@ func saveEngineOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:not_enought_args_for:%s",
 				ENGINE_MAN, cmd.TargetArgs()[0])
 		}
-		savePath, err := flame.SavegamesPath()
-		if err != nil {
-			return 8, fmt.Sprintf("%s:fail_to_retrieve_savegames_path:%v",
-				ENGINE_MAN, err)
+		if flame.Mod() == nil {
+			return 7, fmt.Sprintf("%s:no_module_loaded",
+				ENGINE_MAN)
 		}
+		savePath := flame.SavegamesPath()
 		saveName := cmd.Args()[0]
-		err = data.SaveGame(flame.Game(), savePath, saveName)
+		err := data.SaveGame(flame.Game(), savePath, saveName)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:fail_to_save_game:%v",
 				ENGINE_MAN, err)

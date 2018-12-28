@@ -27,6 +27,7 @@ package core
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
@@ -67,16 +68,21 @@ func NewGame(mod *module.Module, players []*character.Character) (*Game, error) 
 
 // LoadGame creates game from loaded module
 // state and PCs.
-func LoadGame(mod *module.Module, pcs []*character.Character) *Game {
+func LoadGame(save *save.SaveGame) *Game {
 	g := new(Game)
-	g.mod = mod
-	g.pcs = pcs
+	g.mod = save.Mod
+	g.pcs = save.Players
 	return g
 }
 
 // Module returns game module.
 func (g *Game) Module() *module.Module {
 	return g.mod
+}
+
+// Players returns all game PCs.
+func (g *Game) Players() []*character.Character {
+	return g.pcs
 }
 
 // Player returns player character with specified serial ID

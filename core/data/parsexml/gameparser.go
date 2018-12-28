@@ -29,13 +29,14 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/isangeles/flame/core"
+	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/core/module"
 )
 
 // Struct for saved game XML node.
 type SavedGameXML struct {
 	XMLName xml.Name        `xml:"game"`
+	Name    string          `xml:"name,attr"`
 	Chapter SavedChapterXML `xml:"chapter"`
 }
 
@@ -75,9 +76,10 @@ type SavedCharactersXML struct {
 
 // MarshalGame parses specified game to XML
 // savegame data.
-func MarshalGame(game *core.Game) (string, error) {
+func MarshalSaveGame(game *save.SaveGame) (string, error) {
 	xmlGame := new(SavedGameXML)
-	chapter := game.Module().Chapter()
+	xmlGame.Name = game.Name
+	chapter := game.Mod.Chapter()
 	if chapter == nil {
 		return "", fmt.Errorf("no game chapter set")
 	}
@@ -98,8 +100,10 @@ func MarshalGame(game *core.Game) (string, error) {
 				xmlChar := xmlCharacter(c)
 				charSerialID := module.FullSerial(xmlChar.ID,
 					xmlChar.Serial)
-				if game.Player(charSerialID) != nil {
-					xmlChar.PC = true
+				for _, pc := range game.Players {	
+					if pc.SerialID() == charSerialID {
+						xmlChar.PC = true
+					}
 				}
 				xmlChars.Characters = append(xmlChars.Characters,
 					*xmlChar)

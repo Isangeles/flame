@@ -31,6 +31,7 @@ import (
 
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/object/character"
@@ -45,7 +46,10 @@ var (
 // file.
 func SaveGame(game *core.Game, dirPath, saveName string) error {
 	// Parse game data.
-	xml, err := parsexml.MarshalGame(game)
+	save := new(save.SaveGame)
+	save.Mod = game.Module()
+	save.Players = game.Players()
+	xml, err := parsexml.MarshalSaveGame(save)
 	if err != nil {
 		return fmt.Errorf("fail_to_marshal_game:%v",
 			err)
@@ -87,18 +91,19 @@ func LoadGame(mod *module.Module, dirPath, fileName string) (*core.Game, error) 
 		return nil, fmt.Errorf("fail_to_unmarshal_savegame_data:%v",
 			err)
 	}
-	game, err := buildXMLSavedGame(mod, &xmlGame)
+	save, err := buildXMLSavedGame(mod, &xmlGame)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_build_game_from_saved_data:%v",
 			err)
 	}
+	game := core.LoadGame(save)
 	return game, nil
 }
 
 // buildXMLSavedGame build game from data in specified
 // saved game XML struct.
 func buildXMLSavedGame(mod *module.Module,
-	xmlGame *parsexml.SavedGameXML) (*core.Game, error) {
+	xmlGame *parsexml.SavedGameXML) (*save.SaveGame, error) {
 	xmlChapter := &xmlGame.Chapter
 	// Load chapter with ID from save.
 	err := LoadChapter(mod, xmlChapter.ID)
@@ -151,6 +156,8 @@ func buildXMLSavedGame(mod *module.Module,
 		}
 	}
 	// Create game from saved data.
-	game := core.LoadGame(mod, pcs)
+	game := new(save.SaveGame)
+	game.Mod = mod
+	game.Players = pcs
 	return game, nil
 }

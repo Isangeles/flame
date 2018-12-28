@@ -118,12 +118,12 @@ func LangID() string {
 // SavehgamesPath returns current path
 // to savegames directory or errror
 // if no module is loaded.
-func SavegamesPath() (string, error) {
+func SavegamesPath() string {
 	if Mod() == nil {
-		return "", fmt.Errorf("no module loaded")
+		return "savegames"
 	}
 	return filepath.FromSlash("savegames/" +
-		Mod().Conf().Name), nil
+		Mod().Conf().Name)
 }
 
 // SetLang sets language with specified ID as current language.
