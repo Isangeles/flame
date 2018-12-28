@@ -29,7 +29,6 @@ import (
 	"github.com/isangeles/flame/core/module/object/character"
 )
 
-
 // charDisplayString returns string with character
 // stats and info.
 func charDisplayString(char *character.Character) string {

@@ -79,11 +79,13 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 	return nil
 }
 
-// LoadSavedGame loads saved game from save file with specified name in
+// ImportSavedGame imports saved game from save file with specified name in
 // specified dir.
-func LoadSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGame, error) {
-	filePath := filepath.FromSlash(dirPath + "/" + fileName +
-		SAVEGAME_FILE_EXT)
+func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGame, error) {
+	filePath := filepath.FromSlash(dirPath + "/" + fileName)
+	if !strings.HasSuffix(filePath, SAVEGAME_FILE_EXT) {
+		filePath = filePath + SAVEGAME_FILE_EXT
+	}
 	doc, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_savegame_file:%v",
@@ -102,9 +104,9 @@ func LoadSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGame
 	return save, nil
 }
 
-// LoadSavedGamesDir loads all saved games from save files in
+// ImportSavedGamesDir imports all saved games from save files in
 // directory with specified path.
-func LoadSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, error) {
+func ImportSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		log.Err.Printf("fail_to_read_dir:%v",
@@ -115,7 +117,7 @@ func LoadSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, er
 		if !strings.HasSuffix(fInfo.Name(), SAVEGAME_FILE_EXT) {
 			continue
 		}
-		sav, err := LoadSavedGame(mod, dirPath, fInfo.Name())
+		sav, err := ImportSavedGame(mod, dirPath, fInfo.Name())
 		if err != nil {
 			log.Err.Printf("data_savegame_load:fail_to_import_save:%v",
 				err)

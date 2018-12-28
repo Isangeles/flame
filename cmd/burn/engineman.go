@@ -128,7 +128,7 @@ func loadEngineOption(cmd Command) (int, string) {
 		}
 		savesPath := flame.SavegamesPath()
 		saveName := cmd.Args()[0]
-		sav, err := data.LoadSavedGame(flame.Mod(), savesPath, saveName)
+		sav, err := data.ImportSavedGame(flame.Mod(), savesPath, saveName)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:fail_to_load_game:%v",
 				ENGINE_MAN, err)
