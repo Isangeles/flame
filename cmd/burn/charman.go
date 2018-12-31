@@ -85,6 +85,23 @@ func setCharOption(cmd Command) (int, string) {
 		}
 		char.SetPosition(x, y)
 		return 0, ""
+	case "dest":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.OptionArgs()[1])
+		}
+		x, err := strconv.ParseFloat(cmd.Args()[0], 64)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:invalid_argument:%s", CHAR_MAN,
+				cmd.OptionArgs()[0])
+		}
+		y, err := strconv.ParseFloat(cmd.Args()[1], 64)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:invalid_argument:%s", CHAR_MAN,
+				cmd.OptionArgs()[1])
+		}
+		char.SetDestPoint(x, y)
+		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])

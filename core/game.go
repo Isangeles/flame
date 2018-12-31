@@ -75,6 +75,15 @@ func LoadGame(save *save.SaveGame) *Game {
 	return g
 }
 
+// Update updates game, delta value must be
+// time from last update in milliseconds.
+func (g *Game) Update(delta int64) {
+	updateChars := g.Module().Chapter().Characters()
+	for _, c := range updateChars {
+		c.Update()
+	}
+}
+
 // Module returns game module.
 func (g *Game) Module() *module.Module {
 	return g.mod

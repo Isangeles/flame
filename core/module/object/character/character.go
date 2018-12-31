@@ -31,18 +31,19 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id         string
-	serial     string
-	name       string
-	level      int
-	sex        Gender
-	race       Race
-	attitude   Attitude
-	alignment  Alignment
-	guild      Guild
-	attributes Attributes
-	posX, posY float64
-	sight      float64
+	id           string
+	serial       string
+	name         string
+	level        int
+	sex          Gender
+	race         Race
+	attitude     Attitude
+	alignment    Alignment
+	guild        Guild
+	attributes   Attributes
+	posX, posY   float64
+	destX, destY float64
+	sight        float64
 }
 
 // NewCharacter returns new character with specified parameters.
@@ -62,6 +63,24 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 		sight: 300,
 	}
 	return &c
+}
+
+// Update updates character.
+func (c *Character) Update() {
+	if c.InMove() {
+		if c.posX < c.destX {
+			c.Move(c.posX+1, c.posY) 
+		}
+		if c.posX > c.destX {
+			c.Move(c.posX-1, c.posY)
+		}
+		if c.posY < c.destY {
+			c.Move(c.posX, c.posY+1)
+		}
+		if c.posY > c.destY {
+			c.Move(c.posX, c.posY-1)
+		}
+	}
 }
 
 // Id returns character ID.
@@ -137,13 +156,35 @@ func (c *Character) SetName(name string) {
 }
 
 // SetPosition sets specified XY position as current
-// position of character.
+// position of character and current destination point.
 func (c *Character) SetPosition(x, y float64) {
 	c.posX, c.posY = x, y
+	c.destX, c.destY = x, y
+}
+
+// Move moves characters to specified XY position
+// without changing destination point.
+func (c *Character) Move(x, y float64) {
+	c.posX, c.posY = x, y
+}
+
+// SetDestPoint sets specified XY position as current
+// destionation point of character.
+func (c *Character) SetDestPoint(x, y float64) {
+	c.destX, c.destY = x, y
 }
 
 // SetSerial sets specified serial value for this
 // character.
 func (c *Character) SetSerial(serial string) {
 	c.serial = serial
+}
+
+// InMove checks whether character is moving.
+func (c *Character) InMove() bool {
+	if c.posX != c.destX || c.posY != c.destY {
+		return true
+	} else {
+		return false
+	}
 }

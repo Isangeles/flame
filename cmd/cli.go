@@ -34,13 +34,14 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/core"
-	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/cmd/burn"
 	"github.com/isangeles/flame/cmd/burn/syntax"
 	"github.com/isangeles/flame/cmd/log"
+	"github.com/isangeles/flame/core"
+	"github.com/isangeles/flame/core/data"
 )
 
 const (
@@ -56,6 +57,7 @@ const (
 var (
 	game        *core.Game
 	lastCommand string
+	lastUpdate  time.Time
 )
 
 // On init.
@@ -84,6 +86,10 @@ func main() {
 			log.Inf.Println(input)
 		}
 		fmt.Print(INPUT_INDICATOR)
+		// Game update on input.
+		if game != nil {
+			go gameLoop(game)
+		}
 	}
 	if err := scan.Err(); err != nil {
 		log.Err.Printf("input_scanner_init_fail_msg:%v\n", err)
@@ -119,6 +125,7 @@ func execute(input string) {
 			break
 		}
 		game = g
+		lastUpdate = time.Now()
 	case IMPORT_CHARS_CMD:
 		if flame.Mod() == nil {
 			log.Err.Printf("no_module_loaded")
@@ -142,6 +149,14 @@ func execute(input string) {
 			log.Err.Printf("command_build_error:%v", err)
 		}
 		res, out := burn.HandleExpression(exp)
-		log.Inf.Printf("burn[%d]:%s\n", res, out)	
+		log.Inf.Printf("burn[%d]:%s\n", res, out)
 	}
+}
+
+// gameLoop handles game updating.
+func gameLoop(g *core.Game) {
+	dtNano := time.Since(lastUpdate).Nanoseconds()
+	delta := dtNano / int64(time.Millisecond) // delta to milliseconds
+	g.Update(delta)
+	lastUpdate = time.Now()
 }
