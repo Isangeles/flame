@@ -144,6 +144,11 @@ func (c *Character) Position() (float64, float64) {
 	return c.posX, c.posY
 }
 
+// DestPoint return current destination point position.
+func (c *Character) DestPoint() (float64, float64) {
+	return c.destX, c.destY
+}
+
 // SightRange returns current sight range.
 func (c *Character) SightRange() float64 {
 	return c.sight

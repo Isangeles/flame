@@ -112,6 +112,8 @@ func UnmarshalAlignment(aliAttr string) (character.Alignment, error) {
 		return character.Chaotic_good, nil
 	case "lawful_neutral":
 		return character.Lawful_neutral, nil
+	case "chaotic_neutral":
+		return character.Chaotic_neutral, nil
 	case "true_neutral":
 		return character.True_neutral, nil
 	case "lawful_evil":
