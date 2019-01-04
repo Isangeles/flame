@@ -27,6 +27,8 @@ package character
 
 import (
 	"fmt"
+
+	"github.com/isangeles/flame/core/module/object/item"
 )
 
 // Character struct represents game character.
@@ -44,6 +46,8 @@ type Character struct {
 	posX, posY   float64
 	destX, destY float64
 	sight        float64
+	inventory    *item.Inventory
+	equipment    *Equipment
 }
 
 // NewCharacter returns new character with specified parameters.
@@ -62,6 +66,8 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 		alignment: alignment,
 		sight: 300,
 	}
+	c.inventory = new(item.Inventory)
+	c.equipment = new(Equipment)
 	return &c
 }
 
@@ -152,6 +158,16 @@ func (c *Character) DestPoint() (float64, float64) {
 // SightRange returns current sight range.
 func (c *Character) SightRange() float64 {
 	return c.sight
+}
+
+// Inventory returns character inventory.
+func (c *Character) Inventory() *item.Inventory {
+	return c.inventory
+}
+
+// Equipment returns character equipment.
+func (c *Character) Equipment() *Equipment {
+	return c.equipment
 }
 
 // SetName sets specified text as character
