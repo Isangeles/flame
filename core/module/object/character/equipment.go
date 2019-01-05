@@ -24,11 +24,32 @@
 package character
 
 import (
+	"fmt"
+	
 	"github.com/isangeles/flame/core/module/object/item"
 )
 
 // Struct for character equipment.
 type Equipment struct {
+	char      *Character
 	handRight item.Equiper
 	handLeft  item.Equiper
+}
+
+// newEquipment creates new equipment for
+// specified character.
+func newEquipment(char *Character) *Equipment {
+	eq := new(Equipment)
+	eq.char = char
+	return eq
+}
+
+// EquipHandRight equips specified 'equipable' item,
+// returns error if equip fail(e.q. equip reqs not meet).
+func (eq *Equipment) EquipHandRight(item item.Equiper) error {
+	if eq.char.MeetReqs(item.EquipReqs()) {
+		eq.handRight = item
+		return nil
+	}
+	return fmt.Errorf("reqs_not_meet")
 }

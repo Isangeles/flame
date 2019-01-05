@@ -125,7 +125,12 @@ func LoadScenario(mod *module.Module, id string) error {
 		char.SetPosition(x, y)
 		name := text.ReadDisplayText(npcsLangPath, char.ID())
 		char.SetName(name[0])
-		mod.AssignSerial(char)
+		err = mod.AssignSerial(char)
+		if err != nil {
+			log.Err.Printf("data_scenario_spawn_npc:%s:fail_to_assign_serial:%v",
+				xmlAreaChar.ID, err)
+			continue
+		}
 		mainarea.AddCharacter(char)
 	}
 	subareas := make([]*scenario.Area, 0)

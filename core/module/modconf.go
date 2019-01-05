@@ -45,3 +45,9 @@ func (c ModConf) ChaptersPath() string {
 func (c ModConf) CharactersPath() string {
 	return filepath.FromSlash(c.Path + "/characters")
 }
+
+// ItemsPath returns path to items bases
+// directory.
+func (c ModConf) ItemsPath() string {
+	return filepath.FromSlash(c.Path + "/items")
+}

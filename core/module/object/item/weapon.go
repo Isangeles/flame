@@ -33,6 +33,7 @@ import (
 type Weapon struct {
 	id             string
 	serial         string
+	name           string
 	value          int
 	level          int
 	dmgMin, dmgMax int
@@ -41,10 +42,11 @@ type Weapon struct {
 
 // NewWeapon creates new weapon with
 // specified parameters.
-func NewWeapon(id string, value, level, dmgMin, dmgMax int,
+func NewWeapon(id, name string, value, level, dmgMin, dmgMax int,
 	equipReqs []req.Requirement) *Weapon {
 	w := Weapon{
 		id: id,
+		name: name,
 		value: value,
 		level: level,
 		dmgMin: dmgMin,
@@ -72,8 +74,19 @@ func (w *Weapon) SerialID() string {
 
 // SetSerial sets specified value as serial
 // value of weapon.
-func (w *Weapon) SerSerial(serial string) {
+func (w *Weapon) SetSerial(serial string) {
 	w.serial = serial
+}
+
+// Name returns item name.
+func (w *Weapon) Name() string {
+	return w.name
+}
+
+// SetName sets specified name as
+// item display name.
+func (w *Weapon) SetName(name string) {
+	w.name = name
 }
 
 // Value returns item value.

@@ -67,7 +67,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 		sight: 300,
 	}
 	c.inventory = new(item.Inventory)
-	c.equipment = new(Equipment)
+	c.equipment = newEquipment(&c)
 	return &c
 }
 

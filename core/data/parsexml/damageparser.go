@@ -1,5 +1,5 @@
 /*
- * req.go
+ * damageparser.go
  *
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,30 +21,16 @@
  *
  */
 
-package character
+package parsexml
 
 import (
-	"github.com/isangeles/flame/core/module/req"
+	"encoding/xml"
 )
 
-// ReqMeet checks whether character meets
-// specified requirement.
-func (char *Character) MeetReq(r req.Requirement) bool {
-	switch r := r.(type) {
-	case *req.LevelReq:
-		return char.Level() >= r.MinLevel() 
-	default:
-		return true
-	}
+// Struct for damage XML node.
+type DamageNodeXML struct {
+	XMLNode xml.Name `xml:"damage"`
+	Min     int      `xml:"min,value"`
+	Max     int      `xml:"max,value"`
 }
 
-// ReqsMeet checks whether all specified requirements
-// are meet by character.
-func (char *Character) MeetReqs(reqs []req.Requirement) bool {
-	for _, r := range reqs {
-		if !char.MeetReq(r) {
-			return false
-		}
-	}
-	return true
-}

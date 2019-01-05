@@ -1,0 +1,8 @@
+<base>
+	<item id="iwIronSword" value="10" level="1">
+		<damage>
+			<min>1</min>
+			<max>10</max>
+		</damage>
+	</item>
+</base>

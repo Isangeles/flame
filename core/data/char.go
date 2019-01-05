@@ -101,8 +101,8 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
 		impChars, err := ImportCharacters(charFilePath)
 		if err != nil {
-			log.Err.Printf("data_char_import:fail_to_parse_char_file:%v",
-				err)
+			log.Err.Printf("data_char_import:%s:fail_to_parse_char_file:%v",
+				charFilePath, err)
 			continue
 		}
 		for _, c := range impChars {

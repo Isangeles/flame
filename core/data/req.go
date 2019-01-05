@@ -21,30 +21,21 @@
  *
  */
 
-package character
+package data
 
 import (
+	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module/req"
 )
 
-// ReqMeet checks whether character meets
-// specified requirement.
-func (char *Character) MeetReq(r req.Requirement) bool {
-	switch r := r.(type) {
-	case *req.LevelReq:
-		return char.Level() >= r.MinLevel() 
-	default:
-		return true
+// buildXMLReqs creates requirements from specified
+// XML data.
+func buildXMLReqs(xmlReqs *parsexml.ReqsNodeXML) []req.Requirement { 
+	reqs := make([]req.Requirement, 0)
+	// Level reqs.
+	for _, xmlReq := range xmlReqs.LevelReqs {
+		req := req.NewLevelReq(xmlReq.MinLevel)
+		reqs = append(reqs, req)
 	}
-}
-
-// ReqsMeet checks whether all specified requirements
-// are meet by character.
-func (char *Character) MeetReqs(reqs []req.Requirement) bool {
-	for _, r := range reqs {
-		if !char.MeetReq(r) {
-			return false
-		}
-	}
-	return true
+	return reqs
 }

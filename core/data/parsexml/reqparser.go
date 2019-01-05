@@ -1,5 +1,5 @@
 /*
- * req.go
+ * reqparser.go
  *
  * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,30 +21,20 @@
  *
  */
 
-package character
+package parsexml
 
 import (
-	"github.com/isangeles/flame/core/module/req"
+	"encoding/xml"
 )
 
-// ReqMeet checks whether character meets
-// specified requirement.
-func (char *Character) MeetReq(r req.Requirement) bool {
-	switch r := r.(type) {
-	case *req.LevelReq:
-		return char.Level() >= r.MinLevel() 
-	default:
-		return true
-	}
+// Struct for requirements XML node.
+type ReqsNodeXML struct {
+	XMLName   xml.Name          `xml:"reqs"`
+	LevelReqs []LevelReqNodeXML `xml:"levelReq"`
 }
 
-// ReqsMeet checks whether all specified requirements
-// are meet by character.
-func (char *Character) MeetReqs(reqs []req.Requirement) bool {
-	for _, r := range reqs {
-		if !char.MeetReq(r) {
-			return false
-		}
-	}
-	return true
+// Struct for level requirement XML node.
+type LevelReqNodeXML struct {
+	XMLName  xml.Name `xml:"levelReq"`
+	MinLevel int      `xml:"min,value"`
 }

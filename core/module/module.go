@@ -56,21 +56,6 @@ func NewModule(conf ModConf) *Module {
 
 // Jumps to next module chapter.
 func (m *Module) SetChapter(chapter *Chapter) error {
-	// TODO: for now only start chapter.
-	/*
-	chapPath := filepath.FromSlash(m.ChaptersPath() +
-		"/" + m.conf.Chapters[0])
-	chapConf, err := LoadChapterConf(chapPath)
-	if err != nil {
-		return fmt.Errorf("fail_to_read_chapter_conf:%s:%v",
-			chapPath, err)
-	}
-	chapConf.ID = m.conf.Chapters[0]
-	c, err := NewChapter(m, chapConf)
-	if err != nil {
-		return fmt.Errorf("fail_to_set_next_chapter:%v", err)
-	}
-        */
 	m.chapter = chapter
 	return nil
 }
@@ -99,6 +84,12 @@ func (m *Module) ChaptersPath() string {
 // exported characters.
 func (m *Module) CharactersPath() string {
 	return m.conf.CharactersPath()
+}
+
+// ItemsPath returns path to directory
+// with items bases.
+func (m *Module) ItemsPath() string {
+	return m.conf.ItemsPath()
 }
 
 // Chapter returns current module chapter.
@@ -157,10 +148,12 @@ func (m *Module) AssignSerial(ob Serializer) error {
 	if chapter == nil {
 		return fmt.Errorf("no active chapter set")
 	}
-	switch ob.(type) {
+	switch ob := ob.(type) {
 	case *character.Character:
-		char, _ := ob.(*character.Character)
-		m.Chapter().AssignCharacterSerial(char)	
+		m.Chapter().AssignCharacterSerial(ob)
+		return nil
+	// TODO: item case.
+	default:
+		return fmt.Errorf("unsupported object type")
 	}
-	return nil
 }
