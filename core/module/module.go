@@ -29,6 +29,7 @@ import (
 	"path/filepath"
 
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/item"
 )
 
 var (
@@ -39,6 +40,7 @@ var (
 type Module struct {
 	conf    ModConf
 	chapter *Chapter
+	items   []Serializer
 }
 
 // DefaultModulesPath returns default path to modules directory.
@@ -51,6 +53,7 @@ func DefaultModulesPath() string {
 func NewModule(conf ModConf) *Module {
 	m := new(Module)
 	m.conf = conf
+	m.items = make([]Serializer, 0)
 	return m
 }
 
@@ -152,8 +155,18 @@ func (m *Module) AssignSerial(ob Serializer) error {
 	case *character.Character:
 		m.Chapter().AssignCharacterSerial(ob)
 		return nil
-	// TODO: item case.
+	case item.Item:
+		m.AssignItemSerial(ob)
+		return nil
 	default:
-		return fmt.Errorf("unsupported object type")
+		return fmt.Errorf("unsupported game object type")
 	}
+}
+
+// AssignItemSerial assigns unique serial value to
+// specified item.
+func (m *Module) AssignItemSerial(it item.Item) {
+	serial := uniqueSerial(m.items)
+	it.SetSerial(serial)
+	m.items = append(m.items, it)
 }

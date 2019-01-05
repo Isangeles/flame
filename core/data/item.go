@@ -90,6 +90,20 @@ func LoadWeaponsDir(dirPath string) error {
 	return nil
 }
 
+// Item creates new instance of item with specified ID
+// for specified module, returns error if item with such ID
+// was not found or module failed to assign serial value for
+// item.
+func Item(mod *module.Module, id string) (item.Item, error) {
+	switch {
+	case weaponsData[id] != nil:
+		return Weapon(mod, id)
+	default:
+		return nil, fmt.Errorf("item_not_found:%s",
+			id)
+	}
+}
+
 // Weapon creates new instance of weapon with specified ID
 // for specified module, returns error if weapon with such ID
 // was not found or module failed to assign serial value for

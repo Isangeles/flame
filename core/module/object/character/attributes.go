@@ -27,10 +27,20 @@ import (
 	"fmt"
 )
 
+const (
+	base_lift = 10
+)
+
 // Attributes struct represents game character attributes: strenght,
 // constitution, dexterity, wisdom, intelligence.
 type Attributes struct {
 	Str, Con, Dex, Wis, Int int
+}
+
+// Lift returns maximal size of inventory based on
+// attributes.
+func (a Attributes) Lift() int {
+	return base_lift * a.Str
 }
 
 // String returns attributes struct as string in format:

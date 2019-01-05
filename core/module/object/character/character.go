@@ -66,7 +66,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 		alignment: alignment,
 		sight: 300,
 	}
-	c.inventory = new(item.Inventory)
+	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
 	return &c
 }

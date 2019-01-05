@@ -23,9 +23,22 @@
 
 package item
 
+import (
+	"fmt"
+)
+
 // Struct for container with items.
 type Inventory struct {
-	items []Item
+	items   []Item
+	maxSize int
+}
+
+// NewInventory creates new inventory with
+// specified maximal capacity.
+func NewInventory(size int) *Inventory {
+	inv := new(Inventory)
+	inv.maxSize = size
+	return inv
 }
 
 // Items returns all items in inventory.
@@ -46,8 +59,12 @@ func (inv *Inventory) Item(serialID string) Item {
 }
 
 // AddItems add specified item to inventory.
-func (inv *Inventory) AddItem(i Item) {
+func (inv *Inventory) AddItem(i Item) error {
+	if len(inv.items) >= inv.maxSize {
+		return fmt.Errorf("no_inv_space")
+	}
 	inv.items = append(inv.items, i)
+	return nil
 }
 
 // Size returns current amount of items

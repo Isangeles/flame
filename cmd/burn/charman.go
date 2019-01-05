@@ -49,6 +49,8 @@ func handleCharCommand(cmd Command) (int, string) {
 		return showCharOption(cmd)
 	case "export":
 		return exportCharOption(cmd)
+	case "add":
+		return addCharOption(cmd)
 	default:
 		return 4, fmt.Sprintf("%s:no_such_option:%s", CHAR_MAN,
 			cmd.OptionArgs()[0])
@@ -137,6 +139,14 @@ func showCharOption(cmd Command) (int, string) {
 		return 0, chars[0].ID()
 	case "serialid":
 		return 0, chars[0].SerialID()
+	case "items":
+		out := ""
+		for _, char := range chars {
+			for _, it := range char.Inventory().Items() {
+				out += fmt.Sprintf("%s ", it.SerialID())
+			}
+		}
+		return 0, out
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
@@ -160,4 +170,44 @@ func exportCharOption(cmd Command) (int, string) {
 		return 8, fmt.Sprintf("%s:%v", CHAR_MAN, err)
 	}
 	return 0, ""
+}
+
+// addEngineOption handles 'export' option for engineman CI tool.
+func addCharOption(cmd Command) (int, string) {
+	if len(cmd.TargetArgs()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			CHAR_MAN, cmd.OptionArgs()[0])
+	}
+	if len(cmd.Args()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_args_for:%s",
+			CHAR_MAN, cmd.OptionArgs()[0])
+	}
+	char := flame.Game().Player(cmd.TargetArgs()[0])
+	if char == nil {
+		return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
+			cmd.TargetArgs()[1])
+	}
+
+	switch cmd.Args()[0] {
+	case "item":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+			CHAR_MAN, cmd.Args()[0])
+		}
+		itemID := cmd.Args()[1]
+		item, err := data.Item(flame.Game().Module(), itemID)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_retrieve_item:%v",
+				CHAR_MAN, err)
+		}
+		err = char.Inventory().AddItem(item)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_add_item_to_inventory:%v",
+				CHAR_MAN, err)
+		}
+		return 0, ""
+	default:
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
+			cmd.OptionArgs()[0], cmd.Args()[0])
+	}
 }
