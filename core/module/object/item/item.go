@@ -31,6 +31,7 @@ import (
 type Item interface {
 	ID()       string
 	SerialID() string
+	Name()     string
 	Value()    int
 	Level()    int
 }
