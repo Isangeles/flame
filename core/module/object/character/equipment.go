@@ -44,12 +44,15 @@ func newEquipment(char *Character) *Equipment {
 	return eq
 }
 
-// EquipHandRight equips specified 'equipable' item,
-// returns error if equip fail(e.q. equip reqs not meet).
-func (eq *Equipment) EquipHandRight(item item.Equiper) error {
-	if eq.char.MeetReqs(item.EquipReqs()) {
-		eq.handRight = item
-		return nil
+// EquipHandRight assigns specified 'equipable' item to right hand slot,
+// returns error if equip fail(e.q. equip reqs aren't meet).
+func (eq *Equipment) EquipHandRight(it item.Equiper) error {
+	if !eq.char.MeetReqs(it.EquipReqs()) {
+		return fmt.Errorf("reqs_not_meet")
 	}
-	return fmt.Errorf("reqs_not_meet")
+	if len(it.Slots()) != 1 || it.Slots()[0] != item.Hand {
+		return fmt.Errorf("slot_not_match")
+	}
+	eq.handRight = it
+	return nil
 }

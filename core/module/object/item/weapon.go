@@ -38,12 +38,13 @@ type Weapon struct {
 	level          int
 	dmgMin, dmgMax int
 	equipReqs      []req.Requirement
+	slots          []Slot
 }
 
 // NewWeapon creates new weapon with
 // specified parameters.
 func NewWeapon(id, name string, value, level, dmgMin, dmgMax int,
-	equipReqs []req.Requirement) *Weapon {
+	equipReqs []req.Requirement, slots []Slot) *Weapon {
 	w := Weapon{
 		id: id,
 		name: name,
@@ -52,6 +53,7 @@ func NewWeapon(id, name string, value, level, dmgMin, dmgMax int,
 		dmgMin: dmgMin,
 		dmgMax: dmgMax,
 		equipReqs: equipReqs,
+		slots: slots,
 	}
 	return &w
 }
@@ -108,4 +110,10 @@ func (w *Weapon) Damage() (int, int) {
 // EquipReqs returns weapon equip requirements.
 func (w *Weapon) EquipReqs() []req.Requirement {
 	return w.equipReqs
+}
+
+// Slots returns type of slots occupated by
+// this weapon.
+func (w *Weapon) Slots() []Slot {
+	return w.slots
 }

@@ -29,6 +29,7 @@ import (
 	"strconv"
 
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/item"
 )
 
 var (
@@ -160,4 +161,20 @@ func UnmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 		fmt.Errorf("fail to parse wis attribute:%s", stats[4])
 	}
 	return character.Attributes{str, con, dex, inte, wis}, nil
+}
+
+// UnmarshalItemSlots parses specified slots attribute from XML doc
+// to item slot types.
+func UnmarshalItemSlots(slotsAttr string) ([]item.Slot, error) {
+	slots := make([]item.Slot, 0)
+	attrs := strings.Split(slotsAttr, " ")
+	for _, attr := range attrs {
+		switch attr {
+		case "one_hand":
+			slots = append(slots, item.Hand)
+		default: // all slots IDs must be 'parsable'
+			return nil, fmt.Errorf("fail_to_parse_slot_type:%s", slotsAttr)
+		}
+	}
+	return slots, nil
 }

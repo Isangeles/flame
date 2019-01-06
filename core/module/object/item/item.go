@@ -41,4 +41,19 @@ type Item interface {
 // Interface for 'equipable' items.
 type Equiper interface {
 	EquipReqs() []req.Requirement
+	Slots()     []Slot
 }
+
+// Type for slot type occupated by item.
+type Slot int
+
+const (
+	None Slot = iota
+	Head
+	Neck
+	Chest
+	Hand
+	Finger
+	Legs
+	Feets
+)

@@ -116,10 +116,13 @@ func Weapon(mod *module.Module, id string) (*item.Weapon, error) {
 	}
 	itemsLangPath := filepath.FromSlash(mod.Chapter().LangPath() +
 		"items" + text.LANG_FILE_EXT)
-	w := buildXMLWeapon(xmlWeapon)
+	w, err := buildXMLWeapon(xmlWeapon)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_build_weapon:%v", err)
+	}
 	name := text.ReadDisplayText(itemsLangPath, w.ID())
 	w.SetName(name[0])
-	err := mod.AssignSerial(w)
+	err = mod.AssignSerial(w)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_assign_item_serial:%v",
 			err)
@@ -128,9 +131,14 @@ func Weapon(mod *module.Module, id string) (*item.Weapon, error) {
 }
 
 // buildXMLWeapon creates new weapon from specified XML data.
-func buildXMLWeapon(xmlWeapon *parsexml.WeaponNodeXML) *item.Weapon {
+func buildXMLWeapon(xmlWeapon *parsexml.WeaponNodeXML) (*item.Weapon, error) {
 	reqs := buildXMLReqs(&xmlWeapon.Reqs)
+	slots, err := parsexml.UnmarshalItemSlots(xmlWeapon.Slots)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_slot_types:%v",
+			err)
+	}
 	w := item.NewWeapon(xmlWeapon.ID, "", xmlWeapon.Value, xmlWeapon.Level,
-		xmlWeapon.Damage.Min, xmlWeapon.Damage.Max, reqs)
-	return w
+		xmlWeapon.Damage.Min, xmlWeapon.Damage.Max, reqs, slots)
+	return w, nil
 }

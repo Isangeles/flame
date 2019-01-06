@@ -1,5 +1,5 @@
 <base>
-	<item id="iwIronSword" value="10" level="1">
+	<item id="iwIronSword" value="10" level="1" slots="one_hand">
 		<damage>
 			<min>1</min>
 			<max>10</max>

@@ -41,9 +41,10 @@ type WeaponNodeXML struct {
 	XMLName xml.Name      `xml:"item"`
 	ID      string        `xml:"id,attr"`
 	Value   int           `xml:"value,attr"`
-	Level   int           `xml:"level, attr"`
+	Level   int           `xml:"level,attr"`
 	Damage  DamageNodeXML `xml:"damage"`
 	Reqs    ReqsNodeXML   `xml:"reqs"`
+	Slots   string        `xml:"slots,attr"`
 }
 
 // UnmarshalWeaponsBase parses specified data to
