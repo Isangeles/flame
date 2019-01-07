@@ -35,6 +35,7 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/log"
 )
@@ -45,7 +46,7 @@ const (
 
 // Character parses specified characters base and creates
 // game character.
-func Character(basePath, charID string) (*character.Character, error) {
+func Character(mod *module.Module, basePath, charID string) (*character.Character, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_characters_base_file:%v", err)
@@ -55,7 +56,7 @@ func Character(basePath, charID string) (*character.Character, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_character:%v", err)
 	}
-	char, err := buildXMLCharacter(&charXML)
+	char, err := buildXMLCharacter(mod, &charXML)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_build_character_from_xml:%v", err)
 	}
@@ -63,7 +64,7 @@ func Character(basePath, charID string) (*character.Character, error) {
 }
 
 // ImportCharacters imports char file with specified path.
-func ImportCharacters(path string) ([]*character.Character, error) {
+func ImportCharacters(mod *module.Module, path string) ([]*character.Character, error) {
 	charFile, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
@@ -75,7 +76,7 @@ func ImportCharacters(path string) ([]*character.Character, error) {
 	}
 	chars := make([]*character.Character, 0)
 	for _, charXML := range charsXML {
-		char, err := buildXMLCharacter(&charXML)
+		char, err := buildXMLCharacter(mod, &charXML)
 		if err != nil {
 			log.Err.Printf("data_import_chars:%s:fail_to_build_char:%s:%v",
 				path, charXML.ID, err)
@@ -88,7 +89,7 @@ func ImportCharacters(path string) ([]*character.Character, error) {
 
 // ImportCharactersDir imports all characters files from directory
 // with specified path.
-func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
+func ImportCharactersDir(mod *module.Module, dirPath string) ([]*character.Character, error) {
 	chars := make([]*character.Character, 0)
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -99,7 +100,7 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 			continue
 		}
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
-		impChars, err := ImportCharacters(charFilePath)
+		impChars, err := ImportCharacters(mod, charFilePath)
 		if err != nil {
 			log.Err.Printf("data_char_import:%s:fail_to_parse_char_file:%v",
 				charFilePath, err)
@@ -136,7 +137,8 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 
 // buildXMLCharacter creates new game character from XML
 // character data.
-func buildXMLCharacter(charXML *parsexml.CharacterXML) (*character.Character, error) {
+func buildXMLCharacter(mod *module.Module,
+	charXML *parsexml.CharacterXML) (*character.Character, error) {
 	id := charXML.ID
 	name := charXML.Name
 	level, err := strconv.Atoi(charXML.Level)
@@ -172,5 +174,17 @@ func buildXMLCharacter(charXML *parsexml.CharacterXML) (*character.Character, er
 	}
 	char := character.NewCharacter(id, name, level, sex, race,
 		attitude, guild, attributes, alignment)
+	for _, xmlInvItem := range charXML.Inventory.Items {
+		it, err := Item(mod, xmlInvItem.ID)
+		if err != nil {
+			log.Err.Printf("data_character:inv_item:%v", err)
+			continue
+		}
+		it.SetSerial(xmlInvItem.Serial)
+		err = char.Inventory().AddItem(it)
+		if err != nil {
+			log.Err.Printf("data_character:add_item:%v", err)
+		}
+	}
 	return char, nil
 }

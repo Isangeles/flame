@@ -29,15 +29,15 @@ import (
 
 // Struct for container with items.
 type Inventory struct {
-	items   []Item
-	maxSize int
+	items []Item
+	cap   int
 }
 
 // NewInventory creates new inventory with
 // specified maximal capacity.
-func NewInventory(size int) *Inventory {
+func NewInventory(cap int) *Inventory {
 	inv := new(Inventory)
-	inv.maxSize = size
+	inv.cap = cap
 	return inv
 }
 
@@ -60,7 +60,7 @@ func (inv *Inventory) Item(serialID string) Item {
 
 // AddItems add specified item to inventory.
 func (inv *Inventory) AddItem(i Item) error {
-	if len(inv.items) >= inv.maxSize {
+	if len(inv.items) >= inv.Capacity() {
 		return fmt.Errorf("no_inv_space")
 	}
 	inv.items = append(inv.items, i)
@@ -71,4 +71,10 @@ func (inv *Inventory) AddItem(i Item) error {
 // in inventory.
 func (inv *Inventory) Size() int {
 	return len(inv.items)
+}
+
+// Capacity returns maximal inventory
+// capacity.
+func (inv *Inventory) Capacity() int {
+	return inv.cap
 }

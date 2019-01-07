@@ -72,7 +72,7 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 		return nil, fmt.Errorf("no module loaded")
 	}
 	// Load data.
-	err := data.LoadWeaponsDir(Mod().ItemsPath())
+	err := data.LoadModuleData(Mod())
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_module_weapons:%v",
 			err)

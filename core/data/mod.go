@@ -111,7 +111,7 @@ func LoadScenario(mod *module.Module, id string) error {
 			continue
 		}
 		// Build area NPC.
-		char, err := buildXMLCharacter(&charXML)
+		char, err := buildXMLCharacter(mod, &charXML)
 		if err != nil {
 			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",
 				xmlAreaChar.ID, err)

@@ -57,3 +57,25 @@ const (
 	Legs
 	Feets
 )
+
+// ID returns slot ID.
+func (s Slot) ID() string {
+	switch s {
+	case Head:
+		return "slot_head"
+	case Neck:
+		return "slot_neck"
+	case Chest:
+		return "slot_chest"
+	case Hand:
+		return "slot_hand"
+	case Finger:
+		return "slot_finger"
+	case Legs:
+		return "slot_legs"
+	case Feets:
+		return "slot_feets"
+	default:
+		return "slot_none"
+	}
+}

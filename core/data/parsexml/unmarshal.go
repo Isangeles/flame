@@ -170,7 +170,7 @@ func UnmarshalItemSlots(slotsAttr string) ([]item.Slot, error) {
 	attrs := strings.Split(slotsAttr, " ")
 	for _, attr := range attrs {
 		switch attr {
-		case "one_hand":
+		case item.Hand.ID():
 			slots = append(slots, item.Hand)
 		default: // all slots IDs must be 'parsable'
 			return nil, fmt.Errorf("fail_to_parse_slot_type:%s", slotsAttr)

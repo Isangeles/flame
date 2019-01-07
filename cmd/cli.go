@@ -131,7 +131,8 @@ func execute(input string) {
 			log.Err.Printf("no_module_loaded")
 			break
 		}
-		chars, err := data.ImportCharactersDir(flame.Mod().CharactersPath())
+		chars, err := data.ImportCharactersDir(flame.Mod(),
+			flame.Mod().CharactersPath())
 		if err != nil {
 			log.Err.Printf("fail_to_import_module_characters:%v\n", err)
 			break

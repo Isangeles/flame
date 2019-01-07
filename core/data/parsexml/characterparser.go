@@ -40,19 +40,20 @@ type CharactersBaseXML struct {
 
 // Struct for XML character node. 
 type CharacterXML struct {
-	XMLName   xml.Name `xml:"char"`
-	ID        string   `xml:"id,attr"`
-	Serial    string   `xml:"serial,attr"`
-	Name      string   `xml:"name,attr"`
-	Gender    string   `xml:"gender,attr"`
-	Race      string   `xml:"race,attr"`
-	Attitude  string   `xml:"attitude,attr"`
-	Alignment string   `xml:"alignment,attr"`
-	Guild     string   `xml:"guild,attr"`
-	Level     string   `xml:"level,attr"`
-	Stats     string   `xml:"stats,value"`
-	PC        bool     `xml:"pc,attr"`
-	Position  string   `xml:"position,value"`
+	XMLName   xml.Name         `xml:"char"`
+	ID        string           `xml:"id,attr"`
+	Serial    string           `xml:"serial,attr"`
+	Name      string           `xml:"name,attr"`
+	Gender    string           `xml:"gender,attr"`
+	Race      string           `xml:"race,attr"`
+	Attitude  string           `xml:"attitude,attr"`
+	Alignment string           `xml:"alignment,attr"`
+	Guild     string           `xml:"guild,attr"`
+	Level     string           `xml:"level,attr"`
+	Stats     string           `xml:"stats,value"`
+	PC        bool             `xml:"pc,attr"`
+	Position  string           `xml:"position,value"`
+	Inventory InventoryNodeXML `xml:"inventory"`
 }
 
 // UnmarshalCharactersBaseXML parses characters base from XML data.
@@ -113,6 +114,6 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Stats = marshalAttributes(char.Attributes())
 	posX, posY := char.Position()
 	xmlChar.Position = fmt.Sprintf("%fx%f", posX, posY)
+	xmlChar.Inventory = *xmlInventory(char.Inventory())
 	return xmlChar
 }
-
