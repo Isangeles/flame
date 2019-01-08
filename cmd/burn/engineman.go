@@ -28,7 +28,6 @@ import (
 	"path/filepath"
 
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
@@ -115,7 +114,6 @@ func loadEngineOption(cmd Command) (int, string) {
 				ENGINE_MAN, err)
 		}
 		flame.SetModule(m)
-
 		return 0, ""
 	case "game":
 		if len(cmd.Args()) < 1 {
@@ -126,24 +124,12 @@ func loadEngineOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_module_loaded",
 				ENGINE_MAN)
 		}
-		// Load module data(required to build items, etc.).
-		err := data.LoadModuleData(flame.Mod())
-		// Import saved game.
-		savesPath := flame.SavegamesPath()
-		saveName := cmd.Args()[0]
-		sav, err := data.ImportSavedGame(flame.Mod(), savesPath, saveName)
+		_, err := flame.LoadGame(cmd.Args()[0])
 		if err != nil {
 			return 8, fmt.Sprintf("%s:fail_to_load_game:%v",
 				ENGINE_MAN, err)
 		}
-		if err != nil {
-			return 8, fmt.Sprintf("%s:fail_to_load_module_data:%v",
-				ENGINE_MAN, err)
-		}
-		g := core.LoadGame(sav)
-		flame.SetGame(g)
 		return 0, ""
-		
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])

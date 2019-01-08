@@ -34,8 +34,6 @@ import (
 )
 
 // Struct game representation. Contains game module and PCs.
-// Also handles generating of unique serial values for
-// all game objects like characters, items, etc.
 type Game struct {
 	mod *module.Module
 	pcs []*character.Character

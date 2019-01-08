@@ -27,9 +27,9 @@ import (
 	"fmt"
 )
 
-// Interface for all game objects with unique
-// serial ID.
-type Serializer interface {
+// Interface for all game objects with
+// unique serial ID.
+type Serialer interface {
 	ID() string
 	Serial() string
 	SerialID() string
@@ -44,7 +44,7 @@ func FullSerial(id, serial string) string {
 
 // uinqueSerial generates unique serial value accross
 // specified group of objects with serial value.
-func uniqueSerial(group []Serializer) string {
+func uniqueSerial(group []Serialer) string {
 	// Choose serial value unique accross chars.
 	serial := fmt.Sprintf("%d", len(group))
 	// Ensure serial value uniqueness.
@@ -56,7 +56,7 @@ func uniqueSerial(group []Serializer) string {
 
 // isSerialUnique checks whether specified serial value
 // is unique across specified objects with serial value.
-func isSerialUnique(group []Serializer, serial string) bool {
+func isSerialUnique(group []Serialer, serial string) bool {
 	for _, ob := range group {
 		if ob.Serial() == serial {
 			return false

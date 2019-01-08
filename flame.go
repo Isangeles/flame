@@ -98,3 +98,27 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	}
 	return game, nil
 }
+
+// LoadGame loads game from save with specified name
+// and sets loaded game as current game.
+func LoadGame(saveName string) (*core.Game, error) {
+	if Mod() == nil {
+		return nil, fmt.Errorf("no module loaded")
+	}
+	// Load module data(required to build items, etc.).
+	err := data.LoadModuleData(Mod())
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
+	}
+	// Import saved game.
+	savesPath := SavegamesPath()
+	sav, err := data.ImportSavedGame(Mod(), savesPath, saveName)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_game:%v", err)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
+	}
+	SetGame(core.LoadGame(sav))
+	return game, nil
+}

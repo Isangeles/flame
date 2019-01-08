@@ -41,53 +41,51 @@ const (
 	WEAPONS_FILE_EXT = ".weapons"
 )
 
-var (
-	weaponsData map[string]*parsexml.WeaponNodeXML
-)
-
-// LoadWeaponsBase load weapons from specified
-// weapons base file.
-func LoadWeaponsBase(basePath string) error {
-	if weaponsData == nil {
-		weaponsData = make(map[string]*parsexml.WeaponNodeXML, 0)
-	}
+// ImportWeapons imports all XML weapons from file with specified
+// path.
+func ImportWeapons(basePath string) ([]*parsexml.WeaponNodeXML, error) {
+	weapons := make([]*parsexml.WeaponNodeXML, 0)
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return fmt.Errorf("fail_to_open_weapons_base_file:%v",
+		return nil, fmt.Errorf("fail_to_open_weapons_base_file:%v",
 			err)
 	}
 	defer doc.Close()
 	weaponsXML, err := parsexml.UnmarshalWeaponsBase(doc)
 	if err != nil {
-		return fmt.Errorf("fail_to_unmarshal_weapons:%v",
+		return nil, fmt.Errorf("fail_to_unmarshal_weapons:%v",
 			err)
 	}
 	for _, w := range weaponsXML {
-		weaponsData[w.ID] = &w
+		weapons = append(weapons, &w)
 	}
-	return nil
+	return weapons, nil
 }
 
-// LoadWeaponsDir loads all weapons bases files
-// in directory with specified path.
-func LoadWeaponsDir(dirPath string) error {
+// ImportWeaponsDir imports all weapons from specified files
+// in specified directory.
+func ImportWeaponsDir(dirPath string) ([]*parsexml.WeaponNodeXML, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
+	weapons := make([]*parsexml.WeaponNodeXML, 0)
 	for _, fInfo := range files {
 		if !strings.HasSuffix(fInfo.Name(), WEAPONS_FILE_EXT) {
 			continue
 		}
 		baseFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
-		err := LoadWeaponsBase(baseFilePath)
+		weaps, err := ImportWeapons(baseFilePath)
 		if err != nil {
 			log.Err.Printf("data_weapons_import:%s:fail_to_load_weapons_file:%v",
 				baseFilePath, err)
 			continue
 		}
+		for _, w := range weaps {
+			weapons = append(weapons, w)
+		}
 	}
-	return nil
+	return weapons, nil
 }
 
 // Item creates new instance of item with specified ID

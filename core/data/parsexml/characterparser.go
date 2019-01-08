@@ -49,7 +49,7 @@ type CharacterXML struct {
 	Attitude  string           `xml:"attitude,attr"`
 	Alignment string           `xml:"alignment,attr"`
 	Guild     string           `xml:"guild,attr"`
-	Level     string           `xml:"level,attr"`
+	Level     int              `xml:"level,attr"`
 	Stats     string           `xml:"stats,value"`
 	PC        bool             `xml:"pc,attr"`
 	Position  string           `xml:"position,value"`
@@ -106,7 +106,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.ID = char.ID()
 	xmlChar.Serial = char.Serial()
 	xmlChar.Name = char.Name()
-	xmlChar.Level = fmt.Sprintf("%d", char.Level())
+	xmlChar.Level = char.Level()
 	xmlChar.Gender = marshalGender(char.Gender())
 	xmlChar.Race = marshalRace(char.Race())
 	xmlChar.Attitude = marshalAttitude(char.Attitude())

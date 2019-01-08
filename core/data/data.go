@@ -21,20 +21,32 @@
  * 
  */
 
+// data package provides connection with external data files like items
+// base, savegames, etc.
 package data
 
 import (
 	"fmt"
-	
+
+	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module"
 )
+
+var (
+	weaponsData map[string]*parsexml.WeaponNodeXML
+)
+
 
 // LoadModuleData loads data(items, skills, etc.) from
 // specified module.
 func LoadModuleData(mod *module.Module) error {
-	err := LoadWeaponsDir(mod.ItemsPath())
+	weaponsData = make(map[string]*parsexml.WeaponNodeXML)
+	xmlWeapons, err := ImportWeaponsDir(mod.ItemsPath())
 	if err != nil {
 		return fmt.Errorf("fail_to_load_weapons:%v", err)
+	}
+	for _, xmlWeapon := range xmlWeapons {
+		weaponsData[xmlWeapon.ID] = xmlWeapon
 	}
 	return nil
 }

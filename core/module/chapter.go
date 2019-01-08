@@ -189,7 +189,7 @@ func (c *Chapter) CharacterArea(char *character.Character) (*scenario.Area, erro
 // object with serial ID.
 func (c *Chapter) AssignCharacterSerial(char *character.Character) {
 	chars := c.CharactersWithID(char.ID())
-	objects := make([]Serializer, 0)
+	objects := make([]Serialer, 0)
 	for _, c := range chars {
 		objects = append(objects, c)
 	}

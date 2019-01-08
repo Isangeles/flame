@@ -33,6 +33,7 @@ import (
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
 )
 
@@ -111,20 +112,16 @@ func LoadScenario(mod *module.Module, id string) error {
 			continue
 		}
 		// Build area NPC.
-		char, err := buildXMLCharacter(mod, &charXML)
+		char, err := buildXMLAreaCharacter(mod, &charXML, &xmlAreaChar)
 		if err != nil {
 			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",
 				xmlAreaChar.ID, err)
-		}
-		x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)
-		if err != nil {
-			log.Err.Printf("data_scenario_spawn_npc:%s:unmarshal_position_fail:%v",
-				xmlAreaChar.ID, err)
 			continue
 		}
-		char.SetPosition(x, y)
+		// Set name.
 		name := text.ReadDisplayText(npcsLangPath, char.ID())
 		char.SetName(name[0])
+		// Set serial.
 		err = mod.AssignSerial(char)
 		if err != nil {
 			log.Err.Printf("data_scenario_spawn_npc:%s:fail_to_assign_serial:%v",
@@ -197,4 +194,21 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 		StartScenID:confValues[0],
 	}
 	return conf, nil
+}
+
+// buildXMLAreaChar creates game character from specified
+// character and area XML data.
+func buildXMLAreaCharacter(mod *module.Module, xmlChar *parsexml.CharacterXML,
+	xmlAreaChar *parsexml.AreaCharXML) (*character.Character, error) {
+	char, err := buildXMLCharacter(mod, xmlChar)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_build_base_char:%v", err)
+	}
+	// Set position.
+	x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_position:%v", err)
+	}
+	char.SetPosition(x, y)
+	return char, nil
 }

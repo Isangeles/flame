@@ -22,6 +22,8 @@
  */
  
 // Package module provides engine module struct represenation.
+// Also handles generating of unique serial values for
+// all game objects like characters, items, etc.
 package module
 
 import (
@@ -40,7 +42,7 @@ var (
 type Module struct {
 	conf    ModConf
 	chapter *Chapter
-	items   []Serializer
+	items   []Serialer
 }
 
 // DefaultModulesPath returns default path to modules directory.
@@ -53,7 +55,7 @@ func DefaultModulesPath() string {
 func NewModule(conf ModConf) *Module {
 	m := new(Module)
 	m.conf = conf
-	m.items = make([]Serializer, 0)
+	m.items = make([]Serialer, 0)
 	return m
 }
 
@@ -146,7 +148,7 @@ func (m *Module) Character(serialID string) *character.Character {
 // AssignSerial sets unique serial value for
 // specified object with serial value.
 // Returns error if no active chapter set.
-func (m *Module) AssignSerial(ob Serializer) error {
+func (m *Module) AssignSerial(ob Serialer) error {
 	chapter := m.Chapter()
 	if chapter == nil {
 		return fmt.Errorf("no active chapter set")

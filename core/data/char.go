@@ -21,8 +21,6 @@
  *
  */
 
-// data package provides connection with external data files like items
-// base, savegames, etc.
 package data
 
 import (
@@ -31,7 +29,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/isangeles/flame/core/data/parsexml"
@@ -141,11 +138,7 @@ func buildXMLCharacter(mod *module.Module,
 	charXML *parsexml.CharacterXML) (*character.Character, error) {
 	id := charXML.ID
 	name := charXML.Name
-	level, err := strconv.Atoi(charXML.Level)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_char_level:%v",
-			err)
-	}
+	level := charXML.Level
 	sex, err := parsexml.UnmarshalGender(charXML.Gender)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_parse_char_gender:%v",
@@ -174,6 +167,7 @@ func buildXMLCharacter(mod *module.Module,
 	}
 	char := character.NewCharacter(id, name, level, sex, race,
 		attitude, guild, attributes, alignment)
+	// Inventory.
 	for _, xmlInvItem := range charXML.Inventory.Items {
 		it, err := Item(mod, xmlInvItem.ID)
 		if err != nil {
