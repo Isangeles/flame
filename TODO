@@ -4,10 +4,8 @@ MAJOR:
 * Quests system
 * Player-NPC interaction
 * NPC AI
-* Game data marshaling/unmarshaling
 * Scripts processor
-* Game characters inventory and equipment
-* Items
+* Armors & misc items
 * Skills
 * Game objects
 MINOR:
@@ -17,4 +15,6 @@ MINOR:
 DONE:
 * Generating of unique serial IDs for game objects
 * Save/load game mechanism
+* Game characters inventory and equipment
+* Weapons items
 

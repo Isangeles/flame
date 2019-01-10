@@ -31,9 +31,16 @@ import (
 
 // Struct for character equipment.
 type Equipment struct {
-	char      *Character
-	handRight item.Equiper
-	handLeft  item.Equiper
+	char        *Character
+	head        item.Equiper
+	neck        item.Equiper
+	chest       item.Equiper
+	handRight   item.Equiper
+	handLeft    item.Equiper
+	fingerRight item.Equiper
+	fingerLeft  item.Equiper
+	legs        item.Equiper
+	feets       item.Equiper
 }
 
 // newEquipment creates new equipment for
@@ -55,4 +62,16 @@ func (eq *Equipment) EquipHandRight(it item.Equiper) error {
 	}
 	eq.handRight = it
 	return nil
+}
+
+// Items returns slice with all equiped items.
+func (eq *Equipment) Items() []item.Equiper {
+	its := make([]item.Equiper, 0)
+	if eq.handRight != nil {
+		its = append(its, eq.handRight)	
+	}
+	if eq.handLeft != nil {
+		its = append(its, eq.handLeft)
+	}
+	return its
 }

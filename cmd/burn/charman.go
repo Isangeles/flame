@@ -174,6 +174,18 @@ func showCharOption(cmd Command) (int, string) {
 			}
 		}
 		return 0, out
+	case "equipment":
+		out := ""
+		for _, char := range chars {
+			for _, it := range char.Equipment().Items() {
+				out += fmt.Sprintf("%s:", it.SerialID())
+				for _, s := range it.Slots() {
+					out += fmt.Sprintf("%s ", s.ID())
+				}
+				out += "\n"
+			}
+		}
+		return 0, out
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.Args()[0])

@@ -40,6 +40,8 @@ type Item interface {
 
 // Interface for 'equipable' items.
 type Equiper interface {
+	ID()        string
+	SerialID()  string
 	EquipReqs() []req.Requirement
 	Slots()     []Slot
 }

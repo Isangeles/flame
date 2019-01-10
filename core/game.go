@@ -35,8 +35,9 @@ import (
 
 // Struct game representation. Contains game module and PCs.
 type Game struct {
-	mod *module.Module
-	pcs []*character.Character
+	mod     *module.Module
+	pcs     []*character.Character
+	paused bool
 }
 
 // NewGame returns new instance of game struct.
@@ -76,10 +77,18 @@ func LoadGame(save *save.SaveGame) *Game {
 // Update updates game, delta value must be
 // time from last update in milliseconds.
 func (g *Game) Update(delta int64) {
+	if g.paused {
+		return
+	}
 	updateChars := g.Module().Chapter().Characters()
 	for _, c := range updateChars {
 		c.Update()
 	}
+}
+
+// Pause toggles game update pause.
+func (g *Game) Pause(pause bool) {
+	g.paused = pause
 }
 
 // Module returns game module.
