@@ -57,7 +57,7 @@ const (
 	Hand
 	Finger
 	Legs
-	Feets
+	Feet
 )
 
 // ID returns slot ID.
@@ -75,8 +75,8 @@ func (s Slot) ID() string {
 		return "slot_finger"
 	case Legs:
 		return "slot_legs"
-	case Feets:
-		return "slot_feets"
+	case Feet:
+		return "slot_feet"
 	default:
 		return "slot_none"
 	}

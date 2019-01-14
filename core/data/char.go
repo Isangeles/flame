@@ -34,6 +34,7 @@ import (
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/log"
 )
 
@@ -171,13 +172,41 @@ func buildXMLCharacter(mod *module.Module,
 	for _, xmlInvItem := range charXML.Inventory.Items {
 		it, err := Item(mod, xmlInvItem.ID)
 		if err != nil {
-			log.Err.Printf("data_character:inv_item:%v", err)
+			log.Err.Printf("data_build_character:%s:inv_item:%v",
+				char.SerialID(), err)
 			continue
 		}
 		it.SetSerial(xmlInvItem.Serial)
 		err = char.Inventory().AddItem(it)
 		if err != nil {
-			log.Err.Printf("data_character:add_item:%v", err)
+			log.Err.Printf("data_build_character:%s::add_item:%v",
+				char.SerialID(), err)
+		}
+	}
+	// Equipment.
+	for _, xmlEqItem := range charXML.Equipment.Items {
+		it := char.Inventory().Item(xmlEqItem.ID)
+		if it == nil {
+			log.Err.Printf("data_build_character:%s:eq:fail to retrieve eq item from inv",
+				char.SerialID())
+			continue
+		}
+		eqItem, ok := it.(item.Equiper)
+		if !ok {
+			log.Err.Printf("data_build_character:%s:eq:not_eqipable_item:%s",
+				char.SerialID(), it.ID())
+			continue
+		}
+		switch xmlEqItem.Slot {
+		case "right hand":
+			err := char.Equipment().EquipHandRight(eqItem)
+			if err != nil {
+				log.Err.Printf("data_build_character:%s:eq:fail_to_equip_item:%v",
+					char.SerialID(), err)
+			}
+		default:
+			log.Err.Printf("data_build_character:%s:unknown_equipment_slot:%s",
+				char.SerialID(), xmlEqItem.Slot)
 		}
 	}
 	return char, nil

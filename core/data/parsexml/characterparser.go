@@ -54,6 +54,20 @@ type CharacterXML struct {
 	PC        bool             `xml:"pc,attr"`
 	Position  string           `xml:"position,value"`
 	Inventory InventoryNodeXML `xml:"inventory"`
+	Equipment EquipmentNodeXML `xml:"equipment"`
+}
+
+// Struct for equipment XML node.
+type EquipmentNodeXML struct {
+	XMLName xml.Name               `xml:"equipment"`
+	Items   []EquipmentItemNodeXML `xml:"item"`
+}
+
+// Struct for equipment item XML node.
+type EquipmentItemNodeXML struct {
+	XMLName xml.Name `xml:"item"`
+	ID      string   `xml:"id,attr"`
+	Slot    string   `xml:"slot"`
 }
 
 // UnmarshalCharactersBaseXML parses characters base from XML data.
@@ -115,5 +129,21 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	posX, posY := char.Position()
 	xmlChar.Position = fmt.Sprintf("%fx%f", posX, posY)
 	xmlChar.Inventory = *xmlInventory(char.Inventory())
+	xmlChar.Equipment = *xmlEquipment(char.Equipment())
 	return xmlChar
+}
+
+// xmlEquipment parses specified character equipment to
+// XML equipment node.
+func xmlEquipment(eq *character.Equipment) *EquipmentNodeXML {
+	xmlEq := new(EquipmentNodeXML)
+	if eq.HandRight() != nil {
+		xmlEqItem := EquipmentItemNodeXML{
+			ID: eq.HandRight().SerialID(),
+			Slot: "right hand",
+		}
+		xmlEq.Items = append(xmlEq.Items, xmlEqItem)
+	}
+	// TODO: parse all equipment slots.
+	return xmlEq
 }
