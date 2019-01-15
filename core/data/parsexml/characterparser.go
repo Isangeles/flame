@@ -1,7 +1,7 @@
 /*
  * characterparser.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -137,10 +137,10 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 // XML equipment node.
 func xmlEquipment(eq *character.Equipment) *EquipmentNodeXML {
 	xmlEq := new(EquipmentNodeXML)
-	if eq.HandRight() != nil {
+	if eq.HandRight().Item() != nil {
 		xmlEqItem := EquipmentItemNodeXML{
-			ID: eq.HandRight().SerialID(),
-			Slot: "right hand",
+			ID: eq.HandRight().Item().SerialID(),
+			Slot: MarshalEqSlot(eq.HandRight()),
 		}
 		xmlEq.Items = append(xmlEq.Items, xmlEqItem)
 	}

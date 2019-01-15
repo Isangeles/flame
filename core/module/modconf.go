@@ -51,3 +51,8 @@ func (c ModConf) CharactersPath() string {
 func (c ModConf) ItemsPath() string {
 	return filepath.FromSlash(c.Path + "/items")
 }
+
+// LangPath returns path to lang directory.
+func (c ModConf) LangPath() string {
+	return filepath.FromSlash(c.Path + "/lang/" + c.Lang)
+}

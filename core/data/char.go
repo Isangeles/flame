@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -198,7 +198,7 @@ func buildXMLCharacter(mod *module.Module,
 			continue
 		}
 		switch xmlEqItem.Slot {
-		case "right hand":
+		case parsexml.MarshalEqSlot(char.Equipment().HandRight()):
 			err := char.Equipment().EquipHandRight(eqItem)
 			if err != nil {
 				log.Err.Printf("data_build_character:%s:eq:fail_to_equip_item:%v",

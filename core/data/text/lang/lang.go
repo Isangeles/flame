@@ -28,7 +28,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data/text"
 )
 
@@ -37,7 +36,7 @@ const (
 )
 
 var (
-	mainLangPath = "data/lang"
+	langPath string
 )
 
 // Text returns text with specified ID from file with specified name in 
@@ -49,7 +48,7 @@ func Text(langFile, textId string) string {
 		langFile = langFile + LANG_FILE_EXT
 	}
 	
-	var fullpath string = filepath.FromSlash(CurrentLangPath() + "/" + langFile)
+	var fullpath string = filepath.FromSlash(LangPath() + "/" + langFile)
 	return text.ReadDisplayText(fullpath, textId)[0]
 }
 
@@ -62,7 +61,7 @@ func Texts(langFile string, textIDs ...string) []string {
 		langFile = langFile + LANG_FILE_EXT
 	}
 
-	var fullpath string = filepath.FromSlash(CurrentLangPath() + "/" + langFile)
+	var fullpath string = filepath.FromSlash(LangPath() + "/" + langFile)
 	return text.ReadDisplayText(fullpath, textIDs...)
 }
 
@@ -83,7 +82,14 @@ func UITexts(textIDs ...string) []string {
 	return Texts("ui", textIDs...)
 }
 
+// SetLangPath sets specified path as current lang
+// path.
+func SetLangPath(path string) {
+	langPath = path
+}
+
 // MainLangPath return path to main lang direcotry for current language.
-func CurrentLangPath() string {
-	return filepath.FromSlash(mainLangPath + "/" + flame.LangID())
+func LangPath() string {
+	//return filepath.FromSlash("data/lang/" + flame.LangID())
+	return langPath
 }

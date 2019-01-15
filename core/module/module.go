@@ -97,6 +97,11 @@ func (m *Module) ItemsPath() string {
 	return m.conf.ItemsPath()
 }
 
+// LangPath returns path to lang directory.
+func (m *Module) LangPath() string {
+	return m.conf.LangPath()
+}
+
 // Chapter returns current module chapter.
 func (m *Module) Chapter() *Chapter {
 	return m.chapter
@@ -149,12 +154,12 @@ func (m *Module) Character(serialID string) *character.Character {
 // specified object with serial value.
 // Returns error if no active chapter set.
 func (m *Module) AssignSerial(ob Serialer) error {
-	chapter := m.Chapter()
-	if chapter == nil {
-		return fmt.Errorf("no active chapter set")
-	}
 	switch ob := ob.(type) {
 	case *character.Character:
+		chapter := m.Chapter()
+		if chapter == nil {
+			return fmt.Errorf("no active chapter set")
+		}
 		m.Chapter().AssignCharacterSerial(ob)
 		return nil
 	case item.Item:

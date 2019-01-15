@@ -110,3 +110,30 @@ func marshalAttributes(attrs character.Attributes) string {
 	return fmt.Sprintf("%d;%d;%d;%d;%d;", attrs.Str,
 		attrs.Con, attrs.Dex, attrs.Wis, attrs.Int)
 }
+
+// marshalEqSlot parses specified equipment slot to XML
+// attribute value.
+func MarshalEqSlot(eqSlot *character.EquipmentSlot) string {
+	switch eqSlot.Type() {
+	case character.Head:
+		return "head"
+	case character.Neck:
+		return "neck"
+	case character.Chest:
+		return "chest"
+	case character.Hand_right:
+		return "right hand"
+	case character.Hand_left:
+		return "left hand"
+	case character.Finger_right:
+		return "finger right"
+	case character.Finger_left:
+		return "finger left"
+	case character.Legs:
+		return "legs"		
+	case character.Feet:
+		return "feet"
+	default:
+		return "unknow"
+	}
+}

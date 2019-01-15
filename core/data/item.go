@@ -112,8 +112,8 @@ func Weapon(mod *module.Module, id string) (*item.Weapon, error) {
 		return nil, fmt.Errorf("weapon_not_found:%s",
 			id)
 	}
-	itemsLangPath := filepath.FromSlash(mod.Chapter().LangPath() +
-		"items" + text.LANG_FILE_EXT)
+	itemsLangPath := filepath.FromSlash(mod.LangPath() + "items" +
+		text.LANG_FILE_EXT)
 	w, err := buildXMLWeapon(xmlWeapon)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_build_weapon:%v", err)

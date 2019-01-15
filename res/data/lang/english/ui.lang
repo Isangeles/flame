@@ -27,6 +27,7 @@ ali_neu_evil:Neutral evil;
 ali_cha_evil:Chaotic evil;
 com_yes:Yes;
 com_no:No;
+game_pause_info:Game paused;
 cli_newchar_name:Character name;
 cli_newchar_race:Character race;
 cli_newchar_gender:Character gender;

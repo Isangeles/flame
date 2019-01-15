@@ -28,9 +28,11 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/save"
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/log"	
 )
 
 // Struct game representation. Contains game module and PCs.
@@ -88,7 +90,13 @@ func (g *Game) Update(delta int64) {
 
 // Pause toggles game update pause.
 func (g *Game) Pause(pause bool) {
+	log.Inf.Printf(lang.Text("ui", "game_pause_info"))
 	g.paused = pause
+}
+
+// Paused checks whether game is paused.
+func (g *Game) Paused() bool {
+	return g.paused
 }
 
 // Module returns game module.

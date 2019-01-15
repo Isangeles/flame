@@ -1,7 +1,7 @@
 /*
  * equipment.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ type Equipment struct {
 
 // Struct for equipment slots.
 type EquipmentSlot struct {
-	stype EquipmentSlotType
+	sType EquipmentSlotType
 	item  item.Equiper
 }
 
@@ -81,9 +81,11 @@ func newEquipment(char *Character) *Equipment {
 	return eq
 }
 
-func newEquipmentSlot(stype EquipmentSlotType) *EquipmentSlot {
+// newEquipmentSlot creates new equipment slot for
+// specified slot type.
+func newEquipmentSlot(sType EquipmentSlotType) *EquipmentSlot {
 	s := new(EquipmentSlot)
-	s.stype = stype
+	s.sType = sType
 	return s
 }
 
@@ -112,14 +114,55 @@ func (eq *Equipment) Items() []item.Equiper {
 	return its
 }
 
+// Equiped checks whether specified item is
+// equiped.
+func (eq *Equipment) Equiped(item item.Item) bool {
+	for _, i := range eq.Items() {
+		if i.SerialID() == item.SerialID() {
+			return true
+		}
+	}
+	return false
+}
+
 // HandRight returns item from right hand slot.
-func (eq *Equipment) HandRight() item.Equiper {
-	return eq.handRight.item
+func (eq *Equipment) HandRight() *EquipmentSlot {
+	return eq.handRight
 }
 
 // Type returns slot type.
 func (eqSlot *EquipmentSlot) Type() EquipmentSlotType {
-	return eqSlot.stype
+	return eqSlot.sType
+}
+
+// Item returns slot item or nil if slot is empty.
+func (eqSlot *EquipmentSlot) Item() item.Equiper {
+	return eqSlot.item
+}
+
+// ID returns slot ID.
+func (eqSlot *EquipmentSlot) ID() string {
+	switch eqSlot.Type() {
+	case Head:
+		return "eq_slot_head"
+	case Neck:
+		return "eq_slot_neck"
+	case Chest:
+		return "eq_slot_chest"
+	case Hand_right:
+		return "eq_slot_hand_right"
+	case Hand_left:
+		return "eq_slot_hand_left"
+	case Finger_right:
+		return "eq_slot_finger_right"
+	case Finger_left:
+		return "eq_slot_finger_left"
+	case Legs:
+		return "eq_slot_legs"		
+	case Feet:
+		return "eq_slot_feet"
+	}
+	return "eq_slot_unknown"
 }
 
 // compact checks whether equipment slot is compatible with

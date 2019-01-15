@@ -33,6 +33,7 @@ import (
 
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/log"
@@ -81,6 +82,7 @@ func LoadConfig() error {
 			return err
 		}
 	}
+	lang.SetLangPath(filepath.FromSlash("data/lang/" + LangID()))
 	
 	log.Dbg.Print("config file loaded")
 	return nil
