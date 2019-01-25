@@ -1,7 +1,7 @@
 /*
  * character.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  * 
  */
  
-// character package provides game character struct representation and
+// character package provides game character struct and
 // other types for game characters.
 package character
 
@@ -31,23 +31,29 @@ import (
 	"github.com/isangeles/flame/core/module/object/item"
 )
 
+const (
+	base_exp = 1000
+)
+
 // Character struct represents game character.
 type Character struct {
-	id           string
-	serial       string
-	name         string
-	level        int
-	sex          Gender
-	race         Race
-	attitude     Attitude
-	alignment    Alignment
-	guild        Guild
-	attributes   Attributes
-	posX, posY   float64
-	destX, destY float64
-	sight        float64
-	inventory    *item.Inventory
-	equipment    *Equipment
+	id            string
+	serial        string
+	name          string
+	level         int
+	hp, maxHP     int
+	mana, maxMana int
+	exp, maxExp   int
+	sex           Gender
+	race          Race
+	attitude      Attitude
+	alignment     Alignment
+	guild         Guild
+	attributes    Attributes
+	posX, posY    float64
+	destX, destY  float64
+	inventory     *item.Inventory
+	equipment     *Equipment
 }
 
 // NewCharacter returns new character with specified parameters.
@@ -57,17 +63,20 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 	c := Character{
 		id: id,
 		name: name,
-		level: level,
 		sex: sex,
 		race: race,
 		attitude: attitude,
 		guild: guild,
 		attributes: attributes,
 		alignment: alignment,
-		sight: 300,
 	}
 	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
+	for i := 0; i < level; i++ {
+		oldMaxExp := c.MaxExperience()
+		c.levelup()
+		c.SetExperience(oldMaxExp)
+	}
 	return &c
 }
 
@@ -115,6 +124,42 @@ func (c *Character) Level() int {
 	return c.level
 }
 
+// Health returns current value of health
+// points.
+func (c *Character) Health() int {
+	return c.hp
+}
+
+// MaxHealth returns maximal value of
+// health points.
+func (c *Character) MaxHealth() int {
+	return c.attributes.Health() + (base_health * c.Level())
+}
+
+// Mana returns current value of mana
+// points.
+func (c *Character) Mana() int {
+	return c.mana
+}
+
+// MaxMana returns maximal value of mana
+// points.
+func (c *Character) MaxMana() int {
+	return c.attributes.Mana() + (base_mana * c.Level()/2)
+}
+
+// Experience returns current value of experience
+// points.
+func (c *Character) Experience() int {
+	return c.exp
+}
+
+// MaxExperience returns maximal value of
+// experience points.
+func (c *Character) MaxExperience() int {
+	return c.maxExp
+}
+
 // Gender returns character gender.
 func (c *Character) Gender() Gender {
 	return c.sex
@@ -157,7 +202,7 @@ func (c *Character) DestPoint() (float64, float64) {
 
 // SightRange returns current sight range.
 func (c *Character) SightRange() float64 {
-	return c.sight
+	return c.attributes.Sight()
 }
 
 // Inventory returns character inventory.
@@ -174,6 +219,27 @@ func (c *Character) Equipment() *Equipment {
 // display name.
 func (c *Character) SetName(name string) {
 	c.name = name
+}
+
+// SetHealth sets specified value as current
+// amount of health points.
+func (c *Character) SetHealth(hp int) {
+	c.hp = hp
+}
+
+// SetMana sets specified value as current
+// amount of mana points.
+func (c *Character) SetMana(mana int) {
+	c.mana = mana
+}
+
+// SetExperience sets specified value as current
+// amount of experience points.
+func (c *Character) SetExperience(exp int) {
+	c.exp = exp
+	if c.Experience() >= c.MaxExperience() {
+		c.levelup()
+	}
 }
 
 // SetPosition sets specified XY position as current
@@ -208,4 +274,12 @@ func (c *Character) InMove() bool {
 	} else {
 		return false
 	}
+}
+
+// levelup promotes character to next level.
+func (c * Character) levelup() {
+	c.level += 1
+	c.SetHealth(c.MaxHealth())
+	c.SetMana(c.MaxMana())
+	c.maxExp = base_exp * c.Level()
 }

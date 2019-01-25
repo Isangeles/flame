@@ -1,7 +1,7 @@
 /*
  * charman.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,6 +119,20 @@ func setCharOption(cmd Command) (int, string) {
 			char.SetDestPoint(x, y)
 		}
 		return 0, ""
+	case "health", "hp":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.OptionArgs()[1])
+		}
+		val, err := strconv.Atoi(cmd.Args()[1])
+		if err != nil {
+			return 8, fmt.Sprintf("%s:invalid_argument:%s", CHAR_MAN,
+				cmd.OptionArgs()[1])
+		}
+		for _, char := range chars {
+			char.SetHealth(val)
+		}
+		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
@@ -184,6 +198,18 @@ func showCharOption(cmd Command) (int, string) {
 				}
 				out += "\n"
 			}
+		}
+		return 0, out
+	case "health", "hp":
+		out := ""
+		for _, char := range chars {
+			out += fmt.Sprintf("%d ", char.Health())
+		}
+		return 0, out
+	case "max-health", "max-hp":
+		out := ""
+		for _, char := range chars {
+			out += fmt.Sprintf("%d ", char.MaxHealth())
 		}
 		return 0, out
 	default:
