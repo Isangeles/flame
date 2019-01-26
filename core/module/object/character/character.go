@@ -44,6 +44,8 @@ type Character struct {
 	hp, maxHP     int
 	mana, maxMana int
 	exp, maxExp   int
+	live          bool
+	agony         bool
 	sex           Gender
 	race          Race
 	attitude      Attitude
@@ -70,6 +72,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 		attributes: attributes,
 		alignment: alignment,
 	}
+	c.live = true
 	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
 	for i := 0; i < level; i++ {
@@ -82,6 +85,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 
 // Update updates character.
 func (c *Character) Update() {
+	// Move to dest point.
 	if c.InMove() {
 		if c.posX < c.destX {
 			c.Move(c.posX+1, c.posY) 
@@ -96,9 +100,24 @@ func (c *Character) Update() {
 			c.Move(c.posX, c.posY-1)
 		}
 	}
+	// Check experience value.
+	if c.Experience() >= c.MaxExperience() {
+		c.levelup()
+	}
+	// Check health value.
+	if c.Health() <= c.agonyHP() {
+		c.agony = true
+	} else if c.Agony() {
+		c.agony = false
+	}
+	if c.Health() <= 0 {
+		c.live = false
+	} else if !c.Live() {
+		c.live = true
+	}
 }
 
-// Id returns character ID.
+// ID returns character ID.
 func (c *Character) ID() string {
 	return c.id
 }
@@ -158,6 +177,17 @@ func (c *Character) Experience() int {
 // experience points.
 func (c *Character) MaxExperience() int {
 	return c.maxExp
+}
+
+// Live checks wheter character is live.
+func (c *Character) Live() bool {
+	return c.live
+}
+
+// Agony check wheter character is in
+// agony state.
+func (c *Character) Agony() bool {
+	return c.agony
 }
 
 // Gender returns character gender.
@@ -237,9 +267,6 @@ func (c *Character) SetMana(mana int) {
 // amount of experience points.
 func (c *Character) SetExperience(exp int) {
 	c.exp = exp
-	if c.Experience() >= c.MaxExperience() {
-		c.levelup()
-	}
 }
 
 // SetPosition sets specified XY position as current
@@ -282,4 +309,10 @@ func (c * Character) levelup() {
 	c.SetHealth(c.MaxHealth())
 	c.SetMana(c.MaxMana())
 	c.maxExp = base_exp * c.Level()
+}
+
+// agonyHP returns value of health causing
+// agony state.
+func (c *Character) agonyHP() int {
+	return 10 / 100 * c.MaxHealth() 
 }

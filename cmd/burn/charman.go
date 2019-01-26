@@ -133,6 +133,20 @@ func setCharOption(cmd Command) (int, string) {
 			char.SetHealth(val)
 		}
 		return 0, ""
+	case "mana":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.OptionArgs()[1])
+		}
+		val, err := strconv.Atoi(cmd.Args()[1])
+		if err != nil {
+			return 8, fmt.Sprintf("%s:invalid_argument:%s", CHAR_MAN,
+				cmd.OptionArgs()[1])
+		}
+		for _, char := range chars {
+			char.SetMana(val)
+		}
+		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
@@ -210,6 +224,18 @@ func showCharOption(cmd Command) (int, string) {
 		out := ""
 		for _, char := range chars {
 			out += fmt.Sprintf("%d ", char.MaxHealth())
+		}
+		return 0, out
+	case "mana":
+		out := ""
+		for _, char := range chars {
+			out += fmt.Sprintf("%d ", char.Mana())
+		}
+		return 0, out
+	case "max-mana":
+		out := ""
+		for _, char := range chars {
+			out += fmt.Sprintf("%d ", char.MaxMana())
 		}
 		return 0, out
 	default:

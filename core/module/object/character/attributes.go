@@ -43,24 +43,24 @@ type Attributes struct {
 // Lift returns maximal size of inventory based on
 // attributes.
 func (a Attributes) Lift() int {
-	return base_lift * a.Str
+	return base_lift * (1 + a.Str)
 }
 
 // Sight returns maximal sight range based on
 // attributes.
 func (a Attributes) Sight() float64 {
-	return base_sight * float64(a.Wis)
+	return base_sight * float64(1 + a.Wis)
 }
 
 // Health returns maximal health based on
 // attributes.
 func (a Attributes) Health() int {
-	return (base_health * a.Con) * a.Str/2
+	return (base_health * (1 + a.Con)) * (1 + a.Str/2)
 }
 
 // Mana returns maximal mana based on attributes.
 func (a Attributes) Mana() int {
-	return (base_mana * a.Int) * a.Wis/2
+	return (base_mana * (1 + a.Int)) * (1 + a.Wis/2)
 }
 
 // String returns attributes struct as string in format:
