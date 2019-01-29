@@ -53,25 +53,25 @@ func handleModuleCommand(cmd Command) (int, string) {
 // showModuleOption handles show option for moduleman CI tool,
 // returns response code and message.
 func showModuleOption(cmd Command) (int, string) {
-	if len(cmd.TargetArgs()) < 1 {
-		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s", MODULE_MAN,
+	if len(cmd.Args()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_args_for:%s", MODULE_MAN,
 			cmd.OptionArgs()[0])
 	}
 
-	switch cmd.TargetArgs()[0] {
+	switch cmd.Args()[0] {
 	case "name":
 		return 0, flame.Mod().Name()
 	case "chapters":
 		return 0, fmt.Sprint(flame.Mod().ChaptersIds())
-	case "areachars":
+	case "area-chars":
 		if flame.Game() == nil { // TODO: better check whether mod has chapter set.
 			return 8, fmt.Sprintf("%s:no_game_loaded", MODULE_MAN)
 		}
-		if len(cmd.TargetArgs()) < 2 {
-			return 8, fmt.Sprintf("%s:no_enought_target_args_for%s",
-				MODULE_MAN, cmd.TargetArgs()[0])
+		if len(cmd.TargetArgs()) < 1 {
+			return 8, fmt.Sprintf("%s:no_enought_args_for%s",
+				MODULE_MAN, cmd.Args()[0])
 		}
-		areaID := cmd.TargetArgs()[1]
+		areaID := cmd.TargetArgs()[0]
 		var area *scenario.Area
 		for _, s := range flame.Mod().Chapter().Scenarios() {
 			for _, a := range s.Areas() {
@@ -94,6 +94,6 @@ func showModuleOption(cmd Command) (int, string) {
 		return 10, "unsupported yet"
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
-			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
+			cmd.OptionArgs()[0], cmd.Args()[0])
 	}
 }

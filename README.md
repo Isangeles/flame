@@ -21,7 +21,10 @@
   $ ./cmd
 ```
 
-## Flame CLI commands
+## Flame CLI:
+Flame comes with a simple textual interface that uses [Burn](https://github.com/isangeles/flame/cmd/burn) commands interpreter to execute commands.
+
+### Commands:
 Load module:
 ```
   $engineman -o load -t module -a [module name] [module path](optional)
@@ -33,11 +36,13 @@ Create new character:
 ```
   $newchar
 ```
+Description: starts new character creation dialog.
 
 Start new game:
 ```
   $newgame
 ```
+Description: starts new game dialog.
 
 Export game character:
 ```
@@ -75,7 +80,7 @@ Description: equips item with specified serial ID for game character with specif
 * Isangeles <<dev@isangeles.pl>>
 
 ## License
-Copyright 2018 Dariusz Sikora <<dev@isangeles.pl>>
+Copyright 2018-2019 Dariusz Sikora <<dev@isangeles.pl>>
  
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

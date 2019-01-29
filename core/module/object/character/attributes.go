@@ -49,7 +49,7 @@ func (a Attributes) Lift() int {
 // Sight returns maximal sight range based on
 // attributes.
 func (a Attributes) Sight() float64 {
-	return base_sight * float64(1 + a.Wis)
+	return base_sight// * float64(1 + a.Wis)
 }
 
 // Health returns maximal health based on

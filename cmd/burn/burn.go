@@ -1,7 +1,7 @@
 /*
  * burn.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -129,7 +129,6 @@ func HandleArgsPipe(cmds ...Command) (res int, out string) {
 // command on right as target arguments.
 func HandleTargetArgsPipe(cmds ...Command) (res int, out string) {
 	for _, cmd := range cmds {
-		fmt.Printf("pipe_cmd:%v\n", cmd)
 		res, out = pipeTargetArgs(cmd, out)
 		if res != 0 {
 			return res, out
