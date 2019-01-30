@@ -6,6 +6,8 @@
 ```
   [tool name] -o [option] -t [targets...] -a [arguments...]
 ```
+  Beside many arguments Burn handles also many targets, e.g. one charman tool command can be executed on many game characters, which results with a combined output.
+  
   Example command:
 ```
   >charman -o show -t player_test_0 player_test_1 -a position

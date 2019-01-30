@@ -22,7 +22,7 @@
 ```
 
 ## Flame CLI:
-Flame comes with a simple textual interface that uses [Burn](https://github.com/isangeles/flame/cmd/burn) commands interpreter to execute commands.
+Flame comes with a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
 
 ### Commands:
 Load module:
