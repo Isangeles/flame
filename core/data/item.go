@@ -1,7 +1,7 @@
 /*
  * item.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,7 +112,7 @@ func Weapon(mod *module.Module, id string) (*item.Weapon, error) {
 		return nil, fmt.Errorf("weapon_not_found:%s",
 			id)
 	}
-	itemsLangPath := filepath.FromSlash(mod.LangPath() + "items" +
+	itemsLangPath := filepath.FromSlash(mod.LangPath() + "/items" +
 		text.LANG_FILE_EXT)
 	w, err := buildXMLWeapon(xmlWeapon)
 	if err != nil {

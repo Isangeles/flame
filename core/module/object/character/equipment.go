@@ -25,7 +25,7 @@ package character
 
 import (
 	"fmt"
-	
+
 	"github.com/isangeles/flame/core/module/object/item"
 )
 
@@ -89,7 +89,46 @@ func newEquipmentSlot(sType EquipmentSlotType) *EquipmentSlot {
 	return s
 }
 
-// EquipHandRight assigns specified 'equipable' item to right hand slot,
+// Equip add specified equipable item to all 
+// compatible slots.
+func (eq *Equipment) Equip(it item.Equiper) error {
+	if !eq.char.MeetReqs(it.EquipReqs()) {
+		return fmt.Errorf("reqs_not_meet")
+	}
+	for _, s := range it.Slots() {
+		switch s {
+		case item.Hand:
+			if eq.handRight.item != nil {
+				eq.handLeft.item = it
+				break
+			}
+			eq.handRight.item = it
+		}
+	}
+	return nil
+}
+
+// Unequip removes specified item from all compatible
+// slots.
+func (eq *Equipment) Unequip(it item.Equiper) error {
+    if !eq.Equiped(it) {
+        return fmt.Errorf("item_not_equiped")
+    }
+    for _, s := range it.Slots() {
+        switch s {
+        case item.Hand:
+            if eq.handLeft.item == it {
+                eq.handLeft.item = nil
+            }    
+            if eq.handRight.item == it {
+                eq.handRight.item = nil
+            }
+        }
+    }
+    return nil
+}
+
+// equiphandright assigns specified 'equipable' item to right hand slot,
 // returns error if equip fail(e.q. equip reqs aren't meet).
 func (eq *Equipment) EquipHandRight(it item.Equiper) error {
 	if !eq.char.MeetReqs(it.EquipReqs()) {
@@ -106,7 +145,7 @@ func (eq *Equipment) EquipHandRight(it item.Equiper) error {
 func (eq *Equipment) Items() []item.Equiper {
 	its := make([]item.Equiper, 0)
 	if eq.handRight.item != nil {
-		its = append(its, eq.handRight.item)	
+		its = append(its, eq.handRight.item)
 	}
 	if eq.handLeft.item != nil {
 		its = append(its, eq.handLeft.item)
@@ -116,7 +155,7 @@ func (eq *Equipment) Items() []item.Equiper {
 
 // Equiped checks whether specified item is
 // equiped.
-func (eq *Equipment) Equiped(item item.Item) bool {
+func (eq *Equipment) Equiped(item item.Equiper) bool {
 	for _, i := range eq.Items() {
 		if i.SerialID() == item.SerialID() {
 			return true
@@ -158,7 +197,7 @@ func (eqSlot *EquipmentSlot) ID() string {
 	case Finger_left:
 		return "eq_slot_finger_left"
 	case Legs:
-		return "eq_slot_legs"		
+		return "eq_slot_legs"
 	case Feet:
 		return "eq_slot_feet"
 	}
@@ -175,9 +214,11 @@ func (eqSlotType EquipmentSlotType) compact(itSlot item.Slot) bool {
 		return itSlot == item.Neck
 	case Chest:
 		return itSlot == item.Chest
-	case Hand_right: case Hand_left:
+	case Hand_right:
+	case Hand_left:
 		return itSlot == item.Hand
-	case Finger_right: case Finger_left:
+	case Finger_right:
+	case Finger_left:
 		return itSlot == item.Finger
 	case Legs:
 		return itSlot == item.Legs
