@@ -84,7 +84,7 @@ func (g *Game) Update(delta int64) {
 	}
 	updateChars := g.Module().Chapter().Characters()
 	for _, c := range updateChars {
-		c.Update()
+		c.Update(delta)
 	}
 }
 

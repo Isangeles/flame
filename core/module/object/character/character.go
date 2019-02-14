@@ -27,8 +27,10 @@ package character
 
 import (
 	"fmt"
-
+	
+	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/object/skill"
 )
 
 const (
@@ -56,6 +58,9 @@ type Character struct {
 	destX, destY  float64
 	inventory     *item.Inventory
 	equipment     *Equipment
+	effects       *effect.Effects
+	targets       []effect.Target
+	skills        []*skill.Skill
 }
 
 // NewCharacter returns new character with specified parameters.
@@ -75,6 +80,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 	c.live = true
 	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
+	c.effects = effect.NewEffects(&c)
 	for i := 0; i < level; i++ {
 		oldMaxExp := c.MaxExperience()
 		c.levelup()
@@ -84,7 +90,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 }
 
 // Update updates character.
-func (c *Character) Update() {
+func (c *Character) Update(delta int64) {
 	// Move to dest point.
 	if c.InMove() {
 		if c.posX < c.destX {
@@ -115,6 +121,7 @@ func (c *Character) Update() {
 	} else if !c.Live() {
 		c.live = true
 	}
+	c.effects.Update(delta)
 }
 
 // ID returns character ID.
@@ -301,6 +308,16 @@ func (c *Character) InMove() bool {
 	} else {
 		return false
 	}
+}
+
+// Effects returns character effects container.
+func (c *Character) Effects() *effect.Effects {
+	return c.effects
+}
+
+// Targets returns character targets.
+func (c *Character) Targets() []effect.Target {
+	return c.targets
 }
 
 // levelup promotes character to next level.

@@ -4,10 +4,12 @@
   The main goal is to create simple, flexible, extensible and completely modular game engine. Engine provides build-in CLI frontend to easy run and debug modules. Engine does not come with any graphical interface, instead is designed to be used with external GUI's(e.g. [Mural](https://github.com/isangeles/mural)).
   
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine, Senlin modules should be compatible with Flame(with some modifications).
+
+  Flame modules are available for download [here](http://flame.isangeles.pl/mods).
   
   Currently in a very early development stage.
 
-## Install & Run
+## Build & Run
   Get sources from git:
 ```
   $ go get -u github.com/isangeles/flame
