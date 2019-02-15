@@ -46,10 +46,16 @@ func (c ModConf) CharactersPath() string {
 	return filepath.FromSlash(c.Path + "/characters")
 }
 
-// ItemsPath returns path to items bases
-// directory.
+// ItemsPath returns path to directory with
+// items bases.
 func (c ModConf) ItemsPath() string {
 	return filepath.FromSlash(c.Path + "/items")
+}
+
+// EffectsPath returns path to directory with
+// effects bases.
+func (c ModConf) EffectsPath() string {
+	return filepath.FromSlash(c.Path + "/effects")
 }
 
 // LangPath returns path to lang directory.

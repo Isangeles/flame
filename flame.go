@@ -74,7 +74,7 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	// Load data.
 	err := data.LoadModuleData(Mod())
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_weapons:%v",
+		return nil, fmt.Errorf("fail_to_load_module_data:%v",
 			err)
 	}
 	// Load start chapter for module.

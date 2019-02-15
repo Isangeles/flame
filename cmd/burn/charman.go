@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/modutil"
 )
 
 // handleCharCommand handles specified command for game
@@ -48,7 +49,7 @@ func handleCharCommand(cmd Command) (int, string) {
 		return setCharOption(cmd)
 	case "show":
 		return showCharOption(cmd)
-	case "export":
+	case "export", "save":
 		return exportCharOption(cmd)
 	case "add":
 		return addCharOption(cmd)
@@ -214,6 +215,14 @@ func showCharOption(cmd Command) (int, string) {
 			}
 		}
 		return 0, out
+	case "effects":
+		out := ""
+		for _, char := range chars {
+			for _, e := range char.Effects() {
+				out += fmt.Sprintf("%s ", modutil.SerialID(e.ID(), e.Serial()))
+			}
+		}
+		return 0, out
 	case "health", "hp":
 		out := ""
 		for _, char := range chars {
@@ -253,7 +262,7 @@ func exportCharOption(cmd Command) (int, string) {
 	char := flame.Game().Player(cmd.TargetArgs()[0])
 	if char == nil {
 		return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-			cmd.TargetArgs()[1])
+			cmd.TargetArgs()[0])
 	}
 
 	err := data.ExportCharacter(char, flame.Game().Module().CharactersPath())
@@ -301,6 +310,21 @@ func addCharOption(cmd Command) (int, string) {
 				return 8, fmt.Sprintf("%s:fail_to_add_item_to_inventory:%v",
 					CHAR_MAN, err)
 			}
+		}
+		return 0, ""
+	case "effect":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+			CHAR_MAN, cmd.Args()[0])
+		}
+		effectID := cmd.Args()[1]
+		effect, err := data.Effect(flame.Game().Module(), effectID)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_retrieve_effect:%v",
+				CHAR_MAN, err)
+		}
+		for _, char := range chars {
+			char.AddEffect(effect)
 		}
 		return 0, ""
 	default:

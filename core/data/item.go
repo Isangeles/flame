@@ -41,6 +41,20 @@ const (
 	WEAPONS_FILE_EXT = ".weapons"
 )
 
+// Item creates new instance of item with specified ID
+// for specified module, returns error if item data with such ID
+// was not found or module failed to assign serial value for
+// item.
+func Item(mod *module.Module, id string) (item.Item, error) {
+	switch {
+	case weaponsData[id] != nil:
+		return weapon(mod, id)
+	default:
+		return nil, fmt.Errorf("item_not_found:%s",
+			id)
+	}
+}
+
 // ImportWeapons imports all XML weapons from file with specified
 // path.
 func ImportWeapons(basePath string) ([]*parsexml.WeaponNodeXML, error) {
@@ -62,7 +76,7 @@ func ImportWeapons(basePath string) ([]*parsexml.WeaponNodeXML, error) {
 	return weapons, nil
 }
 
-// ImportWeaponsDir imports all weapons from specified files
+// ImportWeaponsDir imports all weapons from files
 // in specified directory.
 func ImportWeaponsDir(dirPath string) ([]*parsexml.WeaponNodeXML, error) {
 	files, err := ioutil.ReadDir(dirPath)
@@ -88,31 +102,16 @@ func ImportWeaponsDir(dirPath string) ([]*parsexml.WeaponNodeXML, error) {
 	return weapons, nil
 }
 
-// Item creates new instance of item with specified ID
-// for specified module, returns error if item with such ID
-// was not found or module failed to assign serial value for
-// item.
-func Item(mod *module.Module, id string) (item.Item, error) {
-	switch {
-	case weaponsData[id] != nil:
-		return Weapon(mod, id)
-	default:
-		return nil, fmt.Errorf("item_not_found:%s",
-			id)
-	}
-}
-
-// Weapon creates new instance of weapon with specified ID
+// weapon creates new instance of weapon with specified ID
 // for specified module, returns error if weapon with such ID
 // was not found or module failed to assign serial value for
 // weapon.
-func Weapon(mod *module.Module, id string) (*item.Weapon, error) {
+func weapon(mod *module.Module, id string) (*item.Weapon, error) {
 	xmlWeapon := weaponsData[id]
 	if xmlWeapon == nil {
-		return nil, fmt.Errorf("weapon_not_found:%s",
-			id)
+		return nil, fmt.Errorf("weapon_not_found:%s", id)
 	}
-	itemsLangPath := filepath.FromSlash(mod.LangPath() + "/items" +
+	itemsLangPath := filepath.FromSlash(mod.Conf().LangPath() + "/items" +
 		text.LANG_FILE_EXT)
 	w, err := buildXMLWeapon(xmlWeapon)
 	if err != nil {

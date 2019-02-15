@@ -130,8 +130,7 @@ func ImportSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, 
 
 // buildXMLSavedGame build game from data in specified
 // saved game XML struct.
-func buildXMLSavedGame(mod *module.Module,
-	xmlGame *parsexml.SavedGameXML) (*save.SaveGame, error) {
+func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*save.SaveGame, error) {
 	xmlChapter := &xmlGame.Chapter
 	// Load chapter with ID from save.
 	err := LoadChapter(mod, xmlChapter.ID)

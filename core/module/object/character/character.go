@@ -28,9 +28,11 @@ package character
 import (
 	"fmt"
 	
-	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/modifier"
+	"github.com/isangeles/flame/core/module/modutil"
 )
 
 const (
@@ -58,8 +60,8 @@ type Character struct {
 	destX, destY  float64
 	inventory     *item.Inventory
 	equipment     *Equipment
-	effects       *effect.Effects
-	targets       []effect.Target
+	targets       []modifier.Target
+	effects       map[string]*effect.Effect
 	skills        []*skill.Skill
 }
 
@@ -80,7 +82,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 	c.live = true
 	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
-	c.effects = effect.NewEffects(&c)
+	c.effects = make(map[string]*effect.Effect)
 	for i := 0; i < level; i++ {
 		oldMaxExp := c.MaxExperience()
 		c.levelup()
@@ -121,7 +123,14 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
-	c.effects.Update(delta)
+	/*
+	for serial, e := range c.effects {
+		e.Update(delta)
+		if e.Time() <= 0 {
+			delete(c.effects, serial)
+		}
+	}
+        */
 }
 
 // ID returns character ID.
@@ -310,13 +319,18 @@ func (c *Character) InMove() bool {
 	}
 }
 
-// Effects returns character effects container.
-func (c *Character) Effects() *effect.Effects {
+// Effects returns character all effects.
+func (c *Character) Effects() map[string]*effect.Effect {
 	return c.effects
 }
 
+// AddEffect add specified effect to character effects.
+func (c *Character) AddEffect(e *effect.Effect) {
+	c.effects[modutil.SerialID(e.ID(), e.Serial())] = e
+}
+
 // Targets returns character targets.
-func (c *Character) Targets() []effect.Target {
+func (c *Character) Targets() []modifier.Target {
 	return c.targets
 }
 

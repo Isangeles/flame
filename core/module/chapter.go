@@ -1,7 +1,7 @@
 /*
  * chapter.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ package module
 import (
 	"fmt"
 	"path/filepath"
-	//"strings"
 	
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/object/character"
@@ -185,27 +184,23 @@ func (c *Chapter) CharacterArea(char *character.Character) (*scenario.Area, erro
 	return nil, fmt.Errorf("character not found in any active scenario")
 }
 
-// AssignCharacterSerial sets unique serial value for specified
-// object with serial ID.
-func (c *Chapter) AssignCharacterSerial(char *character.Character) {
-	chars := c.CharactersWithID(char.ID())
-	objects := make([]Serialer, 0)
-	for _, c := range chars {
-		objects = append(objects, c)
-	}
-	serial := uniqueSerial(objects)
-	// Assing serial value to char.
-	char.SetSerial(serial)
-}
-
 // generateSerials generates unique serial values
 // for all chapter objects without serial value.
 func (c *Chapter) generateSerials() {
 	// Characters.
 	for _, char := range c.Characters() {
-		if char.Serial() != "" { // assumes assigned serial uniqueness
-			continue
+		if char.Serial() == "" { // assumes assigned serial uniqueness
+			c.Module().AssignSerial(char)
 		}
-		c.AssignCharacterSerial(char)
+		for _, i := range char.Inventory().Items() {
+			if i.Serial() == "" {
+				c.Module().AssignSerial(i)
+			}
+		}
+		for _, e := range char.Effects() {
+			if e.Serial() == "" {
+				c.Module().AssignSerial(e)
+			}
+		}
 	}
 }

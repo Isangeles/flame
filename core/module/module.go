@@ -1,7 +1,7 @@
 /*
  * module.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import (
 	"path/filepath"
 
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 )
 
@@ -43,6 +44,7 @@ type Module struct {
 	conf    ModConf
 	chapter *Chapter
 	items   []Serialer
+	effects []Serialer
 }
 
 // DefaultModulesPath returns default path to modules directory.
@@ -89,17 +91,6 @@ func (m *Module) ChaptersPath() string {
 // exported characters.
 func (m *Module) CharactersPath() string {
 	return m.conf.CharactersPath()
-}
-
-// ItemsPath returns path to directory
-// with items bases.
-func (m *Module) ItemsPath() string {
-	return m.conf.ItemsPath()
-}
-
-// LangPath returns path to lang directory.
-func (m *Module) LangPath() string {
-	return m.conf.LangPath()
 }
 
 // Chapter returns current module chapter.
@@ -160,20 +151,47 @@ func (m *Module) AssignSerial(ob Serialer) error {
 		if chapter == nil {
 			return fmt.Errorf("no active chapter set")
 		}
-		m.Chapter().AssignCharacterSerial(ob)
+		m.assignCharacterSerial(ob)
 		return nil
 	case item.Item:
-		m.AssignItemSerial(ob)
+		m.assignItemSerial(ob)
+		return nil
+	case *effect.Effect:
+		m.assignEffectSerial(ob)
 		return nil
 	default:
 		return fmt.Errorf("unsupported game object type")
 	}
 }
 
-// AssignItemSerial assigns unique serial value to
+
+// assignCharacterSerial sets unique serial value for specified
+// object with serial ID.
+func (m *Module) assignCharacterSerial(char *character.Character) {
+	chars := m.Chapter().CharactersWithID(char.ID())
+	objects := make([]Serialer, 0)
+	for _, c := range chars {
+		objects = append(objects, c)
+	}
+	serial := uniqueSerial(objects)
+	// Assing serial value to char.
+	char.SetSerial(serial)
+}
+
+// assignItemSerial assigns unique serial value to
 // specified item.
-func (m *Module) AssignItemSerial(it item.Item) {
+func (m *Module) assignItemSerial(it item.Item) {
 	serial := uniqueSerial(m.items)
 	it.SetSerial(serial)
 	m.items = append(m.items, it)
 }
+
+// assignEffectSerial assigns unique serial value to
+// specified effect.
+func (m *Module) assignEffectSerial(ef *effect.Effect) {
+	serial := uniqueSerial(m.effects)
+	ef.SetSerial(serial)
+	m.effects = append(m.effects, ef)
+}
+
+

@@ -24,8 +24,9 @@
 package skill
 
 import (
-	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/module/modifier"
 )
 
 // Interface for skills.
@@ -33,8 +34,7 @@ type Skill struct {
 	id, serial string
 	name       string
 	useReqs    []req.Requirement
-	targetEffs []effect.Effect
-	userEffs   []effect.Effect
+	effects    []effect.Effect
 	castSec    int // cast time in seconds
 	casting    bool
 	ready      bool
@@ -42,13 +42,12 @@ type Skill struct {
 
 // NewSkill creates new skill with specifie parameters.
 func NewSkill(id, name string, cast int, useReqs []req.Requirement,
-	tEffects, uEffects []effect.Effect) *Skill {
+	effects []effect.Effect) *Skill {
 	s := new(Skill)
 	s.id = id
 	s.name = name
 	s.useReqs = useReqs
-	s.targetEffs = tEffects
-	s.userEffs = uEffects
+	s.effects = effects
 	return s
 }
 
@@ -59,7 +58,7 @@ func (s *Skill) Update(delta int64) {
 
 // Cast starts skill casting with specified targetable object
 // as skill user.
-func (s *Skill) Cast(user effect.Target) error {
+func (s *Skill) Cast(user modifier.Target) error {
 	s.casting = true
 	return nil
 }

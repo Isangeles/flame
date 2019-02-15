@@ -32,7 +32,6 @@ import (
 type Serialer interface {
 	ID() string
 	Serial() string
-	SerialID() string
 	SetSerial(serial string)
 }
 

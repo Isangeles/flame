@@ -84,7 +84,8 @@ func newCharacterDialog() (*character.Character, error) {
 			}
 		}
 		// Summary.
-		c = character.NewCharacter("player", name, 1, sex, race,
+		charID := fmt.Sprintf("player_%s", name)
+		c = character.NewCharacter(charID, name, 1, sex, race,
 			character.Friendly, character.NewGuild("none"), attrs,
 			character.True_neutral)
 		fmt.Printf("%s: %s\n", lang.UIText("cli_newchar_summary"),
