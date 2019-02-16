@@ -27,6 +27,9 @@ package data
 
 import (
 	"fmt"
+	"io/ioutil"
+	"strings"
+	"os"
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module"
@@ -59,4 +62,21 @@ func LoadModuleData(mod *module.Module) error {
 		effectsData[xmlEffect.ID] = xmlEffect
 	}
 	return nil
+}
+
+// SavegamesFiles returns names of all save files
+// in directory with specified path.
+func SavegamesFiles(dirPath string) ([]os.FileInfo, error) {
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_read_dir:%v",
+			err)
+	}
+	savegames := make([]os.FileInfo, 0)
+	for _, fInfo := range files {
+		if strings.HasSuffix(fInfo.Name(), SAVEGAME_FILE_EXT) {
+			savegames = append(savegames, fInfo)
+		}
+	}
+	return savegames, nil
 }

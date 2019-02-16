@@ -123,14 +123,14 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
-	/*
+	// Update effects.
 	for serial, e := range c.effects {
 		e.Update(delta)
+		// Remove expired effects.
 		if e.Time() <= 0 {
 			delete(c.effects, serial)
 		}
 	}
-        */
 }
 
 // ID returns character ID.
@@ -143,7 +143,7 @@ func (c *Character) Serial() string {
 	return c.serial
 }
 
-// SerialId returns character ID and serial value
+// SerialID returns character ID and serial value
 // in form: [ID]_[serial].
 func (c *Character) SerialID() string {
 	return fmt.Sprintf("%s_%s", c.ID(), c.serial)
@@ -320,12 +320,17 @@ func (c *Character) InMove() bool {
 }
 
 // Effects returns character all effects.
-func (c *Character) Effects() map[string]*effect.Effect {
-	return c.effects
+func (c *Character) Effects() []*effect.Effect {
+	effs := make([]*effect.Effect, 0)
+	for _, e := range c.effects {
+		effs = append(effs, e)
+	}
+	return effs
 }
 
 // AddEffect add specified effect to character effects.
 func (c *Character) AddEffect(e *effect.Effect) {
+	e.SetTarget(c)
 	c.effects[modutil.SerialID(e.ID(), e.Serial())] = e
 }
 

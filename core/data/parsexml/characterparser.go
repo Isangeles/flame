@@ -1,24 +1,24 @@
 /*
  * characterparser.go
- * 
+ *
  * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 package parsexml
@@ -38,23 +38,24 @@ type CharactersBaseXML struct {
 	Characters []CharacterXML `xml:"char"`
 }
 
-// Struct for XML character node. 
+// Struct for XML character node.
 type CharacterXML struct {
-	XMLName   xml.Name         `xml:"char"`
-	ID        string           `xml:"id,attr"`
-	Serial    string           `xml:"serial,attr"`
-	Name      string           `xml:"name,attr"`
-	Gender    string           `xml:"gender,attr"`
-	Race      string           `xml:"race,attr"`
-	Attitude  string           `xml:"attitude,attr"`
-	Alignment string           `xml:"alignment,attr"`
-	Guild     string           `xml:"guild,attr"`
-	Level     int              `xml:"level,attr"`
-	Stats     string           `xml:"stats,value"`
-	PC        bool             `xml:"pc,attr"`
-	Position  string           `xml:"position,value"`
-	Inventory InventoryNodeXML `xml:"inventory"`
-	Equipment EquipmentNodeXML `xml:"equipment"`
+	XMLName   xml.Name             `xml:"char"`
+	ID        string               `xml:"id,attr"`
+	Serial    string               `xml:"serial,attr"`
+	Name      string               `xml:"name,attr"`
+	Gender    string               `xml:"gender,attr"`
+	Race      string               `xml:"race,attr"`
+	Attitude  string               `xml:"attitude,attr"`
+	Alignment string               `xml:"alignment,attr"`
+	Guild     string               `xml:"guild,attr"`
+	Level     int                  `xml:"level,attr"`
+	Stats     string               `xml:"stats,value"`
+	PC        bool                 `xml:"pc,attr"`
+	Position  string               `xml:"position,value"`
+	Inventory InventoryNodeXML     `xml:"inventory"`
+	Equipment EquipmentNodeXML     `xml:"equipment"`
+	Effects   ObjectEffectsNodeXML `xml:"effects"`
 }
 
 // Struct for equipment XML node.
@@ -130,6 +131,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Position = fmt.Sprintf("%fx%f", posX, posY)
 	xmlChar.Inventory = *xmlInventory(char.Inventory())
 	xmlChar.Equipment = *xmlEquipment(char.Equipment())
+	xmlChar.Effects = *xmlObjectEffects(char.Effects())
 	return xmlChar
 }
 
@@ -139,7 +141,7 @@ func xmlEquipment(eq *character.Equipment) *EquipmentNodeXML {
 	xmlEq := new(EquipmentNodeXML)
 	if eq.HandRight().Item() != nil {
 		xmlEqItem := EquipmentItemNodeXML{
-			ID: eq.HandRight().Item().SerialID(),
+			ID:   eq.HandRight().Item().SerialID(),
 			Slot: MarshalEqSlot(eq.HandRight()),
 		}
 		xmlEq.Items = append(xmlEq.Items, xmlEqItem)

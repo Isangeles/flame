@@ -50,6 +50,7 @@ const (
 	CLOSE_CMD        = "close"
 	NEW_CHAR_CMD     = "newchar"
 	NEW_GAME_CMD     = "newgame"
+	LOAD_GAME_CMD    = "loadgame"
 	IMPORT_CHARS_CMD = "importchars"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
@@ -131,6 +132,14 @@ func execute(input string) {
 		g, err := newGameDialog()
 		if err != nil {
 			log.Err.Printf("%s\n", err)
+			break
+		}
+		game = g
+		lastUpdate = time.Now()
+	case LOAD_GAME_CMD:
+		g, err := loadGameDialog()
+		if err != nil {
+			log.Err.Printf("%s", err)
 			break
 		}
 		game = g

@@ -65,7 +65,7 @@ func newGameDialog() (*core.Game, error) {
 			id, err := strconv.Atoi(input)
 			if err != nil {
 				fmt.Printf("%s:%s\n",
-					lang.UIText("cli_newchar_nan_error"), input)
+					lang.UIText("cli_nan_error"), input)
 			}
 			if id >= 0 && id < len(playableChars) {
 				pc = playableChars[id]

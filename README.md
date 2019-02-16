@@ -46,6 +46,12 @@ Start new game:
 ```
 Description: starts new game dialog.
 
+Load game:
+```
+  $loadgame
+```
+Description: starts load game dialog.
+
 Export game character:
 ```
   $charman -o export -t [character ID]

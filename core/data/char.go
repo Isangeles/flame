@@ -187,8 +187,8 @@ func buildXMLCharacter(mod *module.Module,
 	for _, xmlEqItem := range charXML.Equipment.Items {
 		it := char.Inventory().Item(xmlEqItem.ID)
 		if it == nil {
-			log.Err.Printf("data_build_character:%s:eq:fail to retrieve eq item from inv",
-				char.SerialID())
+			log.Err.Printf("data_build_character:%s:eq:fail_to_retrieve_eq_item_from_inv:%v",
+				char.SerialID(), err)
 			continue
 		}
 		eqItem, ok := it.(item.Equiper)
@@ -208,6 +208,17 @@ func buildXMLCharacter(mod *module.Module,
 			log.Err.Printf("data_build_character:%s:unknown_equipment_slot:%s",
 				char.SerialID(), xmlEqItem.Slot)
 		}
+	}
+	// Effects.
+	for _, xmlEffect := range charXML.Effects.Effects {
+		effect, err := Effect(mod, xmlEffect.ID)
+		if err != nil {
+			log.Err.Printf("data_build_character:%s:fail_to_create_effect:%v",
+				char.SerialID(), err)
+		}
+		effect.SetSerial(xmlEffect.Serial)
+		effect.SetTimeSeconds(xmlEffect.Time)
+		char.AddEffect(effect)
 	}
 	return char, nil
 }

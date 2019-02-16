@@ -38,4 +38,5 @@ type Target interface {
 // Interface for object modifiers.
 type Modifier interface {
 	Affect(source Target, targets ...Target)
+	Undo(source Target, targets ...Target)
 }

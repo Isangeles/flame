@@ -30,13 +30,13 @@ import (
 
 // Struct for effects.
 type Effect struct {
-	id, serial  string
-	name        string
-	source      modifier.Target
-	target      modifier.Target
-	modifiers   []modifier.Modifier
-	durationSec int64
-	timeSec     int64
+	id, serial string
+	name       string
+	source     modifier.Target
+	target     modifier.Target
+	modifiers  []modifier.Modifier
+	duration   int64
+	time       int64
 }
 
 // NewEffect creates new effect.
@@ -44,7 +44,8 @@ func NewEffect(id string, modifiers []modifier.Modifier, duration int64) *Effect
 	e := new(Effect)
 	e.id = id
 	e.modifiers = modifiers
-	e.durationSec = duration
+	e.duration = int64(duration * 1000)
+	e.SetTimeSeconds(duration)
 	return e
 }
 
@@ -56,7 +57,7 @@ func (e *Effect) Update(delta int64) {
 	for _, m := range e.modifiers {
 		m.Affect(e.target)
 	}
-	e.SetTime(-delta)
+	e.time -= delta
 }
 
 // ID returns effect ID.
@@ -74,10 +75,16 @@ func (e *Effect) Name() string {
 	return e.name
 }
 
-// Time returns current duration time
-// in seconds.
+// Duration returns effect duration time
+// in milliseconds.
+func (e *Effect) Duration() int64 {
+	return e.duration
+}
+
+// Time returns current duration time in
+// milliseconds.
 func (e *Effect) Time() int64 {
-	return e.timeSec
+	return e.time
 }
 
 // SetSerial sets specified value as
@@ -92,10 +99,10 @@ func (e *Effect) SetName(name string) {
 	e.name = name
 }
 
-// SetTime sets specified value as effect
+// SetTimeSeconds sets specified value as effect
 // duration time in seconds.
-func (e *Effect) SetTime(time int64) {
-	e.timeSec = time
+func (e *Effect) SetTimeSeconds(time int64) {
+	e.time = int64(time * 1000)
 }
 
 // SetSource sets specified targetable object

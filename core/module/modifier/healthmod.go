@@ -23,20 +23,43 @@
 
 package modifier
 
+import (
+	"math/rand"
+	"time"
+)
+
 // Struct for health modifier.
 type HealthMod struct {
 	min, max int
+	rng  *rand.Rand
 }
 
 // NewHealthMod creates new health modifier.
 func NewHealthMod(min, max int) HealthMod {
-	return HealthMod{min, max}
+	hm := HealthMod{min: min, max: max}
+	rngSrc := rand.NewSource(time.Now().UnixNano())
+	hm.rng = rand.New(rngSrc)
+	return hm
 }
 
-// Affect affects on specified targetable objects.
+// Affect modifies targets health points.
 func (hm HealthMod) Affect(source Target, targets ...Target) {
 	for _, t := range targets {
-		val := hm.min
+		val := hm.rollValue()
 		t.SetHealth(val)
 	}
+}
+
+// Undo undos health modification on specified targets.
+func (hm HealthMod) Undo(source Target, targets ...Target) {
+	for _, t := range targets {
+		val := hm.rollValue()
+		t.SetHealth(-val)
+	}
+}
+
+// rollValue returns random value from min - max
+// range.
+func (hm HealthMod) rollValue() int {
+	return hm.min + hm.rng.Intn(hm.max - hm.min)
 }
