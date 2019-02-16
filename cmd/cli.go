@@ -35,8 +35,9 @@ import (
 	"os"
 	"strings"
 	"time"
-
+	
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/cmd/burn"
 	"github.com/isangeles/flame/cmd/burn/syntax"
 	"github.com/isangeles/flame/cmd/log"
@@ -62,10 +63,18 @@ var (
 
 // On init.
 func init() {
-	err := flame.LoadConfig()
+	// Load flame config.
+	err := config.LoadConfig()
 	if err != nil {
 		log.Err.Printf("fail_to_load_flame_config:%v", err)
 	}
+	// Load module.
+	m, err := data.Module(config.ModulePath(), config.LangID())
+	if err != nil {
+		log.Err.Printf("fail_to_load_config_module:%v", err)
+	}
+	flame.SetModule(m)
+	// Load CLI config.
 	err = loadConfig()
 	if err != nil {
 		log.Err.Printf("fail_to_load_config:%v", err)
@@ -100,7 +109,7 @@ func main() {
 func execute(input string) {
 	switch input {
 	case CLOSE_CMD:
-		err := flame.SaveConfig()
+		err := config.SaveConfig()
 		if err != nil {
 			log.Err.Printf("engine_config_save_fail:%v",
 				err)

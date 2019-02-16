@@ -28,8 +28,8 @@ import (
 	"path/filepath"
 
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 )
 
@@ -45,10 +45,10 @@ func handleEngineCommand(cmd Command) (int, string) {
 		return 0, flame.VERSION
 	case "lang":
 		if len(cmd.Args()) < 1 {
-			return 0, flame.LangID()
+			return 0, config.LangID()
 		}
 
-		err := flame.SetLang(cmd.Args()[0])
+		err := config.SetLang(cmd.Args()[0])
 		if err != nil {
 			return 8, fmt.Sprintf("%s:lang_set_fail:%v", ENGINE_MAN, err)
 		}
@@ -105,10 +105,10 @@ func loadEngineOption(cmd Command) (int, string) {
 			modPath = filepath.FromSlash(cmd.Args()[1] + "/" +
 				cmd.Args()[0])
 		} else {
-			modPath = filepath.FromSlash(module.DefaultModulesPath() + "/" +
+			modPath = filepath.FromSlash(config.ModulePath() + "/" +
 				cmd.Args()[0])
 		}
-		m, err := data.Module(modPath, flame.LangID())
+		m, err := data.Module(modPath, config.LangID())
 		if err != nil {
 			return 8, fmt.Sprintf("%s:module_load_fail:%s",
 				ENGINE_MAN, err)
@@ -146,7 +146,7 @@ func saveEngineOption(cmd Command) (int, string) {
 
 	switch cmd.TargetArgs()[0] {
 	case "config":
-		err := flame.SaveConfig()
+		err := config.SaveConfig()
 		if err != nil {
 			return 8, fmt.Sprintf("%s:config_save_fail:%v",
 				ENGINE_MAN, err)
@@ -162,7 +162,7 @@ func saveEngineOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_module_loaded",
 				ENGINE_MAN)
 		}
-		savePath := flame.SavegamesPath()
+		savePath := config.ModuleSavegamesPath()
 		saveName := cmd.Args()[0]
 		err := data.SaveGame(flame.Game(), savePath, saveName)
 		if err != nil {
@@ -231,7 +231,7 @@ func setEngineOption(cmd Command) (int, string) {
 		}
 		arg0 := cmd.Args()[0]
 		dbgMode := (arg0 == "true" || arg0 == "on")
-		flame.SetDebug(dbgMode)
+		config.SetDebug(dbgMode)
 		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'",

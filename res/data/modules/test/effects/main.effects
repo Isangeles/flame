@@ -1,5 +1,5 @@
 <base>
-	<effect id="hit1" duration="0">
+	<effect id="bleed1" duration="5">
 		<modifiers>
 			<healthMod min="-3" max="-1" />
 		</modifiers>

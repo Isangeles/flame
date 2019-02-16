@@ -43,11 +43,10 @@ type Weapon struct {
 
 // NewWeapon creates new weapon with
 // specified parameters.
-func NewWeapon(id, name string, value, level, dmgMin, dmgMax int,
+func NewWeapon(id string, value, level, dmgMin, dmgMax int,
 	equipReqs []req.Requirement, slots []Slot) *Weapon {
 	w := Weapon{
 		id: id,
-		name: name,
 		value: value,
 		dmgMin: dmgMin,
 		dmgMax: dmgMax,

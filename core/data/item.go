@@ -135,7 +135,7 @@ func buildXMLWeapon(xmlWeapon *parsexml.WeaponNodeXML) (*item.Weapon, error) {
 		return nil, fmt.Errorf("fail_to_unmarshal_slot_types:%v",
 			err)
 	}
-	w := item.NewWeapon(xmlWeapon.ID, "", xmlWeapon.Value, xmlWeapon.Level,
+	w := item.NewWeapon(xmlWeapon.ID, xmlWeapon.Value, xmlWeapon.Level,
 		xmlWeapon.Damage.Min, xmlWeapon.Damage.Max, reqs, slots)
 	return w, nil
 }

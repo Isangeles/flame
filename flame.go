@@ -27,6 +27,7 @@ package flame
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
@@ -111,7 +112,7 @@ func LoadGame(saveName string) (*core.Game, error) {
 		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
 	}
 	// Import saved game.
-	savesPath := SavegamesPath()
+	savesPath := config.ModuleSavegamesPath()
 	sav, err := data.ImportSavedGame(Mod(), savesPath, saveName)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_game:%v", err)

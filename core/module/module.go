@@ -28,15 +28,10 @@ package module
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
-)
-
-var (
-	defaultModulesPath string = filepath.FromSlash("data/modules")
 )
 
 // Module struct represents engine module.
@@ -45,11 +40,6 @@ type Module struct {
 	chapter *Chapter
 	items   []Serialer
 	effects []Serialer
-}
-
-// DefaultModulesPath returns default path to modules directory.
-func DefaultModulesPath() string {
-	return defaultModulesPath
 }
 
 // NewModule creates new instance of module with specified configuration
