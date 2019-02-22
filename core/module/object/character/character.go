@@ -27,11 +27,11 @@ package character
 
 import (
 	"fmt"
-	
+
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
-	"github.com/isangeles/flame/core/module/modifier"
 	"github.com/isangeles/flame/core/module/modutil"
 )
 
@@ -56,11 +56,12 @@ type Character struct {
 	alignment     Alignment
 	guild         Guild
 	attributes    Attributes
+	resilience    object.Resilience
 	posX, posY    float64
 	destX, destY  float64
 	inventory     *item.Inventory
 	equipment     *Equipment
-	targets       []modifier.Target
+	targets       []object.Target
 	effects       map[string]*effect.Effect
 	skills        []*skill.Skill
 }
@@ -83,6 +84,7 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
 	c.effects = make(map[string]*effect.Effect)
+	// Set level.
 	for i := 0; i < level; i++ {
 		oldMaxExp := c.MaxExperience()
 		c.levelup()
@@ -168,7 +170,7 @@ func (c *Character) Health() int {
 // MaxHealth returns maximal value of
 // health points.
 func (c *Character) MaxHealth() int {
-	return c.attributes.Health() + (base_health * c.Level())
+	return c.attributes.Health() + (Base_health * c.Level())
 }
 
 // Mana returns current value of mana
@@ -180,7 +182,7 @@ func (c *Character) Mana() int {
 // MaxMana returns maximal value of mana
 // points.
 func (c *Character) MaxMana() int {
-	return c.attributes.Mana() + (base_mana * c.Level()/2)
+	return c.attributes.Mana() + (Base_mana * c.Level()/2)
 }
 
 // Experience returns current value of experience
@@ -335,7 +337,7 @@ func (c *Character) AddEffect(e *effect.Effect) {
 }
 
 // Targets returns character targets.
-func (c *Character) Targets() []modifier.Target {
+func (c *Character) Targets() []object.Target {
 	return c.targets
 }
 

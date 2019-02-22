@@ -90,8 +90,10 @@ func (g *Game) Update(delta int64) {
 
 // Pause toggles game update pause.
 func (g *Game) Pause(pause bool) {
-	log.Inf.Printf(lang.Text("ui", "game_pause_info"))
 	g.paused = pause
+	if g.Paused() {
+		log.Inf.Printf(lang.Text("ui", "game_pause_info"))
+	}
 }
 
 // Paused checks whether game is paused.

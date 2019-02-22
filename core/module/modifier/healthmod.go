@@ -26,6 +26,8 @@ package modifier
 import (
 	"math/rand"
 	"time"
+
+	"github.com/isangeles/flame/core/module/object"
 )
 
 // Struct for health modifier.
@@ -43,23 +45,24 @@ func NewHealthMod(min, max int) HealthMod {
 }
 
 // Affect modifies targets health points.
-func (hm HealthMod) Affect(source Target, targets ...Target) {
+func (hm HealthMod) Affect(source object.Target, targets ...object.Target) {
 	for _, t := range targets {
 		val := hm.rollValue()
-		t.SetHealth(val)
+		hit := object.Hit{
+			Source: source,
+			Type: object.Hit_normal,
+			Damage: val,
+		}
+		t.TakeHit(hit)
 	}
 }
 
 // Undo undos health modification on specified targets.
-func (hm HealthMod) Undo(source Target, targets ...Target) {
-	for _, t := range targets {
-		val := hm.rollValue()
-		t.SetHealth(-val)
-	}
+func (hm HealthMod) Undo(source object.Target, targets ...object.Target) {
 }
 
-// rollValue returns random value from min - max
-// range.
+// rollValue returns random value
+// from min - max range.
 func (hm HealthMod) rollValue() int {
 	return hm.min + hm.rng.Intn(hm.max - hm.min)
 }

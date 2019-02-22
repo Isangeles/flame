@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * combat.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,14 +21,26 @@
  *
  */
 
-package modifier
+package character
 
 import (
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/log"
 )
 
-// Interface for object modifiers.
-type Modifier interface {
-	Affect(source object.Target, targets ...object.Target)
-	Undo(source object.Target, targets ...object.Target)
+// Hit handles specified hit.
+func (c *Character) TakeHit(hit object.Hit) {
+	// TODO: handle resits.
+	c.SetHealth(c.Health() - hit.Damage)
+	log.Cmb.Printf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.Damage)
 }
+
+// TakeEffects adds specified effects
+func (c *Character) TakeEffect(e *effect.Effect) {
+	// TODO: handle resists.
+	c.AddEffect(e)
+	log.Cmb.Printf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
+}
+

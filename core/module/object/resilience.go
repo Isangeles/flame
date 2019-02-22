@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * resilience.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,14 +21,13 @@
  *
  */
 
-package modifier
+package object
 
-import (
-	"github.com/isangeles/flame/core/module/object"
-)
-
-// Interface for object modifiers.
-type Modifier interface {
-	Affect(source object.Target, targets ...object.Target)
-	Undo(source object.Target, targets ...object.Target)
+// Struct for object resiliences.
+type Resilience struct {
+	Normal int
+	Fire   int
+	Frost  int
+	Nature int
+	Magic  int
 }

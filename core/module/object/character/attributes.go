@@ -28,10 +28,10 @@ import (
 )
 
 const (
-	base_lift = 10
-	base_sight = 300.0
-	base_health = 100
-	base_mana = 10
+	Base_lift = 10
+	Base_sight = 300.0
+	Base_health = 100
+	Base_mana = 10
 )
 
 // Attributes struct represents game character attributes: strenght,
@@ -43,24 +43,24 @@ type Attributes struct {
 // Lift returns maximal size of inventory based on
 // attributes.
 func (a Attributes) Lift() int {
-	return base_lift * (1 + a.Str)
+	return Base_lift * (1 + a.Str)
 }
 
 // Sight returns maximal sight range based on
 // attributes.
 func (a Attributes) Sight() float64 {
-	return base_sight// * float64(1 + a.Wis)
+	return Base_sight// * float64(1 + a.Wis)
 }
 
 // Health returns maximal health based on
 // attributes.
 func (a Attributes) Health() int {
-	return (base_health * (1 + a.Con)) * (1 + a.Str/2)
+	return (Base_health * (1 + a.Con)) * (1 + a.Str/2)
 }
 
 // Mana returns maximal mana based on attributes.
 func (a Attributes) Mana() int {
-	return (base_mana * (1 + a.Int)) * (1 + a.Wis/2)
+	return (Base_mana * (1 + a.Int)) * (1 + a.Wis/2)
 }
 
 // String returns attributes struct as string in format:

@@ -25,6 +25,8 @@ ali_cha_neutral:Chaotic neutral;
 ali_law_evil:Lawful evil;
 ali_neu_evil:Neutral evil;
 ali_cha_evil:Chaotic evil;
+ob_health:Health;
+ob_effect:Effect;
 com_yes:Yes;
 com_no:No;
 game_pause_info:Game paused;

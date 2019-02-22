@@ -34,5 +34,6 @@ var (
 	Inf *log.Logger = log.New(enginelog.InfLog, "flame-core:", 0)
 	Err *log.Logger = log.New(enginelog.ErrLog, "flame-core:", 0)
 	Dbg *log.Logger = log.New(enginelog.DbgLog, "flame-debug:", 0)
+	Cmb *log.Logger = log.New(enginelog.InfLog, "flame-combat:", 0)
 )
 

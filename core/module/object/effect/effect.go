@@ -26,17 +26,19 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/module/modifier"
+	"github.com/isangeles/flame/core/module/object"
 )
 
 // Struct for effects.
 type Effect struct {
 	id, serial string
 	name       string
-	source     modifier.Target
-	target     modifier.Target
+	source     object.Target
+	target     object.Target
 	modifiers  []modifier.Modifier
 	duration   int64
 	time       int64
+	sec_timer  int64
 }
 
 // NewEffect creates new effect.
@@ -54,8 +56,12 @@ func (e *Effect) Update(delta int64) {
 	if e.target == nil || e.Time() <= 0 {
 		return
 	}
-	for _, m := range e.modifiers {
-		m.Affect(e.target)
+	e.sec_timer += delta
+	if e.sec_timer >= 1000 { // every second
+		for _, m := range e.modifiers {
+			m.Affect(e.source, e.target)
+		}
+		e.sec_timer = 0
 	}
 	e.time -= delta
 }
@@ -107,12 +113,12 @@ func (e *Effect) SetTimeSeconds(time int64) {
 
 // SetSource sets specified targetable object
 // as effect source.
-func (e *Effect) SetSource(t modifier.Target) {
+func (e *Effect) SetSource(t object.Target) {
 	e.source = t
 }
 
 // SetTarget sets specified targertable object
 // as effect target.
-func (e *Effect) SetTarget(t modifier.Target) {
+func (e *Effect) SetTarget(t object.Target) {
 	e.target = t
 }

@@ -24,9 +24,9 @@
 package skill
 
 import (
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/req"
-	"github.com/isangeles/flame/core/module/modifier"
 )
 
 // Interface for skills.
@@ -58,7 +58,7 @@ func (s *Skill) Update(delta int64) {
 
 // Cast starts skill casting with specified targetable object
 // as skill user.
-func (s *Skill) Cast(user modifier.Target) error {
+func (s *Skill) Cast(user object.Target) error {
 	s.casting = true
 	return nil
 }

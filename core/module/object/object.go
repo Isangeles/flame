@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * defence.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,14 +21,33 @@
  *
  */
 
-package modifier
+package object
 
-import (
-	"github.com/isangeles/flame/core/module/object"
-)
-
-// Interface for object modifiers.
-type Modifier interface {
-	Affect(source object.Target, targets ...object.Target)
-	Undo(source object.Target, targets ...object.Target)
+// Interfece for 'atackable' objects.
+type Target interface {
+	Health() int
+	Mana() int
+	SetMana(val int)
+	Experience() int
+	SetExperience(val int)
+	Live() bool
+	TakeHit(h Hit)
 }
+
+// Struct for hit.
+type Hit struct {
+	Source Target
+	Type   HitType
+	Damage int
+}
+
+// Struct for hit type.
+type HitType int
+
+const (
+	Hit_normal HitType = iota
+	Hit_fire
+	Hit_frost
+	Hit_nature
+	Hit_magic
+)

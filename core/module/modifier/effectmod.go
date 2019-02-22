@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * effectmod.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -27,8 +27,22 @@ import (
 	"github.com/isangeles/flame/core/module/object"
 )
 
-// Interface for object modifiers.
-type Modifier interface {
-	Affect(source object.Target, targets ...object.Target)
-	Undo(source object.Target, targets ...object.Target)
+// Struct for effect modifier.
+type EffectMod struct {
+	effectID     string
+	activeSerial string
+}
+
+// NewEffectMod creates new effect modifier.
+func NewEffectMod(effectID string) EffectMod {
+	em := EffectMod{effectID: effectID}
+	return em
+}
+
+// Affect puts modifier effect on specified targets.
+func (em EffectMod) Affect(source object.Target, targets ...object.Target) {
+}
+
+// Undo removes modifier effect from specified targets.
+func (em EffectMod) Undo(source object.Target, targets ...object.Target) {
 }
