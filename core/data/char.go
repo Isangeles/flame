@@ -1,5 +1,5 @@
 /*
- * data.go
+ * char.go
  *
  * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -173,14 +173,14 @@ func buildXMLCharacter(mod *module.Module,
 		it, err := Item(mod, xmlInvItem.ID)
 		if err != nil {
 			log.Err.Printf("data_build_character:%s:inv_item:%v",
-				char.SerialID(), err)
+				char.ID(), err)
 			continue
 		}
 		it.SetSerial(xmlInvItem.Serial)
 		err = char.Inventory().AddItem(it)
 		if err != nil {
 			log.Err.Printf("data_build_character:%s::add_item:%v",
-				char.SerialID(), err)
+				char.ID(), err)
 		}
 	}
 	// Equipment.
@@ -194,7 +194,7 @@ func buildXMLCharacter(mod *module.Module,
 		eqItem, ok := it.(item.Equiper)
 		if !ok {
 			log.Err.Printf("data_build_character:%s:eq:not_eqipable_item:%s",
-				char.SerialID(), it.ID())
+				char.ID(), it.ID())
 			continue
 		}
 		switch xmlEqItem.Slot {
@@ -202,11 +202,11 @@ func buildXMLCharacter(mod *module.Module,
 			err := char.Equipment().EquipHandRight(eqItem)
 			if err != nil {
 				log.Err.Printf("data_build_character:%s:eq:fail_to_equip_item:%v",
-					char.SerialID(), err)
+					char.ID(), err)
 			}
 		default:
 			log.Err.Printf("data_build_character:%s:unknown_equipment_slot:%s",
-				char.SerialID(), xmlEqItem.Slot)
+				char.ID(), xmlEqItem.Slot)
 		}
 	}
 	// Effects.
@@ -214,7 +214,8 @@ func buildXMLCharacter(mod *module.Module,
 		effect, err := Effect(mod, xmlEffect.ID)
 		if err != nil {
 			log.Err.Printf("data_build_character:%s:fail_to_create_effect:%v",
-				char.SerialID(), err)
+				char.ID(), err)
+			continue
 		}
 		effect.SetSerial(xmlEffect.Serial)
 		effect.SetTimeSeconds(xmlEffect.Time)

@@ -26,6 +26,7 @@ package item
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -43,16 +44,17 @@ type Weapon struct {
 
 // NewWeapon creates new weapon with
 // specified parameters.
-func NewWeapon(id string, value, level, dmgMin, dmgMax int,
-	equipReqs []req.Requirement, slots []Slot) *Weapon {
+func NewWeapon(data res.WeaponData) *Weapon {
 	w := Weapon{
-		id: id,
-		value: value,
-		dmgMin: dmgMin,
-		dmgMax: dmgMax,
-		level: level,
-		equipReqs: equipReqs,
-		slots: slots,
+		id: data.ID,
+		value: data.Value,
+		dmgMin: data.DMGMin,
+		dmgMax: data.DMGMax,
+		level: data.Level,
+		equipReqs: data.EQReqs,
+	}
+	for _, sid := range data.Slots {
+		w.slots = append(w.slots, Slot(sid))
 	}
 	return &w
 }

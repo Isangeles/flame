@@ -31,36 +31,25 @@ import (
 	"strings"
 	"os"
 
-	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
-)
-
-var (
-	weaponsData map[string]*parsexml.WeaponNodeXML
-	effectsData map[string]*parsexml.EffectNodeXML
 )
 
 // LoadModuleData loads data(items, skills, etc.) from
 // specified module.
 func LoadModuleData(mod *module.Module) error {
 	// Weapons.
-	weaponsData = make(map[string]*parsexml.WeaponNodeXML)
-	xmlWeapons, err := ImportWeaponsDir(mod.Conf().ItemsPath())
+	weaponsData, err := ImportWeaponsDir(mod.Conf().ItemsPath())
 	if err != nil {
 		return fmt.Errorf("fail_to_load_weapons:%v", err)
 	}
-	for _, xmlWeapon := range xmlWeapons {
-		weaponsData[xmlWeapon.ID] = xmlWeapon
-	}
+	res.SetWeaponsData(weaponsData)
 	// Effects.
-	effectsData = make(map[string]*parsexml.EffectNodeXML)
-	xmlEffects, err := ImportEffectsDir(mod.Conf().EffectsPath())
+	effectsData, err := ImportEffectsDir(mod.Conf().EffectsPath())
 	if err != nil {
 		return fmt.Errorf("fail_to_load_effects:%v", err)
 	}
-	for _, xmlEffect := range xmlEffects {
-		effectsData[xmlEffect.ID] = xmlEffect
-	}
+	res.SetEffectsData(effectsData)
 	return nil
 }
 

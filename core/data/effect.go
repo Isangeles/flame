@@ -32,6 +32,7 @@ import (
 	
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/log"
@@ -46,13 +47,13 @@ const (
 // was not found or module failed to assign serial value for
 // effect.
 func Effect(mod *module.Module, id string) (*effect.Effect, error) {
-	xmlEffect := effectsData[id]
-	if xmlEffect == nil {
+	data := res.Effect(id)
+	if data.ID == "" {
 		return nil, fmt.Errorf("effect_not_found:%s", id)
 	}
+	e := effect.NewEffect(data)
 	effectsLangPath := filepath.FromSlash(mod.Conf().LangPath() + "/effects" +
 		text.LANG_FILE_EXT)
-	e := buildXMLEffect(xmlEffect)
 	name := text.ReadDisplayText(effectsLangPath, e.ID())
 	e.SetName(name[0])
 	err := mod.AssignSerial(e)
@@ -64,8 +65,8 @@ func Effect(mod *module.Module, id string) (*effect.Effect, error) {
 
 // ImportEffects imports all XML effects data from effects base
 // with specified path.
-func ImportEffects(basePath string) ([]*parsexml.EffectNodeXML, error) {
-	effects := make([]*parsexml.EffectNodeXML, 0)
+func ImportEffects(basePath string) ([]res.EffectData, error) {
+	effects := make([]res.EffectData, 0)
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_effects_base_file:%v", err)
@@ -75,20 +76,21 @@ func ImportEffects(basePath string) ([]*parsexml.EffectNodeXML, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_effects_base:%v", err)
 	}
-	for _, e := range xmlEffects {
-		effects = append(effects, &e)
+	for _, xmlEffect := range xmlEffects {
+		e := buildXMLEffectData(xmlEffect)
+		effects = append(effects, e)
 	}
 	return effects, nil
 }
 
 // ImportEffectsDir imports all effects from files in
 // specified directory.
-func ImportEffectsDir(dirPath string) ([]*parsexml.EffectNodeXML, error) {
+func ImportEffectsDir(dirPath string) ([]res.EffectData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	effects := make([]*parsexml.EffectNodeXML, 0)
+	effects := make([]res.EffectData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), EFFECTS_FILE_EXT) {
 			continue
@@ -108,7 +110,13 @@ func ImportEffectsDir(dirPath string) ([]*parsexml.EffectNodeXML, error) {
 }
 
 // buildXMLEffect build effect from XML data.
-func buildXMLEffect(xmlEffect *parsexml.EffectNodeXML) *effect.Effect {
+func buildXMLEffectData(xmlEffect parsexml.EffectNodeXML) res.EffectData {
 	mods := buildXMLModifiers(&xmlEffect.ModifiersNode)
-	return effect.NewEffect(xmlEffect.ID, mods, xmlEffect.Duration)
+	data := res.EffectData{
+		ID: xmlEffect.ID,
+		Duration: xmlEffect.Duration,
+		Modifiers: mods,
+		Subeffects: xmlEffect.Subeffects.Effects,
+	}
+	return data
 }

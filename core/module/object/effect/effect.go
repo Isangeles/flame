@@ -25,8 +25,10 @@
 package effect
 
 import (
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/modifier"
 	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for effects.
@@ -36,18 +38,20 @@ type Effect struct {
 	source     object.Target
 	target     object.Target
 	modifiers  []modifier.Modifier
+	subeffects []string
 	duration   int64
 	time       int64
 	sec_timer  int64
 }
 
 // NewEffect creates new effect.
-func NewEffect(id string, modifiers []modifier.Modifier, duration int64) *Effect {
+func NewEffect(data res.EffectData) *Effect {
 	e := new(Effect)
-	e.id = id
-	e.modifiers = modifiers
-	e.duration = int64(duration * 1000)
-	e.SetTimeSeconds(duration)
+	e.id = data.ID
+	e.modifiers = data.Modifiers
+	e.subeffects = data.Subeffects
+	e.duration = int64(data.Duration * 1000)
+	e.SetTimeSeconds(data.Duration)
 	return e
 }
 
@@ -121,4 +125,19 @@ func (e *Effect) SetSource(t object.Target) {
 // as effect target.
 func (e *Effect) SetTarget(t object.Target) {
 	e.target = t
+}
+
+// SubEffects creates and returns all subeffects.
+func (e *Effect) SubEffects() []*Effect {
+	subeffects := make([]*Effect, 0)
+	for _, eid := range e.subeffects {
+		data := res.Effect(eid)
+		if data.ID == "" {
+			log.Err.Printf("effect:%s_%s:sub_effect_resource_not_found:%s",
+				e.ID(), e.Serial(), eid)
+		}
+		subeff := NewEffect(data)
+		subeffects = append(subeffects, subeff)
+	}
+	return subeffects
 }

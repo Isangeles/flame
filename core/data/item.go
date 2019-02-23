@@ -32,6 +32,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/log"
@@ -47,7 +48,7 @@ const (
 // item.
 func Item(mod *module.Module, id string) (item.Item, error) {
 	switch {
-	case weaponsData[id] != nil:
+	case res.Weapon(id).ID != "":
 		return weapon(mod, id)
 	default:
 		return nil, fmt.Errorf("item_not_found:%s",
@@ -57,8 +58,8 @@ func Item(mod *module.Module, id string) (item.Item, error) {
 
 // ImportWeapons imports all XML weapons from file with specified
 // path.
-func ImportWeapons(basePath string) ([]*parsexml.WeaponNodeXML, error) {
-	weapons := make([]*parsexml.WeaponNodeXML, 0)
+func ImportWeapons(basePath string) ([]res.WeaponData, error) {
+	weapons := make([]res.WeaponData, 0)
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_weapons_base_file:%v",
@@ -70,20 +71,24 @@ func ImportWeapons(basePath string) ([]*parsexml.WeaponNodeXML, error) {
 		return nil, fmt.Errorf("fail_to_unmarshal_weapons:%v",
 			err)
 	}
-	for _, w := range weaponsXML {
-		weapons = append(weapons, &w)
+	for _, weaponXML := range weaponsXML {
+		w, err := buildXMLWeaponData(weaponXML)
+		if err != nil {
+			log.Err.Printf("imp_weapon:build_xml_data_fail:%v", err)
+		}
+		weapons = append(weapons, w)
 	}
 	return weapons, nil
 }
 
 // ImportWeaponsDir imports all weapons from files
 // in specified directory.
-func ImportWeaponsDir(dirPath string) ([]*parsexml.WeaponNodeXML, error) {
+func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	weapons := make([]*parsexml.WeaponNodeXML, 0)
+	weapons := make([]res.WeaponData, 0)
 	for _, fInfo := range files {
 		if !strings.HasSuffix(fInfo.Name(), WEAPONS_FILE_EXT) {
 			continue
@@ -107,35 +112,41 @@ func ImportWeaponsDir(dirPath string) ([]*parsexml.WeaponNodeXML, error) {
 // was not found or module failed to assign serial value for
 // weapon.
 func weapon(mod *module.Module, id string) (*item.Weapon, error) {
-	xmlWeapon := weaponsData[id]
-	if xmlWeapon == nil {
+	weaponData := res.Weapon(id)
+	if weaponData.ID == "" {
 		return nil, fmt.Errorf("weapon_not_found:%s", id)
 	}
+	w := item.NewWeapon(weaponData)
 	itemsLangPath := filepath.FromSlash(mod.Conf().LangPath() + "/items" +
 		text.LANG_FILE_EXT)
-	w, err := buildXMLWeapon(xmlWeapon)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_build_weapon:%v", err)
-	}
 	name := text.ReadDisplayText(itemsLangPath, w.ID())
 	w.SetName(name[0])
-	err = mod.AssignSerial(w)
+	err := mod.AssignSerial(w)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_assign_item_serial:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_assign_item_serial:%v", err)
 	}
 	return w, nil
 }
 
 // buildXMLWeapon creates new weapon from specified XML data.
-func buildXMLWeapon(xmlWeapon *parsexml.WeaponNodeXML) (*item.Weapon, error) {
+func buildXMLWeaponData(xmlWeapon parsexml.WeaponNodeXML) (res.WeaponData, error) {
 	reqs := buildXMLReqs(&xmlWeapon.Reqs)
 	slots, err := parsexml.UnmarshalItemSlots(xmlWeapon.Slots)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_slot_types:%v",
-			err)
+		return res.WeaponData{}, fmt.Errorf("fail_to_unmarshal_slot_types:%v", err)
 	}
-	w := item.NewWeapon(xmlWeapon.ID, xmlWeapon.Value, xmlWeapon.Level,
-		xmlWeapon.Damage.Min, xmlWeapon.Damage.Max, reqs, slots)
+	slotsID := make([]int, 0)
+	for _, s := range slots {
+		slotsID = append(slotsID, int(s))
+	}
+	w := res.WeaponData{
+		ID: xmlWeapon.ID,
+		Value: xmlWeapon.Value,
+		Level: xmlWeapon.Level,
+		DMGMin: xmlWeapon.Damage.Min,
+		DMGMax: xmlWeapon.Damage.Max,
+		EQReqs: reqs,
+		Slots: slotsID,
+	}
 	return w, nil
 }

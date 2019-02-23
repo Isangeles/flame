@@ -38,18 +38,25 @@ type EffectsBaseXML struct {
 
 // Struct for effect XML node.
 type EffectNodeXML struct {
-	XMLName       xml.Name         `xml:"effect"`
-	ID            string           `xml:"id,attr"`
-	Duration      int64            `xml:"duration,attr"`
-	ModifiersNode ModifiersNodeXML `xml:"modifiers"`
+	XMLName       xml.Name          `xml:"effect"`
+	ID            string            `xml:"id,attr"`
+	Duration      int64             `xml:"duration,attr"`
+	ModifiersNode ModifiersNodeXML  `xml:"modifiers"`
+	Subeffects    SubeffectsNodeXML `xml:"subeffects"`
+}
+
+// Struct for node with subeffects.
+type SubeffectsNodeXML struct {
+	XMLName xml.Name `xml:"subeffects"`
+	Effects []string `xml:"effect,value"`
 }
 
 // UnmarshalEffectsBase parses specified data to XML effect
 // nodes.
 func UnmarshalEffectsBase(data io.Reader) ([]EffectNodeXML, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlEffectsBase := new(EffectsBaseXML)
-	err := xml.Unmarshal(doc, xmlEffectsBase)
+	xmlEffectsBase := EffectsBaseXML{}
+	err := xml.Unmarshal(doc, &xmlEffectsBase)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
 			err)
