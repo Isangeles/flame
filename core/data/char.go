@@ -209,17 +209,5 @@ func buildXMLCharacter(mod *module.Module,
 				char.ID(), xmlEqItem.Slot)
 		}
 	}
-	// Effects.
-	for _, xmlEffect := range charXML.Effects.Effects {
-		effect, err := Effect(mod, xmlEffect.ID)
-		if err != nil {
-			log.Err.Printf("data_build_character:%s:fail_to_create_effect:%v",
-				char.ID(), err)
-			continue
-		}
-		effect.SetSerial(xmlEffect.Serial)
-		effect.SetTimeSeconds(xmlEffect.Time)
-		char.AddEffect(effect)
-	}
 	return char, nil
 }

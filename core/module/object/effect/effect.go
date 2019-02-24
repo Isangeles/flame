@@ -35,8 +35,8 @@ import (
 type Effect struct {
 	id, serial string
 	name       string
-	source     object.Target
-	target     object.Target
+	source     object.Object
+	target     Target
 	modifiers  []modifier.Modifier
 	subeffects []string
 	duration   int64
@@ -64,6 +64,9 @@ func (e *Effect) Update(delta int64) {
 	if e.sec_timer >= 1000 { // every second
 		for _, m := range e.modifiers {
 			m.Affect(e.source, e.target)
+		}
+		for _, sube := range e.SubEffects() {
+			e.target.TakeEffect(sube)
 		}
 		e.sec_timer = 0
 	}
@@ -97,6 +100,11 @@ func (e *Effect) Time() int64 {
 	return e.time
 }
 
+// Source returns effect source object.
+func (e *Effect) Source() object.Object {
+	return e.source
+}
+
 // SetSerial sets specified value as
 // effect serial value.
 func (e *Effect) SetSerial(serial string) {
@@ -117,13 +125,13 @@ func (e *Effect) SetTimeSeconds(time int64) {
 
 // SetSource sets specified targetable object
 // as effect source.
-func (e *Effect) SetSource(t object.Target) {
+func (e *Effect) SetSource(t object.Object) {
 	e.source = t
 }
 
 // SetTarget sets specified targertable object
 // as effect target.
-func (e *Effect) SetTarget(t object.Target) {
+func (e *Effect) SetTarget(t Target) {
 	e.target = t
 }
 
@@ -137,6 +145,7 @@ func (e *Effect) SubEffects() []*Effect {
 				e.ID(), e.Serial(), eid)
 		}
 		subeff := NewEffect(data)
+		subeff.SetSource(e.source)
 		subeffects = append(subeffects, subeff)
 	}
 	return subeffects

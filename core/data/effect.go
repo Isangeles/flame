@@ -118,5 +118,6 @@ func buildXMLEffectData(xmlEffect parsexml.EffectNodeXML) res.EffectData {
 		Modifiers: mods,
 		Subeffects: xmlEffect.Subeffects.Effects,
 	}
+	log.Dbg.Printf("subeffs_len:%d", len(data.Subeffects))
 	return data
 }

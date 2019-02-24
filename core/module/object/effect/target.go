@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * target.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,14 +21,22 @@
  *
  */
 
-package modifier
+package effect
 
 import (
 	"github.com/isangeles/flame/core/module/object"
 )
 
-// Interface for object modifiers.
-type Modifier interface {
-	Affect(source object.Object, targets ...object.Object)
-	Undo(source object.Object, targets ...object.Object)
+// Interfece for effects targets.
+type Target interface {
+	ID() string
+	Serial() string
+	Health() int
+	Mana() int
+	SetMana(val int)
+	Experience() int
+	SetExperience(val int)
+	Live() bool
+	TakeHit(h object.Hit)
+	TakeEffect(e *Effect)
 }

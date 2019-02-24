@@ -45,7 +45,7 @@ func NewHealthMod(min, max int) HealthMod {
 }
 
 // Affect modifies targets health points.
-func (hm HealthMod) Affect(source object.Target, targets ...object.Target) {
+func (hm HealthMod) Affect(source object.Object, targets ...object.Object) {
 	for _, t := range targets {
 		val := hm.rollValue()
 		hit := object.Hit{
@@ -58,7 +58,7 @@ func (hm HealthMod) Affect(source object.Target, targets ...object.Target) {
 }
 
 // Undo undos health modification on specified targets.
-func (hm HealthMod) Undo(source object.Target, targets ...object.Target) {
+func (hm HealthMod) Undo(source object.Object, targets ...object.Object) {
 }
 
 // rollValue returns random value

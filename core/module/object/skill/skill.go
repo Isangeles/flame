@@ -58,7 +58,7 @@ func (s *Skill) Update(delta int64) {
 
 // Cast starts skill casting with specified targetable object
 // as skill user.
-func (s *Skill) Cast(user object.Target) error {
+func (s *Skill) Cast(user object.Object) error {
 	s.casting = true
 	return nil
 }

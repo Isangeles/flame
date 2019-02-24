@@ -180,12 +180,50 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 		if err != nil {
 			log.Err.Printf("data_build_saved_game:add_chapter_scenario:%s:fail:%v",
 				xmlScen.ID, err)
+			continue
 		}
 	}
+	// Restore objects effects.
+	restoreChapterEffects(mod, xmlChapter)
 	// Create game from saved data.
 	game := new(save.SaveGame)
 	game.Name = xmlGame.Name
 	game.Mod = mod
 	game.Players = pcs
 	return game, nil
+}
+
+
+// restoreChapterEffects restores all XML effect for specified character.
+func restoreChapterEffects(mod *module.Module, xmlChapter *parsexml.SavedChapterXML) {
+	for _, xmlScen := range xmlChapter.Scenarios {
+		for _, xmlArea := range xmlScen.AreasNode.Areas {
+			// Characters.
+			for _, xmlChar := range xmlArea.CharsNode.Characters {
+				char := mod.Character(xmlChar.ID + "_" + xmlChar.Serial)
+				if char == nil {
+					log.Err.Printf("data_restore_chapter_effects:char:%s:not_found",
+						xmlChar.ID)
+					continue
+				}	
+				for _, xmlEffect := range xmlChar.Effects.Effects {
+					effect, err := Effect(mod, xmlEffect.ID)
+					if err != nil {
+						log.Err.Printf("data_restore_chapter_effects:char:%s:fail_to_create_effect:%v",
+							char.ID(), err)
+						continue
+					}
+					source := mod.Object(xmlEffect.Source.ID, xmlEffect.Source.Serial)
+					if source == nil {
+						log.Err.Printf("data_restore_chapter_effects:char:%s:fail_to_find_source:%s",
+							char.ID(), xmlEffect.Source)
+					}
+					effect.SetSerial(xmlEffect.Serial)
+					effect.SetTimeSeconds(xmlEffect.Time)
+					effect.SetSource(source)
+					char.AddEffect(effect)
+				}
+			}
+		}
+	}
 }

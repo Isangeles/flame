@@ -1,5 +1,5 @@
 /*
- * defence.go
+ * object.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -23,8 +23,10 @@
 
 package object
 
-// Interfece for 'atackable' objects.
-type Target interface {
+// Interfece for game objects.
+type Object interface {
+	ID() string
+	Serial() string
 	Health() int
 	Mana() int
 	SetMana(val int)
@@ -36,7 +38,7 @@ type Target interface {
 
 // Struct for hit.
 type Hit struct {
-	Source Target
+	Source Object
 	Type   HitType
 	Damage int
 }

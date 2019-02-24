@@ -29,6 +29,7 @@ package module
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -99,13 +100,6 @@ func (m *Module) LangID() string {
 	return m.conf.Lang
 }
 
-// CharactersBasePath returns path to XML document with module characters.
-/*
-func (m *Module) CharactersBasePath() string {
-	return filepath.FromSlash("data/modules/" + m.Name() + "/npcs/npcs.base")
-}
-*/
-
 // NewcharAttrsMin returns minimal amount of
 // attributes points for new characer.
 func (m *Module) NewcharAttrsMin() int {
@@ -129,6 +123,16 @@ func (m *Module) ChaptersIds() []string {
 // character was found.
 func (m *Module) Character(serialID string) *character.Character {
 	return m.Chapter().Character(serialID)
+}
+
+// Object returns game object with specified serial ID
+// or nil if on object with such ID was found.
+func (m *Module) Object(id, serial string) object.Object {
+	char := m.Character(id + "_" + serial)
+	if char != nil {
+		return char
+	}
+	return nil
 }
 
 // AssignSerial sets unique serial value for

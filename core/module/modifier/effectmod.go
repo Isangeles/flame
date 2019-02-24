@@ -40,9 +40,9 @@ func NewEffectMod(effectID string) EffectMod {
 }
 
 // Affect puts modifier effect on specified targets.
-func (em EffectMod) Affect(source object.Target, targets ...object.Target) {
+func (em EffectMod) Affect(source object.Object, targets ...object.Object) {
 }
 
 // Undo removes modifier effect from specified targets.
-func (em EffectMod) Undo(source object.Target, targets ...object.Target) {
+func (em EffectMod) Undo(source object.Object, targets ...object.Object) {
 }
