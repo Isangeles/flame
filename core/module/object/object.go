@@ -33,14 +33,16 @@ type Object interface {
 	Experience() int
 	SetExperience(val int)
 	Live() bool
+	Damage() (int, int)
+	Hit() Hit
 	TakeHit(h Hit)
 }
 
-// Struct for hit.
+// Struct for object hit.
 type Hit struct {
 	Source Object
 	Type   HitType
-	Damage int
+	HP     int
 }
 
 // Struct for hit type.

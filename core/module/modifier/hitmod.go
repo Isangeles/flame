@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * hitmod.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,26 +21,31 @@
  *
  */
 
-package data
+package modifier
 
 import (
-	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/module/modifier"
+	"github.com/isangeles/flame/core/module/object"
 )
 
-// buildXMLModifiers creates modifiers from specified
-// XML data.
-func buildXMLModifiers(xmlModifiers *parsexml.ModifiersNodeXML) []modifier.Modifier {
-	mods := make([]modifier.Modifier, 0)
-	// Health modifiers.
-	for _, xmlMod := range xmlModifiers.HealthMods {
-		mod := modifier.NewHealthMod(xmlMod.MinValue, xmlMod.MaxValue)
-		mods = append(mods, mod)
+// Struct for hit modifier.
+type HitMod struct {}
+
+// NewHitMod creates hit modifier.
+func NewHitMod() HitMod {
+	hitm := HitMod{}
+	return hitm
+}
+
+// Affect takes source damage and attacks specified targets.
+func (hitm HitMod) Affect(source object.Object, targets ...object.Object) {
+	if source == nil {
+		return
 	}
-	// Hit modifiers.
-	for _ = range xmlModifiers.HitMods {
-		mod := modifier.NewHitMod()
-		mods = append(mods, mod)
+	for _, t := range targets {
+		t.TakeHit(source.Hit())
 	}
-	return mods
+}
+
+// Undo does nothing.
+func (hitm HitMod) Undo(source object.Object, targets ...object.Object) {
 }

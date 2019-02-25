@@ -27,14 +27,24 @@ import (
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/rng"
 	"github.com/isangeles/flame/log"
 )
 
+// Hit creates character hit.
+func (c *Character) Hit() object.Hit {
+	return object.Hit{
+		Source: c,
+		Type:   object.Hit_normal,
+		HP:     rng.RollInt(c.Damage()),
+	}
+}
+
 // Hit handles specified hit.
 func (c *Character) TakeHit(hit object.Hit) {
-	// TODO: handle resits.
-	c.SetHealth(c.Health() - hit.Damage)
-	log.Cmb.Printf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.Damage)
+	// TODO: handle resists.
+	c.SetHealth(c.Health() + hit.HP)
+	log.Cmb.Printf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
 }
 
 // TakeEffects adds specified effects
@@ -43,4 +53,3 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	c.AddEffect(e)
 	log.Cmb.Printf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
 }
-

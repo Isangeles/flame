@@ -1,5 +1,5 @@
 /*
- * effectmod.go
+ * rng.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,28 +21,26 @@
  *
  */
 
-package modifier
+// Package for random number generator.
+package rng
 
 import (
-	"github.com/isangeles/flame/core/module/object"
+	"math/rand"
+	"time"
 )
 
-// Struct for effect modifier.
-type EffectMod struct {
-	effectID     string
-	activeSerial string
+var (
+	rng *rand.Rand
+)
+
+// On init.
+func init() {
+	src := rand.NewSource(time.Now().UnixNano())
+	rng = rand.New(src)
 }
 
-// NewEffectMod creates new effect modifier.
-func NewEffectMod(effectID string) EffectMod {
-	em := EffectMod{effectID: effectID}
-	return em
-}
-
-// Affect puts modifier effect on specified targets.
-func (em EffectMod) Affect(source object.Object, targets ...object.Object) {
-}
-
-// Undo removes modifier effect from specified targets.
-func (em EffectMod) Undo(source object.Object, targets ...object.Object) {
+// RollInt generates random integer from
+// specified range.
+func RollInt(min, max int) int {
+	return min + rng.Intn(max - min)
 }

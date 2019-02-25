@@ -63,6 +63,14 @@ func (a Attributes) Mana() int {
 	return (Base_mana * (1 + a.Int)) * (1 + a.Wis/2)
 }
 
+// Damage returns min and max damage values
+// based on attributes.
+func (a Attributes) Damage() (int, int) {
+	min := 1 + (10 * a.Str)
+	max := 10 + (10 * a.Str)
+	return min, max
+}
+
 // String returns attributes struct as string in format:
 // [strengt], [constitution], [dexterity], [wisdom], [intelligence]
 func (a Attributes) String() string {

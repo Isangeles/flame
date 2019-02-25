@@ -37,6 +37,8 @@ type Target interface {
 	Experience() int
 	SetExperience(val int)
 	Live() bool
+	Damage() (int, int)
+	Hit() object.Hit
 	TakeHit(h object.Hit)
 	TakeEffect(e *Effect)
 }

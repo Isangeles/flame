@@ -341,6 +341,20 @@ func (c *Character) Targets() []object.Object {
 	return c.targets
 }
 
+// Damage retruns min and max damage value,
+// including weapons, effects, etc.
+func (c *Character) Damage() (int, int) {
+	min, max := c.Attributes().Damage()
+	if it := c.Equipment().HandRight().Item(); it != nil {
+		if w, ok := it.(*item.Weapon); ok {
+			dmgMin, dmgMax := w.Damage()
+			min += dmgMin
+			max += dmgMax
+		}
+	}
+	return min, max
+}
+
 // levelup promotes character to next level.
 func (c * Character) levelup() {
 	c.level += 1

@@ -31,6 +31,7 @@ import (
 type ModifiersNodeXML struct {
 	XMLName    xml.Name       `xml:"modifiers"`
 	HealthMods []HealthModXML `xml:"healthMod"`
+	HitMods    []HitModXML    `xml:"hitMod"`
 }
 
 // Struct for health modifier XML node.
@@ -38,4 +39,9 @@ type HealthModXML struct {
 	XMLName  xml.Name `xml:"healthMod"`
 	MinValue int      `xml:"min,attr"`
 	MaxValue int      `xml:"max,attr"`
+}
+
+// Struct for hit modifier XML node.
+type HitModXML struct {
+	XMLName xml.Name `xml:"hitMod"`
 }
