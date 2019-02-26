@@ -31,7 +31,7 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -117,10 +117,8 @@ func weapon(mod *module.Module, id string) (*item.Weapon, error) {
 		return nil, fmt.Errorf("weapon_not_found:%s", id)
 	}
 	w := item.NewWeapon(weaponData)
-	itemsLangPath := filepath.FromSlash(mod.Conf().LangPath() + "/items" +
-		text.LANG_FILE_EXT)
-	name := text.ReadDisplayText(itemsLangPath, w.ID())
-	w.SetName(name[0])
+	name := lang.Text("items", w.ID())
+	w.SetName(name)
 	err := mod.AssignSerial(w)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_assign_item_serial:%v", err)
@@ -129,7 +127,7 @@ func weapon(mod *module.Module, id string) (*item.Weapon, error) {
 }
 
 // buildXMLWeapon creates new weapon from specified XML data.
-func buildXMLWeaponData(xmlWeapon parsexml.WeaponNodeXML) (res.WeaponData, error) {
+func buildXMLWeaponData(xmlWeapon parsexml.WeaponXML) (res.WeaponData, error) {
 	reqs := buildXMLReqs(&xmlWeapon.Reqs)
 	slots, err := parsexml.UnmarshalItemSlots(xmlWeapon.Slots)
 	if err != nil {

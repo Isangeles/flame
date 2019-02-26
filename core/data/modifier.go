@@ -25,21 +25,21 @@ package data
 
 import (
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/module/modifier"
+	"github.com/isangeles/flame/core/module/object/effect"
 )
 
 // buildXMLModifiers creates modifiers from specified
 // XML data.
-func buildXMLModifiers(xmlModifiers *parsexml.ModifiersNodeXML) []modifier.Modifier {
-	mods := make([]modifier.Modifier, 0)
+func buildXMLModifiers(xmlModifiers *parsexml.ModifiersNodeXML) []effect.Modifier {
+	mods := make([]effect.Modifier, 0)
 	// Health modifiers.
 	for _, xmlMod := range xmlModifiers.HealthMods {
-		mod := modifier.NewHealthMod(xmlMod.MinValue, xmlMod.MaxValue)
+		mod := effect.HealthMod{xmlMod.MinValue, xmlMod.MaxValue}
 		mods = append(mods, mod)
 	}
 	// Hit modifiers.
 	for _ = range xmlModifiers.HitMods {
-		mod := modifier.NewHitMod()
+		mod := effect.HitMod{}
 		mods = append(mods, mod)
 	}
 	return mods

@@ -28,32 +28,32 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	
-	"github.com/isangeles/flame/core/module/req"
+
 	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for weapons base XML doc.
 type WeaponsBaseXML struct {
 	XMLName xml.Name        `xml:"base"`
-	Items   []WeaponNodeXML `xml:"item"`
+	Items   []WeaponXML `xml:"item"`
 }
 
 // Struct for weapon XML node.
-type WeaponNodeXML struct {
-	XMLName xml.Name      `xml:"item"`
-	ID      string        `xml:"id,attr"`
-	Serial  string        `xml:"serial,attr"`
-	Value   int           `xml:"value,attr"`
-	Level   int           `xml:"level,attr"`
-	Damage  DamageNodeXML `xml:"damage"`
-	Reqs    ReqsNodeXML   `xml:"reqs"`
-	Slots   string        `xml:"slots,attr"`
+type WeaponXML struct {
+	XMLName xml.Name  `xml:"item"`
+	ID      string    `xml:"id,attr"`
+	Serial  string    `xml:"serial,attr"`
+	Value   int       `xml:"value,attr"`
+	Level   int       `xml:"level,attr"`
+	Damage  DamageXML `xml:"damage"`
+	Reqs    ReqsXML   `xml:"reqs"`
+	Slots   string    `xml:"slots,attr"`
 }
 
 // UnmarshalWeaponsBase parses specified data to
 // XML weapon nodes.
-func UnmarshalWeaponsBase(data io.Reader) ([]WeaponNodeXML, error) {
+func UnmarshalWeaponsBase(data io.Reader) ([]WeaponXML, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlWeaponsBase := new(WeaponsBaseXML)
 	err := xml.Unmarshal(doc, xmlWeaponsBase)
@@ -66,8 +66,8 @@ func UnmarshalWeaponsBase(data io.Reader) ([]WeaponNodeXML, error) {
 
 // xmlWeapon parses specified weapon item to XML
 // weapon node.
-func xmlWeapon(w *item.Weapon) *WeaponNodeXML {
-	xmlWeapon := new(WeaponNodeXML)
+func xmlWeapon(w *item.Weapon) *WeaponXML {
+	xmlWeapon := new(WeaponXML)
 	xmlWeapon.ID = w.ID()
 	xmlWeapon.Serial = w.Serial()
 	xmlWeapon.Value = w.Value()

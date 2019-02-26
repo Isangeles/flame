@@ -58,6 +58,12 @@ func (c ModConf) EffectsPath() string {
 	return filepath.FromSlash(c.Path + "/effects")
 }
 
+// SkillsPath returns path to directory with
+// skills base.
+func (c ModConf) SkillsPath() string {
+	return filepath.FromSlash(c.Path + "/skills")
+}
+
 // LangPath returns path to lang directory.
 func (c ModConf) LangPath() string {
 	return filepath.FromSlash(c.Path + "/lang/" + c.Lang)

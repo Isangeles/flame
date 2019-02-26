@@ -61,7 +61,7 @@ type Character struct {
 	destX, destY  float64
 	inventory     *item.Inventory
 	equipment     *Equipment
-	targets       []object.Object
+	targets       []effect.Target
 	effects       map[string]*effect.Effect
 	skills        []*skill.Skill
 }
@@ -337,7 +337,7 @@ func (c *Character) AddEffect(e *effect.Effect) {
 }
 
 // Targets returns character targets.
-func (c *Character) Targets() []object.Object {
+func (c *Character) Targets() []effect.Target {
 	return c.targets
 }
 

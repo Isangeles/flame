@@ -1,0 +1,7 @@
+<base>
+	<skill id="melee1" cast="0">
+	       <effects>
+			<effect>hit1</effect>
+	       </effects>
+	</skill>
+</base>

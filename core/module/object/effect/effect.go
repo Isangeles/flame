@@ -26,8 +26,6 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/modifier"
-	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/log"
 )
 
@@ -35,9 +33,9 @@ import (
 type Effect struct {
 	id, serial string
 	name       string
-	source     object.Object
+	source     Target
 	target     Target
-	modifiers  []modifier.Modifier
+	modifiers  []Modifier
 	subeffects []string
 	duration   int64
 	time       int64
@@ -45,10 +43,18 @@ type Effect struct {
 }
 
 // NewEffect creates new effect.
-func NewEffect(data res.EffectData) *Effect {
+func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
-	e.modifiers = data.Modifiers
+	// Modifiers.
+	for _, m := range data.HealthMods {
+		hpMod := HealthMod{m.Min, m.Max}
+		e.modifiers = append(e.modifiers, hpMod)
+	}
+	for _ = range data.HitMods {
+		e.modifiers = append(e.modifiers, HitMod{})
+	}
+	// Sub-effects.
 	e.subeffects = data.Subeffects
 	e.duration = int64(data.Duration * 1000)
 	e.SetTimeSeconds(data.Duration)
@@ -101,7 +107,7 @@ func (e *Effect) Time() int64 {
 }
 
 // Source returns effect source object.
-func (e *Effect) Source() object.Object {
+func (e *Effect) Source() Target {
 	return e.source
 }
 
@@ -125,7 +131,7 @@ func (e *Effect) SetTimeSeconds(time int64) {
 
 // SetSource sets specified targetable object
 // as effect source.
-func (e *Effect) SetSource(t object.Object) {
+func (e *Effect) SetSource(t Target) {
 	e.source = t
 }
 
@@ -144,7 +150,7 @@ func (e *Effect) SubEffects() []*Effect {
 			log.Err.Printf("effect:%s_%s:sub_effect_resource_not_found:%s",
 				e.ID(), e.Serial(), eid)
 		}
-		subeff := NewEffect(data)
+		subeff := New(data)
 		subeff.SetSource(e.source)
 		subeffects = append(subeffects, subeff)
 	}

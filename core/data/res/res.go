@@ -25,6 +25,7 @@ package res
 
 var (
 	effectsData map[string]EffectData
+	skillsData  map[string]SkillData
 	weaponsData map[string]WeaponData
 )
 
@@ -36,6 +37,14 @@ func Effect(id string) EffectData {
 	return effectsData[id]
 }
 
+// Skill returns resources for skill
+// with specified iD or empty resource
+// struct if data for specified skill ID
+// was not found.
+func Skill(id string) SkillData {
+	return skillsData[id]
+}
+
 // Weapon returns weapon resource data
 // for weapon with specified ID or empty
 // weapon resurce struct if data for specified
@@ -44,12 +53,21 @@ func Weapon(id string) WeaponData {
 	return weaponsData[id]
 }
 
-// SetEffectsData sets specified effects data as
-// effects resources.
+// SetEffectsData sets specified effects data
+// as effects resources.
 func SetEffectsData(data []EffectData) {
 	effectsData = make(map[string]EffectData)
 	for _, ed := range data {
 		effectsData[ed.ID] = ed
+	}
+}
+
+// SetSkillsData sets specified skills data
+// as skills resources.
+func SetSkillsData(data []SkillData) {
+	skillsData = make(map[string]SkillData)
+	for _, sd := range data {
+		skillsData[sd.ID] = sd
 	}
 }
 

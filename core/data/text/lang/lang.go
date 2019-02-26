@@ -75,21 +75,19 @@ func UIText(textID string) string {
 
 // UITexts returns all text lines from UI lang file with specified IDs
 // In case of error(file/ID not found) returns string with error
-// message.
-// In case of error(file/ID not found) returns string with error
 // message instead of text. 
 func UITexts(textIDs ...string) []string {
 	return Texts("ui", textIDs...)
 }
 
-// SetLangPath sets specified path as current lang
-// path.
+// SetLangPath sets specified path as
+// current lang directory path.
 func SetLangPath(path string) {
 	langPath = path
 }
 
-// MainLangPath return path to main lang direcotry for current language.
+// LangPath return path to
+// lang directory.
 func LangPath() string {
-	//return filepath.FromSlash("data/lang/" + flame.LangID())
 	return langPath
 }

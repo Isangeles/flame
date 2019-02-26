@@ -23,14 +23,21 @@
 
 package res
 
-import (
-	"github.com/isangeles/flame/core/module/modifier"
-)
-
 // Struct for effect data resource.
 type EffectData struct {
 	ID         string
 	Duration   int64
-	Modifiers  []modifier.Modifier
+	HealthMods []HealthModData
+	HitMods    []HitModData
 	Subeffects []string
 }
+
+// Struct for health modifier
+// data.
+type HealthModData struct {
+	Min, Max int
+}
+
+// Struct for hit modifier
+// data.
+type HitModData struct {}

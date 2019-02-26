@@ -30,7 +30,7 @@ import (
 
 // buildXMLReqs creates requirements from specified
 // XML data.
-func buildXMLReqs(xmlReqs *parsexml.ReqsNodeXML) []req.Requirement { 
+func buildXMLReqs(xmlReqs *parsexml.ReqsXML) []req.Requirement { 
 	reqs := make([]req.Requirement, 0)
 	// Level reqs.
 	for _, xmlReq := range xmlReqs.LevelReqs {

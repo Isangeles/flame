@@ -1,5 +1,5 @@
 /*
- * object.go
+ * hit.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,26 +21,11 @@
  *
  */
 
-package object
-
-// Interfece for game objects.
-type Object interface {
-	ID() string
-	Serial() string
-	Health() int
-	Mana() int
-	SetMana(val int)
-	Experience() int
-	SetExperience(val int)
-	Live() bool
-	Damage() (int, int)
-	Hit() Hit
-	TakeHit(h Hit)
-}
+package effect
 
 // Struct for object hit.
 type Hit struct {
-	Source Object
+	Source Target
 	Type   HitType
 	HP     int
 }

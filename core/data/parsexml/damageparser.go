@@ -28,7 +28,7 @@ import (
 )
 
 // Struct for damage XML node.
-type DamageNodeXML struct {
+type DamageXML struct {
 	XMLNode xml.Name `xml:"damage"`
 	Min     int      `xml:"min,value"`
 	Max     int      `xml:"max,value"`

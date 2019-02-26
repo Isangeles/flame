@@ -40,32 +40,32 @@ type CharactersBaseXML struct {
 
 // Struct for XML character node.
 type CharacterXML struct {
-	XMLName   xml.Name             `xml:"char"`
-	ID        string               `xml:"id,attr"`
-	Serial    string               `xml:"serial,attr"`
-	Name      string               `xml:"name,attr"`
-	Gender    string               `xml:"gender,attr"`
-	Race      string               `xml:"race,attr"`
-	Attitude  string               `xml:"attitude,attr"`
-	Alignment string               `xml:"alignment,attr"`
-	Guild     string               `xml:"guild,attr"`
-	Level     int                  `xml:"level,attr"`
-	Stats     string               `xml:"stats,value"`
-	PC        bool                 `xml:"pc,attr"`
-	Position  string               `xml:"position,value"`
-	Inventory InventoryNodeXML     `xml:"inventory"`
-	Equipment EquipmentNodeXML     `xml:"equipment"`
-	Effects   ObjectEffectsNodeXML `xml:"effects"`
+	XMLName   xml.Name         `xml:"char"`
+	ID        string           `xml:"id,attr"`
+	Serial    string           `xml:"serial,attr"`
+	Name      string           `xml:"name,attr"`
+	Gender    string           `xml:"gender,attr"`
+	Race      string           `xml:"race,attr"`
+	Attitude  string           `xml:"attitude,attr"`
+	Alignment string           `xml:"alignment,attr"`
+	Guild     string           `xml:"guild,attr"`
+	Level     int              `xml:"level,attr"`
+	Stats     string           `xml:"stats,value"`
+	PC        bool             `xml:"pc,attr"`
+	Position  string           `xml:"position,value"`
+	Inventory InventoryXML     `xml:"inventory"`
+	Equipment EquipmentXML     `xml:"equipment"`
+	Effects   ObjectEffectsXML `xml:"effects"`
 }
 
 // Struct for equipment XML node.
-type EquipmentNodeXML struct {
-	XMLName xml.Name               `xml:"equipment"`
-	Items   []EquipmentItemNodeXML `xml:"item"`
+type EquipmentXML struct {
+	XMLName xml.Name           `xml:"equipment"`
+	Items   []EquipmentItemXML `xml:"item"`
 }
 
 // Struct for equipment item XML node.
-type EquipmentItemNodeXML struct {
+type EquipmentItemXML struct {
 	XMLName xml.Name `xml:"item"`
 	ID      string   `xml:"id,attr"`
 	Slot    string   `xml:"slot"`
@@ -137,10 +137,10 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 
 // xmlEquipment parses specified character equipment to
 // XML equipment node.
-func xmlEquipment(eq *character.Equipment) *EquipmentNodeXML {
-	xmlEq := new(EquipmentNodeXML)
+func xmlEquipment(eq *character.Equipment) *EquipmentXML {
+	xmlEq := new(EquipmentXML)
 	if eq.HandRight().Item() != nil {
-		xmlEqItem := EquipmentItemNodeXML{
+		xmlEqItem := EquipmentItemXML{
 			ID:   eq.HandRight().Item().SerialID(),
 			Slot: MarshalEqSlot(eq.HandRight()),
 		}

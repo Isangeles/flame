@@ -1,5 +1,5 @@
 /*
- * hitmod.go
+ * healthmod.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,31 +21,30 @@
  *
  */
 
-package modifier
+package effect
 
 import (
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/rng"
 )
 
-// Struct for hit modifier.
-type HitMod struct {}
-
-// NewHitMod creates hit modifier.
-func NewHitMod() HitMod {
-	hitm := HitMod{}
-	return hitm
+// Struct for health modifier.
+type HealthMod struct {
+	Min, Max int
 }
 
-// Affect takes source damage and attacks specified targets.
-func (hitm HitMod) Affect(source object.Object, targets ...object.Object) {
-	if source == nil {
-		return
-	}
+// Affect modifies targets health points.
+func (hm HealthMod) Affect(source Target, targets ...Target) {
 	for _, t := range targets {
-		t.TakeHit(source.Hit())
+		val := rng.RollInt(hm.Min, hm.Max)
+		hit := Hit{
+			Source: source,
+			Type:   Hit_normal,
+			HP:     val,
+		}
+		t.TakeHit(hit)
 	}
 }
 
-// Undo does nothing.
-func (hitm HitMod) Undo(source object.Object, targets ...object.Object) {
+// Undo undos health modification on specified targets.
+func (hm HealthMod) Undo(source Target, targets ...Target) {
 }

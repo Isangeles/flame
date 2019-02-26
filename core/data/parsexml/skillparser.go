@@ -25,17 +25,47 @@ package parsexml
 
 import (
 	"encoding/xml"
+	"fmt"
+	"io"
+	"io/ioutil"
 )
 
 // Struct for skills XML base.
 type SkillsBaseXML struct {
-	XMLName xml.Name       `xml:"base"`
-	Skills  []SkillNodeXML `xml"skill"`
+	XMLName xml.Name   `xml:"base"`
+	Skills  []SkillXML `xml"skill"`
 }
 
 // Struct for skill XML node.
-type SkillNodeXML struct {
-	XMLName xml.Name `xml:"skill"`
+type SkillXML struct {
+	XMLName xml.Name        `xml:"skill"`
+	ID      string          `xml:"id,attr"`
+	Cast    int             `xml:"cast,attr"`
+	Effects SkillEffectsXML `xml:"effects"`
+	Reqs    ReqsXML          `xml:"reqs"`
 }
 
+// Struct for skill effects XML node.
+type SkillEffectsXML struct {
+	XMLName xml.Name         `xml:"effects"`
+	Nodes   []SkillEffectXML `xml:"effect"`
+}
 
+// Struct for skill effect XML node.
+type SkillEffectXML struct {
+	XMLName xml.Name `xml:"effect"`
+	ID      string   `xml:"id,attr"`
+}
+
+// UnmarshalSkillsBase parses specified data to XML skill
+// nodes.
+func UnmarshalSkillsBase(data io.Reader) ([]SkillXML, error) {
+	doc, _ := ioutil.ReadAll(data)
+	xmlBase := SkillsBaseXML{}
+	err := xml.Unmarshal(doc, &xmlBase)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
+			err)
+	}
+	return xmlBase.Skills, nil
+}

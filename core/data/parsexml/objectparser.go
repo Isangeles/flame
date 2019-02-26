@@ -30,17 +30,17 @@ import (
 )
 
 // Struct for XML node with object effects.
-type ObjectEffectsNodeXML struct {
-	XMLName xml.Name         `xml:"effects"`
+type ObjectEffectsXML struct {
+	XMLName xml.Name          `xml:"effects"`
 	Effects []ObjectEffectXML `xml:"effect"`
 }
 
 // Strcut for object effects XML node.
 type ObjectEffectXML struct {
-	XMLName xml.Name `xml:"effect"`
-	ID      string   `xml:"id,attr"`
-	Serial  string   `xml:"serial,attr"`
-	Time    int64    `xml:"time,attr"`
+	XMLName xml.Name              `xml:"effect"`
+	ID      string                `xml:"id,attr"`
+	Serial  string                `xml:"serial,attr"`
+	Time    int64                 `xml:"time,attr"`
 	Source  ObjectEffectSourceXML `xml:"sourceSerial,attr"`
 }
 
@@ -53,8 +53,8 @@ type ObjectEffectSourceXML struct {
 
 // xmlObjectEffects parses specified effects to XML
 // object effects struct.
-func xmlObjectEffects(effs []*effect.Effect) *ObjectEffectsNodeXML {
-	xmlEffs := new(ObjectEffectsNodeXML)
+func xmlObjectEffects(effs []*effect.Effect) *ObjectEffectsXML {
+	xmlEffs := new(ObjectEffectsXML)
 	for _, e := range effs {
 		eTimeSec := int64(e.Time() / 1000)
 		xmlEffSource := ObjectEffectSourceXML{}
@@ -63,9 +63,9 @@ func xmlObjectEffects(effs []*effect.Effect) *ObjectEffectsNodeXML {
 			xmlEffSource.Serial = e.Source().Serial()
 		}
 		xmlEff := ObjectEffectXML{
-			ID: e.ID(),
+			ID:     e.ID(),
 			Serial: e.Serial(),
-			Time: eTimeSec,
+			Time:   eTimeSec,
 			Source: xmlEffSource,
 		}
 		xmlEffs.Effects = append(xmlEffs.Effects, xmlEff)

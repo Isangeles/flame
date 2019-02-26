@@ -30,21 +30,21 @@ import (
 )
 
 // Struct for requirements XML node.
-type ReqsNodeXML struct {
-	XMLName   xml.Name          `xml:"reqs"`
-	LevelReqs []LevelReqNodeXML `xml:"levelReq"`
+type ReqsXML struct {
+	XMLName   xml.Name      `xml:"reqs"`
+	LevelReqs []LevelReqXML `xml:"levelReq"`
 }
 
 // Struct for level requirement XML node.
-type LevelReqNodeXML struct {
+type LevelReqXML struct {
 	XMLName  xml.Name `xml:"levelReq"`
 	MinLevel int      `xml:"min,value"`
 }
 
 // xmlLevelReq parses specified level requirement to
 // XML level req node.
-func xmlLevelReq(req *req.LevelReq) *LevelReqNodeXML {
-	xmlReq := new(LevelReqNodeXML)
+func xmlLevelReq(req *req.LevelReq) *LevelReqXML {
+	xmlReq := new(LevelReqXML)
 	xmlReq.MinLevel = req.MinLevel()
 	return xmlReq
 }

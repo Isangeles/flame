@@ -25,23 +25,22 @@ package character
 
 import (
 	"github.com/isangeles/flame/core/data/text/lang"
-	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/rng"
 	"github.com/isangeles/flame/log"
 )
 
 // Hit creates character hit.
-func (c *Character) Hit() object.Hit {
-	return object.Hit{
+func (c *Character) Hit() effect.Hit {
+	return effect.Hit{
 		Source: c,
-		Type:   object.Hit_normal,
+		Type:   effect.Hit_normal,
 		HP:     rng.RollInt(c.Damage()),
 	}
 }
 
 // Hit handles specified hit.
-func (c *Character) TakeHit(hit object.Hit) {
+func (c *Character) TakeHit(hit effect.Hit) {
 	// TODO: handle resists.
 	c.SetHealth(c.Health() + hit.HP)
 	log.Cmb.Printf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)

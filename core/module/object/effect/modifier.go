@@ -21,14 +21,10 @@
  *
  */
 
-package modifier
-
-import (
-	"github.com/isangeles/flame/core/module/object"
-)
+package effect
 
 // Interface for object modifiers.
 type Modifier interface {
-	Affect(source object.Object, targets ...object.Object)
-	Undo(source object.Object, targets ...object.Object)
+	Affect(source Target, targets ...Target)
+	Undo(source Target, targets ...Target)
 }

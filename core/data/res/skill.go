@@ -1,5 +1,5 @@
 /*
- * target.go
+ * skill.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,20 +21,18 @@
  *
  */
 
-package effect
+package res
 
-// Interfece for effects targets.
-type Target interface {
-	ID() string
-	Serial() string
-	Health() int
-	Mana() int
-	SetMana(val int)
-	Experience() int
-	SetExperience(val int)
-	Live() bool
-	Damage() (int, int)
-	Hit() Hit
-	TakeHit(h Hit)
-	TakeEffect(e *Effect)
+import (
+	"github.com/isangeles/flame/core/module/req"
+)
+
+// Struct for skill data.
+type SkillData struct {
+	ID      string
+	Name    string
+	Cast    int
+	UseReqs []req.Requirement
+	Effects []EffectData
 }
+

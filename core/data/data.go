@@ -38,18 +38,24 @@ import (
 // LoadModuleData loads data(items, skills, etc.) from
 // specified module.
 func LoadModuleData(mod *module.Module) error {
-	// Weapons.
-	weaponsData, err := ImportWeaponsDir(mod.Conf().ItemsPath())
-	if err != nil {
-		return fmt.Errorf("fail_to_load_weapons:%v", err)
-	}
-	res.SetWeaponsData(weaponsData)
 	// Effects.
 	effectsData, err := ImportEffectsDir(mod.Conf().EffectsPath())
 	if err != nil {
 		return fmt.Errorf("fail_to_load_effects:%v", err)
 	}
 	res.SetEffectsData(effectsData)
+	// Skills.
+	skillsData, err := ImportSkillsDir(mod.Conf().SkillsPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_load_skills:%v", err)
+	}
+	res.SetSkillsData(skillsData)
+	// Weapons.
+	weaponsData, err := ImportWeaponsDir(mod.Conf().ItemsPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_load_weapons:%v", err)
+	}
+	res.SetWeaponsData(weaponsData)
 	return nil
 }
 

@@ -1,4 +1,4 @@
- /*
+/*
  * skill.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
@@ -24,9 +24,9 @@
 package skill
 
 import (
-	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/data/res"
 )
 
 // Interface for skills.
@@ -34,20 +34,19 @@ type Skill struct {
 	id, serial string
 	name       string
 	useReqs    []req.Requirement
-	effects    []effect.Effect
+	effects    []res.EffectData
 	castSec    int // cast time in seconds
 	casting    bool
 	ready      bool
 }
 
 // NewSkill creates new skill with specifie parameters.
-func NewSkill(id, name string, cast int, useReqs []req.Requirement,
-	effects []effect.Effect) *Skill {
+func New(data res.SkillData) *Skill {
 	s := new(Skill)
-	s.id = id
-	s.name = name
-	s.useReqs = useReqs
-	s.effects = effects
+	s.id = data.ID
+	s.name = data.Name
+	s.useReqs = data.UseReqs
+	s.effects = data.Effects
 	return s
 }
 
@@ -56,9 +55,36 @@ func (s *Skill) Update(delta int64) {
 
 }
 
+// ID returns skill ID.
+func (s *Skill) ID() string {
+	return s.id
+}
+
+// Serial returns skill serial
+// value.
+func (s *Skill) Serial() string {
+	return s.serial
+}
+
+// SetSerial sets skill serial value.
+func (s *Skill) SetSerial(serial string) {
+	s.serial = serial
+}
+
+// Name returns skill name.
+func (s *Skill) Name() string {
+	return s.name
+}
+
+// SetName sets specified name as
+// skill display name.
+func (s *Skill) SetName(name string) {
+	s.name = name
+}
+
 // Cast starts skill casting with specified targetable object
 // as skill user.
-func (s *Skill) Cast(user object.Object) error {
+func (s *Skill) Cast(user effect.Target) error {
 	s.casting = true
 	return nil
 }
