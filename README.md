@@ -82,7 +82,19 @@ Equip item:
 ```
   $charman -o equip -t [character serial ID] -a [slot ID] [item serial ID]
 ```
-Description: equips item with specified serial ID for game character with specified serial ID.
+Description: equips item with specified ID for game character with specified serial ID.
+
+Add effect:
+```
+  $charman -o add -t [character serial ID] -a effect [effect ID]
+```
+Description: puts effect with specified ID on game character with specified serial ID.
+
+Spawn NPC:
+```
+  $moduleman -o add -t character -a [character ID] [scenario ID] [areaID] [posX](optional) [posY](optional)
+```
+Description: spawns new chapter NPC with specified ID in specified scenario area at given position(0, 0 if not specified).
 
 ## Contact
 * Isangeles <<dev@isangeles.pl>>

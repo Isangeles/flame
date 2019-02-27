@@ -32,6 +32,7 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -44,24 +45,105 @@ const (
 
 // Character parses specified characters base and creates
 // game character.
-func Character(mod *module.Module, basePath, charID string) (*character.Character, error) {
-	doc, err := os.Open(basePath)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_characters_base_file:%v", err)
+func Character(mod *module.Module, charID string) (*character.Character, error) {
+	dataChar := res.Character(charID)
+	if dataChar.ID == "" {
+		return nil, fmt.Errorf("character_data_not_found:%%s", charID)
 	}
-	defer doc.Close()
-	charXML, err := parsexml.UnmarshalCharacter(doc, charID)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_character:%v", err)
+	char := character.New(dataChar)
+	// Inventory.
+	for _, invItData := range dataChar.Items {
+		it, err := Item(mod, invItData.ID)
+		if it == nil {
+			log.Err.Printf("data:character:%s:fail_to_retrieve_inv_item:%v",
+				char.ID(), err)
+			continue
+		}
+		it.SetSerial(invItData.Serial)
+		char.Inventory().AddItem(it)
 	}
-	char, err := buildXMLCharacter(mod, &charXML)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_build_character_from_xml:%v", err)
+	// Equipment.
+	for _, eqItData := range dataChar.EqItems {
+		it := char.Inventory().Item(eqItData.ID)
+		if it == nil {
+			log.Err.Printf("data:character:%s:eq:fail_to_retrieve_eq_item_from_inv:%s",
+				char.ID(), eqItData.ID)
+			continue
+		}
+		eqItem, ok := it.(item.Equiper)
+		if !ok {
+			log.Err.Printf("data:character:%s:eq:not_eqipable_item:%s",
+				char.ID(), it.ID())
+			continue
+		}
+		switch character.EquipmentSlotType(eqItData.Slot) {
+		case character.Hand_right:
+			err := char.Equipment().EquipHandRight(eqItem)
+			if err != nil {
+				log.Err.Printf("data_build_character:%s:eq:fail_to_equip_item:%v",
+					char.ID(), err)
+			}
+		default:
+			log.Err.Printf("data:character:%s:unknown_equipment_slot:%s",
+				char.ID(), eqItData.Slot)
+		}
 	}
 	return char, nil
 }
 
-// ImportCharacters imports char file with specified path.
+// ImportCharactersData import characters data from base file
+// with specified path.
+func ImportCharactersData(basePath string) ([]res.CharacterData, error) {
+	baseFile, err := os.Open(basePath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
+	}
+	defer baseFile.Close()
+	xmlChars, err := parsexml.UnmarshalCharactersBase(baseFile)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_chars_base:%v", err)
+	}
+	chars := make([]res.CharacterData, 0)
+	for _, xmlChar := range xmlChars {
+		char, err := buildXMLCharacterData(&xmlChar)
+		if err != nil {
+			log.Err.Printf("data:import_char:%s:fail_to_build_xml_data:%v",
+				xmlChar.ID, err)
+			continue
+		}
+		chars = append(chars, char)
+	}
+	return chars, nil
+}
+
+// ImportCharactersDir imports all characters files from directory
+// with specified path.
+func ImportCharactersDataDir(dirPath string) ([]res.CharacterData, error) {
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+	}
+	chars := make([]res.CharacterData, 0)
+	for _, fInfo := range files {
+		if !strings.HasSuffix(fInfo.Name(), CHARS_FILE_EXT) {
+			continue
+		}
+		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
+		impChars, err := ImportCharactersData(charFilePath)
+		if err != nil {
+			log.Err.Printf("data_char_import:%s:fail_to_parse_char_file:%v",
+				charFilePath, err)
+			continue
+		}
+		for _, c := range impChars {
+			chars = append(chars, c)
+		}
+	}
+	return chars, nil
+}
+
+// ImportCharacters imports characters from base file with
+// specified path.
 func ImportCharacters(mod *module.Module, path string) ([]*character.Character, error) {
 	charFile, err := os.Open(path)
 	if err != nil {
@@ -210,4 +292,65 @@ func buildXMLCharacter(mod *module.Module,
 		}
 	}
 	return char, nil
+}
+
+// buildXMLCharacterData creates character resources from specified
+// XML data.
+func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, error) {
+	data := res.CharacterData{
+		ID: xmlChar.ID,
+		Name: xmlChar.Name,
+		Level: xmlChar.Level,
+		Guild: xmlChar.Guild,
+	}
+	sex, err := parsexml.UnmarshalGender(xmlChar.Gender)
+	if err != nil {
+		return data, fmt.Errorf("fail_to_parse_gender:%v", err)
+	}
+	data.Sex = int(sex)
+	race, err := parsexml.UnmarshalRace(xmlChar.Race)
+	if err != nil {
+		return data, fmt.Errorf("fail_to_parse_race:%v", err)
+	}
+	data.Race = int(race)
+	attitude, err := parsexml.UnmarshalAttitude(xmlChar.Attitude)
+	if err != nil {
+		return data, fmt.Errorf("fail_to_parse_attitude:%v", err)
+	}
+	data.Attitude = int(attitude)
+	alignment, err := parsexml.UnmarshalAlignment(xmlChar.Alignment)
+	if err != nil {
+		return data, fmt.Errorf("fail_to_parse_alignment:%v", err)
+	}
+	data.Alignment = int(alignment)
+	attributes, err := parsexml.UnmarshalAttributes(xmlChar.Stats)
+	if err != nil {
+		return data, fmt.Errorf("fail_to_parse_attributes:%v", err)
+	}
+	data.Str = attributes.Str
+	data.Con = attributes.Con
+	data.Dex = attributes.Dex
+	data.Int = attributes.Int
+	data.Wis = attributes.Wis
+	for _, xmlInvIt := range xmlChar.Inventory.Items {
+		invItData := res.InventoryItemData{
+			ID: xmlInvIt.ID,
+			Serial: xmlInvIt.Serial,
+		}
+		data.Items = append(data.Items, invItData)
+	}
+	for _, xmlEqIt := range xmlChar.Equipment.Items {
+		slot, err := parsexml.UnmarshalEqSlot(xmlEqIt.Slot)
+		if err != nil {
+			log.Err.Printf("data:build_xml_character:%s:parse_eq_item:%s:fail_to_parse_slot:%v",
+				xmlChar.ID, xmlEqIt.ID, err)
+			continue
+		}
+		eqItData := res.EquipmentItemData{
+			ID: xmlEqIt.ID,
+		        Slot: int(slot),
+		}
+		data.EqItems = append(data.EqItems, eqItData)
+	}
+	return data, nil
 }

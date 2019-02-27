@@ -23,10 +23,46 @@
 
 package module
 
+import (
+	"path/filepath"
+)
+
 // Struct for chapter configurtion
 // values.
 type ChapterConf struct {
 	ID, Path    string
+	Lang        string
 	StartScenID string
 	Scenarios   []string
+}
+
+// FullPath returns path to chapter directory.
+func (cc ChapterConf) FullPath() string {
+	return filepath.FromSlash(cc.Path)
+}
+
+// ScenariosPath returns path to chapter
+// scenarios directory.
+func (cc ChapterConf) ScenariosPath() string {
+	return filepath.FromSlash(cc.FullPath() +
+		"/area/scenarios")
+}
+
+// LangPath returns path to chapter
+// lang directory.
+func (cc ChapterConf) LangPath() string {
+	return filepath.FromSlash(cc.FullPath() + "/lang" +
+		"/" + cc.Lang)
+}
+
+// NPCPath returns path to chapter NPCs
+// directory.
+func (cc ChapterConf) NPCPath() string {
+	return filepath.FromSlash(cc.FullPath() + "/npc")
+}
+
+// AreasPath returns path to chapter
+// areas directory.
+func (cc ChapterConf) AreasPath() string {
+	return filepath.FromSlash(cc.FullPath() + "/area")
 }

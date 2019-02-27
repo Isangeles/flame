@@ -64,7 +64,7 @@ func UnmarshalGender(genderAttr string) (character.Gender, error) {
 	case "female":
 		return character.Female, nil
 	default:
-		return -1, fmt.Errorf("fail_to_parse_gender:%s", genderAttr)
+		return -1, fmt.Errorf("unsupported_gender_value:%s", genderAttr)
 	}
 }
 
@@ -84,7 +84,7 @@ func UnmarshalRace(raceAttr string) (character.Race, error) {
 	case "goblin":
 		return character.Goblin, nil
 	default:
-		return character.Race_unknown, nil//fmt.Errorf("fail to parse race:%s", raceAttr)
+		return -1, fmt.Errorf("unsupported_race_value:%s", raceAttr)
 	}
 }
 
@@ -98,7 +98,7 @@ func UnmarshalAttitude(attitudeAttr string) (character.Attitude, error) {
 	case "hostile":
 		return character.Hostile, nil
 	default:
-		return -1, fmt.Errorf("fail_to_parse_attitude:%s", attitudeAttr)
+		return -1, fmt.Errorf("unsupported_attitude_value:%s", attitudeAttr)
 	}
 }
 
@@ -124,7 +124,7 @@ func UnmarshalAlignment(aliAttr string) (character.Alignment, error) {
 	case "chaotic_evil":
 		return character.Chaotic_evil, nil
 	default:
-		return -1, fmt.Errorf("fail_to_parse_alignment:%s", aliAttr)
+		return -1, fmt.Errorf("unsupported_alignment_value:%s", aliAttr)
 	}
 }
 
@@ -177,4 +177,16 @@ func UnmarshalItemSlots(slotsAttr string) ([]item.Slot, error) {
 		}
 	}
 	return slots, nil
+}
+
+// UnmarshalEqSlot parses specified slot XML attribute to
+// equipment slot type.
+func UnmarshalEqSlot(slot string) (character.EquipmentSlotType, error) {
+	switch slot {
+	case "right_hand":
+		return character.Hand_right, nil
+	default:
+		return -1, fmt.Errorf("unsupported_eq_slot_type_value:%s",
+			slot)
+	}
 }

@@ -8,6 +8,7 @@ MAJOR:
 * Armors & misc items
 * Skills
 * Game objects
+* Parse imported characters to characters data objects
 MINOR:
 * More detiled readme
 * Tutorials
@@ -17,4 +18,5 @@ DONE:
 * Save/load game mechanism
 * Game characters inventory and equipment
 * Weapons items
+* Effects & modifiers
 

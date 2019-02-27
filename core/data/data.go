@@ -35,8 +35,8 @@ import (
 	"github.com/isangeles/flame/core/module"
 )
 
-// LoadModuleData loads data(items, skills, etc.) from
-// specified module.
+// LoadModuleData loads module data(items, skills, etc.)
+// for specified module.
 func LoadModuleData(mod *module.Module) error {
 	// Effects.
 	effectsData, err := ImportEffectsDir(mod.Conf().EffectsPath())
@@ -56,6 +56,18 @@ func LoadModuleData(mod *module.Module) error {
 		return fmt.Errorf("fail_to_load_weapons:%v", err)
 	}
 	res.SetWeaponsData(weaponsData)
+	return nil
+}
+
+// LoadChapterData loads chapter data(NPC, quests, etc.)
+// for specified chapter.
+func LoadChapterData(chapter *module.Chapter) error {
+	// NPC.
+	npcData, err := ImportCharactersDataDir(chapter.Conf().NPCPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_load_npc:%v", err)
+	}
+	res.SetCharactersData(npcData)
 	return nil
 }
 

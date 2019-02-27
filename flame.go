@@ -72,7 +72,7 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if Mod() == nil {
 		return nil, fmt.Errorf("no module loaded")
 	}
-	// Load data.
+	// Load module data.
 	err := data.LoadModuleData(Mod())
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_module_data:%v",
@@ -84,8 +84,15 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 		return nil, fmt.Errorf("fail_to_load_start_chapter:%v",
 			err)
 	}
+	// Load chapter data(to build quests, characters, erc.).
+	err = data.LoadChapterData(Mod().Chapter())
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_module_data:%v",
+			err)
+	}
 	// Load start scenario for module.
 	chapter := Mod().Chapter()
+	// Load chapter scenario.
 	err = data.LoadScenario(Mod(), chapter.Conf().StartScenID)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_start_scenario:%v",
@@ -106,10 +113,11 @@ func LoadGame(saveName string) (*core.Game, error) {
 	if Mod() == nil {
 		return nil, fmt.Errorf("no module loaded")
 	}
-	// Load module data(required to build items, etc.).
+	// Load module data.
 	err := data.LoadModuleData(Mod())
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
+		return nil, fmt.Errorf("fail_to_load_module_data:%v",
+			err)
 	}
 	// Import saved game.
 	savesPath := config.ModuleSavegamesPath()
@@ -117,8 +125,12 @@ func LoadGame(saveName string) (*core.Game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_game:%v", err)
 	}
+	mod = sav.Mod
+	// Load chapter data(to build quests, characters, erc.).
+	err = data.LoadChapterData(Mod().Chapter())
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
+		return nil, fmt.Errorf("fail_to_load_module_data:%v",
+			err)
 	}
 	SetGame(core.LoadGame(sav))
 	return game, nil

@@ -28,6 +28,7 @@ package character
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -86,6 +87,30 @@ func NewCharacter(id string, name string, level int, sex Gender, race Race,
 	c.effects = make(map[string]*effect.Effect)
 	// Set level.
 	for i := 0; i < level; i++ {
+		oldMaxExp := c.MaxExperience()
+		c.levelup()
+		c.SetExperience(oldMaxExp)
+	}
+	return &c
+}
+
+// New creates new character from specified data.
+func New(data res.CharacterData) *Character {
+	c := Character{
+		id: data.ID,
+		name: data.Name,
+		sex: Gender(data.Sex),
+		race: Race(data.Race),
+		attitude: Attitude(data.Attitude),
+		alignment: Alignment(data.Alignment),
+	}
+	c.attributes = Attributes{data.Str, data.Con, data.Dex, data.Int, data.Wis}
+	c.live = true
+	c.inventory = item.NewInventory(c.Attributes().Lift())
+	c.equipment = newEquipment(&c)
+	c.effects = make(map[string]*effect.Effect)
+	// Set level.
+	for i := 0; i < data.Level; i++ {
 		oldMaxExp := c.MaxExperience()
 		c.levelup()
 		c.SetExperience(oldMaxExp)

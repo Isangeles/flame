@@ -44,6 +44,7 @@ func NewChapter(mod *Module, conf ChapterConf) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = conf
+	c.conf.Lang = c.mod.Conf().Lang
 	return c
 }
 
