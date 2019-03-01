@@ -1,7 +1,7 @@
 /*
  * cli.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 // Command line interface for flame engine.
 // Uses flame command interpreter(CI) to handle user input and communicate
 // with Flame Engine.
-// All commands to be handle by CI must starts with dollar sign($),
+// All commands to be handled by CI must starts with dollar sign($),
 // otherwise input is directly send to out(like 'echo').
 // Type '$close' to close CLI.
 package main

@@ -21,6 +21,7 @@
  *
  */
 
+// Package for skills.
 package skill
 
 import (
@@ -35,7 +36,7 @@ type Skill struct {
 	name       string
 	useReqs    []req.Requirement
 	effects    []res.EffectData
-	castSec    int // cast time in seconds
+	castTime   int64 // cast time in milliseconds
 	casting    bool
 	ready      bool
 }
@@ -47,6 +48,7 @@ func New(data res.SkillData) *Skill {
 	s.name = data.Name
 	s.useReqs = data.UseReqs
 	s.effects = data.Effects
+	s.castTime = int64(data.Cast * 1000) // cast from sec to millisec
 	return s
 }
 
@@ -87,6 +89,12 @@ func (s *Skill) SetName(name string) {
 func (s *Skill) Cast(user effect.Target) error {
 	s.casting = true
 	return nil
+}
+
+// CastTime returns skill casting time int
+// milliseconds.
+func (s *Skill) CastTime() int64 {
+	return s.castTime
 }
 
 // Casting checks whether skill is currently casted.

@@ -148,12 +148,13 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 			area := scenario.NewArea(xmlArea.ID)
 			for _, xmlChar := range xmlArea.CharsNode.Characters {
 				// Build chapter NPC.
-				char, err := buildXMLCharacter(mod, &xmlChar)
+				charData, err := buildXMLCharacterData(&xmlChar)
 				if err != nil {
 					log.Err.Printf("data_build_saved_game:build_char:%s:fail:%v",
 						xmlChar.ID, err)
 					continue
 				}
+				char := buildCharacter(mod, charData)
 				posX, posY, err := parsexml.UnmarshalPosition(
 					xmlChar.Position)
 				if err != nil {

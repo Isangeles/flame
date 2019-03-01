@@ -26,6 +26,7 @@ package res
 // Struct for effect data resource.
 type EffectData struct {
 	ID         string
+	Name       string
 	Duration   int64
 	HealthMods []HealthModData
 	HitMods    []HitModData

@@ -94,6 +94,6 @@ func SetWeaponsData(data []WeaponData) {
 func SetCharactersData(data []CharacterData) {
 	charsData = make(map[string]CharacterData)
 	for _, cd := range data {
-		charsData[cd.ID] = cd
+		charsData[cd.BasicData.ID] = cd
 	}
 }

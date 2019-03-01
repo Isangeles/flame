@@ -46,6 +46,7 @@ type Effect struct {
 func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
+	e.name = data.Name
 	// Modifiers.
 	for _, m := range data.HealthMods {
 		hpMod := HealthMod{m.Min, m.Max}

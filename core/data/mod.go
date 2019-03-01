@@ -200,10 +200,11 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 // character and area XML data.
 func buildXMLAreaCharacter(mod *module.Module, xmlChar *parsexml.CharacterXML,
 	xmlAreaChar *parsexml.AreaCharXML) (*character.Character, error) {
-	char, err := buildXMLCharacter(mod, xmlChar)
+	charData, err := buildXMLCharacterData(xmlChar)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_build_base_char:%v", err)
+		return nil, fmt.Errorf("fail_to_build_base_char_data:%v", err)
 	}
+	char := buildCharacter(mod, charData)
 	// Set position.
 	x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)
 	if err != nil {

@@ -25,6 +25,13 @@ package res
 
 // Struct for character data resource.
 type CharacterData struct {
+	BasicData CharacterBasicData
+	Items     []InventoryItemData
+	EqItems   []EquipmentItemData
+}
+
+// Struct for basic character data.
+type CharacterBasicData struct {
 	ID        string
 	Name      string
 	Level     int
@@ -38,8 +45,6 @@ type CharacterData struct {
 	Dex       int
 	Int       int
 	Wis       int
-	Items     []InventoryItemData
-	EqItems   []EquipmentItemData
 }
 
 // Struct for inventory item data

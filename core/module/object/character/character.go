@@ -67,35 +67,8 @@ type Character struct {
 	skills        []*skill.Skill
 }
 
-// NewCharacter returns new character with specified parameters.
-func NewCharacter(id string, name string, level int, sex Gender, race Race,
-	attitude Attitude, guild Guild, attributes Attributes,
-	alignment Alignment) *Character {
-	c := Character{
-		id: id,
-		name: name,
-		sex: sex,
-		race: race,
-		attitude: attitude,
-		guild: guild,
-		attributes: attributes,
-		alignment: alignment,
-	}
-	c.live = true
-	c.inventory = item.NewInventory(c.Attributes().Lift())
-	c.equipment = newEquipment(&c)
-	c.effects = make(map[string]*effect.Effect)
-	// Set level.
-	for i := 0; i < level; i++ {
-		oldMaxExp := c.MaxExperience()
-		c.levelup()
-		c.SetExperience(oldMaxExp)
-	}
-	return &c
-}
-
 // New creates new character from specified data.
-func New(data res.CharacterData) *Character {
+func New(data res.CharacterBasicData) *Character {
 	c := Character{
 		id: data.ID,
 		name: data.Name,

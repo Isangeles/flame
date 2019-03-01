@@ -47,10 +47,10 @@ const (
 // game character.
 func Character(mod *module.Module, charID string) (*character.Character, error) {
 	dataChar := res.Character(charID)
-	if dataChar.ID == "" {
+	if dataChar.BasicData.ID == "" {
 		return nil, fmt.Errorf("character_data_not_found:%%s", charID)
 	}
-	char := character.New(dataChar)
+	char := character.New(dataChar.BasicData)
 	// Inventory.
 	for _, invItData := range dataChar.Items {
 		it, err := Item(mod, invItData.ID)
@@ -116,8 +116,8 @@ func ImportCharactersData(basePath string) ([]res.CharacterData, error) {
 	return chars, nil
 }
 
-// ImportCharactersDir imports all characters files from directory
-// with specified path.
+// ImportCharactersDataDir imports all characters data from
+// files in directory with specified path.
 func ImportCharactersDataDir(dirPath string) ([]res.CharacterData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -156,12 +156,13 @@ func ImportCharacters(mod *module.Module, path string) ([]*character.Character, 
 	}
 	chars := make([]*character.Character, 0)
 	for _, charXML := range charsXML {
-		char, err := buildXMLCharacter(mod, &charXML)
+		charData, err := buildXMLCharacterData(&charXML)
 		if err != nil {
-			log.Err.Printf("data_import_chars:%s:fail_to_build_char:%s:%v",
-				path, charXML.ID, err)
+			log.Err.Printf("data:import_char:%s:fail_to_build_char_data:%v",
+				charXML.ID, err)
 			continue
 		}
+		char := buildCharacter(mod, charData)
 		chars = append(chars, char)
 	}
 	return chars, nil
@@ -215,123 +216,88 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	return nil
 }
 
-// buildXMLCharacter creates new game character from XML
-// character data.
-func buildXMLCharacter(mod *module.Module,
-	charXML *parsexml.CharacterXML) (*character.Character, error) {
-	id := charXML.ID
-	name := charXML.Name
-	level := charXML.Level
-	sex, err := parsexml.UnmarshalGender(charXML.Gender)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_char_gender:%v",
-			err)
-	}
-	race, err := parsexml.UnmarshalRace(charXML.Race)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_char_race:%v",
-			err)
-	}
-	attitude, err := parsexml.UnmarshalAttitude(charXML.Attitude)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_char_attitude:%v",
-			err)
-	}
-	guild := character.NewGuild(charXML.Guild) // TODO: search and assign guild
-	attributes, err := parsexml.UnmarshalAttributes(charXML.Stats)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_char_attributes:%v",
-			err)
-	}
-	alignment, err := parsexml.UnmarshalAlignment(charXML.Alignment)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_char_alignment:%v",
-			err)
-	}
-	char := character.NewCharacter(id, name, level, sex, race,
-		attitude, guild, attributes, alignment)
+// buildCharacter builds new character from specified data.
+func buildCharacter(mod *module.Module, data res.CharacterData) (*character.Character) {
+	char := character.New(data.BasicData)
 	// Inventory.
-	for _, xmlInvItem := range charXML.Inventory.Items {
-		it, err := Item(mod, xmlInvItem.ID)
-		if err != nil {
-			log.Err.Printf("data_build_character:%s:inv_item:%v",
+	for _, invItData := range data.Items {
+		it, err := Item(mod, invItData.ID)
+		if it == nil {
+			log.Err.Printf("data:character:%s:fail_to_retrieve_inv_item:%v",
 				char.ID(), err)
 			continue
 		}
-		it.SetSerial(xmlInvItem.Serial)
-		err = char.Inventory().AddItem(it)
-		if err != nil {
-			log.Err.Printf("data_build_character:%s::add_item:%v",
-				char.ID(), err)
-		}
+		it.SetSerial(invItData.Serial)
+		char.Inventory().AddItem(it)
 	}
 	// Equipment.
-	for _, xmlEqItem := range charXML.Equipment.Items {
-		it := char.Inventory().Item(xmlEqItem.ID)
+	for _, eqItData := range data.EqItems {
+		it := char.Inventory().Item(eqItData.ID)
 		if it == nil {
-			log.Err.Printf("data_build_character:%s:eq:fail_to_retrieve_eq_item_from_inv:%v",
-				char.SerialID(), err)
+			log.Err.Printf("data:character:%s:eq:fail_to_retrieve_eq_item_from_inv:%s",
+				char.ID(), eqItData.ID)
 			continue
 		}
 		eqItem, ok := it.(item.Equiper)
 		if !ok {
-			log.Err.Printf("data_build_character:%s:eq:not_eqipable_item:%s",
+			log.Err.Printf("data:character:%s:eq:not_eqipable_item:%s",
 				char.ID(), it.ID())
 			continue
 		}
-		switch xmlEqItem.Slot {
-		case parsexml.MarshalEqSlot(char.Equipment().HandRight()):
+		switch character.EquipmentSlotType(eqItData.Slot) {
+		case character.Hand_right:
 			err := char.Equipment().EquipHandRight(eqItem)
 			if err != nil {
 				log.Err.Printf("data_build_character:%s:eq:fail_to_equip_item:%v",
 					char.ID(), err)
 			}
 		default:
-			log.Err.Printf("data_build_character:%s:unknown_equipment_slot:%s",
-				char.ID(), xmlEqItem.Slot)
+			log.Err.Printf("data:character:%s:unknown_equipment_slot:%s",
+				char.ID(), eqItData.Slot)
 		}
 	}
-	return char, nil
+	return char
 }
 
 // buildXMLCharacterData creates character resources from specified
 // XML data.
 func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, error) {
-	data := res.CharacterData{
+	baseData := res.CharacterBasicData{
 		ID: xmlChar.ID,
 		Name: xmlChar.Name,
 		Level: xmlChar.Level,
 		Guild: xmlChar.Guild,
 	}
+	data := res.CharacterData{BasicData: baseData}
 	sex, err := parsexml.UnmarshalGender(xmlChar.Gender)
 	if err != nil {
 		return data, fmt.Errorf("fail_to_parse_gender:%v", err)
 	}
-	data.Sex = int(sex)
+	data.BasicData.Sex = int(sex)
 	race, err := parsexml.UnmarshalRace(xmlChar.Race)
 	if err != nil {
 		return data, fmt.Errorf("fail_to_parse_race:%v", err)
 	}
-	data.Race = int(race)
+	data.BasicData.Race = int(race)
 	attitude, err := parsexml.UnmarshalAttitude(xmlChar.Attitude)
 	if err != nil {
 		return data, fmt.Errorf("fail_to_parse_attitude:%v", err)
 	}
-	data.Attitude = int(attitude)
+	data.BasicData.Attitude = int(attitude)
 	alignment, err := parsexml.UnmarshalAlignment(xmlChar.Alignment)
 	if err != nil {
 		return data, fmt.Errorf("fail_to_parse_alignment:%v", err)
 	}
-	data.Alignment = int(alignment)
+	data.BasicData.Alignment = int(alignment)
 	attributes, err := parsexml.UnmarshalAttributes(xmlChar.Stats)
 	if err != nil {
 		return data, fmt.Errorf("fail_to_parse_attributes:%v", err)
 	}
-	data.Str = attributes.Str
-	data.Con = attributes.Con
-	data.Dex = attributes.Dex
-	data.Int = attributes.Int
-	data.Wis = attributes.Wis
+	data.BasicData.Str = attributes.Str
+	data.BasicData.Con = attributes.Con
+	data.BasicData.Dex = attributes.Dex
+	data.BasicData.Int = attributes.Int
+	data.BasicData.Wis = attributes.Wis
 	for _, xmlInvIt := range xmlChar.Inventory.Items {
 		invItData := res.InventoryItemData{
 			ID: xmlInvIt.ID,
