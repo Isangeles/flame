@@ -25,21 +25,43 @@
 package skill
 
 import (
+	"fmt"
+	
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/req"
-	"github.com/isangeles/flame/core/data/res"
 )
 
 // Interface for skills.
 type Skill struct {
-	id, serial string
-	name       string
-	useReqs    []req.Requirement
-	effects    []res.EffectData
-	castTime   int64 // cast time in milliseconds
-	casting    bool
-	ready      bool
+	id, serial   string
+	name         string
+	useReqs      []req.Requirement
+	effects      []res.EffectData
+	tartype      TargetType
+	user         SkillUser
+	target       effect.Target
+	castTime     int64 // cast time in milliseconds
+	castTimeLeft int64 // remaning cast time in milliseconds
+	casting      bool
+	ready        bool
 }
+
+// Type for skills target
+// types.
+type TargetType int
+
+const (
+	// Errors.
+	OTHERS_TARGET_ERR = "only_others_target"
+	SELF_TARGET_ERR = "only_self_target"
+	NO_TARGET_ERR = "no_target"
+	REQS_NOT_MET_ERR = "reqs_not_meet"
+	// Target types.
+	Target_all TargetType = iota
+	Target_others
+	Target_self
+)
 
 // NewSkill creates new skill with specifie parameters.
 func New(data res.SkillData) *Skill {
@@ -54,7 +76,18 @@ func New(data res.SkillData) *Skill {
 
 // Update updates skill.
 func (s *Skill) Update(delta int64) {
-
+	if s.Casting() {
+		s.castTimeLeft -= delta
+		if s.castTimeLeft <= 0 {
+			s.casting = false
+			if s.target == nil {
+				return
+			}
+			for _, e := range s.buildEffects() {
+				s.target.TakeEffect(e)
+			}
+		}
+	}
 }
 
 // ID returns skill ID.
@@ -86,7 +119,24 @@ func (s *Skill) SetName(name string) {
 
 // Cast starts skill casting with specified targetable object
 // as skill user.
-func (s *Skill) Cast(user effect.Target) error {
+func (s *Skill) Cast(user SkillUser, target effect.Target) error {
+	if s.tartype != Target_all && target == nil {
+		return fmt.Errorf(NO_TARGET_ERR)
+	}
+	if s.tartype == Target_others &&
+		user.ID()+user.Serial() == target.ID()+target.Serial() {
+		return fmt.Errorf(OTHERS_TARGET_ERR)
+	}
+	if s.tartype == Target_self &&
+		user.ID()+user.Serial() != target.ID()+target.Serial() {
+		return fmt.Errorf(SELF_TARGET_ERR)
+	}
+	s.user = user
+	s.target = target
+	if !user.MeetReqs(s.useReqs) {
+		return fmt.Errorf(REQS_NOT_MET_ERR)
+	}
+	s.castTimeLeft = s.castTime
 	s.casting = true
 	return nil
 }
@@ -106,4 +156,15 @@ func (s *Skill) Casting() bool {
 // was started and funished successfully.
 func (s *Skill) Ready() bool {
 	return s.ready
+}
+
+// effects builds and returns skill effects.
+func (s *Skill) buildEffects() []*effect.Effect {
+	effects := make([]*effect.Effect, 0)
+	for _, ed := range s.effects {
+		e := effect.New(ed)
+		e.SetSerial(s.ID() + "_" + s.Serial())
+		effects = append(effects, e)
+	}
+	return effects
 }

@@ -29,9 +29,9 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
+	"github.com/isangeles/flame/core/module/modutil"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
-	"github.com/isangeles/flame/core/module/modutil"
 )
 
 // handleCharCommand handles specified command for game
@@ -55,6 +55,8 @@ func handleCharCommand(cmd Command) (int, string) {
 		return addCharOption(cmd)
 	case "equip":
 		return equipCharOption(cmd)
+	case "cast":
+		return castCharOption(cmd)
 	default:
 		return 4, fmt.Sprintf("%s:no_such_option:%s", CHAR_MAN,
 			cmd.OptionArgs()[0])
@@ -148,6 +150,20 @@ func setCharOption(cmd Command) (int, string) {
 			char.SetMana(val)
 		}
 		return 0, ""
+	case "target":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.OptionArgs()[1])
+		}
+		tarchar := flame.Game().Module().Character(cmd.Args()[1])
+		if tarchar == nil {
+			return 8, fmt.Sprintf("%s:character_not_found:%s",
+				CHAR_MAN, cmd.Args()[1])
+		}
+		for _, char := range chars {
+			char.SetTarget(tarchar)
+		}
+		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.TargetArgs()[0])
@@ -177,7 +193,7 @@ func showCharOption(cmd Command) (int, string) {
 	switch cmd.Args()[0] {
 	case "position":
 		out := ""
-		for _, char := range chars {		
+		for _, char := range chars {
 			x, y := char.Position()
 			out = fmt.Sprintf("%s%fx%f ", out,
 				x, y)
@@ -272,7 +288,7 @@ func exportCharOption(cmd Command) (int, string) {
 	return 0, ""
 }
 
-// addEngineOption handles 'add' option for charman CI tool.
+// addCharOption handles 'add' option for charman CI tool.
 func addCharOption(cmd Command) (int, string) {
 	if len(cmd.TargetArgs()) < 1 {
 		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
@@ -296,7 +312,7 @@ func addCharOption(cmd Command) (int, string) {
 	case "item":
 		if len(cmd.Args()) < 2 {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
-			CHAR_MAN, cmd.Args()[0])
+				CHAR_MAN, cmd.Args()[0])
 		}
 		itemID := cmd.Args()[1]
 		item, err := data.Item(flame.Game().Module(), itemID)
@@ -315,16 +331,31 @@ func addCharOption(cmd Command) (int, string) {
 	case "effect":
 		if len(cmd.Args()) < 2 {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
-			CHAR_MAN, cmd.Args()[0])
-		}
-		effectID := cmd.Args()[1]
-		effect, err := data.Effect(flame.Game().Module(), effectID)
-		if err != nil {
-			return 8, fmt.Sprintf("%s:fail_to_retrieve_effect:%v",
-				CHAR_MAN, err)
+				CHAR_MAN, cmd.Args()[0])
 		}
 		for _, char := range chars {
+			effectID := cmd.Args()[1]
+			effect, err := data.Effect(flame.Game().Module(), effectID)
+			if err != nil {
+				return 8, fmt.Sprintf("%s:fail_to_retrieve_effect:%v",
+					CHAR_MAN, err)
+			}
 			char.AddEffect(effect)
+		}
+		return 0, ""
+	case "skill":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		for _, char := range chars {
+			skillID := cmd.Args()[1]
+			skill, err := data.Skill(flame.Game().Module(), skillID)
+			if err != nil {
+				return 8, fmt.Sprintf("%s:fail_to_retrieve_skill:%v",
+					CHAR_MAN, err)
+			}
+			char.AddSkill(skill)
 		}
 		return 0, ""
 	default:
@@ -333,7 +364,7 @@ func addCharOption(cmd Command) (int, string) {
 	}
 }
 
-// equipEngineOption handles 'equip' option for charman CI tool.
+// equipCharOption handles 'equip' option for charman CI tool.
 func equipCharOption(cmd Command) (int, string) {
 	if len(cmd.TargetArgs()) < 1 {
 		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
@@ -373,7 +404,45 @@ func equipCharOption(cmd Command) (int, string) {
 					CHAR_MAN, char.SerialID(), err)
 			}
 		}
-		return 0, "" 
+		return 0, ""
+	default:
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
+			cmd.OptionArgs()[0], cmd.Args()[0])
+	}
+}
+
+// castCharOption handles 'cast' option for charman CI tool.
+func castCharOption(cmd Command) (int, string) {
+	if len(cmd.TargetArgs()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			CHAR_MAN, cmd.OptionArgs()[0])
+	}
+	if len(cmd.Args()) < 2 {
+		return 5, fmt.Sprintf("%s:no_enought_args_for:%s",
+			CHAR_MAN, cmd.OptionArgs()[0])
+	}
+	chars := make([]*character.Character, 0)
+	for _, id := range cmd.TargetArgs() {
+		char := flame.Game().Module().Character(id)
+		if char == nil {
+			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
+				id)
+		}
+		chars = append(chars, char)
+	}
+
+	switch cmd.Args()[0] {
+	case "skill":
+		for _, char := range chars {
+			serialID := cmd.Args()[1]
+			skill := char.Skills()[serialID]
+			if skill == nil {
+				return 5, fmt.Sprintf("%s:character:%s:skill_not_known:%s",
+					CHAR_MAN, char.ID()+"_"+char.Serial(), serialID)
+			}
+			char.UseSkill(skill)
+		}
+		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.Args()[0])

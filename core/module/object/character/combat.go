@@ -24,10 +24,12 @@
 package character
 
 import (
+	"fmt"
+
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/core/rng"
-	"github.com/isangeles/flame/log"
 )
 
 // Hit creates character hit.
@@ -43,12 +45,26 @@ func (c *Character) Hit() effect.Hit {
 func (c *Character) TakeHit(hit effect.Hit) {
 	// TODO: handle resists.
 	c.SetHealth(c.Health() + hit.HP)
-	log.Cmb.Printf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
+	c.combatlog <- fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
 }
 
 // TakeEffects adds specified effects
 func (c *Character) TakeEffect(e *effect.Effect) {
 	// TODO: handle resists.
 	c.AddEffect(e)
-	log.Cmb.Printf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
+	c.combatlog <- fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
+}
+
+// UseSkill uses specified skill on current target.
+func (c *Character) UseSkill(s *skill.Skill) {
+	for _, charSkill := range c.Skills() {
+		if charSkill == s {
+			err := s.Cast(c, c.Targets()[0])
+			if err != nil {
+				c.combatlog <- fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
+			}
+			return
+		}
+	}
+	c.combatlog <- fmt.Sprintf("%s:%s:skill_not_known", c.Name(), s.Name())
 }

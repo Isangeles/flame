@@ -216,8 +216,8 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	return nil
 }
 
-// buildCharacter builds new character from specified data.
-func buildCharacter(mod *module.Module, data res.CharacterData) (*character.Character) {
+// buildCharacter builds new character from specified data(with items and equipment).
+func buildCharacter(mod *module.Module, data res.CharacterData) *character.Character {
 	char := character.New(data.BasicData)
 	// Inventory.
 	for _, invItData := range data.Items {
@@ -262,11 +262,13 @@ func buildCharacter(mod *module.Module, data res.CharacterData) (*character.Char
 // buildXMLCharacterData creates character resources from specified
 // XML data.
 func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, error) {
+	// Basic data.
 	baseData := res.CharacterBasicData{
-		ID: xmlChar.ID,
-		Name: xmlChar.Name,
-		Level: xmlChar.Level,
-		Guild: xmlChar.Guild,
+		ID:     xmlChar.ID,
+		Serial: xmlChar.Serial,
+		Name:   xmlChar.Name,
+		Level:  xmlChar.Level,
+		Guild:  xmlChar.Guild,
 	}
 	data := res.CharacterData{BasicData: baseData}
 	sex, err := parsexml.UnmarshalGender(xmlChar.Gender)
@@ -298,13 +300,15 @@ func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, e
 	data.BasicData.Dex = attributes.Dex
 	data.BasicData.Int = attributes.Int
 	data.BasicData.Wis = attributes.Wis
+	// Items.
 	for _, xmlInvIt := range xmlChar.Inventory.Items {
 		invItData := res.InventoryItemData{
-			ID: xmlInvIt.ID,
+			ID:     xmlInvIt.ID,
 			Serial: xmlInvIt.Serial,
 		}
 		data.Items = append(data.Items, invItData)
 	}
+	// Equipment.
 	for _, xmlEqIt := range xmlChar.Equipment.Items {
 		slot, err := parsexml.UnmarshalEqSlot(xmlEqIt.Slot)
 		if err != nil {
@@ -313,10 +317,21 @@ func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, e
 			continue
 		}
 		eqItData := res.EquipmentItemData{
-			ID: xmlEqIt.ID,
-		        Slot: int(slot),
+			ID:   xmlEqIt.ID,
+			Slot: int(slot),
 		}
 		data.EqItems = append(data.EqItems, eqItData)
+	}
+	// Effects.
+	for _, xmlEffect := range xmlChar.Effects.Effects {
+		effectData := res.ObjectEffectData{
+			ID:           xmlEffect.ID,
+			Serial:       xmlEffect.Serial,
+			Time:         xmlEffect.Time,
+			SourceID:     xmlEffect.Source.ID,
+			SourceSerial: xmlEffect.Source.Serial,
+		}
+		data.Effects = append(data.Effects, effectData)
 	}
 	return data, nil
 }

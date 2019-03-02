@@ -33,7 +33,7 @@ import (
 // Struct for skills XML base.
 type SkillsBaseXML struct {
 	XMLName xml.Name   `xml:"base"`
-	Skills  []SkillXML `xml"skill"`
+	Skills  []SkillXML `xml:"skill"`
 }
 
 // Struct for skill XML node.
@@ -42,7 +42,7 @@ type SkillXML struct {
 	ID      string          `xml:"id,attr"`
 	Cast    int             `xml:"cast,attr"`
 	Effects SkillEffectsXML `xml:"effects"`
-	Reqs    ReqsXML          `xml:"reqs"`
+	Reqs    ReqsXML         `xml:"reqs"`
 }
 
 // Struct for skill effects XML node.

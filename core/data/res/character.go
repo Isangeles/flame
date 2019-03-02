@@ -28,11 +28,13 @@ type CharacterData struct {
 	BasicData CharacterBasicData
 	Items     []InventoryItemData
 	EqItems   []EquipmentItemData
+	Effects   []ObjectEffectData
 }
 
 // Struct for basic character data.
 type CharacterBasicData struct {
 	ID        string
+	Serial    string
 	Name      string
 	Level     int
 	Sex       int
@@ -57,6 +59,15 @@ type InventoryItemData struct {
 // Struct for equipment item data
 // resource.
 type EquipmentItemData struct {
-	ID    string
-	Slot  int
+	ID   string
+	Slot int
+}
+
+// Struct for object effects data.
+type ObjectEffectData struct {
+	ID           string
+	Serial       string
+	Time         int64
+	SourceID     string
+	SourceSerial string
 }

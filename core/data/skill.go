@@ -94,13 +94,13 @@ func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
 			continue
 		}
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		skills, err := ImportSkills(basePath)
+		impSkills, err := ImportSkills(basePath)
 		if err != nil {
 			log.Err.Printf("data:skills_import:%s:fail_to_import_base:%v",
 				basePath, err)
 			continue
 		}
-		for _, s := range skills {
+		for _, s := range impSkills {
 			skills = append(skills, s)
 		}
 	}

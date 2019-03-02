@@ -1,26 +1,26 @@
 /*
  * character.go
- * 
+ *
  * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
- 
+
 // character package provides game character struct and
 // other types for game characters.
 package character
@@ -29,15 +29,11 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/modutil"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
-	"github.com/isangeles/flame/core/module/modutil"
-)
-
-const (
-	base_exp = 1000
 )
 
 // Character struct represents game character.
@@ -64,24 +60,32 @@ type Character struct {
 	equipment     *Equipment
 	targets       []effect.Target
 	effects       map[string]*effect.Effect
-	skills        []*skill.Skill
+	skills        map[string]*skill.Skill
+	combatlog     chan string
 }
+
+const (
+	base_exp = 1000
+)
 
 // New creates new character from specified data.
 func New(data res.CharacterBasicData) *Character {
 	c := Character{
-		id: data.ID,
-		name: data.Name,
-		sex: Gender(data.Sex),
-		race: Race(data.Race),
-		attitude: Attitude(data.Attitude),
+		id:        data.ID,
+		name:      data.Name,
+		sex:       Gender(data.Sex),
+		race:      Race(data.Race),
+		attitude:  Attitude(data.Attitude),
 		alignment: Alignment(data.Alignment),
 	}
 	c.attributes = Attributes{data.Str, data.Con, data.Dex, data.Int, data.Wis}
 	c.live = true
 	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
+	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
+	c.skills = make(map[string]*skill.Skill)
+	c.combatlog = make(chan string, 3)
 	// Set level.
 	for i := 0; i < data.Level; i++ {
 		oldMaxExp := c.MaxExperience()
@@ -96,7 +100,7 @@ func (c *Character) Update(delta int64) {
 	// Move to dest point.
 	if c.InMove() {
 		if c.posX < c.destX {
-			c.Move(c.posX+1, c.posY) 
+			c.Move(c.posX+1, c.posY)
 		}
 		if c.posX > c.destX {
 			c.Move(c.posX-1, c.posY)
@@ -130,6 +134,10 @@ func (c *Character) Update(delta int64) {
 		if e.Time() <= 0 {
 			delete(c.effects, serial)
 		}
+	}
+	// Update skills.
+	for _, s := range c.Skills() {
+		s.Update(delta)
 	}
 }
 
@@ -180,7 +188,7 @@ func (c *Character) Mana() int {
 // MaxMana returns maximal value of mana
 // points.
 func (c *Character) MaxMana() int {
-	return c.attributes.Mana() + (Base_mana * c.Level()/2)
+	return c.attributes.Mana() + (Base_mana * c.Level() / 2)
 }
 
 // Experience returns current value of experience
@@ -334,9 +342,26 @@ func (c *Character) AddEffect(e *effect.Effect) {
 	c.effects[modutil.SerialID(e.ID(), e.Serial())] = e
 }
 
+// Skills return all character skills.
+func (c *Character) Skills() map[string]*skill.Skill {
+	return c.skills
+}
+
+// AddSkill adds specified skill to characters
+// skills.
+func (c *Character) AddSkill(s *skill.Skill) {
+	c.skills[s.ID() + "_" + s.Serial()] = s
+}
+
 // Targets returns character targets.
 func (c *Character) Targets() []effect.Target {
 	return c.targets
+}
+
+// SetTarget sets specified 'targetable' as current
+// target.
+func (c *Character) SetTarget(t effect.Target) {
+	c.targets[0] = t
 }
 
 // Damage retruns min and max damage value,
@@ -353,8 +378,13 @@ func (c *Character) Damage() (int, int) {
 	return min, max
 }
 
+// CombatLog returns character combat log channel.
+func (c *Character) CombatLog() chan string {
+	return c.combatlog
+}
+
 // levelup promotes character to next level.
-func (c * Character) levelup() {
+func (c *Character) levelup() {
 	c.level += 1
 	c.SetHealth(c.MaxHealth())
 	c.SetMana(c.MaxMana())
@@ -364,5 +394,5 @@ func (c * Character) levelup() {
 // agonyHP returns value of health causing
 // agony state.
 func (c *Character) agonyHP() int {
-	return 10 / 100 * c.MaxHealth() 
+	return 10 / 100 * c.MaxHealth()
 }

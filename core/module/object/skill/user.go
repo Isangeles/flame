@@ -1,5 +1,5 @@
 /*
- * hit.go
+ * user.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,23 +21,17 @@
  *
  */
 
-package effect
+package skill
 
-// Struct for object hit.
-type Hit struct {
-	Source  Target
-	Type    HitType
-	HP      int
-	Effects []*Effect
-}
-
-// Struct for hit type.
-type HitType int
-
-const (
-	Hit_normal HitType = iota
-	Hit_fire
-	Hit_frost
-	Hit_nature
-	Hit_magic
+import (
+	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/req"
 )
+
+// Struct for skill users.
+type SkillUser interface {
+	ID() string
+	Serial() string
+	MeetReqs(r []req.Requirement) bool
+	TakeHit(h effect.Hit)
+}

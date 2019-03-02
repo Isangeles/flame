@@ -56,6 +56,7 @@ type CharacterXML struct {
 	Inventory InventoryXML     `xml:"inventory"`
 	Equipment EquipmentXML     `xml:"equipment"`
 	Effects   ObjectEffectsXML `xml:"effects"`
+	Skills    ObjectSkillsXML  `xml:"skills"`
 }
 
 // Struct for equipment XML node.

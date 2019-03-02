@@ -34,6 +34,7 @@ import (
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/save"
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
@@ -139,6 +140,7 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 			err)
 	}
 	mod.Chapter().ClearScenarios() // to remove start scenario
+	charsData := make([]*res.CharacterData, 0)
 	pcs := make([]*character.Character, 0)
 	// Build chapter scenarios from save.
 	for _, xmlScen := range xmlChapter.Scenarios {
@@ -154,7 +156,9 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 						xmlChar.ID, err)
 					continue
 				}
+				charsData = append(charsData, &charData) // save data to restore effects later
 				char := buildCharacter(mod, charData)
+				// Set position & serial.
 				posX, posY, err := parsexml.UnmarshalPosition(
 					xmlChar.Position)
 				if err != nil {
@@ -184,8 +188,14 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 			continue
 		}
 	}
-	// Restore objects effects.
-	restoreChapterEffects(mod, xmlChapter)
+	// Restore characters effects.
+	for _, cd := range charsData {
+		err := restoreCharEffects(mod, cd)
+		if err != nil {
+			log.Err.Printf("data:build_saved_game:restore_effects:char%s:%v",
+				cd.BasicData.ID, err)
+		}
+	}
 	// Create game from saved data.
 	game := new(save.SaveGame)
 	game.Name = xmlGame.Name
@@ -194,37 +204,29 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 	return game, nil
 }
 
-
-// restoreChapterEffects restores all XML effect for specified character.
-func restoreChapterEffects(mod *module.Module, xmlChapter *parsexml.SavedChapterXML) {
-	for _, xmlScen := range xmlChapter.Scenarios {
-		for _, xmlArea := range xmlScen.AreasNode.Areas {
-			// Characters.
-			for _, xmlChar := range xmlArea.CharsNode.Characters {
-				char := mod.Character(xmlChar.ID + "_" + xmlChar.Serial)
-				if char == nil {
-					log.Err.Printf("data_restore_chapter_effects:char:%s:not_found",
-						xmlChar.ID)
-					continue
-				}	
-				for _, xmlEffect := range xmlChar.Effects.Effects {
-					effect, err := Effect(mod, xmlEffect.ID)
-					if err != nil {
-						log.Err.Printf("data_restore_chapter_effects:char:%s:fail_to_create_effect:%v",
-							char.ID(), err)
-						continue
-					}
-					source := mod.Object(xmlEffect.Source.ID, xmlEffect.Source.Serial)
-					if source == nil {
-						log.Err.Printf("data_restore_chapter_effects:char:%s:fail_to_find_source:%s",
-							char.ID(), xmlEffect.Source)
-					}
-					effect.SetSerial(xmlEffect.Serial)
-					effect.SetTimeSeconds(xmlEffect.Time)
-					effect.SetSource(source)
-					char.AddEffect(effect)
-				}
-			}
+// restoreEffects resores effects for module character.
+func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
+	char := mod.Character(data.BasicData.ID + "_" + data.BasicData.Serial)
+	if char == nil {
+		return fmt.Errorf("char_not_found")
+	}	
+	for _, eData := range data.Effects {
+		effect, err := Effect(mod, eData.ID)
+		if err != nil {
+			log.Err.Printf("data:char:%s:restore_effects:fail_to_create_effect:%v",
+				char.ID(), err)
+			continue
 		}
+		effect.SetSerial(eData.Serial)
+		effect.SetTimeSeconds(eData.Time)
+		// Restore effect source.
+		source := mod.Object(eData.SourceID, eData.SourceSerial)
+		if source == nil {
+			log.Err.Printf("data:char:%s:restore_effects:fail_to_find_source:%s",
+				char.ID(), eData.SourceID + "_" + eData.SourceSerial)
+		}
+		effect.SetSource(source)
+		char.AddEffect(effect)
 	}
+	return nil
 }

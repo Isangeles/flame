@@ -86,6 +86,10 @@ func (g *Game) Update(delta int64) {
 	for _, c := range updateChars {
 		c.Update(delta)
 	}
+	// Combat log.
+	for _, pc := range g.pcs {
+		log.Cmb.Printf(<-pc.CombatLog())
+	}
 }
 
 // Pause toggles game update pause.

@@ -51,6 +51,18 @@ type ObjectEffectSourceXML struct {
 	Serial  string   `xml:"serial,attr"`
 }
 
+// Struct for object skills XML node.
+type ObjectSkillsXML struct {
+	XMLName xml.Name         `xml:"skills"`
+	Skills  []ObjectSkillXML `xml:"skill"`
+}
+
+// Struct for object skill XML node.
+type ObjectSkillXML struct {
+	XMLName xml.Name `xml:"skill"`
+	ID      string   `xml:"id,attr"`
+}
+
 // xmlObjectEffects parses specified effects to XML
 // object effects struct.
 func xmlObjectEffects(effs []*effect.Effect) *ObjectEffectsXML {
