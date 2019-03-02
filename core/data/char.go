@@ -256,6 +256,17 @@ func buildCharacter(mod *module.Module, data res.CharacterData) *character.Chara
 				char.ID(), eqItData.Slot)
 		}
 	}
+	// Skills.
+	for _, skillData := range data.Skills {
+		skill, err := Skill(mod, skillData.ID)
+		if err != nil {
+			log.Err.Printf("data:build_character:%s:fail_to_retrieve_skill:%v",
+				char.ID(), err)
+			continue
+		}
+		skill.SetSerial(skillData.Serial)
+		char.AddSkill(skill)
+	}
 	return char
 }
 
@@ -323,7 +334,7 @@ func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, e
 		data.EqItems = append(data.EqItems, eqItData)
 	}
 	// Effects.
-	for _, xmlEffect := range xmlChar.Effects.Effects {
+	for _, xmlEffect := range xmlChar.Effects.Nodes {
 		effectData := res.ObjectEffectData{
 			ID:           xmlEffect.ID,
 			Serial:       xmlEffect.Serial,
@@ -332,6 +343,14 @@ func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, e
 			SourceSerial: xmlEffect.Source.Serial,
 		}
 		data.Effects = append(data.Effects, effectData)
+	}
+	// Skills.
+	for _, xmlSkill := range xmlChar.Skills.Nodes {
+		skillData := res.ObjectSkillData{
+			ID:     xmlSkill.ID,
+			Serial: xmlSkill.Serial,
+		}
+		data.Skills = append(data.Skills, skillData)
 	}
 	return data, nil
 }

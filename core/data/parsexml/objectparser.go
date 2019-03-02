@@ -27,12 +27,13 @@ import (
 	"encoding/xml"
 
 	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/object/skill"
 )
 
 // Struct for XML node with object effects.
 type ObjectEffectsXML struct {
 	XMLName xml.Name          `xml:"effects"`
-	Effects []ObjectEffectXML `xml:"effect"`
+	Nodes   []ObjectEffectXML `xml:"effect"`
 }
 
 // Strcut for object effects XML node.
@@ -54,18 +55,19 @@ type ObjectEffectSourceXML struct {
 // Struct for object skills XML node.
 type ObjectSkillsXML struct {
 	XMLName xml.Name         `xml:"skills"`
-	Skills  []ObjectSkillXML `xml:"skill"`
+	Nodes   []ObjectSkillXML `xml:"skill"`
 }
 
 // Struct for object skill XML node.
 type ObjectSkillXML struct {
 	XMLName xml.Name `xml:"skill"`
 	ID      string   `xml:"id,attr"`
+	Serial  string   `xml:"serial,attr"`
 }
 
 // xmlObjectEffects parses specified effects to XML
 // object effects struct.
-func xmlObjectEffects(effs []*effect.Effect) *ObjectEffectsXML {
+func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffectsXML {
 	xmlEffs := new(ObjectEffectsXML)
 	for _, e := range effs {
 		eTimeSec := int64(e.Time() / 1000)
@@ -80,7 +82,21 @@ func xmlObjectEffects(effs []*effect.Effect) *ObjectEffectsXML {
 			Time:   eTimeSec,
 			Source: xmlEffSource,
 		}
-		xmlEffs.Effects = append(xmlEffs.Effects, xmlEff)
+		xmlEffs.Nodes = append(xmlEffs.Nodes, xmlEff)
 	}
 	return xmlEffs
+}
+
+// xmlObjectSkills parses specified skills to XML
+// object skills struct.
+func xmlObjectSkills(skills ...*skill.Skill) *ObjectSkillsXML {
+	xmlSkills := new(ObjectSkillsXML)
+	for _, s := range skills {
+		xmlSkill := ObjectSkillXML{
+			ID: s.ID(),
+			Serial: s.Serial(),
+		}
+		xmlSkills.Nodes = append(xmlSkills.Nodes, xmlSkill)
+	}
+	return xmlSkills
 }

@@ -29,6 +29,7 @@ type CharacterData struct {
 	Items     []InventoryItemData
 	EqItems   []EquipmentItemData
 	Effects   []ObjectEffectData
+	Skills    []ObjectSkillData
 }
 
 // Struct for basic character data.
@@ -70,4 +71,10 @@ type ObjectEffectData struct {
 	Time         int64
 	SourceID     string
 	SourceSerial string
+}
+
+// Struct for object skill data.
+type ObjectSkillData struct {
+	ID     string
+	Serial string
 }

@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  *
  */
 
-// core package provides game struct representation.
+// core package provides game struct.
 package core
 
 import (
@@ -32,13 +32,14 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
-	"github.com/isangeles/flame/log"	
+	"github.com/isangeles/flame/log"
 )
 
-// Struct game representation. Contains game module and PCs.
+// Struct for game, contains game
+// module and PCs.
 type Game struct {
-	mod     *module.Module
-	pcs     []*character.Character
+	mod    *module.Module
+	pcs    []*character.Character
 	paused bool
 }
 
@@ -86,9 +87,12 @@ func (g *Game) Update(delta int64) {
 	for _, c := range updateChars {
 		c.Update(delta)
 	}
-	// Combat log.
 	for _, pc := range g.pcs {
-		log.Cmb.Printf(<-pc.CombatLog())
+		select {
+		case msg := <-pc.CombatLog():
+			log.Cmb.Printf(msg)
+		default:
+		}
 	}
 }
 

@@ -45,14 +45,22 @@ func (c *Character) Hit() effect.Hit {
 func (c *Character) TakeHit(hit effect.Hit) {
 	// TODO: handle resists.
 	c.SetHealth(c.Health() + hit.HP)
-	c.combatlog <- fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
+	msg := fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
+	select {
+	case c.combatlog <- msg:
+	default:
+	}
 }
 
 // TakeEffects adds specified effects
 func (c *Character) TakeEffect(e *effect.Effect) {
 	// TODO: handle resists.
 	c.AddEffect(e)
-	c.combatlog <- fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
+	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
+	select {
+	case c.combatlog <- msg:
+	default:
+	}
 }
 
 // UseSkill uses specified skill on current target.
@@ -66,5 +74,9 @@ func (c *Character) UseSkill(s *skill.Skill) {
 			return
 		}
 	}
-	c.combatlog <- fmt.Sprintf("%s:%s:skill_not_known", c.Name(), s.Name())
+	msg := fmt.Sprintf("%s:%s:skill_not_known", c.Name(), s.Name())
+	select {
+	case c.combatlog <- msg:
+	default:
+	}
 }
