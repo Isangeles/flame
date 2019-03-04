@@ -121,9 +121,9 @@ func raceDialog() character.Race {
 	fmt.Printf("%s:", lang.Text("ui", "cli_newchar_race"))
 	racesNames := lang.Texts("ui", "race_human", "race_elf", "race_dwarf",
 		"race_gnome")
-	s := make([]interface{}, len(racesNames))
-	for i, v := range racesNames {
-		s[i] = v
+	s := make([]interface{}, 0)
+	for _, v := range racesNames {
+		s = append(s, v)
 	}
 	for true {
 		fmt.Printf("[1 - %s, 2 - %s, 3 - %s, 4 - %s]:", s...)
@@ -152,9 +152,9 @@ func genderDialog() character.Gender {
 	scan := bufio.NewScanner(os.Stdin)
 	fmt.Printf("%s:", lang.Text("ui", "cli_newchar_gender"))
 	genderNames := lang.Texts("ui", "gender_male", "gender_female")
-	s := make([]interface{}, len(genderNames))
-	for i, v := range genderNames {
-		s[i] = v
+	s := make([]interface{}, 0)
+	for _, v := range genderNames {
+		s = append(s, v)
 	}
 	for true {
 		fmt.Printf("[1 - %s, 2 - %s]:", s...)

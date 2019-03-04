@@ -1,7 +1,7 @@
 /*
  * lang.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@
  * 
  */
 
-// Package for connection with transalation data files.
+// This package provides easy way to retrieve
+// data from transalation files inside data lang
+// directory.
 package lang
 
 import (
@@ -37,47 +39,63 @@ const (
 
 var (
 	langPath string
+	cache    map[string]string
 )
+
+// On init.
+func init() {
+	cache = make(map[string]string)
+}
 
 // Text returns text with specified ID from file with specified name in 
 // current lang directory.
 // In case of error(file/ID not found) returns string with error 
 // message.
-func Text(langFile, textId string) string {
+// Results are cached under lang file + id key, so lang file is open
+// only in case when there was no previous requests for specified
+// lang file + id pair.
+func Text(langFile, id string) string {
 	if !strings.HasSuffix(langFile, LANG_FILE_EXT) {
 		langFile = langFile + LANG_FILE_EXT
 	}
-	
-	var fullpath string = filepath.FromSlash(LangPath() + "/" + langFile)
-	return text.ReadDisplayText(fullpath, textId)[0]
+	if cache[langFile + id] != "" {
+		return cache[langFile + id]
+	}
+	fullpath := filepath.FromSlash(LangPath() + "/" + langFile)
+	text := text.ReadDisplayText(fullpath, id)[id]
+	cache[langFile + id] = text // cache result
+	return text
 }
 
-// Texts returns slice with all values for specified IDs from file
-// with specified name in current lang directory.
+// Texts returns map with all values for specified IDs from file
+// with specified name in current lang directory(specified IDs as keys).
 // In case of error(file/ID not found) returns string with error 
 // message.
-func Texts(langFile string, textIDs ...string) []string {
+// Results are cached under lang file + id key, so lang file is open
+// only in case when there was no previous requests for specified
+// lang file + id pair.
+func Texts(langFile string, ids ...string) map[string]string {
 	if !strings.HasSuffix(langFile, LANG_FILE_EXT) {
 		langFile = langFile + LANG_FILE_EXT
 	}
-
-	var fullpath string = filepath.FromSlash(LangPath() + "/" + langFile)
-	return text.ReadDisplayText(fullpath, textIDs...)
-}
-
-// UIText returns text with specified ID from main UI lang file('ui.lang')
-// in 'core.MainLangPath()' directory.
-// In case of error(file/ID not found) returns string with error
-// message.
-func UIText(textID string) string {
-	return Text("ui", textID)
-}
-
-// UITexts returns all text lines from UI lang file with specified IDs
-// In case of error(file/ID not found) returns string with error
-// message instead of text. 
-func UITexts(textIDs ...string) []string {
-	return Texts("ui", textIDs...)
+	texts := make(map[string]string)
+	uncached := make([]string, 0)
+	for _, id := range ids {
+		if cache[id] == "" {
+			uncached = append(uncached, id)
+			continue
+		}
+		texts[id] = cache[langFile + id]
+	}
+	fullpath := filepath.FromSlash(LangPath() + "/" + langFile)
+	for id, val := range text.ReadDisplayText(fullpath, uncached...) {
+		texts[id] = val
+	}
+	// Cache results.
+	for id, t := range texts {
+		cache[langFile + id] = t
+	}
+	return texts
 }
 
 // SetLangPath sets specified path as

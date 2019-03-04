@@ -364,18 +364,15 @@ func (c *Character) SetTarget(t effect.Target) {
 	c.targets[0] = t
 }
 
-// Damage retruns min and max damage value,
-// including weapons, effects, etc.
-func (c *Character) Damage() (int, int) {
-	min, max := c.Attributes().Damage()
-	if it := c.Equipment().HandRight().Item(); it != nil {
-		if w, ok := it.(*item.Weapon); ok {
-			dmgMin, dmgMax := w.Damage()
-			min += dmgMin
-			max += dmgMax
+// Casting checks whether any of character
+// skills is casted.
+func (c *Character) Casting() bool {
+	for _, s := range c.Skills() {
+		if s.Casting() {
+			return true
 		}
 	}
-	return min, max
+	return false
 }
 
 // CombatLog returns character combat log channel.

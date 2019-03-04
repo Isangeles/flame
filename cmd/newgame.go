@@ -1,7 +1,7 @@
 /*
  * newgame.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,10 +42,10 @@ var (
 // newGameDialog starts CLI dialog for new game.
 func newGameDialog() (*core.Game, error) {
 	if flame.Mod() == nil {
-		return nil, fmt.Errorf(lang.UIText("cli_no_mod_err"))
+		return nil, fmt.Errorf(lang.Text("ui", "cli_no_mod_err"))
 	}
 	if len(playableChars) < 1 {
-		return nil, fmt.Errorf(lang.UIText("cli_newgame_no_chars_err"))
+		return nil, fmt.Errorf(lang.Text("ui", "cli_newgame_no_chars_err"))
 	}
 	var (
 		pc *character.Character
@@ -54,18 +54,18 @@ func newGameDialog() (*core.Game, error) {
 	scan := bufio.NewScanner(os.Stdin)
 	var accept bool
 	for !accept {
-		fmt.Printf("%s:\n", lang.UIText("cli_newgame_chars"))
+		fmt.Printf("%s:\n", lang.Text("ui", "cli_newgame_chars"))
 		for i, c := range playableChars {
 			fmt.Printf("[%d]%v\n", i, charDisplayString(c))
 		}
 
-		fmt.Printf("%s:", lang.UIText("cli_newgame_select_char"))
+		fmt.Printf("%s:", lang.Text("ui", "cli_newgame_select_char"))
 		for scan.Scan() {
 			input := scan.Text()
 			id, err := strconv.Atoi(input)
 			if err != nil {
 				fmt.Printf("%s:%s\n",
-					lang.UIText("cli_nan_error"), input)
+					lang.Text("ui", "cli_nan_error"), input)
 			}
 			if id >= 0 && id < len(playableChars) {
 				pc = playableChars[id]
@@ -73,9 +73,9 @@ func newGameDialog() (*core.Game, error) {
 			}
 		}
 
-		fmt.Printf("%s:%v\n", lang.UIText("cli_newgame_summary"),
+		fmt.Printf("%s:%v\n", lang.Text("ui", "cli_newgame_summary"),
 			charDisplayString(pc))
-		fmt.Printf("%s:", lang.UIText("cli_accept_dialog"))
+		fmt.Printf("%s:", lang.Text("ui", "cli_accept_dialog"))
 		scan.Scan()
 		input := scan.Text()
 		if input != "r" {
@@ -87,7 +87,7 @@ func newGameDialog() (*core.Game, error) {
 	pcs = append(pcs, pc)
 	g, err := flame.StartGame(pcs)
 	if err != nil {
-		return nil, fmt.Errorf("%s:%v", lang.UIText("cli_newgame_start_err"), err)
+		return nil, fmt.Errorf("%s:%v", lang.Text("ui", "cli_newgame_start_err"), err)
 	}
 	return g, nil 
 }

@@ -29,7 +29,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	//"runtime/debug"
 
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/data/text/lang"
@@ -61,10 +60,10 @@ func LoadConfig() error {
 		return fmt.Errorf("fail_to_load_some_conf_values:%v", err)
 	}
 
-	langID = confValues[0]
-	enginelog.EnableDebug(confValues[1] == "true")
+	langID = confValues["lang"]
+	enginelog.EnableDebug(confValues["debug"] == "true")
 	// Auto load module.
-	modNamePath := strings.Split(confModVal[0], ";")
+	modNamePath := strings.Split(confModVal["module"], ";")
 	if modNamePath[0] != "" {
 		if len(modNamePath) < 2 {
 			modName = modNamePath[0]

@@ -1,7 +1,7 @@
 /*
  * text.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,8 @@
  * 
  */
 
-// text package provides functions to retrive parameters from engine 
-// config files and text data from lang files.
-// Config/lang file data format:
+// text package provides functions to retrive
+// parameters from text files in format:
 // [text ID]:[text];[new-line]
 // ...
 package text
@@ -38,26 +37,25 @@ import (
 
 const (
 	LANG_FILE_EXT = ".lang"
-	
 	ID_TEXT_SEP = ":"
 	LINE_TERMINATOR = ";"
 	COMMENT_PREFIX = "#"
 )
 
-// ReadDisplayText retrives text(one or more) with specified IDs from file 
-// from sepcified path.
+// ReadDisplayText retrives text values with specified IDs from file 
+// with sepcified path. Returns map with text values as values and IDs as keys.
 // In case of error(file/ID not found) returns string with error message 
 // instead of text. 
-func ReadDisplayText(filePath string, textIDs ...string) (texts []string) {
+func ReadDisplayText(filePath string, ids ...string) map[string]string {
+	texts := make(map[string]string)
 	file, err := os.Open(filePath)
 	if err != nil {
-		texts = append(texts, fmt.Sprintf("CANT_OPEN:%s", filePath))
-		return
+		texts["err"] = fmt.Sprintf("CANT_OPEN:%s", filePath)
+		return texts
 	}
 	defer file.Close()
-
 	scann := bufio.NewScanner(file)
-	for _, id := range textIDs {
+	for _, id := range ids {
 		var found = false
 		file.Seek(0, 0) // reset file pointer
 		for scann.Scan() {
@@ -69,24 +67,23 @@ func ReadDisplayText(filePath string, textIDs ...string) (texts []string) {
 			lineParts := strings.Split(line, ID_TEXT_SEP)
 			if lineParts[0] == id {
 				t := lineParts[1]
-				texts = append(texts,
-					strings.TrimSuffix(t, LINE_TERMINATOR))
+				texts[id] = strings.TrimSuffix(t, LINE_TERMINATOR)
 				found = true
 				break
 			}
 		}
 		if !found {
-			texts = append(texts, fmt.Sprintf("TEXT_NOT_FONUD:%v", id))
+			texts[id] = fmt.Sprintf("TEXT_NOT_FONUD:%v", id)
 		}
 	}
-	
-	return
+	return texts
 }
 
-// ReadConfigValue retrives text(one or more) with specified IDs from file 
-// from sepcified path.
-// Returns error if file or at least one speicfied ID was not found.
-func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
+// ReadConfigValue retrives text values with specified IDs from file 
+// with sepcified path.
+// Returns map with text values as values and IDs as keys or
+// error if file or at least one speicfied ID was not found.
+func ReadConfigValue(filePath string, ids ...string) (map[string]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("CANT_OPEN:%s", filePath)
@@ -94,8 +91,8 @@ func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 	defer file.Close()
 
 	scan := bufio.NewScanner(file)
-	var texts []string
-	for _, id := range textIDs {
+	texts := make(map[string]string)
+	for _, id := range ids {
 		found := false
 		file.Seek(0, 0) // reset file pointer
 		for scan.Scan() {
@@ -107,8 +104,7 @@ func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 			lineParts := strings.Split(line, ID_TEXT_SEP)
 			if lineParts[0] == id {
 				t := lineParts[1]
-				texts = append(texts,
-					strings.TrimSuffix(t, LINE_TERMINATOR))
+				texts[id] = strings.TrimSuffix(t, LINE_TERMINATOR)
 				found = true
 				break
 			}
@@ -121,21 +117,23 @@ func ReadConfigValue(filePath string, textIDs ...string) ([]string, error) {
 }
 
 // ReadConfigInt retrives integer(one or more) with specified IDs from file 
-// from sepcified path.
-// Returns error if file or at least one speicfied ID was not found, or
-// value for at least one specified ID was not parseable to integer.
-func ReadConfigInt(filePath string, ids ...string) ([]int, error) {
+// with sepcified path.
+// Returns map with integers as values and IDs as keys or error if file
+// or at least one speicfied ID was not found, or was not parseable to integer.
+func ReadConfigInt(filePath string, ids ...string) (map[string]int, error) {
+	// Read values as text.
 	vals, err := ReadConfigValue(filePath, ids...)
 	if err != nil {
 		return nil, err
 	}
-	var ints []int
-	for _, v := range vals {
+	// Parse values to integers.
+	ints := make(map[string]int)
+	for id, v := range vals {
 		i, err := strconv.Atoi(v)
 		if err != nil {
 			return nil, err
 		}
-		ints = append(ints, i)
+		ints[id] = i
 	}
 	return ints, nil
 }

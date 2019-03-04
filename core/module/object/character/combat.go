@@ -28,6 +28,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/core/rng"
 )
@@ -63,18 +64,44 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	}
 }
 
+
+// Damage retruns min and max damage value,
+// including weapons, active effects, etc.
+func (c *Character) Damage() (int, int) {
+	min, max := c.Attributes().Damage()
+	if it := c.Equipment().HandRight().Item(); it != nil {
+		if w, ok := it.(*item.Weapon); ok {
+			dmgMin, dmgMax := w.Damage()
+			min += dmgMin
+			max += dmgMax
+		}
+	}
+	return min, max
+}
+
 // UseSkill uses specified skill on current target.
 func (c *Character) UseSkill(s *skill.Skill) {
+	if c.Casting() {
+		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
+			lang.Text("ui", "cant_do_right_now"))
+		select {
+		case c.combatlog <- msg:
+		default:
+		}
+		return
+	}
 	for _, charSkill := range c.Skills() {
 		if charSkill == s {
 			err := s.Cast(c, c.Targets()[0])
 			if err != nil {
-				c.combatlog <- fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
+				c.combatlog <- fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(),
+					err)
 			}
 			return
 		}
 	}
-	msg := fmt.Sprintf("%s:%s:skill_not_known", c.Name(), s.Name())
+	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
+		lang.Text("ui", "skill_not_known"))
 	select {
 	case c.combatlog <- msg:
 	default:

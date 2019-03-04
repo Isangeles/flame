@@ -1,7 +1,7 @@
 /*
  * mod.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,7 +120,7 @@ func LoadScenario(mod *module.Module, id string) error {
 		}
 		// Set name.
 		name := text.ReadDisplayText(npcsLangPath, char.ID())
-		char.SetName(name[0])
+		char.SetName(name[char.ID()])
 		// Set serial.
 		err = mod.AssignSerial(char)
 		if err != nil {
@@ -165,16 +165,16 @@ func modConf(path, lang string) (module.ModConf, error) {
 		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_values:%s",
 			err)
 	}
-	chapters := strings.Split(confValues[1], ";")
+	chapters := strings.Split(confValues["chapters"], ";")
 	if len(chapters) < 1 {
 		return module.ModConf{}, fmt.Errorf("no_chapters_specified")
 	}
 	conf := module.ModConf{
-		Name:            confValues[0],
+		Name:            confValues["name"],
 		Path:            path,
 		Lang:            lang,
-		NewcharAttrsMin: confInts[0],
-		NewcharAttrsMax: confInts[1],
+		NewcharAttrsMin: confInts["new_char_attrs_min"],
+		NewcharAttrsMax: confInts["new_char_attrs_max"],
 		Chapters:        chapters,
 	}
 	return conf, nil
@@ -191,7 +191,7 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	}
 	conf := module.ChapterConf{
 		Path:chapterPath,
-		StartScenID:confValues[0],
+		StartScenID:confValues["start_scenario"],
 	}
 	return conf, nil
 }
