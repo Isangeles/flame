@@ -60,9 +60,10 @@ type ObjectSkillsXML struct {
 
 // Struct for object skill XML node.
 type ObjectSkillXML struct {
-	XMLName xml.Name `xml:"skill"`
-	ID      string   `xml:"id,attr"`
-	Serial  string   `xml:"serial,attr"`
+	XMLName  xml.Name `xml:"skill"`
+	ID       string   `xml:"id,attr"`
+	Serial   string   `xml:"serial,attr"`
+	Cooldown int64    `xml:"cooldown,attr"`
 }
 
 // xmlObjectEffects parses specified effects to XML
@@ -70,7 +71,6 @@ type ObjectSkillXML struct {
 func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffectsXML {
 	xmlEffs := new(ObjectEffectsXML)
 	for _, e := range effs {
-		eTimeSec := int64(e.Time() / 1000)
 		xmlEffSource := ObjectEffectSourceXML{}
 		if e.Source() != nil {
 			xmlEffSource.ID = e.Source().ID()
@@ -79,7 +79,7 @@ func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffectsXML {
 		xmlEff := ObjectEffectXML{
 			ID:     e.ID(),
 			Serial: e.Serial(),
-			Time:   eTimeSec,
+			Time:   e.Time(),
 			Source: xmlEffSource,
 		}
 		xmlEffs.Nodes = append(xmlEffs.Nodes, xmlEff)
@@ -93,8 +93,9 @@ func xmlObjectSkills(skills ...*skill.Skill) *ObjectSkillsXML {
 	xmlSkills := new(ObjectSkillsXML)
 	for _, s := range skills {
 		xmlSkill := ObjectSkillXML{
-			ID: s.ID(),
-			Serial: s.Serial(),
+			ID:       s.ID(),
+			Serial:   s.Serial(),
+			Cooldown: s.Cooldown(),
 		}
 		xmlSkills.Nodes = append(xmlSkills.Nodes, xmlSkill)
 	}

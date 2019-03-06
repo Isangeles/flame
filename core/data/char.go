@@ -265,6 +265,7 @@ func buildCharacter(mod *module.Module, data res.CharacterData) *character.Chara
 			continue
 		}
 		skill.SetSerial(skillData.Serial)
+		skill.SetCooldown(skillData.Cooldown)
 		char.AddSkill(skill)
 	}
 	return char

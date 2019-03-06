@@ -1,7 +1,7 @@
 /*
  * unmarshal.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import (
 
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/object/skill"
 )
 
 var (
@@ -188,5 +189,23 @@ func UnmarshalEqSlot(slot string) (character.EquipmentSlotType, error) {
 	default:
 		return -1, fmt.Errorf("unsupported_eq_slot_type_value:%s",
 			slot)
+	}
+}
+
+// UnmarshalSkillRange parses specified skill range XML attribute
+// to skill range type.
+func UnmarshalSkillRange(rg string) (skill.Range, error) {
+	switch rg {
+	case "touch":
+		return skill.Range_touch, nil
+	case "close":
+		return skill.Range_close, nil
+	case "far":
+		return skill.Range_far, nil
+	case "huge":
+		return skill.Range_huge, nil
+	default:
+		return -1, fmt.Errorf("unsupported_skill_range_type_value:%s",
+			rg)
 	}
 }

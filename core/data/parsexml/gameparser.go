@@ -1,7 +1,7 @@
 /*
  * gameparser.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/save"
-	"github.com/isangeles/flame/core/module"
 )
 
 // Struct for saved game XML node.
@@ -98,8 +97,7 @@ func MarshalSaveGame(game *save.SaveGame) (string, error) {
 			xmlChars := &xmlArea.CharsNode
 			for _, c := range a.Characters() {
 				xmlChar := xmlCharacter(c)
-				charSerialID := module.FullSerial(xmlChar.ID,
-					xmlChar.Serial)
+				charSerialID := xmlChar.ID + "_" + xmlChar.Serial
 				for _, pc := range game.Players {	
 					if pc.SerialID() == charSerialID {
 						xmlChar.PC = true

@@ -57,8 +57,8 @@ func New(data res.EffectData) *Effect {
 	}
 	// Sub-effects.
 	e.subeffects = data.Subeffects
-	e.duration = int64(data.Duration * 1000)
-	e.SetTimeSeconds(data.Duration)
+	e.duration = int64(data.Duration)
+	e.SetTime(data.Duration)
 	return e
 }
 
@@ -124,10 +124,10 @@ func (e *Effect) SetName(name string) {
 	e.name = name
 }
 
-// SetTimeSeconds sets specified value as effect
-// duration time in seconds.
-func (e *Effect) SetTimeSeconds(time int64) {
-	e.time = int64(time * 1000)
+// SetTime sets specified value as effect
+// duration time in milliseconds.
+func (e *Effect) SetTime(time int64) {
+	e.time = time
 }
 
 // SetSource sets specified targetable object

@@ -112,7 +112,7 @@ func buildXMLEffectData(xmlEffect parsexml.EffectXML) res.EffectData {
 	mods := buildXMLModifiers(&xmlEffect.ModifiersNode)
 	data := res.EffectData{
 		ID: xmlEffect.ID,
-		Duration: xmlEffect.Duration,
+		Duration: xmlEffect.Duration * 1000,
 		Subeffects: xmlEffect.Subeffects.Effects,
 	}
 	for _, m := range mods {

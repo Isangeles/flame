@@ -32,6 +32,8 @@ import (
 type SkillUser interface {
 	ID() string
 	Serial() string
+	Skills() map[string]*Skill
 	MeetReqs(r []req.Requirement) bool
 	TakeHit(h effect.Hit)
+	Position() (x, y float64)
 }

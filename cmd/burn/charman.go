@@ -30,6 +30,7 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module/modutil"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
 )
@@ -261,6 +262,21 @@ func showCharOption(cmd Command) (int, string) {
 		out := ""
 		for _, char := range chars {
 			out += fmt.Sprintf("%d ", char.MaxMana())
+		}
+		return 0, out
+	case "range":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		tar := flame.Game().Module().Character(cmd.Args()[1])
+		if tar == nil {
+			return 8, fmt.Sprintf("%s:object_not_found:%s",
+				CHAR_MAN, cmd.Args()[1])
+		}
+		out := ""
+		for _, char := range chars {
+			out += fmt.Sprintf("%f ", object.Range(char, tar))
 		}
 		return 0, out
 	default:

@@ -33,15 +33,16 @@ import (
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Module struct represents engine module.
 type Module struct {
 	conf    ModConf
 	chapter *Chapter
-	items   []Serialer
-	effects []Serialer
-	skills  []Serialer
+	items   []serial.Serialer
+	effects []serial.Serialer
+	skills  []serial.Serialer
 }
 
 // NewModule creates new instance of module with specified configuration
@@ -49,7 +50,6 @@ type Module struct {
 func NewModule(conf ModConf) *Module {
 	m := new(Module)
 	m.conf = conf
-	m.items = make([]Serialer, 0)
 	return m
 }
 
@@ -139,7 +139,7 @@ func (m *Module) Object(id, serial string) effect.Target {
 // AssignSerial sets unique serial value for
 // specified object with serial value.
 // Returns error if no active chapter set.
-func (m *Module) AssignSerial(ob Serialer) error {
+func (m *Module) AssignSerial(ob serial.Serialer) error {
 	switch ob := ob.(type) {
 	case *character.Character:
 		chapter := m.Chapter()
@@ -166,35 +166,35 @@ func (m *Module) AssignSerial(ob Serialer) error {
 // object with serial ID.
 func (m *Module) assignCharacterSerial(char *character.Character) {
 	chars := m.Chapter().CharactersWithID(char.ID())
-	objects := make([]Serialer, 0)
+	objects := make([]serial.Serialer, 0)
 	for _, c := range chars {
 		objects = append(objects, c)
 	}
-	serial := uniqueSerial(objects)
+	ser := serial.UniqueSerial(objects)
 	// Assing serial value to char.
-	char.SetSerial(serial)
+	char.SetSerial(ser)
 }
 
 // assignItemSerial assigns unique serial value to
 // specified item.
 func (m *Module) assignItemSerial(it item.Item) {
-	serial := uniqueSerial(m.items)
-	it.SetSerial(serial)
+	ser := serial.UniqueSerial(m.items)
+	it.SetSerial(ser)
 	m.items = append(m.items, it)
 }
 
 // assignEffectSerial assigns unique serial value to
 // specified effect.
 func (m *Module) assignEffectSerial(ef *effect.Effect) {
-	serial := uniqueSerial(m.effects)
-	ef.SetSerial(serial)
+	ser := serial.UniqueSerial(m.effects)
+	ef.SetSerial(ser)
 	m.effects = append(m.effects, ef)
 }
 
 // assignSkillSerial assigns unique serial value to
 // specified skill.
 func (m *Module) assignSkillSerial(sk *skill.Skill) {
-	serial := uniqueSerial(m.skills)
-	sk.SetSerial(serial)
+	ser := serial.UniqueSerial(m.skills)
+	sk.SetSerial(ser)
 	m.skills = append(m.skills, sk)
 }

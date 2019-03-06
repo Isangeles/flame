@@ -6,17 +6,18 @@ MAJOR:
 * NPC AI
 * Scripts processor
 * Armors & misc items
-* Skills
 * Game objects
 * Parse imported characters to characters data objects
 MINOR:
 * More detiled readme
 * Tutorials
 * More tools/options for CI
+* Improve generating serial values for game object
 DONE:
 * Generating of unique serial IDs for game objects
 * Save/load game mechanism
 * Game characters inventory and equipment
 * Weapons items
 * Effects & modifiers
+* Skills
 

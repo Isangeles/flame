@@ -1,5 +1,5 @@
 /*
- * target.go
+ * object.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,21 +21,33 @@
  *
  */
 
-package effect
+package object
 
-// Interfece for effects targets.
-type Target interface {
+import (
+	"math"
+)
+
+// Interface for game objects.
+type Object interface {
 	ID() string
 	Serial() string
-	Health() int
-	Mana() int
-	SetMana(val int)
-	Experience() int
-	SetExperience(val int)
-	Live() bool
-	Damage() (int, int)
-	Hit() Hit
-	TakeHit(h Hit)
-	TakeEffect(e *Effect)
+}
+
+// Interface for all object with
+// position on game world map.
+type Positioner interface {
 	Position() (x, y float64)
+}
+
+// Equals checks whether two specified objects
+// represents the same game object.
+func Equals(ob1, ob2 Object) bool {
+	return ob1.ID() + ob1.Serial() == ob2.ID() + ob2.Serial()
+}
+
+// Range returns range between two objects.
+func Range(ob1, ob2 Positioner) float64 {
+	x1, y1 := ob1.Position()
+	x2, y2 := ob2.Position()
+	return math.Hypot(x1-x2, y1-y2)
 }

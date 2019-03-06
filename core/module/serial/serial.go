@@ -1,7 +1,7 @@
 /*
  * serial.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  *
  */
 
-package module
+package serial
 
 import (
 	"fmt"
@@ -41,21 +41,21 @@ func FullSerial(id, serial string) string {
 	return fmt.Sprintf("%s_%s", id, serial)
 }
 
-// uinqueSerial generates unique serial value accross
+// UinqueSerial generates unique serial value accross
 // specified group of objects with serial value.
-func uniqueSerial(group []Serialer) string {
+func UniqueSerial(group []Serialer) string {
 	// Choose serial value unique accross chars.
 	serial := fmt.Sprintf("%d", len(group))
 	// Ensure serial value uniqueness.
-	for i := len(group); !isSerialUnique(group, serial); i++ {
+	for i := len(group); !unique(group, serial); i++ {
 		serial = fmt.Sprintf("%d", i)
 	}
 	return serial
 }
 
-// isSerialUnique checks whether specified serial value
+// serialUnique checks whether specified serial value
 // is unique across specified objects with serial value.
-func isSerialUnique(group []Serialer, serial string) bool {
+func unique(group []Serialer, serial string) bool {
 	for _, ob := range group {
 		if ob.Serial() == serial {
 			return false

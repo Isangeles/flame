@@ -25,14 +25,14 @@ package data
 
 import (
 	"fmt"
-	"os"
 	"io/ioutil"
-	"strings"
+	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/log"
@@ -120,11 +120,18 @@ func buildXMLSkillData(xmlSkill parsexml.SkillXML) res.SkillData {
 		}
 		effects = append(effects, eff)
 	}
+	skillRange, err := parsexml.UnmarshalSkillRange(xmlSkill.Range)
+	if err != nil {
+		log.Err.Printf("data:build_xml_skill_data:fail_to_parse_range:%v",
+			err)
+	}
 	data := res.SkillData{
-		ID: xmlSkill.ID,
-		Cast: xmlSkill.Cast,
-		Effects: effects,
-		UseReqs: reqs,
+		ID:       xmlSkill.ID,
+		Cast:     xmlSkill.Cast,
+		Cooldown: xmlSkill.Cooldown,
+		Range:    int(skillRange),
+		Effects:  effects,
+		UseReqs:  reqs,
 	}
 	return data
 }

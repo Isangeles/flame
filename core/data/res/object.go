@@ -1,5 +1,5 @@
 /*
- * target.go
+ * object.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,21 +21,20 @@
  *
  */
 
-package effect
+package res
 
-// Interfece for effects targets.
-type Target interface {
-	ID() string
-	Serial() string
-	Health() int
-	Mana() int
-	SetMana(val int)
-	Experience() int
-	SetExperience(val int)
-	Live() bool
-	Damage() (int, int)
-	Hit() Hit
-	TakeHit(h Hit)
-	TakeEffect(e *Effect)
-	Position() (x, y float64)
+// Struct for object effects data.
+type ObjectEffectData struct {
+	ID           string
+	Serial       string
+	Time         int64
+	SourceID     string
+	SourceSerial string
+}
+
+// Struct for object skill data.
+type ObjectSkillData struct {
+	ID       string
+	Serial   string
+	Cooldown int64
 }

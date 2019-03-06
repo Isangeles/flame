@@ -38,11 +38,13 @@ type SkillsBaseXML struct {
 
 // Struct for skill XML node.
 type SkillXML struct {
-	XMLName xml.Name        `xml:"skill"`
-	ID      string          `xml:"id,attr"`
-	Cast    int             `xml:"cast,attr"`
-	Effects SkillEffectsXML `xml:"effects"`
-	Reqs    ReqsXML         `xml:"reqs"`
+	XMLName  xml.Name        `xml:"skill"`
+	ID       string          `xml:"id,attr"`
+	Cast     int             `xml:"cast,attr"`
+	Cooldown int             `xml:"cooldown,attr"`
+	Range    string          `xml:"range,attr"`
+	Effects  SkillEffectsXML `xml:"effects"`
+	Reqs     ReqsXML         `xml:"reqs"`
 }
 
 // Struct for skill effects XML node.

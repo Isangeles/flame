@@ -29,10 +29,12 @@ import (
 
 // Struct for skill data.
 type SkillData struct {
-	ID      string
-	Name    string
-	Cast    int
-	UseReqs []req.Requirement
-	Effects []EffectData
+	ID       string
+	Name     string
+	Cast     int
+	Cooldown int
+	Range    int
+	UseReqs  []req.Requirement
+	Effects  []EffectData
 }
 

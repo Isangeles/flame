@@ -218,7 +218,7 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 			continue
 		}
 		effect.SetSerial(eData.Serial)
-		effect.SetTimeSeconds(eData.Time)
+		effect.SetTime(eData.Time)
 		// Restore effect source.
 		source := mod.Object(eData.SourceID, eData.SourceSerial)
 		if source == nil {
