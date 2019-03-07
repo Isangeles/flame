@@ -24,9 +24,9 @@
 ```
 
 ## Configuration
-Configuration values are loaded from '.flame' file in Flame executible directory.
+Configuration values are loaded from '.flame' file in Flame executable directory.
 
-###Configuration values
+### Configuration values
 ```
   lang:[language ID];
 ```
@@ -35,7 +35,7 @@ Description: specifies game language, language ID is name of directory with tran
 ```
   module:[module ID];[module path](optional);
 ```
-Description: specifies module to load at start, module ID stands for ID specified in 'mod.conf' file inside main module directory, module path is optional and stands for module directory path, if not provided engine will search default modules path('data/modules').
+Description: specifies module to load at start, module ID is ID specified in 'mod.conf' file inside main module directory, module path is optional and stands for module directory path, if not provided engine will search default modules path('data/modules').
 
 ```
   debug:[true/false];

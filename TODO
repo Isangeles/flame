@@ -12,7 +12,6 @@ MINOR:
 * More detiled readme
 * Tutorials
 * More tools/options for CI
-* Improve generating serial values for game object
 DONE:
 * Generating of unique serial IDs for game objects
 * Save/load game mechanism
