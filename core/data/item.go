@@ -35,6 +35,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
@@ -119,10 +120,7 @@ func weapon(mod *module.Module, id string) (*item.Weapon, error) {
 	w := item.NewWeapon(weaponData)
 	name := lang.Text("items", w.ID())
 	w.SetName(name)
-	err := mod.AssignSerial(w)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_assign_item_serial:%v", err)
-	}
+	serial.AssignSerial(w)
 	return w, nil
 }
 

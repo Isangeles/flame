@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
@@ -58,7 +59,7 @@ func NewGame(mod *module.Module, players []*character.Character) (*Game, error) 
 	// All players to main area of start scenario.
 	startArea := startScen.Mainarea()
 	for _, pc := range g.pcs {
-		g.Module().AssignSerial(pc)
+		serial.AssignSerial(pc)
 		err := g.ChangePlayerArea(startArea, pc.SerialID())
 		if err != nil {
 			return nil, fmt.Errorf("fail_to_change_player_area:%v",

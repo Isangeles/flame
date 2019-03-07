@@ -27,22 +27,14 @@
 package module
 
 import (
-	"fmt"
-
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/effect"
-	"github.com/isangeles/flame/core/module/object/item"
-	"github.com/isangeles/flame/core/module/object/skill"
-	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Module struct represents engine module.
 type Module struct {
 	conf    ModConf
 	chapter *Chapter
-	items   []serial.Serialer
-	effects []serial.Serialer
-	skills  []serial.Serialer
 }
 
 // NewModule creates new instance of module with specified configuration
@@ -72,17 +64,6 @@ func (m *Module) Path() string {
 // FullPath return full path to module directory.
 func (m *Module) FullPath() string {
 	return m.conf.Path
-}
-
-// ChaptersPath returns path to module chapters.
-func (m *Module) ChaptersPath() string {
-	return m.conf.ChaptersPath()
-}
-
-// CharactersPath returns path to directory for
-// exported characters.
-func (m *Module) CharactersPath() string {
-	return m.conf.CharactersPath()
 }
 
 // Chapter returns current module chapter.
@@ -134,67 +115,4 @@ func (m *Module) Object(id, serial string) effect.Target {
 		return char
 	}
 	return nil
-}
-
-// AssignSerial sets unique serial value for
-// specified object with serial value.
-// Returns error if no active chapter set.
-func (m *Module) AssignSerial(ob serial.Serialer) error {
-	switch ob := ob.(type) {
-	case *character.Character:
-		chapter := m.Chapter()
-		if chapter == nil {
-			return fmt.Errorf("no active chapter set")
-		}
-		m.assignCharacterSerial(ob)
-		return nil
-	case item.Item:
-		m.assignItemSerial(ob)
-		return nil
-	case *effect.Effect:
-		m.assignEffectSerial(ob)
-		return nil
-	case *skill.Skill:
-		m.assignSkillSerial(ob)
-		return nil
-	default:
-		return fmt.Errorf("unsupported game object type")
-	}
-}
-
-// assignCharacterSerial sets unique serial value for specified
-// object with serial ID.
-func (m *Module) assignCharacterSerial(char *character.Character) {
-	chars := m.Chapter().CharactersWithID(char.ID())
-	objects := make([]serial.Serialer, 0)
-	for _, c := range chars {
-		objects = append(objects, c)
-	}
-	ser := serial.UniqueSerial(objects)
-	// Assing serial value to char.
-	char.SetSerial(ser)
-}
-
-// assignItemSerial assigns unique serial value to
-// specified item.
-func (m *Module) assignItemSerial(it item.Item) {
-	ser := serial.UniqueSerial(m.items)
-	it.SetSerial(ser)
-	m.items = append(m.items, it)
-}
-
-// assignEffectSerial assigns unique serial value to
-// specified effect.
-func (m *Module) assignEffectSerial(ef *effect.Effect) {
-	ser := serial.UniqueSerial(m.effects)
-	ef.SetSerial(ser)
-	m.effects = append(m.effects, ef)
-}
-
-// assignSkillSerial assigns unique serial value to
-// specified skill.
-func (m *Module) assignSkillSerial(sk *skill.Skill) {
-	ser := serial.UniqueSerial(m.skills)
-	sk.SetSerial(ser)
-	m.skills = append(m.skills, sk)
 }

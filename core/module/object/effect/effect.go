@@ -26,6 +26,7 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
@@ -152,6 +153,7 @@ func (e *Effect) SubEffects() []*Effect {
 				e.ID(), e.Serial(), eid)
 		}
 		subeff := New(data)
+		serial.AssignSerial(subeff)
 		subeff.SetSource(e.source)
 		subeffects = append(subeffects, subeff)
 	}

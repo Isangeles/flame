@@ -150,7 +150,7 @@ func execute(input string) {
 			break
 		}
 		chars, err := data.ImportCharactersDir(flame.Mod(),
-			flame.Mod().CharactersPath())
+			flame.Mod().Conf().CharactersPath())
 		if err != nil {
 			log.Err.Printf("fail_to_import_module_characters:%v\n", err)
 			break

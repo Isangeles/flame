@@ -27,12 +27,51 @@ import (
 	"fmt"
 )
 
+var (
+	base map[string][]Serialer
+)
+
 // Interface for all game objects with
 // unique serial ID.
 type Serialer interface {
 	ID() string
 	Serial() string
 	SetSerial(serial string)
+}
+
+// On init.
+func init() {
+	base = make(map[string][]Serialer)
+}
+
+// AssignSerial assigns and registers unique serial value to
+// specified object among all previously registered objects with
+// same ID, only registers serial if object already has uniqe
+// serial value.
+// Assigns new serial if specified object has serial
+// value but its not unique among previously
+// registered objects.
+func AssignSerial(s Serialer) {
+	// Get all objects with same ID.
+	serialers := base[s.ID()]
+	// Check whether this is first object with such ID.
+	if serialers == nil {
+		if s.Serial() == "" {
+			s.SetSerial("0")
+		}
+		regSerial(s)
+		return
+	}
+	// Check whether object has unique serial value already.
+	if s.Serial() != "" && unique(serialers, s.Serial()) {
+		regSerial(s)
+		return
+	}
+	// Generate & assign unique serial.
+	s.SetSerial(UniqueSerial(serialers))
+	// Save to base.
+	base[s.ID()] = append(serialers, s)
+	return
 }
 
 // FullSerial retruns full serial ID string
@@ -62,4 +101,14 @@ func unique(group []Serialer, serial string) bool {
 		}
 	}
 	return true
+}
+
+// regSerial registers specified object
+// in base with object with serial values.
+func regSerial(s Serialer) {
+	serialers := base[s.ID()]
+	if serialers == nil {
+		serialers = make([]Serialer, 0)
+	}
+	base[s.ID()] = append(serialers, s)
 }

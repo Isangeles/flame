@@ -29,7 +29,6 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/modutil"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -339,7 +338,7 @@ func (c *Character) Effects() []*effect.Effect {
 // AddEffect add specified effect to character effects.
 func (c *Character) AddEffect(e *effect.Effect) {
 	e.SetTarget(c)
-	c.effects[modutil.SerialID(e.ID(), e.Serial())] = e
+	c.effects[e.ID() + "_" + e.Serial()] = e
 }
 
 // Skills return all character skills.

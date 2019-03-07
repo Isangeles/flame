@@ -30,6 +30,7 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Handles specified module command,
@@ -147,11 +148,7 @@ func addModuleOption(cmd Command) (int, string) {
 				if a.ID() != areaID {
 					continue
 				}
-				err := flame.Mod().AssignSerial(char)
-				if err != nil {
-					return 9, fmt.Sprintf("%s:fail_to_assign_serial:%v",
-						MODULE_MAN, err)
-				}
+				serial.AssignSerial(char)
 				a.AddCharacter(char)
 				return 0, ""
 			}

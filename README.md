@@ -23,6 +23,25 @@
   $ ./cmd
 ```
 
+## Configuration
+Configuration values are loaded from '.flame' file in Flame executible directory.
+
+###Configuration values
+```
+  lang:[language ID];
+```
+Description: specifies game language, language ID is name of directory with translation files in lang directories(e.g. 'data/lang' or 'data/modules/[mod]/lang').
+
+```
+  module:[module ID];[module path](optional);
+```
+Description: specifies module to load at start, module ID stands for ID specified in 'mod.conf' file inside main module directory, module path is optional and stands for module directory path, if not provided engine will search default modules path('data/modules').
+
+```
+  debug:[true/false];
+```
+Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
+
 ## Flame CLI:
 Flame comes with a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
 

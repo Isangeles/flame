@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Interface for skills.
@@ -228,7 +229,7 @@ func (s *Skill) buildEffects() []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
 	for _, ed := range s.effects {
 		e := effect.New(ed)
-		e.SetSerial(s.ID() + "_" + s.Serial())
+		serial.AssignSerial(e)
 		effects = append(effects, e)
 	}
 	return effects

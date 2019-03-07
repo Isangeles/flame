@@ -35,6 +35,7 @@ import (
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
@@ -54,10 +55,7 @@ func Skill(mod *module.Module, id string) (*skill.Skill, error) {
 	s := skill.New(data)
 	name := lang.Text("skills", s.ID())
 	s.SetName(name)
-	err := mod.AssignSerial(s)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_assing_serial_value:%v", err)
-	}
+	serial.AssignSerial(s)
 	return s, nil
 }
 

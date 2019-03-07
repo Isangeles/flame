@@ -29,7 +29,6 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/module/modutil"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -236,7 +235,15 @@ func showCharOption(cmd Command) (int, string) {
 		out := ""
 		for _, char := range chars {
 			for _, e := range char.Effects() {
-				out += fmt.Sprintf("%s ", modutil.SerialID(e.ID(), e.Serial()))
+				out += fmt.Sprintf("%s ", e.ID() + "_" + e.Serial())
+			}
+		}
+		return 0, out
+	case "skills":
+		out := ""
+		for _, char := range chars {
+			for _, s := range char.Skills() {
+				out += fmt.Sprintf("%s ", s.ID() + "_" + s.Serial())
 			}
 		}
 		return 0, out
@@ -297,7 +304,7 @@ func exportCharOption(cmd Command) (int, string) {
 			cmd.TargetArgs()[0])
 	}
 
-	err := data.ExportCharacter(char, flame.Game().Module().CharactersPath())
+	err := data.ExportCharacter(char, flame.Game().Module().Conf().CharactersPath())
 	if err != nil {
 		return 8, fmt.Sprintf("%s:%v", CHAR_MAN, err)
 	}

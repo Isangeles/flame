@@ -35,6 +35,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
@@ -54,10 +55,7 @@ func Effect(mod *module.Module, id string) (*effect.Effect, error) {
 	e := effect.New(data)
 	name := lang.Text("effects", e.ID())
 	e.SetName(name)
-	err := mod.AssignSerial(e)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_assing_serial_value:%v", err)
-	}
+	serial.AssignSerial(e)
 	return e, nil
 }
 

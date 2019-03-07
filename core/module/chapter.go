@@ -28,6 +28,7 @@ import (
 	"path/filepath"
 	
 	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/core/module/object/character"
 )
 
@@ -190,18 +191,26 @@ func (c *Chapter) CharacterArea(char *character.Character) (*scenario.Area, erro
 func (c *Chapter) generateSerials() {
 	// Characters.
 	for _, char := range c.Characters() {
-		if char.Serial() == "" { // assumes assigned serial uniqueness
-			c.Module().AssignSerial(char)
+		if char.Serial() == "" {
+			serial.AssignSerial(char)
 		}
 		for _, i := range char.Inventory().Items() {
-			if i.Serial() == "" {
-				c.Module().AssignSerial(i)
+			if i.Serial() != "" {
+				continue
 			}
+			serial.AssignSerial(i)
 		}
 		for _, e := range char.Effects() {
-			if e.Serial() == "" {
-				c.Module().AssignSerial(e)
+			if e.Serial() != "" {
+				continue
 			}
+			serial.AssignSerial(e)			
+		}
+		for _, s := range char.Skills() {
+			if s.Serial() != "" {
+				continue
+			}
+			serial.AssignSerial(s)
 		}
 	}
 }

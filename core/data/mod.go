@@ -35,6 +35,7 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Module creates new module from specified path.
@@ -54,7 +55,7 @@ func Module(path, langID string) (*module.Module, error) {
 // specified ID.
 func LoadChapter(mod *module.Module, id string) error {
 	// Load chapter config file.
-	chapPath := filepath.FromSlash(mod.ChaptersPath() +
+	chapPath := filepath.FromSlash(mod.Conf().ChaptersPath() +
 		"/" + mod.Conf().Chapters[0])
 	chapConf, err := chapterConf(chapPath)
 	if err != nil {
@@ -122,12 +123,8 @@ func LoadScenario(mod *module.Module, id string) error {
 		name := text.ReadDisplayText(npcsLangPath, char.ID())
 		char.SetName(name[char.ID()])
 		// Set serial.
-		err = mod.AssignSerial(char)
-		if err != nil {
-			log.Err.Printf("data_scenario_spawn_npc:%s:fail_to_assign_serial:%v",
-				xmlAreaChar.ID, err)
-			continue
-		}
+		serial.AssignSerial(char)
+		// Char to area.
 		mainarea.AddCharacter(char)
 	}
 	subareas := make([]*scenario.Area, 0)
