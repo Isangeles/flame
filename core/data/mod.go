@@ -83,20 +83,20 @@ func LoadScenario(mod *module.Module, id string) error {
 		return fmt.Errorf("no module chapter set")
 	}
 	// Load files.
-	scenPath := filepath.FromSlash(chap.ScenariosPath() + "/" +
+	scenPath := filepath.FromSlash(chap.Conf().ScenariosPath() + "/" +
 		id)
 	docScen, err := os.Open(scenPath)
 	if err != nil {
 		return fmt.Errorf("fail_to_open_scenario_file:%v", err)
 	}
 	defer docScen.Close()
-	npcsBasePath := filepath.FromSlash(chap.NPCPath() + "/npc" + CHARS_FILE_EXT)
+	npcsBasePath := filepath.FromSlash(chap.Conf().NPCPath() + "/npc" + CHARS_FILE_EXT)
 	docNPCs, err := os.Open(npcsBasePath)
 	if err != nil {
 		return fmt.Errorf("fail_to_open_characters_base_file:%v", err)
 	}
 	defer docNPCs.Close()
-	npcsLangPath := filepath.FromSlash(chap.LangPath() + "/npc" + text.LANG_FILE_EXT)
+	npcsLangPath := filepath.FromSlash(chap.Conf().LangPath() + "/npc" + text.LANG_FILE_EXT)
 	// Unmarshal scenario file.
 	xmlScen, err := parsexml.UnmarshalScenario(docScen)
 	if err != nil {

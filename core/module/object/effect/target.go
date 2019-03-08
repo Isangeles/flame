@@ -38,4 +38,5 @@ type Target interface {
 	TakeHit(h Hit)
 	TakeEffect(e *Effect)
 	Position() (x, y float64)
+	CombatLog() chan string
 }

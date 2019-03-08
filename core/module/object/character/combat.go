@@ -47,10 +47,7 @@ func (c *Character) TakeHit(hit effect.Hit) {
 	// TODO: handle resists.
 	c.SetHealth(c.Health() + hit.HP)
 	msg := fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
-	select {
-	case c.combatlog <- msg:
-	default:
-	}
+	c.sendCmb(msg)
 }
 
 // TakeEffects adds specified effects
@@ -58,10 +55,7 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	// TODO: handle resists.
 	c.AddEffect(e)
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
-	select {
-	case c.combatlog <- msg:
-	default:
-	}
+	c.sendCmb(msg)
 }
 
 
@@ -84,10 +78,7 @@ func (c *Character) UseSkill(s *skill.Skill) {
 	if c.Casting() {
 		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 			lang.Text("ui", "cant_do_right_now"))
-		select {
-		case c.combatlog <- msg:
-		default:
-		}
+		c.sendCmb(msg)
 		return
 	}
 	for _, charSkill := range c.Skills() {
@@ -102,8 +93,5 @@ func (c *Character) UseSkill(s *skill.Skill) {
 	}
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 		lang.Text("ui", "skill_not_known"))
-	select {
-	case c.combatlog <- msg:
-	default:
-	}
+	c.sendCmb(msg)
 }

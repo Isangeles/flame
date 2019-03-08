@@ -214,11 +214,9 @@ func (eqSlotType EquipmentSlotType) compact(itSlot item.Slot) bool {
 		return itSlot == item.Neck
 	case Chest:
 		return itSlot == item.Chest
-	case Hand_right:
-	case Hand_left:
+	case Hand_right, Hand_left:
 		return itSlot == item.Hand
-	case Finger_right:
-	case Finger_left:
+	case Finger_right, Finger_left:
 		return itSlot == item.Finger
 	case Legs:
 		return itSlot == item.Legs

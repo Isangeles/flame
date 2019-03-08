@@ -24,7 +24,9 @@
 package scenario
 
 import (
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/effect"
 )
 
 // Area struct represents game world area.
@@ -64,4 +66,16 @@ func (a *Area) ContainsCharacter(char *character.Character) bool {
 		}
 	}
 	return false
+}
+
+// NearTargets returns all targets near specified position.
+func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Target {
+	objects := make([]effect.Target, 0)
+	// Characters.
+	for _, char := range a.chars {
+		if object.Range(char, pos) <= maxrange {
+			objects = append(objects, char)
+		}
+	}
+	return objects
 }

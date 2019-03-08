@@ -392,3 +392,12 @@ func (c *Character) levelup() {
 func (c *Character) agonyHP() int {
 	return 10 / 100 * c.MaxHealth()
 }
+
+// sendCmb sends specified text message to
+// comabt log channel.
+func (c *Character) sendCmb(msg string) {
+	select {
+	case c.combatlog <- msg:
+	default:
+	}
+}

@@ -31,7 +31,6 @@ import (
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
@@ -60,11 +59,7 @@ func NewGame(mod *module.Module, players []*character.Character) (*Game, error) 
 	startArea := startScen.Mainarea()
 	for _, pc := range g.pcs {
 		serial.AssignSerial(pc)
-		err := g.ChangePlayerArea(startArea, pc.SerialID())
-		if err != nil {
-			return nil, fmt.Errorf("fail_to_change_player_area:%v",
-				err)
-		}
+		startArea.AddCharacter(pc)
 	}
 	return g, nil
 }
@@ -81,19 +76,13 @@ func LoadGame(save *save.SaveGame) *Game {
 // Update updates game, delta value must be
 // time from last update in milliseconds.
 func (g *Game) Update(delta int64) {
+	go g.listenWorld()
 	if g.paused {
 		return
 	}
 	updateChars := g.Module().Chapter().Characters()
 	for _, c := range updateChars {
 		c.Update(delta)
-	}
-	for _, pc := range g.pcs {
-		select {
-		case msg := <-pc.CombatLog():
-			log.Cmb.Printf(msg)
-		default:
-		}
 	}
 }
 
@@ -120,51 +109,28 @@ func (g *Game) Players() []*character.Character {
 	return g.pcs
 }
 
-// Player returns player character with specified serial ID
-// or nil if no such player character was found.
-func (g *Game) Player(serialID string) *character.Character {
-	for _, c := range g.pcs {
-		if serialID == c.SerialID() {
-			return c
+// listenWorld listens players and near objects
+// messages channels ands prints messages to 
+// engine log.
+func (g *Game) listenWorld() {
+	// Players.
+	for _, pc := range g.pcs {
+		select {
+		case msg := <-pc.CombatLog():
+			log.Cmb.Printf(msg)
+		default:
+		}
+		// Near objects.
+		area, err := g.Module().Chapter().CharacterArea(pc)
+		if err != nil {
+			continue
+		}
+		for _, tar := range area.NearTargets(pc, pc.SightRange()) {
+			select {
+			case msg := <-tar.CombatLog():
+				log.Cmb.Printf(msg)
+			default:
+			}
 		}
 	}
-	return nil
-}
-
-// ChangePlayerArea moves player with specified ID to
-// specified area.
-func (g *Game) ChangePlayerArea(area *scenario.Area, serialID string) error {
-	var pc *character.Character
-	for _, c := range g.pcs {
-		if serialID == c.SerialID() {
-			pc = c
-			break
-		}
-	}
-	if pc == nil {
-		return fmt.Errorf("player_not_found:%v", serialID)
-	}
-	area.AddCharacter(pc)
-	return nil
-}
-
-// PlayerArea returns area for player with specified ID.
-func (g *Game) PlayerArea(serialID string) (*scenario.Area, error) {
-	var pc *character.Character
-	for _, c := range g.pcs {
-		if serialID == c.SerialID() {
-			pc = c
-			break
-		}
-	}
-	if pc == nil {
-		return nil, fmt.Errorf("player_not_found:%v", serialID)
-	}
-
-	area, err := g.Module().Chapter().CharacterArea(pc)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_retrive_player_area:%v",
-			err)
-	}
-	return area, nil
 }

@@ -25,7 +25,6 @@ package module
 
 import (
 	"fmt"
-	"path/filepath"
 	
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/serial"
@@ -52,37 +51,6 @@ func NewChapter(mod *Module, conf ChapterConf) *Chapter {
 // ID returns chapter ID.
 func (c *Chapter) ID() string {
 	return c.conf.ID
-}
-
-// FullPath returns path to chapter directory.
-func (c *Chapter) FullPath() string {
-	return filepath.FromSlash(c.conf.Path)
-}
-
-// ScenariosPath returns path to chapter
-// scenarios directory.
-func (c *Chapter) ScenariosPath() string {
-	return filepath.FromSlash(c.FullPath() +
-		"/area/scenarios")
-}
-
-// LangPath returns path to chapter
-// lang directory.
-func (c *Chapter) LangPath() string {
-	return filepath.FromSlash(c.FullPath() + "/lang" +
-		"/" + c.mod.LangID())
-}
-
-// NPCPath returns path to chapter NPCs
-// directory.
-func (c *Chapter) NPCPath() string {
-	return filepath.FromSlash(c.FullPath() + "/npc")
-}
-
-// AreasPath returns path to chapter
-// areas directory.
-func (c *Chapter) AreasPath() string {
-	return filepath.FromSlash(c.FullPath() + "/area")
 }
 
 // Module returns chapter module.
