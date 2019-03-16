@@ -42,11 +42,10 @@ var (
 
 // loadConfig Loads CLI config file.
 func loadConfig() error {
-	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "restrict_mode")
+	confValues, err := text.ReadValue(CONFIG_FILE_NAME, "restrict_mode")
 	if err != nil {
 		return err
 	}
-	
 	restrictMode = confValues["restrict_mode"] == "true"
 	log.Dbg.Println("config file loaded")
 	return nil
@@ -59,11 +58,9 @@ func saveConfig() error {
 		return err
 	}
 	defer f.Close()
-	
 	w := bufio.NewWriter(f)
 	w.WriteString(fmt.Sprintf("%s\n", "# Flame CLI configuration file")) // default header
 	w.WriteString(fmt.Sprintf("restrict_mode:%v;\n", restrictMode))
-	
 	w.Flush()
 	log.Dbg.Println("config file saved")
 	return nil

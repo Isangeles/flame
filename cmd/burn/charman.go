@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/object/skill"
 )
 
 // handleCharCommand handles specified command for game
@@ -235,7 +236,7 @@ func showCharOption(cmd Command) (int, string) {
 		out := ""
 		for _, char := range chars {
 			for _, e := range char.Effects() {
-				out += fmt.Sprintf("%s ", e.ID() + "_" + e.Serial())
+				out += fmt.Sprintf("%s ", e.ID()+"_"+e.Serial())
 			}
 		}
 		return 0, out
@@ -243,7 +244,7 @@ func showCharOption(cmd Command) (int, string) {
 		out := ""
 		for _, char := range chars {
 			for _, s := range char.Skills() {
-				out += fmt.Sprintf("%s ", s.ID() + "_" + s.Serial())
+				out += fmt.Sprintf("%s ", s.ID()+"_"+s.Serial())
 			}
 		}
 		return 0, out
@@ -301,7 +302,7 @@ func exportCharOption(cmd Command) (int, string) {
 	serialID := cmd.TargetArgs()[0]
 	var char *character.Character
 	for _, pc := range flame.Game().Players() {
-		if pc.ID() + "_" + pc.Serial() == serialID {
+		if pc.ID()+"_"+pc.Serial() == serialID {
 			char = pc
 		}
 	}
@@ -463,7 +464,12 @@ func castCharOption(cmd Command) (int, string) {
 	case "skill":
 		for _, char := range chars {
 			serialID := cmd.Args()[1]
-			skill := char.Skills()[serialID]
+			var skill *skill.Skill
+			for _, s := range char.Skills() {
+				if s.ID()+"_"+s.Serial() == serialID {
+					skill = s
+				}
+			}
 			if skill == nil {
 				return 5, fmt.Sprintf("%s:character:%s:skill_not_known:%s",
 					CHAR_MAN, char.ID()+"_"+char.Serial(), serialID)

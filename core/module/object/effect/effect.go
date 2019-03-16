@@ -152,7 +152,7 @@ func (e *Effect) SubEffects() []*Effect {
 			log.Err.Printf("effect:%s_%s:sub_effect_resource_not_found:%s",
 				e.ID(), e.Serial(), eid)
 		}
-		subeff := New(data)
+		subeff := New(*data)
 		serial.AssignSerial(subeff)
 		subeff.SetSource(e.source)
 		subeffects = append(subeffects, subeff)

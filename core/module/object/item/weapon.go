@@ -46,11 +46,12 @@ type Weapon struct {
 // specified parameters.
 func NewWeapon(data res.WeaponData) *Weapon {
 	w := Weapon{
-		id: data.ID,
-		value: data.Value,
-		dmgMin: data.DMGMin,
-		dmgMax: data.DMGMax,
-		level: data.Level,
+		id:        data.ID,
+		name:      data.Name,
+		value:     data.Value,
+		dmgMin:    data.DMGMin,
+		dmgMax:    data.DMGMax,
+		level:     data.Level,
 		equipReqs: data.EQReqs,
 	}
 	for _, sid := range data.Slots {

@@ -156,7 +156,7 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 						xmlChar.ID, err)
 					continue
 				}
-				charsData = append(charsData, &charData) // save data to restore effects later
+				charsData = append(charsData, charData) // save data to restore effects later
 				char := buildCharacter(mod, charData)
 				// Set position & serial.
 				posX, posY, err := parsexml.UnmarshalPosition(

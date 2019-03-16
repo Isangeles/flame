@@ -338,18 +338,22 @@ func (c *Character) Effects() []*effect.Effect {
 // AddEffect add specified effect to character effects.
 func (c *Character) AddEffect(e *effect.Effect) {
 	e.SetTarget(c)
-	c.effects[e.ID() + "_" + e.Serial()] = e
+	c.effects[e.ID() + e.Serial()] = e
 }
 
 // Skills return all character skills.
-func (c *Character) Skills() map[string]*skill.Skill {
-	return c.skills
+func (c *Character) Skills() []*skill.Skill {
+	skills := make([]*skill.Skill, 0)
+	for _, s := range c.skills {
+		skills = append(skills, s)
+	}
+	return skills
 }
 
 // AddSkill adds specified skill to characters
 // skills.
 func (c *Character) AddSkill(s *skill.Skill) {
-	c.skills[s.ID() + "_" + s.Serial()] = s
+	c.skills[s.ID() + s.Serial()] = s
 }
 
 // Targets returns character targets.

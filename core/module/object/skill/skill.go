@@ -93,6 +93,13 @@ func New(data res.SkillData) *Skill {
 
 // Update updates skill.
 func (s *Skill) Update(delta int64) {
+	if !s.Ready() {
+		s.cooldown -= delta
+		if s.cooldown <= 0 {
+			s.ready = true
+		}
+		return
+	}
 	if s.Casting() {
 		s.castTime += delta
 		if s.castTime >= s.castTimeMax {
@@ -105,12 +112,6 @@ func (s *Skill) Update(delta int64) {
 			for _, e := range s.buildEffects() {
 				s.target.TakeEffect(e)
 			}
-		}
-	}
-	if !s.Ready() {
-		s.cooldown -= delta
-		if s.cooldown <= 0 {
-			s.ready = true
 		}
 	}
 }
@@ -145,6 +146,9 @@ func (s *Skill) SetName(name string) {
 // Cast starts skill casting with specified targetable object
 // as skill user.
 func (s *Skill) Cast(user SkillUser, target effect.Target) error {
+	if !s.Ready() {
+		return fmt.Errorf(NOT_READY_ERR)
+	}
 	if s.tartype != Target_all && target == nil {
 		return fmt.Errorf(NO_TARGET_ERR)
 	}
@@ -204,10 +208,15 @@ func (s *Skill) SetCooldown(c int64) {
 	s.cooldown = c
 }
 
-// Ready checks whether skill is ready, i.e. casting
-// was started and funished successfully.
+// Ready checks whether skill is ready
+// to cast.
 func (s *Skill) Ready() bool {
 	return s.ready
+}
+
+// SetReady toggles skill ready state.
+func (s *Skill) SetReady(ready bool) {
+	s.ready = ready
 }
 
 // Value returns range value.
@@ -229,6 +238,7 @@ func (s *Skill) buildEffects() []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
 	for _, ed := range s.effects {
 		e := effect.New(ed)
+		e.SetSource(s.user)
 		serial.AssignSerial(e)
 		effects = append(effects, e)
 	}

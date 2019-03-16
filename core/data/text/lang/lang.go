@@ -24,11 +24,16 @@
 // This package provides easy way to retrieve
 // data from transalation files inside data lang
 // directory.
+// Results are cached under lang file + id key, so lang file is open
+// only in case when there was no previous requests for specified
+// lang file + id pair.
 package lang
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
+	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/text"
 )
@@ -96,6 +101,33 @@ func Texts(langFile string, ids ...string) map[string]string {
 		cache[langFile + id] = t
 	}
 	return texts
+}
+
+// TextDir search all lang files in directory
+// with specified path for text with specified ID.
+// If file/ID was not found returns string with
+// error message.
+// Results are cached.
+func TextDir(path, id string) string {
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		return fmt.Sprintf("read_dir_fail:%v", err)
+	}
+	for _, info := range files {
+		if !strings.HasSuffix(info.Name(), LANG_FILE_EXT) {
+			continue
+		}
+		if cache[info.Name() + id] != "" {
+			return cache[info.Name() + id]
+		}
+		fullpath := filepath.FromSlash(path + "/" + info.Name())
+		text, err := text.ReadValue(fullpath, id)
+		if err == nil {
+			cache[info.Name() + id] = text[id] // cache result
+			return text[id]
+		}
+	}
+	return fmt.Sprintf("text_not_found_in:%s", path)
 }
 
 // SetLangPath sets specified path as

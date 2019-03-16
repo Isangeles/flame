@@ -32,7 +32,6 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/core/module/serial"
@@ -52,16 +51,14 @@ func Skill(mod *module.Module, id string) (*skill.Skill, error) {
 	if data.ID == "" {
 		return nil, fmt.Errorf("skill_not_found:%s", id)
 	}
-	s := skill.New(data)
-	name := lang.Text("skills", s.ID())
-	s.SetName(name)
+	s := skill.New(*data)
 	serial.AssignSerial(s)
 	return s, nil
 }
 
 // ImportSkills imports all XML skills data from skills base
 // with specified path.
-func ImportSkills(basePath string) ([]res.SkillData, error) {
+func ImportSkills(basePath string) ([]*res.SkillData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_skills_base_file:%v", err)
@@ -71,7 +68,7 @@ func ImportSkills(basePath string) ([]res.SkillData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_skills_base:%v", err)
 	}
-	skills := make([]res.SkillData, 0)
+	skills := make([]*res.SkillData, 0)
 	for _, xmlSkill := range xmlSkills {
 		s := buildXMLSkillData(xmlSkill)
 		skills = append(skills, s)
@@ -81,12 +78,12 @@ func ImportSkills(basePath string) ([]res.SkillData, error) {
 
 // ImportSkillsDir imports all skills from files in
 // specified directory.
-func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
+func ImportSkillsDir(dirPath string) ([]*res.SkillData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	skills := make([]res.SkillData, 0)
+	skills := make([]*res.SkillData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), SKILLS_FILE_EXT) {
 			continue
@@ -106,7 +103,7 @@ func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
 }
 
 // buildXMLSkillData builds skill from XML data.
-func buildXMLSkillData(xmlSkill parsexml.SkillXML) res.SkillData {
+func buildXMLSkillData(xmlSkill parsexml.SkillXML) *res.SkillData {
 	reqs := buildXMLReqs(&xmlSkill.Reqs)
 	effects := make([]res.EffectData, 0)
 	for _, xmlSkillEff := range xmlSkill.Effects.Nodes {
@@ -116,7 +113,7 @@ func buildXMLSkillData(xmlSkill parsexml.SkillXML) res.SkillData {
 				xmlSkillEff.ID)
 			continue
 		}
-		effects = append(effects, eff)
+		effects = append(effects, *eff)
 	}
 	skillRange, err := parsexml.UnmarshalSkillRange(xmlSkill.Range)
 	if err != nil {
@@ -131,5 +128,5 @@ func buildXMLSkillData(xmlSkill parsexml.SkillXML) res.SkillData {
 		Effects:  effects,
 		UseReqs:  reqs,
 	}
-	return data
+	return &data
 }

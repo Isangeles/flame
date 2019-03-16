@@ -32,8 +32,18 @@ import (
 type SkillUser interface {
 	ID() string
 	Serial() string
-	Skills() map[string]*Skill
+	Skills() []*Skill
 	MeetReqs(r []req.Requirement) bool
+	Health() int
+	Mana() int
+	SetMana(val int)
+	Experience() int
+	SetExperience(val int)
+	Live() bool
+	Damage() (int, int)
+	Hit() effect.Hit
 	TakeHit(h effect.Hit)
+	TakeEffect(e *effect.Effect)
 	Position() (x, y float64)
+	CombatLog() chan string
 }

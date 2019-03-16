@@ -26,38 +26,13 @@ package character
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/core/rng"
 )
-
-// Hit creates character hit.
-func (c *Character) Hit() effect.Hit {
-	return effect.Hit{
-		Source: c,
-		Type:   effect.Hit_normal,
-		HP:     rng.RollInt(c.Damage()),
-	}
-}
-
-// Hit handles specified hit.
-func (c *Character) TakeHit(hit effect.Hit) {
-	// TODO: handle resists.
-	c.SetHealth(c.Health() + hit.HP)
-	msg := fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
-	c.sendCmb(msg)
-}
-
-// TakeEffects adds specified effects
-func (c *Character) TakeEffect(e *effect.Effect) {
-	// TODO: handle resists.
-	c.AddEffect(e)
-	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
-	c.sendCmb(msg)
-}
-
 
 // Damage retruns min and max damage value,
 // including weapons, active effects, etc.
@@ -71,6 +46,15 @@ func (c *Character) Damage() (int, int) {
 		}
 	}
 	return min, max
+}
+
+// Hit creates character hit.
+func (c *Character) Hit() effect.Hit {
+	return effect.Hit{
+		Source: c,
+		Type:   effect.Hit_normal,
+		HP:     -(rng.RollInt(c.Damage())),
+	}
 }
 
 // UseSkill uses specified skill on current target.
@@ -93,5 +77,24 @@ func (c *Character) UseSkill(s *skill.Skill) {
 	}
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 		lang.Text("ui", "skill_not_known"))
+	c.sendCmb(msg)
+}
+
+// Hit handles specified hit.
+func (c *Character) TakeHit(hit effect.Hit) {
+	// TODO: handle resists.
+	c.SetHealth(c.Health() + hit.HP)
+	msg := fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
+	c.sendCmb(msg)
+}
+
+// TakeEffects adds specified effects
+func (c *Character) TakeEffect(e *effect.Effect) {
+	// TODO: handle resists.
+	c.AddEffect(e)
+	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
+	if config.Debug() {
+		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
+	}
 	c.sendCmb(msg)
 }

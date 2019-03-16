@@ -31,7 +31,6 @@ import (
 	"path/filepath"
 	
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/effect"
@@ -52,16 +51,14 @@ func Effect(mod *module.Module, id string) (*effect.Effect, error) {
 	if data.ID == "" {
 		return nil, fmt.Errorf("effect_not_found:%s", id)
 	}
-	e := effect.New(data)
-	name := lang.Text("effects", e.ID())
-	e.SetName(name)
+	e := effect.New(*data)
 	serial.AssignSerial(e)
 	return e, nil
 }
 
 // ImportEffects imports all XML effects data from effects base
 // with specified path.
-func ImportEffects(basePath string) ([]res.EffectData, error) {
+func ImportEffects(basePath string) ([]*res.EffectData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_effects_base_file:%v", err)
@@ -71,7 +68,7 @@ func ImportEffects(basePath string) ([]res.EffectData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_effects_base:%v", err)
 	}
-	effects := make([]res.EffectData, 0)
+	effects := make([]*res.EffectData, 0)
 	for _, xmlEffect := range xmlEffects {
 		e := buildXMLEffectData(xmlEffect)
 		effects = append(effects, e)
@@ -81,12 +78,12 @@ func ImportEffects(basePath string) ([]res.EffectData, error) {
 
 // ImportEffectsDir imports all effects from files in
 // specified directory.
-func ImportEffectsDir(dirPath string) ([]res.EffectData, error) {
+func ImportEffectsDir(dirPath string) ([]*res.EffectData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	effects := make([]res.EffectData, 0)
+	effects := make([]*res.EffectData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), EFFECTS_FILE_EXT) {
 			continue
@@ -106,7 +103,7 @@ func ImportEffectsDir(dirPath string) ([]res.EffectData, error) {
 }
 
 // buildXMLEffectData builds effect from XML data.
-func buildXMLEffectData(xmlEffect parsexml.EffectXML) res.EffectData {
+func buildXMLEffectData(xmlEffect parsexml.EffectXML) *res.EffectData {
 	mods := buildXMLModifiers(&xmlEffect.ModifiersNode)
 	data := res.EffectData{
 		ID: xmlEffect.ID,
@@ -123,5 +120,5 @@ func buildXMLEffectData(xmlEffect parsexml.EffectXML) res.EffectData {
 			data.HitMods = append(data.HitMods, mData)
 		}
 	}
-	return data
+	return &data
 }

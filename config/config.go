@@ -42,6 +42,7 @@ const (
 
 var (
 	langID        = "english" // default eng
+	debug         = false
 	savegamesPath = "savegames"
 	modName       = ""
 	modPath       = "data/modules"
@@ -50,18 +51,18 @@ var (
 
 // loadConfig loads engine configuration file.
 func LoadConfig() error {
-	confModVal, err := text.ReadConfigValue(CONFIG_FILE_NAME, "module")
+	confModVal, err := text.ReadValue(CONFIG_FILE_NAME, "module")
 	if err != nil {
 		return err
 	}
-	confValues, err := text.ReadConfigValue(CONFIG_FILE_NAME, "lang", "debug")
+	confValues, err := text.ReadValue(CONFIG_FILE_NAME, "lang", "debug")
 	if err != nil {
 		SaveConfig() // replace 'corrupted' config with default config
 		return fmt.Errorf("fail_to_load_some_conf_values:%v", err)
 	}
 
 	langID = confValues["lang"]
-	enginelog.EnableDebug(confValues["debug"] == "true")
+	SetDebug(confValues["debug"] == "true")
 	// Auto load module.
 	modNamePath := strings.Split(confModVal["module"], ";")
 	if modNamePath[0] != "" {
@@ -104,6 +105,12 @@ func LangID() string {
 	return langID
 }
 
+// Debug checks whether debug mode is
+// enabled.
+func Debug() bool {
+	return debug
+}
+
 // SavegamesPath returns current path
 // to savegames directory or errror
 // if no module is loaded.
@@ -130,5 +137,6 @@ func SetLang(lng string) error {
 
 // SetDebug toggles debug mode.
 func SetDebug(dbg bool) {
+	debug = dbg
 	enginelog.EnableDebug(dbg)
 }

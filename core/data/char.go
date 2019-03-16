@@ -93,7 +93,7 @@ func Character(mod *module.Module, charID string) (*character.Character, error) 
 
 // ImportCharactersData import characters data from base file
 // with specified path.
-func ImportCharactersData(basePath string) ([]res.CharacterData, error) {
+func ImportCharactersData(basePath string) ([]*res.CharacterData, error) {
 	baseFile, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
@@ -103,7 +103,7 @@ func ImportCharactersData(basePath string) ([]res.CharacterData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_chars_base:%v", err)
 	}
-	chars := make([]res.CharacterData, 0)
+	chars := make([]*res.CharacterData, 0)
 	for _, xmlChar := range xmlChars {
 		char, err := buildXMLCharacterData(&xmlChar)
 		if err != nil {
@@ -118,12 +118,12 @@ func ImportCharactersData(basePath string) ([]res.CharacterData, error) {
 
 // ImportCharactersDataDir imports all characters data from
 // files in directory with specified path.
-func ImportCharactersDataDir(dirPath string) ([]res.CharacterData, error) {
+func ImportCharactersDataDir(dirPath string) ([]*res.CharacterData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	chars := make([]res.CharacterData, 0)
+	chars := make([]*res.CharacterData, 0)
 	for _, fInfo := range files {
 		if !strings.HasSuffix(fInfo.Name(), CHARS_FILE_EXT) {
 			continue
@@ -217,7 +217,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 }
 
 // buildCharacter builds new character from specified data(with items and equipment).
-func buildCharacter(mod *module.Module, data res.CharacterData) *character.Character {
+func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(data.BasicData)
 	// Inventory.
 	for _, invItData := range data.Items {
@@ -273,7 +273,7 @@ func buildCharacter(mod *module.Module, data res.CharacterData) *character.Chara
 
 // buildXMLCharacterData creates character resources from specified
 // XML data.
-func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, error) {
+func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (*res.CharacterData, error) {
 	// Basic data.
 	baseData := res.CharacterBasicData{
 		ID:     xmlChar.ID,
@@ -285,27 +285,27 @@ func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, e
 	data := res.CharacterData{BasicData: baseData}
 	sex, err := parsexml.UnmarshalGender(xmlChar.Gender)
 	if err != nil {
-		return data, fmt.Errorf("fail_to_parse_gender:%v", err)
+		return nil, fmt.Errorf("fail_to_parse_gender:%v", err)
 	}
 	data.BasicData.Sex = int(sex)
 	race, err := parsexml.UnmarshalRace(xmlChar.Race)
 	if err != nil {
-		return data, fmt.Errorf("fail_to_parse_race:%v", err)
+		return nil, fmt.Errorf("fail_to_parse_race:%v", err)
 	}
 	data.BasicData.Race = int(race)
 	attitude, err := parsexml.UnmarshalAttitude(xmlChar.Attitude)
 	if err != nil {
-		return data, fmt.Errorf("fail_to_parse_attitude:%v", err)
+		return nil, fmt.Errorf("fail_to_parse_attitude:%v", err)
 	}
 	data.BasicData.Attitude = int(attitude)
 	alignment, err := parsexml.UnmarshalAlignment(xmlChar.Alignment)
 	if err != nil {
-		return data, fmt.Errorf("fail_to_parse_alignment:%v", err)
+		return nil, fmt.Errorf("fail_to_parse_alignment:%v", err)
 	}
 	data.BasicData.Alignment = int(alignment)
 	attributes, err := parsexml.UnmarshalAttributes(xmlChar.Stats)
 	if err != nil {
-		return data, fmt.Errorf("fail_to_parse_attributes:%v", err)
+		return nil, fmt.Errorf("fail_to_parse_attributes:%v", err)
 	}
 	data.BasicData.Str = attributes.Str
 	data.BasicData.Con = attributes.Con
@@ -353,5 +353,5 @@ func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (res.CharacterData, e
 		}
 		data.Skills = append(data.Skills, skillData)
 	}
-	return data, nil
+	return &data, nil
 }

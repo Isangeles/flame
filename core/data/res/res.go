@@ -24,17 +24,17 @@
 package res
 
 var (
-	effectsData map[string]EffectData
-	skillsData  map[string]SkillData
-	weaponsData map[string]WeaponData
-	charsData   map[string]CharacterData
+	effectsData map[string]*EffectData
+	skillsData  map[string]*SkillData
+	weaponsData map[string]*WeaponData
+	charsData   map[string]*CharacterData
 )
 
 // Effect returns resources for effect
 // with specified ID or empty resource
 // struct if data for specified effect ID
 // was not found.
-func Effect(id string) EffectData {
+func Effect(id string) *EffectData {
 	return effectsData[id]
 }
 
@@ -42,7 +42,7 @@ func Effect(id string) EffectData {
 // with specified iD or empty resource
 // struct if data for specified skill ID
 // was not found.
-func Skill(id string) SkillData {
+func Skill(id string) *SkillData {
 	return skillsData[id]
 }
 
@@ -50,7 +50,7 @@ func Skill(id string) SkillData {
 // for weapon with specified ID or empty
 // weapon resurce struct if data for specified
 // ID was not found.
-func Weapon(id string) WeaponData {
+func Weapon(id string) *WeaponData {
 	return weaponsData[id]
 }
 
@@ -58,14 +58,14 @@ func Weapon(id string) WeaponData {
 // for character with specified ID or empty
 // character resurce struct if data for specified
 // ID was not found. 
-func Character(id string) CharacterData {
+func Character(id string) *CharacterData {
 	return charsData[id]
 }
 
 // SetEffectsData sets specified effects data
 // as effects resources.
-func SetEffectsData(data []EffectData) {
-	effectsData = make(map[string]EffectData)
+func SetEffectsData(data []*EffectData) {
+	effectsData = make(map[string]*EffectData)
 	for _, ed := range data {
 		effectsData[ed.ID] = ed
 	}
@@ -73,8 +73,8 @@ func SetEffectsData(data []EffectData) {
 
 // SetSkillsData sets specified skills data
 // as skills resources.
-func SetSkillsData(data []SkillData) {
-	skillsData = make(map[string]SkillData)
+func SetSkillsData(data []*SkillData) {
+	skillsData = make(map[string]*SkillData)
 	for _, sd := range data {
 		skillsData[sd.ID] = sd
 	}
@@ -82,8 +82,8 @@ func SetSkillsData(data []SkillData) {
 
 // SetWeaponsData sets specified weapons data as
 // weapons resources.
-func SetWeaponsData(data []WeaponData) {
-	weaponsData = make(map[string]WeaponData)
+func SetWeaponsData(data []*WeaponData) {
+	weaponsData = make(map[string]*WeaponData)
 	for _, wd := range data {
 		weaponsData[wd.ID] = wd
 	}
@@ -91,8 +91,8 @@ func SetWeaponsData(data []WeaponData) {
 
 // SetCharactersData sets specified characters data as
 // characters resource.
-func SetCharactersData(data []CharacterData) {
-	charsData = make(map[string]CharacterData)
+func SetCharactersData(data []*CharacterData) {
+	charsData = make(map[string]*CharacterData)
 	for _, cd := range data {
 		charsData[cd.BasicData.ID] = cd
 	}

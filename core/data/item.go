@@ -31,7 +31,6 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -48,19 +47,25 @@ const (
 // was not found or module failed to assign serial value for
 // item.
 func Item(mod *module.Module, id string) (item.Item, error) {
+	var i item.Item
+	// Find data resources.
 	switch {
 	case res.Weapon(id).ID != "":
-		return weapon(mod, id)
+		weaponData := res.Weapon(id)
+		w := item.NewWeapon(*weaponData)
+		i = w
 	default:
-		return nil, fmt.Errorf("item_not_found:%s",
-			id)
+		return nil, fmt.Errorf("item_data_not_found:%s", id)
 	}
+	// Assign serial.
+	serial.AssignSerial(i)
+	return i, nil
 }
 
 // ImportWeapons imports all XML weapons from file with specified
 // path.
-func ImportWeapons(basePath string) ([]res.WeaponData, error) {
-	weapons := make([]res.WeaponData, 0)
+func ImportWeapons(basePath string) ([]*res.WeaponData, error) {
+	weapons := make([]*res.WeaponData, 0)
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_weapons_base_file:%v",
@@ -84,12 +89,12 @@ func ImportWeapons(basePath string) ([]res.WeaponData, error) {
 
 // ImportWeaponsDir imports all weapons from files
 // in specified directory.
-func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
+func ImportWeaponsDir(dirPath string) ([]*res.WeaponData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	weapons := make([]res.WeaponData, 0)
+	weapons := make([]*res.WeaponData, 0)
 	for _, fInfo := range files {
 		if !strings.HasSuffix(fInfo.Name(), WEAPONS_FILE_EXT) {
 			continue
@@ -108,28 +113,12 @@ func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
 	return weapons, nil
 }
 
-// weapon creates new instance of weapon with specified ID
-// for specified module, returns error if weapon with such ID
-// was not found or module failed to assign serial value for
-// weapon.
-func weapon(mod *module.Module, id string) (*item.Weapon, error) {
-	weaponData := res.Weapon(id)
-	if weaponData.ID == "" {
-		return nil, fmt.Errorf("weapon_not_found:%s", id)
-	}
-	w := item.NewWeapon(weaponData)
-	name := lang.Text("items", w.ID())
-	w.SetName(name)
-	serial.AssignSerial(w)
-	return w, nil
-}
-
 // buildXMLWeapon creates new weapon from specified XML data.
-func buildXMLWeaponData(xmlWeapon parsexml.WeaponXML) (res.WeaponData, error) {
+func buildXMLWeaponData(xmlWeapon parsexml.WeaponXML) (*res.WeaponData, error) {
 	reqs := buildXMLReqs(&xmlWeapon.Reqs)
 	slots, err := parsexml.UnmarshalItemSlots(xmlWeapon.Slots)
 	if err != nil {
-		return res.WeaponData{}, fmt.Errorf("fail_to_unmarshal_slot_types:%v", err)
+		return nil, fmt.Errorf("fail_to_unmarshal_slot_types:%v", err)
 	}
 	slotsID := make([]int, 0)
 	for _, s := range slots {
@@ -144,5 +133,5 @@ func buildXMLWeaponData(xmlWeapon parsexml.WeaponXML) (res.WeaponData, error) {
 		EQReqs: reqs,
 		Slots: slotsID,
 	}
-	return w, nil
+	return &w, nil
 }

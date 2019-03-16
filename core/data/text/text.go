@@ -79,11 +79,11 @@ func ReadDisplayText(filePath string, ids ...string) map[string]string {
 	return texts
 }
 
-// ReadConfigValue retrives text values with specified IDs from file 
+// ReadValue retrives text values with specified IDs from file 
 // with sepcified path.
 // Returns map with text values as values and IDs as keys or
 // error if file or at least one speicfied ID was not found.
-func ReadConfigValue(filePath string, ids ...string) (map[string]string, error) {
+func ReadValue(filePath string, ids ...string) (map[string]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("CANT_OPEN:%s", filePath)
@@ -116,13 +116,13 @@ func ReadConfigValue(filePath string, ids ...string) (map[string]string, error) 
 	return texts, nil
 }
 
-// ReadConfigInt retrives integer(one or more) with specified IDs from file 
+// ReadInt retrives integer(one or more) with specified IDs from file 
 // with sepcified path.
 // Returns map with integers as values and IDs as keys or error if file
 // or at least one speicfied ID was not found, or was not parseable to integer.
-func ReadConfigInt(filePath string, ids ...string) (map[string]int, error) {
+func ReadInt(filePath string, ids ...string) (map[string]int, error) {
 	// Read values as text.
-	vals, err := ReadConfigValue(filePath, ids...)
+	vals, err := ReadValue(filePath, ids...)
 	if err != nil {
 		return nil, err
 	}

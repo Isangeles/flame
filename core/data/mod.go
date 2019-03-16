@@ -151,13 +151,13 @@ func modConf(path, lang string) (module.ModConf, error) {
 			path, err)
 	}
 	modConfPath := filepath.FromSlash(path + "/mod.conf")
-	confInts, err := text.ReadConfigInt(modConfPath, "new_char_attrs_min",
+	confInts, err := text.ReadInt(modConfPath, "new_char_attrs_min",
 		"new_char_attrs_max")
 	if err != nil {
 		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_int_values:%s",
 			err)
 	}
-	confValues, err := text.ReadConfigValue(modConfPath, "name", "chapters")
+	confValues, err := text.ReadValue(modConfPath, "name", "chapters")
 	if err != nil {
 		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_values:%s",
 			err)
@@ -181,7 +181,7 @@ func modConf(path, lang string) (module.ModConf, error) {
 // returns error if configuration not found or corrupted.
 func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
-	confValues, err := text.ReadConfigValue(confPath, "start_scenario")
+	confValues, err := text.ReadValue(confPath, "start_scenario")
 	if err != nil {
 		return module.ChapterConf{}, fmt.Errorf("fail_to_read_conf_values:%v",
 			err)

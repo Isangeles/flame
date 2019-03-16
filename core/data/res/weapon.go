@@ -30,6 +30,7 @@ import (
 // Strunt for weapon resource data.
 type WeaponData struct {
 	ID     string
+	Name   string
 	Value  int
 	Level  int
 	DMGMin int
