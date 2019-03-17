@@ -37,30 +37,31 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id            string
-	serial        string
-	name          string
-	level         int
-	hp, maxHP     int
-	mana, maxMana int
-	exp, maxExp   int
-	live          bool
-	agony         bool
-	sex           Gender
-	race          Race
-	attitude      Attitude
-	alignment     Alignment
-	guild         Guild
-	attributes    Attributes
-	resilience    object.Resilience
-	posX, posY    float64
-	destX, destY  float64
-	inventory     *item.Inventory
-	equipment     *Equipment
-	targets       []effect.Target
-	effects       map[string]*effect.Effect
-	skills        map[string]*skill.Skill
-	combatlog     chan string
+	id               string
+	serial           string
+	name             string
+	level            int
+	hp, maxHP        int
+	mana, maxMana    int
+	exp, maxExp      int
+	live             bool
+	agony            bool
+	sex              Gender
+	race             Race
+	attitude         Attitude
+	alignment        Alignment
+	guild            Guild
+	attributes       Attributes
+	resilience       object.Resilience
+	posX, posY       float64
+	destX, destY     float64
+	inventory        *item.Inventory
+	equipment        *Equipment
+	targets          []effect.Target
+	effects          map[string]*effect.Effect
+	skills           map[string]*skill.Skill
+	combatlog        chan string
+	onSkillActivated func(s *skill.Skill)
 }
 
 const (
@@ -97,7 +98,7 @@ func New(data res.CharacterBasicData) *Character {
 // Update updates character.
 func (c *Character) Update(delta int64) {
 	// Move to dest point.
-	if c.InMove() {
+	if c.Moving() {
 		if c.posX < c.destX {
 			c.Move(c.posX+1, c.posY)
 		}
@@ -126,7 +127,7 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
-	// Update effects.
+	// Effects.
 	for serial, e := range c.effects {
 		e.Update(delta)
 		// Remove expired effects.
@@ -134,9 +135,15 @@ func (c *Character) Update(delta int64) {
 			delete(c.effects, serial)
 		}
 	}
-	// Update skills.
+	// Skills.
 	for _, s := range c.Skills() {
 		s.Update(delta)
+		if s.Casted() {
+			s.Activate()
+			if c.onSkillActivated != nil {
+				c.onSkillActivated(s)
+			}
+		}
 	}
 }
 
@@ -317,8 +324,8 @@ func (c *Character) SetSerial(serial string) {
 	c.serial = serial
 }
 
-// InMove checks whether character is moving.
-func (c *Character) InMove() bool {
+// Moving checks whether character is moving.
+func (c *Character) Moving() bool {
 	if c.posX != c.destX || c.posY != c.destY {
 		return true
 	} else {
@@ -338,7 +345,7 @@ func (c *Character) Effects() []*effect.Effect {
 // AddEffect add specified effect to character effects.
 func (c *Character) AddEffect(e *effect.Effect) {
 	e.SetTarget(c)
-	c.effects[e.ID() + e.Serial()] = e
+	c.effects[e.ID()+e.Serial()] = e
 }
 
 // Skills return all character skills.
@@ -353,7 +360,7 @@ func (c *Character) Skills() []*skill.Skill {
 // AddSkill adds specified skill to characters
 // skills.
 func (c *Character) AddSkill(s *skill.Skill) {
-	c.skills[s.ID() + s.Serial()] = s
+	c.skills[s.ID()+s.Serial()] = s
 }
 
 // Targets returns character targets.
@@ -381,6 +388,12 @@ func (c *Character) Casting() bool {
 // CombatLog returns character combat log channel.
 func (c *Character) CombatLog() chan string {
 	return c.combatlog
+}
+
+// SetOnSkillActivatedFunc sets function triggered after
+// activation one of character skills.
+func (c *Character) SetOnSkillActivatedFunc(f func (s *skill.Skill)) {
+	c.onSkillActivated = f
 }
 
 // levelup promotes character to next level.

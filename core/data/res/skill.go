@@ -31,8 +31,8 @@ import (
 type SkillData struct {
 	ID       string
 	Name     string
-	Cast     int
-	Cooldown int
+	Cast     int64
+	Cooldown int64
 	Range    int
 	UseReqs  []req.Requirement
 	Effects  []EffectData

@@ -92,7 +92,7 @@ func SaveConfig() error {
 	w.WriteString(fmt.Sprintf("%s\n", "# Flame engine configuration file")) // default header
 	w.WriteString(fmt.Sprintf("lang:%s;\n", langID))
 	w.WriteString(fmt.Sprintf("module:%s;%s;\n", ModuleName(), ModulePath()))
-	w.WriteString(fmt.Sprintf("debug:%v;\n", enginelog.IsDebug()))
+	w.WriteString(fmt.Sprintf("debug:%v;\n", Debug()))
 	w.Flush()
 
 	log.Dbg.Print("config file saved")
@@ -138,5 +138,5 @@ func SetLang(lng string) error {
 // SetDebug toggles debug mode.
 func SetDebug(dbg bool) {
 	debug = dbg
-	enginelog.EnableDebug(dbg)
+	enginelog.SetDebug(dbg)
 }

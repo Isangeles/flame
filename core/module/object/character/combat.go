@@ -59,7 +59,7 @@ func (c *Character) Hit() effect.Hit {
 
 // UseSkill uses specified skill on current target.
 func (c *Character) UseSkill(s *skill.Skill) {
-	if c.Casting() {
+	if c.Casting() || c.Moving() {
 		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 			lang.Text("ui", "cant_do_right_now"))
 		c.sendCmb(msg)

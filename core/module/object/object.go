@@ -33,6 +33,14 @@ type Object interface {
 	Serial() string
 }
 
+// Interface for useable gmae
+// objects.
+type UseObject interface {
+	ID() string
+	Serial() string
+	Activate()
+}
+
 // Interface for all object with
 // position on game world map.
 type Positioner interface {

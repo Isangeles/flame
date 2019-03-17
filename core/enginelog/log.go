@@ -1,7 +1,7 @@
 /*
  * log.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,12 +63,12 @@ func logDebug(msg string) {
 }
 
 // EnableDebug enables debug mode.
-func EnableDebug(d bool) {
+func SetDebug(d bool) {
 	debuging = d
 }
 
 // Debug checks if debug mode is enabled.
-func IsDebug() bool {
+func Debug() bool {
 	return debuging
 }
 

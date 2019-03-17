@@ -49,6 +49,7 @@ type Skill struct {
 	cooldown     int64 // cooldown time in millisconds
 	cooldownMax  int64 // maximal cooldown in milliseconds
 	casting      bool
+	casted       bool
 	ready        bool
 }
 
@@ -86,8 +87,8 @@ func New(data res.SkillData) *Skill {
 	s.castRange = Range(data.Range)
 	s.useReqs = data.UseReqs
 	s.effects = data.Effects
-	s.castTimeMax = int64(data.Cast * 1000) // cast from sec to millisec
-	s.cooldownMax = int64(2 * 1000)
+	s.castTimeMax = data.Cast
+	s.cooldownMax = data.Cooldown
 	return s
 }
 
@@ -104,15 +105,21 @@ func (s *Skill) Update(delta int64) {
 		s.castTime += delta
 		if s.castTime >= s.castTimeMax {
 			s.casting = false
-			s.cooldown = s.cooldownMax
-			s.ready = false
-			if s.target == nil {
-				return
-			}
-			for _, e := range s.buildEffects() {
-				s.target.TakeEffect(e)
-			}
+			s.casted = true
 		}
+	}
+}
+
+// Activate activates skill.
+func (s *Skill) Activate() {
+	s.cooldown = s.cooldownMax
+	s.ready = false
+	s.casted = false
+	if s.target == nil {
+		return
+	}
+	for _, e := range s.buildEffects() {
+		s.target.TakeEffect(e)
 	}
 }
 
@@ -189,6 +196,13 @@ func(s *Skill) CastTimeMax() int64 {
 // currently casted.
 func (s *Skill) Casting() bool {
 	return s.casting
+}
+
+// Casted check whether skill was
+// successfully casted but not
+// activated yet.
+func (s *Skill) Casted() bool {
+	return s.casted
 }
 
 // Cooldown retruns current cooldown time.

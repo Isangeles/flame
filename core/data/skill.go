@@ -122,8 +122,8 @@ func buildXMLSkillData(xmlSkill parsexml.SkillXML) *res.SkillData {
 	}
 	data := res.SkillData{
 		ID:       xmlSkill.ID,
-		Cast:     xmlSkill.Cast,
-		Cooldown: xmlSkill.Cooldown,
+		Cast:     int64(xmlSkill.CastSec * 1000),
+		Cooldown: int64(xmlSkill.CooldownSec * 1000),
 		Range:    int(skillRange),
 		Effects:  effects,
 		UseReqs:  reqs,
