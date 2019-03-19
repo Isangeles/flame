@@ -3,6 +3,9 @@
 		<damage type="normal">
 			<min>1</min>
 			<max>10</max>
+			<effects>
+				<effect id="bleed1"/>
+			</effects>
 		</damage>
 	</item>
 </base>

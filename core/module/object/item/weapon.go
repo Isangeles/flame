@@ -27,8 +27,8 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for weapons.
@@ -40,6 +40,7 @@ type Weapon struct {
 	level          int
 	dmgMin, dmgMax int
 	dmgType        effect.HitType
+	dmgEffects     []res.EffectData
 	equipReqs      []req.Requirement
 	slots          []Slot
 }
@@ -48,14 +49,15 @@ type Weapon struct {
 // specified parameters.
 func NewWeapon(data res.WeaponData) *Weapon {
 	w := Weapon{
-		id:        data.ID,
-		name:      data.Name,
-		value:     data.Value,
-		dmgMin:    data.DMGMin,
-		dmgMax:    data.DMGMax,
-		dmgType:   effect.HitType(data.DMGType),
-		level:     data.Level,
-		equipReqs: data.EQReqs,
+		id:         data.ID,
+		name:       data.Name,
+		value:      data.Value,
+		dmgMin:     data.DMGMin,
+		dmgMax:     data.DMGMax,
+		dmgType:    effect.HitType(data.DMGType),
+		dmgEffects: data.DMGEffects,
+		level:      data.Level,
+		equipReqs:  data.EQReqs,
 	}
 	for _, sid := range data.Slots {
 		w.slots = append(w.slots, Slot(sid))
@@ -115,6 +117,11 @@ func (w *Weapon) Damage() (int, int) {
 // DamageType retruns weapon damage type.
 func (w *Weapon) DamageType() effect.HitType {
 	return w.dmgType
+}
+
+// DamageEffects returns weapon hit effects.
+func (w *Weapon) DamageEffects() []res.EffectData {
+	return w.dmgEffects
 }
 
 // EquipReqs returns weapon equip requirements.

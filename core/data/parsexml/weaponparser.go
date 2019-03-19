@@ -28,27 +28,24 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-
-	"github.com/isangeles/flame/core/module/object/item"
-	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for weapons base XML doc.
 type WeaponsBaseXML struct {
-	XMLName xml.Name        `xml:"base"`
+	XMLName xml.Name    `xml:"base"`
 	Items   []WeaponXML `xml:"item"`
 }
 
 // Struct for weapon XML node.
 type WeaponXML struct {
-	XMLName xml.Name  `xml:"item"`
-	ID      string    `xml:"id,attr"`
-	Serial  string    `xml:"serial,attr"`
-	Value   int       `xml:"value,attr"`
-	Level   int       `xml:"level,attr"`
-	Damage  DamageXML `xml:"damage"`
-	Reqs    ReqsXML   `xml:"reqs"`
-	Slots   string    `xml:"slots,attr"`
+	XMLName    xml.Name      `xml:"item"`
+	ID         string        `xml:"id,attr"`
+	Serial     string        `xml:"serial,attr"`
+	Value      int           `xml:"value,attr"`
+	Level      int           `xml:"level,attr"`
+	Damage     DamageXML     `xml:"damage"`
+	Reqs       ReqsXML       `xml:"reqs"`
+	Slots      string        `xml:"slots,attr"`
 }
 
 // UnmarshalWeaponsBase parses specified data to
@@ -62,28 +59,4 @@ func UnmarshalWeaponsBase(data io.Reader) ([]WeaponXML, error) {
 			err)
 	}
 	return xmlWeaponsBase.Items, nil
-}
-
-// xmlWeapon parses specified weapon item to XML
-// weapon node.
-func xmlWeapon(w *item.Weapon) *WeaponXML {
-	xmlWeapon := new(WeaponXML)
-	xmlWeapon.ID = w.ID()
-	xmlWeapon.Serial = w.Serial()
-	xmlWeapon.Value = w.Value()
-	xmlWeapon.Level = w.Level()
-	xmlWeapon.Damage.Min, xmlWeapon.Damage.Max = w.Damage()
-	reqs := &xmlWeapon.Reqs
-	for _, r := range w.EquipReqs() {
-		switch r := r.(type) {
-		case *req.LevelReq:
-			req := xmlLevelReq(r)
-			reqs.LevelReqs = append(reqs.LevelReqs, *req)
-		}
-	}
-	for _, s := range w.Slots() {
-		xmlWeapon.Slots = fmt.Sprintf("%s %s", xmlWeapon.Slots,
-			s.ID())
-	}
-	return xmlWeapon
 }

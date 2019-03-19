@@ -122,13 +122,13 @@ func MarshalEqSlot(eqSlot *character.EquipmentSlot) string {
 	case character.Chest:
 		return "chest"
 	case character.Hand_right:
-		return "right hand"
+		return "right_hand"
 	case character.Hand_left:
-		return "left hand"
+		return "left_hand"
 	case character.Finger_right:
-		return "finger right"
+		return "finger_right"
 	case character.Finger_left:
-		return "finger left"
+		return "finger_left"
 	case character.Legs:
 		return "legs"		
 	case character.Feet:

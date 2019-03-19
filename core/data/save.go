@@ -1,7 +1,7 @@
 /*
  * savegame.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -159,8 +159,7 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 				charsData = append(charsData, charData) // save data to restore effects later
 				char := buildCharacter(mod, charData)
 				// Set position & serial.
-				posX, posY, err := parsexml.UnmarshalPosition(
-					xmlChar.Position)
+				posX, posY, err := parsexml.UnmarshalPosition(xmlChar.Position)
 				if err != nil {
 					log.Err.Printf("data_build_saved_game:set_char_pos:%s:fail:%v",
 						xmlChar.ID, err)

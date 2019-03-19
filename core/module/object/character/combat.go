@@ -60,12 +60,25 @@ func (c *Character) DamageType() effect.HitType {
 	return effect.Hit_normal
 }
 
+// DamageEffects returns character damage effects.
+func (c *Character) DamageEffects() []*effect.Effect {
+	effects := make([]*effect.Effect, 0)
+	rightHandItem := c.Equipment().HandRight().Item()
+	if rightHandItem != nil {
+		if w, ok := rightHandItem.(*item.Weapon); ok {
+			effects = append(effects, c.buildEffects(w.DamageEffects())...)
+		}
+	}
+	return effects
+}
+
 // Hit creates character hit.
 func (c *Character) Hit() effect.Hit {
 	return effect.Hit{
-		Source: c,
-		Type:   c.DamageType(),
-		HP:     -(rng.RollInt(c.Damage())),
+		Source:  c,
+		Type:    c.DamageType(),
+		HP:      -(rng.RollInt(c.Damage())),
+		Effects: c.DamageEffects(),
 	}
 }
 
@@ -79,8 +92,13 @@ func (c *Character) UseSkill(s *skill.Skill) {
 	}
 	charSkill := c.skills[s.ID()+s.Serial()]
 	if charSkill == s {
-		err := s.Cast(c, c.Targets()[0])
+		tar := c.Targets()[0]
+		err := s.Cast(c, tar)
 		if err != nil {
+			// Move to target if is too far.
+			if fmt.Sprintf("%v", err) == skill.RANGE_ERR {
+				c.SetDestPoint(tar.Position())
+			}
 			c.combatlog <- fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
 		}
 		return
@@ -94,6 +112,9 @@ func (c *Character) UseSkill(s *skill.Skill) {
 func (c *Character) TakeHit(hit effect.Hit) {
 	// TODO: handle resists.
 	c.SetHealth(c.Health() + hit.HP)
+	for _, e := range hit.Effects {
+		c.TakeEffect(e)
+	}
 	msg := fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
 	c.sendCmb(msg)
 }

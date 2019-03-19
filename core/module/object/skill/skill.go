@@ -120,7 +120,7 @@ func (s *Skill) Activate() {
 	if s.target == nil {
 		return
 	}
-	for _, e := range s.buildEffects() {
+	for _, e := range s.buildEffects(s.effects) {
 		s.target.TakeEffect(e)
 	}
 }
@@ -255,9 +255,9 @@ func (r Range) Value() float64 {
 }
 
 // effects builds and returns skill effects.
-func (s *Skill) buildEffects() []*effect.Effect {
+func (s *Skill) buildEffects(effectsData []res.EffectData) []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
-	for _, ed := range s.effects {
+	for _, ed := range effectsData {
 		e := effect.New(ed)
 		e.SetSource(s.user)
 		serial.AssignSerial(e)

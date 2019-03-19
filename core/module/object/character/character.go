@@ -33,6 +33,7 @@ import (
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Character struct represents game character.
@@ -428,4 +429,17 @@ func (c *Character) sendCmb(msg string) {
 	case c.combatlog <- msg:
 	default:
 	}
+}
+
+// buildEffects creates new effects from specified
+// data with character as a source.
+func (c *Character) buildEffects(effectsData []res.EffectData) []*effect.Effect {
+	effects := make([]*effect.Effect, 0)
+	for _, ed := range effectsData {
+		e := effect.New(ed)
+		e.SetSource(c)
+		serial.AssignSerial(e)
+		effects = append(effects, e)
+	}
+	return effects
 }

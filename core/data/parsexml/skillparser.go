@@ -38,25 +38,13 @@ type SkillsBaseXML struct {
 
 // Struct for skill XML node.
 type SkillXML struct {
-	XMLName      xml.Name        `xml:"skill"`
-	ID           string          `xml:"id,attr"`
-	CastSec      int             `xml:"cast,attr"`
-	CooldownSec  int             `xml:"cooldown,attr"`
-	Range        string          `xml:"range,attr"`
-	Effects      SkillEffectsXML `xml:"effects"`
-	Reqs         ReqsXML         `xml:"reqs"`
-}
-
-// Struct for skill effects XML node.
-type SkillEffectsXML struct {
-	XMLName xml.Name         `xml:"effects"`
-	Nodes   []SkillEffectXML `xml:"effect"`
-}
-
-// Struct for skill effect XML node.
-type SkillEffectXML struct {
-	XMLName xml.Name `xml:"effect"`
-	ID      string   `xml:"id,attr"`
+	XMLName     xml.Name         `xml:"skill"`
+	ID          string           `xml:"id,attr"`
+	CastSec     int              `xml:"cast,attr"`
+	CooldownSec int              `xml:"cooldown,attr"`
+	Range       string           `xml:"range,attr"`
+	Effects     ObjectEffectsXML `xml:"effects"`
+	Reqs        ReqsXML          `xml:"reqs"`
 }
 
 // UnmarshalSkillsBase parses specified data to XML skill

@@ -125,8 +125,7 @@ func UnmarshalGame(data io.Reader) (SavedGameXML, error) {
 	xmlGame := new(SavedGameXML)
 	err := xml.Unmarshal(doc, xmlGame)
 	if err != nil {
-		return SavedGameXML{}, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
-			err)
+		return *xmlGame, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
 	}
 	return *xmlGame, nil
 }

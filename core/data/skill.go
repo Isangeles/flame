@@ -106,11 +106,11 @@ func ImportSkillsDir(dirPath string) ([]*res.SkillData, error) {
 func buildXMLSkillData(xmlSkill parsexml.SkillXML) *res.SkillData {
 	reqs := buildXMLReqs(&xmlSkill.Reqs)
 	effects := make([]res.EffectData, 0)
-	for _, xmlSkillEff := range xmlSkill.Effects.Nodes {
-		eff := res.Effect(xmlSkillEff.ID)
-		if eff.ID == "" {
+	for _, xmlEffect := range xmlSkill.Effects.Nodes {
+		eff := res.Effect(xmlEffect.ID)
+		if eff == nil {
 			log.Err.Printf("data:build_xml_skill_data:effect_data_not_found:%s",
-				xmlSkillEff.ID)
+				xmlEffect.ID)
 			continue
 		}
 		effects = append(effects, *eff)

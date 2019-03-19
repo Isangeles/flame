@@ -129,15 +129,26 @@ func buildXMLWeaponData(xmlWeapon parsexml.WeaponXML) (*res.WeaponData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_damage_type:%v", err)
 	}
+	hitEffects := make([]res.EffectData, 0)
+	for _, xmlEffect := range xmlWeapon.Damage.Effects.Nodes {
+		eff := res.Effect(xmlEffect.ID)
+		if eff == nil {
+			log.Err.Printf("data:build_xml_weapon:hit_effect_not_found:%s",
+				xmlEffect.ID)
+			continue
+		}
+		hitEffects = append(hitEffects, *eff)
+	}
 	w := res.WeaponData{
-		ID:      xmlWeapon.ID,
-		Value:   xmlWeapon.Value,
-		Level:   xmlWeapon.Level,
-		DMGMin:  xmlWeapon.Damage.Min,
-		DMGMax:  xmlWeapon.Damage.Max,
-		DMGType: int(dmgType),
-		EQReqs:  reqs,
-		Slots:   slotsID,
+		ID:         xmlWeapon.ID,
+		Value:      xmlWeapon.Value,
+		Level:      xmlWeapon.Level,
+		DMGMin:     xmlWeapon.Damage.Min,
+		DMGMax:     xmlWeapon.Damage.Max,
+		DMGType:    int(dmgType),
+		DMGEffects: hitEffects,
+		EQReqs:     reqs,
+		Slots:      slotsID,
 	}
 	return &w, nil
 }
