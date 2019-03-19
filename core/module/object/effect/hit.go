@@ -23,9 +23,13 @@
 
 package effect
 
+import (
+	"github.com/isangeles/flame/core/module/object"
+)
+
 // Struct for object hit.
 type Hit struct {
-	Source  Target
+	Source  object.Object
 	Type    HitType
 	HP      int
 	Effects []*Effect

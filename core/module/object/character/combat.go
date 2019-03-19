@@ -48,11 +48,23 @@ func (c *Character) Damage() (int, int) {
 	return min, max
 }
 
+// DamgaeType returns type of damage caused by
+// character.
+func (c *Character) DamageType() effect.HitType {
+	rightHandItem := c.Equipment().HandRight().Item()
+	if rightHandItem != nil {
+		if w, ok := rightHandItem.(*item.Weapon); ok {
+			w.DamageType()
+		}
+	}
+	return effect.Hit_normal
+}
+
 // Hit creates character hit.
 func (c *Character) Hit() effect.Hit {
 	return effect.Hit{
 		Source: c,
-		Type:   effect.Hit_normal,
+		Type:   c.DamageType(),
 		HP:     -(rng.RollInt(c.Damage())),
 	}
 }
@@ -65,15 +77,13 @@ func (c *Character) UseSkill(s *skill.Skill) {
 		c.sendCmb(msg)
 		return
 	}
-	for _, charSkill := range c.Skills() {
-		if charSkill == s {
-			err := s.Cast(c, c.Targets()[0])
-			if err != nil {
-				c.combatlog <- fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(),
-					err)
-			}
-			return
+	charSkill := c.skills[s.ID()+s.Serial()]
+	if charSkill == s {
+		err := s.Cast(c, c.Targets()[0])
+		if err != nil {
+			c.combatlog <- fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
 		}
+		return
 	}
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 		lang.Text("ui", "skill_not_known"))

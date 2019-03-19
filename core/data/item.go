@@ -81,6 +81,7 @@ func ImportWeapons(basePath string) ([]*res.WeaponData, error) {
 		w, err := buildXMLWeaponData(weaponXML)
 		if err != nil {
 			log.Err.Printf("imp_weapon:build_xml_data_fail:%v", err)
+			continue
 		}
 		weapons = append(weapons, w)
 	}
@@ -124,14 +125,19 @@ func buildXMLWeaponData(xmlWeapon parsexml.WeaponXML) (*res.WeaponData, error) {
 	for _, s := range slots {
 		slotsID = append(slotsID, int(s))
 	}
+	dmgType, err := parsexml.UnmarshalHitType(xmlWeapon.Damage.Type)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_damage_type:%v", err)
+	}
 	w := res.WeaponData{
-		ID: xmlWeapon.ID,
-		Value: xmlWeapon.Value,
-		Level: xmlWeapon.Level,
-		DMGMin: xmlWeapon.Damage.Min,
-		DMGMax: xmlWeapon.Damage.Max,
-		EQReqs: reqs,
-		Slots: slotsID,
+		ID:      xmlWeapon.ID,
+		Value:   xmlWeapon.Value,
+		Level:   xmlWeapon.Level,
+		DMGMin:  xmlWeapon.Damage.Min,
+		DMGMax:  xmlWeapon.Damage.Max,
+		DMGType: int(dmgType),
+		EQReqs:  reqs,
+		Slots:   slotsID,
 	}
 	return &w, nil
 }

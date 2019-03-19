@@ -1,7 +1,7 @@
 /*
  * weapon.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/module/object/effect"
 )
 
 // Struct for weapons.
@@ -38,6 +39,7 @@ type Weapon struct {
 	value          int
 	level          int
 	dmgMin, dmgMax int
+	dmgType        effect.HitType
 	equipReqs      []req.Requirement
 	slots          []Slot
 }
@@ -51,6 +53,7 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		value:     data.Value,
 		dmgMin:    data.DMGMin,
 		dmgMax:    data.DMGMax,
+		dmgType:   effect.HitType(data.DMGType),
 		level:     data.Level,
 		equipReqs: data.EQReqs,
 	}
@@ -107,6 +110,11 @@ func (w *Weapon) Level() int {
 // damge values.
 func (w *Weapon) Damage() (int, int) {
 	return w.dmgMin, w.dmgMax
+}
+
+// DamageType retruns weapon damage type.
+func (w *Weapon) DamageType() effect.HitType {
+	return w.dmgType
 }
 
 // EquipReqs returns weapon equip requirements.

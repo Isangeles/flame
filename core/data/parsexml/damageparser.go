@@ -1,7 +1,7 @@
 /*
  * damageparser.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 // Struct for damage XML node.
 type DamageXML struct {
 	XMLNode xml.Name `xml:"damage"`
+	Type    string   `xml:"type,attr"`
 	Min     int      `xml:"min,value"`
 	Max     int      `xml:"max,value"`
 }
-

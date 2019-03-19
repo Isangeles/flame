@@ -1,6 +1,6 @@
 <base>
 	<item id="iwIronSword" value="10" level="1" slots="slot_hand">
-		<damage>
+		<damage type="normal">
 			<min>1</min>
 			<max>10</max>
 		</damage>

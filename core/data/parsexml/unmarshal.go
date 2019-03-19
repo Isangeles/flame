@@ -29,6 +29,7 @@ import (
 	"strconv"
 
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
 )
@@ -207,5 +208,23 @@ func UnmarshalSkillRange(rg string) (skill.Range, error) {
 	default:
 		return -1, fmt.Errorf("unsupported_skill_range_type_value:%s",
 			rg)
+	}
+}
+
+// UnmarshalHitType parses specified string to hit type.
+func UnmarshalHitType(s string) (effect.HitType, error) {
+	switch s {
+	case "normal":
+		return effect.Hit_normal, nil
+	case "fire":
+		return effect.Hit_fire, nil
+	case "frost":
+		return effect.Hit_frost, nil
+	case "nature":
+		return effect.Hit_nature, nil
+	case "magic":
+		return effect.Hit_magic, nil
+	default:
+		return -1, fmt.Errorf("unsupported_hit_type_value:%s", s)
 	}
 }

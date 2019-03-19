@@ -29,12 +29,13 @@ import (
 
 // Strunt for weapon resource data.
 type WeaponData struct {
-	ID     string
-	Name   string
-	Value  int
-	Level  int
-	DMGMin int
-	DMGMax int
-	EQReqs []req.Requirement
-	Slots  []int
+	ID      string
+	Name    string
+	Value   int
+	Level   int
+	DMGMin  int
+	DMGMax  int
+	DMGType int
+	EQReqs  []req.Requirement
+	Slots   []int
 }

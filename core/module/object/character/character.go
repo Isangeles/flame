@@ -99,6 +99,7 @@ func New(data res.CharacterBasicData) *Character {
 func (c *Character) Update(delta int64) {
 	// Move to dest point.
 	if c.Moving() {
+		c.Interrupt() // interrupt current acction
 		if c.posX < c.destX {
 			c.Move(c.posX+1, c.posY)
 		}
@@ -127,7 +128,7 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
-	// Effects.
+	// Effects.              
 	for serial, e := range c.effects {
 		e.Update(delta)
 		// Remove expired effects.
@@ -394,6 +395,16 @@ func (c *Character) CombatLog() chan string {
 // activation one of character skills.
 func (c *Character) SetOnSkillActivatedFunc(f func (s *skill.Skill)) {
 	c.onSkillActivated = f
+}
+
+// Interrupt stops any acction(like skill
+// casting) performed by character.
+func (c *Character) Interrupt() {
+	for _, s := range c.skills {
+		if s.Casting() {
+			s.StopCast()
+		}
+	}
 }
 
 // levelup promotes character to next level.

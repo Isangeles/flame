@@ -157,7 +157,7 @@ func (eq *Equipment) Items() []item.Equiper {
 // equiped.
 func (eq *Equipment) Equiped(item item.Equiper) bool {
 	for _, i := range eq.Items() {
-		if i.SerialID() == item.SerialID() {
+		if i.ID() == item.ID() && i.Serial() == item.Serial() {
 			return true
 		}
 	}

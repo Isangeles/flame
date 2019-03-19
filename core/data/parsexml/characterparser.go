@@ -146,9 +146,10 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 // XML equipment node.
 func xmlEquipment(eq *character.Equipment) *EquipmentXML {
 	xmlEq := new(EquipmentXML)
-	if eq.HandRight().Item() != nil {
+	handRightItem := eq.HandRight().Item()
+	if handRightItem != nil {
 		xmlEqItem := EquipmentItemXML{
-			ID:   eq.HandRight().Item().SerialID(),
+			ID:   handRightItem.ID() + "_" + handRightItem.Serial(),
 			Slot: MarshalEqSlot(eq.HandRight()),
 		}
 		xmlEq.Items = append(xmlEq.Items, xmlEqItem)

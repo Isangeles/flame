@@ -35,6 +35,8 @@ import (
 )
 
 // Interface for skills.
+// All times(cast time, cooldown, etc.)
+// are in milliseconds.
 type Skill struct {
 	id, serial   string
 	name         string
@@ -44,10 +46,10 @@ type Skill struct {
 	castRange    Range
 	user         SkillUser
 	target       effect.Target
-	castTimeMax  int64 // cast time in milliseconds
-	castTime     int64 // remaning cast time in milliseconds
-	cooldown     int64 // cooldown time in millisconds
-	cooldownMax  int64 // maximal cooldown in milliseconds
+	castTimeMax  int64
+	castTime     int64
+	cooldown     int64
+	cooldownMax  int64
 	casting      bool
 	casted       bool
 	ready        bool
@@ -203,6 +205,11 @@ func (s *Skill) Casting() bool {
 // activated yet.
 func (s *Skill) Casted() bool {
 	return s.casted
+}
+
+// StopCast stops skill casting.
+func (s *Skill) StopCast() {
+	s.casting = false
 }
 
 // Cooldown retruns current cooldown time.
