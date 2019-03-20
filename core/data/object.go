@@ -21,27 +21,4 @@
  *
  */
 
-package res
-
-// Struct for object data.
-type ObjectBasicData struct {
-	ID        string
-	Serial    string
-	HP, MaxHP int
-}
-
-// Struct for object effects data.
-type ObjectEffectData struct {
-	ID           string
-	Serial       string
-	Time         int64
-	SourceID     string
-	SourceSerial string
-}
-
-// Struct for object skill data.
-type ObjectSkillData struct {
-	ID       string
-	Serial   string
-	Cooldown int64
-}
+package data

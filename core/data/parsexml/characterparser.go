@@ -53,6 +53,9 @@ type CharacterXML struct {
 	Level     int              `xml:"level,attr"`
 	Stats     string           `xml:"stats,value"`
 	PC        bool             `xml:"pc,attr"`
+	HP        int              `xml:"hp, attr"`
+	Mana      int              `xml:"mana,attr"`
+	Exp       int              `xml:"exp,attr"`
 	Position  string           `xml:"position,value"`
 	Inventory InventoryXML     `xml:"inventory"`
 	Equipment EquipmentXML     `xml:"equipment"`
@@ -129,6 +132,9 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Attitude = marshalAttitude(char.Attitude())
 	xmlChar.Alignment = marshalAlignment(char.Alignment())
 	xmlChar.Stats = marshalAttributes(char.Attributes())
+	xmlChar.HP = char.Health()
+	xmlChar.Mana = char.Mana()
+	xmlChar.Exp = char.Experience()
 	posX, posY := char.Position()
 	xmlChar.Position = fmt.Sprintf("%fx%f", posX, posY)
 	xmlChar.Inventory = *xmlInventory(char.Inventory())

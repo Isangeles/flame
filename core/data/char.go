@@ -307,11 +307,24 @@ func buildXMLCharacterData(xmlChar *parsexml.CharacterXML) (*res.CharacterData, 
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_parse_attributes:%v", err)
 	}
+	// Attributes.
 	data.BasicData.Str = attributes.Str
 	data.BasicData.Con = attributes.Con
 	data.BasicData.Dex = attributes.Dex
 	data.BasicData.Int = attributes.Int
 	data.BasicData.Wis = attributes.Wis
+	// HP, mana, exp.
+	data.HP = xmlChar.HP
+	data.Mana = xmlChar.Mana
+	data.Exp = xmlChar.Exp
+	// Position.
+	if xmlChar.Position != "" {
+		posX, posY, err := parsexml.UnmarshalPosition(xmlChar.Position)
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_parse_position:%v", err)
+		}
+		data.PosX, data.PosY = posX, posY
+	}
 	// Items.
 	for _, xmlInvIt := range xmlChar.Inventory.Items {
 		invItData := res.InventoryItemData{

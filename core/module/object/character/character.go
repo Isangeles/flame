@@ -38,8 +38,7 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id               string
-	serial           string
+	id, serial       string
 	name             string
 	level            int
 	hp, maxHP        int
@@ -73,6 +72,7 @@ const (
 func New(data res.CharacterBasicData) *Character {
 	c := Character{
 		id:        data.ID,
+		serial:    data.Serial,
 		name:      data.Name,
 		sex:       Gender(data.Sex),
 		race:      Race(data.Race),

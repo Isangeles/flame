@@ -25,11 +25,15 @@ package res
 
 // Struct for character data resource.
 type CharacterData struct {
-	BasicData CharacterBasicData
-	Items     []InventoryItemData
-	EqItems   []EquipmentItemData
-	Effects   []ObjectEffectData
-	Skills    []ObjectSkillData
+	BasicData  CharacterBasicData
+	Items      []InventoryItemData
+	EqItems    []EquipmentItemData
+	Effects    []ObjectEffectData
+	Skills     []ObjectSkillData
+	PosX, PosY float64
+	HP        int
+	Mana      int
+	Exp       int
 }
 
 // Struct for basic character data.

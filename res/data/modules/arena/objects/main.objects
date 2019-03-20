@@ -1,0 +1,5 @@
+<base>
+	<object id="aloe1" hp="1">
+		<inventory cap="5"></inventory>
+	</object>
+</base>

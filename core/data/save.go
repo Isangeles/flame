@@ -158,18 +158,15 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 				}
 				charsData = append(charsData, charData) // save data to restore effects later
 				char := buildCharacter(mod, charData)
-				// Set position & serial.
-				posX, posY, err := parsexml.UnmarshalPosition(xmlChar.Position)
-				if err != nil {
-					log.Err.Printf("data_build_saved_game:set_char_pos:%s:fail:%v",
-						xmlChar.ID, err)
-					continue
-				}
-				char.SetPosition(posX, posY)
+				// Restore HP, mana & exp.
+				char.SetHealth(charData.HP)
+				char.SetMana(charData.Mana)
+				char.SetExperience(charData.Exp)
+				// Restore position.
+				char.SetPosition(charData.PosX, charData.PosY)
 				if xmlChar.PC {
 					pcs = append(pcs, char)
 				}
-				char.SetSerial(xmlChar.Serial)
 				area.AddCharacter(char)
 			}
 			if xmlArea.Mainarea {
