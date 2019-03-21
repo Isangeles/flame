@@ -28,6 +28,7 @@ var (
 	skillsData  map[string]*SkillData
 	weaponsData map[string]*WeaponData
 	charsData   map[string]*CharacterData
+	objectsData map[string]*ObjectData
 )
 
 // Effect returns resources for effect
@@ -62,6 +63,14 @@ func Character(id string) *CharacterData {
 	return charsData[id]
 }
 
+// Object returns object resource data
+// for object with specified ID or empty
+// object resurce struct if data for specified
+// ID was not found. 
+func Object(id string) *ObjectData {
+	return objectsData[id]
+}
+
 // SetEffectsData sets specified effects data
 // as effects resources.
 func SetEffectsData(data []*EffectData) {
@@ -90,10 +99,19 @@ func SetWeaponsData(data []*WeaponData) {
 }
 
 // SetCharactersData sets specified characters data as
-// characters resource.
+// characters resources.
 func SetCharactersData(data []*CharacterData) {
 	charsData = make(map[string]*CharacterData)
 	for _, cd := range data {
 		charsData[cd.BasicData.ID] = cd
+	}
+}
+
+// SetObjectsData sets specified objects data as
+// objects resources.
+func SetObjectsData(data []*ObjectData) {
+	objectsData = make(map[string]*ObjectData)
+	for _, od := range data {
+		objectsData[od.BasicData.ID] = od
 	}
 }

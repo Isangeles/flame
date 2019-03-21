@@ -43,58 +43,20 @@ const (
 	CHARS_FILE_EXT = ".characters"
 )
 
-// Character parses specified characters base and creates
-// game character.
+// Character creates module character with specified ID.
 func Character(mod *module.Module, charID string) (*character.Character, error) {
-	dataChar := res.Character(charID)
-	if dataChar.BasicData.ID == "" {
-		return nil, fmt.Errorf("character_data_not_found:%%s", charID)
+	data := res.Character(charID)
+	if data == nil {
+		return nil, fmt.Errorf("character_data_not_found:%s", charID)
 	}
-	char := character.New(dataChar.BasicData)
-	// Inventory.
-	for _, invItData := range dataChar.Items {
-		it, err := Item(mod, invItData.ID)
-		if it == nil {
-			log.Err.Printf("data:character:%s:fail_to_retrieve_inv_item:%v",
-				char.ID(), err)
-			continue
-		}
-		it.SetSerial(invItData.Serial)
-		char.Inventory().AddItem(it)
-	}
-	// Equipment.
-	for _, eqItData := range dataChar.EqItems {
-		it := char.Inventory().Item(eqItData.ID)
-		if it == nil {
-			log.Err.Printf("data:character:%s:eq:fail_to_retrieve_eq_item_from_inv:%s",
-				char.ID(), eqItData.ID)
-			continue
-		}
-		eqItem, ok := it.(item.Equiper)
-		if !ok {
-			log.Err.Printf("data:character:%s:eq:not_eqipable_item:%s",
-				char.ID(), it.ID())
-			continue
-		}
-		switch character.EquipmentSlotType(eqItData.Slot) {
-		case character.Hand_right:
-			err := char.Equipment().EquipHandRight(eqItem)
-			if err != nil {
-				log.Err.Printf("data_build_character:%s:eq:fail_to_equip_item:%v",
-					char.ID(), err)
-			}
-		default:
-			log.Err.Printf("data:character:%s:unknown_equipment_slot:%s",
-				char.ID(), eqItData.Slot)
-		}
-	}
+	char := buildCharacter(mod, data)
 	return char, nil
 }
 
 // ImportCharactersData import characters data from base file
 // with specified path.
-func ImportCharactersData(basePath string) ([]*res.CharacterData, error) {
-	baseFile, err := os.Open(basePath)
+func ImportCharactersData(path string) ([]*res.CharacterData, error) {
+	baseFile, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
 	}
@@ -118,26 +80,24 @@ func ImportCharactersData(basePath string) ([]*res.CharacterData, error) {
 
 // ImportCharactersDataDir imports all characters data from
 // files in directory with specified path.
-func ImportCharactersDataDir(dirPath string) ([]*res.CharacterData, error) {
-	files, err := ioutil.ReadDir(dirPath)
+func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
+	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
 	chars := make([]*res.CharacterData, 0)
-	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), CHARS_FILE_EXT) {
+	for _, finfo := range files {
+		if !strings.HasSuffix(finfo.Name(), CHARS_FILE_EXT) {
 			continue
 		}
-		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
-		impChars, err := ImportCharactersData(charFilePath)
+		basePath := filepath.FromSlash(path + "/" + finfo.Name())
+		impChars, err := ImportCharactersData(basePath)
 		if err != nil {
-			log.Err.Printf("data_char_import:%s:fail_to_parse_char_file:%v",
-				charFilePath, err)
+			log.Err.Printf("data:import_chars_dir:%s:fail_to_parse_char_file:%v",
+				basePath, err)
 			continue
 		}
-		for _, c := range impChars {
-			chars = append(chars, c)
-		}
+		chars = append(chars, impChars...)
 	}
 	return chars, nil
 }
@@ -222,7 +182,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	// Inventory.
 	for _, invItData := range data.Items {
 		it, err := Item(mod, invItData.ID)
-		if it == nil {
+		if err != nil {
 			log.Err.Printf("data:character:%s:fail_to_retrieve_inv_item:%v",
 				char.ID(), err)
 			continue

@@ -23,7 +23,13 @@
 
 package res
 
-// Struct for object data.
+// Struct for object data. 
+type ObjectData struct {
+	BasicData ObjectBasicData
+	Items     []InventoryItemData
+}
+
+// Struct for basic object data.
 type ObjectBasicData struct {
 	ID        string
 	Serial    string

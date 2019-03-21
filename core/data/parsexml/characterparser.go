@@ -76,16 +76,17 @@ type EquipmentItemXML struct {
 	Slot    string   `xml:"slot"`
 }
 
-// UnmarshalCharactersBaseXML parses characters base from XML data.
+// UnmarshalCharactersBaseXML parses to XML character
+// nodes.
 func UnmarshalCharactersBase(data io.Reader) ([]CharacterXML, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlCharsBase := new(CharactersBaseXML)
-	err := xml.Unmarshal(doc, xmlCharsBase)
+	xmlBase := new(CharactersBaseXML)
+	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
 			err)
 	}
-	return xmlCharsBase.Characters, nil
+	return xmlBase.Characters, nil
 }
 
 // UnmarshalCharacter parses character with specified ID from

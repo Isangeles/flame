@@ -1,7 +1,7 @@
 /*
  * modconf.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,12 @@ func (c ModConf) ChaptersPath() string {
 // exported characters.
 func (c ModConf) CharactersPath() string {
 	return filepath.FromSlash(c.Path + "/characters")
+}
+
+// ObjectsPath returns path to directory with
+// area objects bases.
+func (c ModConf) ObjectsPath() string {
+	return filepath.FromSlash(c.Path + "/objects")
 }
 
 // ItemsPath returns path to directory with

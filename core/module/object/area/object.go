@@ -21,7 +21,8 @@
  *
  */
 
-package areaobject
+// Package for area objects.
+package area
 
 import (
 	"github.com/isangeles/flame/core/data/res"
@@ -42,7 +43,7 @@ type Object struct {
 
 // New creates new area object from
 // specified data.
-func New(data res.ObjectBasicData) *Object {
+func NewObject(data res.ObjectBasicData) *Object {
 	ob := Object{
 		id:     data.ID,
 		serial: data.Serial,
@@ -67,6 +68,16 @@ func (ob *Object) Serial() string {
 // object serial value.
 func (ob *Object) SetSerial(s string) {
 	ob.serial = s
+}
+
+// Name returns object name.
+func (ob *Object) Name() string {
+	return ob.name
+}
+
+// SetName sets object name.
+func (ob *Object) SetName(s string) {
+	ob.name = s
 }
 
 // Position returns object XY position.
@@ -102,4 +113,9 @@ func (ob *Object) MaxHealth() int {
 // as maximal health value.
 func (ob *Object) SetMaxHealth(h int) {
 	ob.maxHP = h
+}
+
+// Inventory returns object inventory.
+func (ob *Object) Inventory() *item.Inventory {
+	return ob.inventory
 }

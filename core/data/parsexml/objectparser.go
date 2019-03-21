@@ -25,10 +25,29 @@ package parsexml
 
 import (
 	"encoding/xml"
+	"fmt"
+	"io"
+	"io/ioutil"
 
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/skill"
 )
+
+// Struct for XML objects base node.
+type ObjectsBaseXML struct {
+	XMLName xml.Name    `xml:"base"`
+	Nodes   []ObjectXML `xml:"object"`
+}
+
+// Struct for XML object node.
+type ObjectXML struct {
+	XMLName   xml.Name     `xml:"object"`
+	ID        string       `xml:"id,attr"`
+	Serial    string       `xml:serial,attr"`
+	HP        int          `xml:"hp,attr"`
+	MaxHP     int          `xml:"maxhp,attr"`
+	Inventory InventoryXML `xml:"inventory"`
+}
 
 // Struct for XML node with object effects.
 type ObjectEffectsXML struct {
@@ -42,7 +61,7 @@ type ObjectEffectXML struct {
 	ID      string                `xml:"id,attr"`
 	Serial  string                `xml:"serial,attr"`
 	Time    int64                 `xml:"time,attr"`
-	Source  ObjectEffectSourceXML `xml:"sourceSerial,attr"`
+	Source  ObjectEffectSourceXML `xml:"source"`
 }
 
 // Struct for object effect source XML node.
@@ -64,6 +83,19 @@ type ObjectSkillXML struct {
 	ID       string   `xml:"id,attr"`
 	Serial   string   `xml:"serial,attr"`
 	Cooldown int64    `xml:"cooldown,attr"`
+}
+
+// UnmarshalObjectsBaseXML parses specified data to XML
+// object nodes.
+func UnmarshalObjectsBase(data io.Reader) ([]ObjectXML, error) {
+	doc, _ := ioutil.ReadAll(data)
+	xmlBase := new(ObjectsBaseXML)
+	err := xml.Unmarshal(doc, xmlBase)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
+			err)
+	}
+	return xmlBase.Nodes, nil
 }
 
 // xmlObjectEffects parses specified effects to XML

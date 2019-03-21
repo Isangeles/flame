@@ -21,8 +21,8 @@
  *
  */
 
-// data package provides connection with external data files like items
-// base, savegames, etc.
+// data package provides connection with external data
+// files like items base, savegames, etc.
 package data
 
 import (
@@ -69,6 +69,12 @@ func LoadModuleData(mod *module.Module) error {
 		wd.Name = lang.TextDir(mod.Conf().LangPath(), wd.ID)
 	}
 	res.SetWeaponsData(weaponsData)
+	// Area objects.
+	objectsData, err := ImportObjectsDir(mod.Conf().ObjectsPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_load_area_objects:%v", err)
+	}
+	res.SetObjectsData(objectsData)
 	return nil
 }
 
@@ -84,7 +90,7 @@ func LoadChapterData(chapter *module.Chapter) error {
 	return nil
 }
 
-// SavegamesFiles returns names of all save files
+// SavegamesFiles returns info's about all save files
 // in directory with specified path.
 func SavegamesFiles(dirPath string) ([]os.FileInfo, error) {
 	files, err := ioutil.ReadDir(dirPath)
