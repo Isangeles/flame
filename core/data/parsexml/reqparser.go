@@ -48,3 +48,15 @@ func xmlLevelReq(req *req.LevelReq) *LevelReqXML {
 	xmlReq.MinLevel = req.MinLevel()
 	return xmlReq
 }
+
+// buildReqs creates requirements from specified
+// XML data.
+func buildReqs(xmlReqs *ReqsXML) []req.Requirement { 
+	reqs := make([]req.Requirement, 0)
+	// Level reqs.
+	for _, xmlReq := range xmlReqs.LevelReqs {
+		req := req.NewLevelReq(xmlReq.MinLevel)
+		reqs = append(reqs, req)
+	}
+	return reqs
+}

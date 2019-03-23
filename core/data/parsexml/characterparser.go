@@ -29,8 +29,10 @@ import (
 	"io"
 	"io/ioutil"
 
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for XML characters base.
@@ -76,17 +78,25 @@ type EquipmentItemXML struct {
 	Slot    string   `xml:"slot"`
 }
 
-// UnmarshalCharactersBaseXML parses to XML character
-// nodes.
-func UnmarshalCharactersBase(data io.Reader) ([]CharacterXML, error) {
+// UnmarshalCharactersBase retrieve all characters data
+// from specified XML data.
+func UnmarshalCharactersBase(data io.Reader) ([]*res.CharacterData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(CharactersBaseXML)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
 	}
-	return xmlBase.Characters, nil
+	chars := make([]*res.CharacterData, 0)
+	for _, xmlChar := range xmlBase.Characters {
+		char, err := buildCharacterData(&xmlChar)
+		if err != nil {
+			log.Err.Printf("xml:unmarshal_character:build_data_fail:%v", err)
+			continue
+		}
+		chars = append(chars, char)
+	}
+	return chars, nil
 }
 
 // UnmarshalCharacter parses character with specified ID from
@@ -163,4 +173,105 @@ func xmlEquipment(eq *character.Equipment) *EquipmentXML {
 	}
 	// TODO: parse all equipment slots.
 	return xmlEq
+}
+
+
+// buildCharacterData creates character resources from specified
+// XML data.
+func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
+	// Basic data.
+	baseData := res.CharacterBasicData{
+		ID:     xmlChar.ID,
+		Serial: xmlChar.Serial,
+		Name:   xmlChar.Name,
+		Level:  xmlChar.Level,
+		Guild:  xmlChar.Guild,
+	}
+	data := res.CharacterData{BasicData: baseData}
+	sex, err := UnmarshalGender(xmlChar.Gender)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_gender:%v", err)
+	}
+	data.BasicData.Sex = int(sex)
+	race, err := UnmarshalRace(xmlChar.Race)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_race:%v", err)
+	}
+	data.BasicData.Race = int(race)
+	attitude, err := UnmarshalAttitude(xmlChar.Attitude)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_attitude:%v", err)
+	}
+	data.BasicData.Attitude = int(attitude)
+	alignment, err := UnmarshalAlignment(xmlChar.Alignment)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_alignment:%v", err)
+	}
+	data.BasicData.Alignment = int(alignment)
+	attributes, err := UnmarshalAttributes(xmlChar.Stats)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_attributes:%v", err)
+	}
+	// Attributes.
+	data.BasicData.Str = attributes.Str
+	data.BasicData.Con = attributes.Con
+	data.BasicData.Dex = attributes.Dex
+	data.BasicData.Int = attributes.Int
+	data.BasicData.Wis = attributes.Wis
+	// Save.
+	data.SavedData.PC = xmlChar.PC
+	// HP, mana, exp.
+	data.SavedData.HP = xmlChar.HP
+	data.SavedData.Mana = xmlChar.Mana
+	data.SavedData.Exp = xmlChar.Exp
+	// Position.
+	if xmlChar.Position != "" {
+		posX, posY, err := UnmarshalPosition(xmlChar.Position)
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_parse_position:%v", err)
+		}
+		data.SavedData.PosX, data.SavedData.PosY = posX, posY
+	}
+	// Items.
+	for _, xmlInvIt := range xmlChar.Inventory.Items {
+		invItData := res.InventoryItemData{
+			ID:     xmlInvIt.ID,
+			Serial: xmlInvIt.Serial,
+		}
+		data.Items = append(data.Items, invItData)
+	}
+	// Equipment.
+	for _, xmlEqIt := range xmlChar.Equipment.Items {
+		slot, err := UnmarshalEqSlot(xmlEqIt.Slot)
+		if err != nil {
+			log.Err.Printf("xml:build_character:%s:parse_eq_item:%s:fail_to_parse_slot:%v",
+				xmlChar.ID, xmlEqIt.ID, err)
+			continue
+		}
+		eqItData := res.EquipmentItemData{
+			ID:   xmlEqIt.ID,
+			Slot: int(slot),
+		}
+		data.EqItems = append(data.EqItems, eqItData)
+	}
+	// Effects.
+	for _, xmlEffect := range xmlChar.Effects.Nodes {
+		effectData := res.ObjectEffectData{
+			ID:           xmlEffect.ID,
+			Serial:       xmlEffect.Serial,
+			Time:         xmlEffect.Time,
+			SourceID:     xmlEffect.Source.ID,
+			SourceSerial: xmlEffect.Source.Serial,
+		}
+		data.Effects = append(data.Effects, effectData)
+	}
+	// Skills.
+	for _, xmlSkill := range xmlChar.Skills.Nodes {
+		skillData := res.ObjectSkillData{
+			ID:     xmlSkill.ID,
+			Serial: xmlSkill.Serial,
+		}
+		data.Skills = append(data.Skills, skillData)
+	}
+	return &data, nil
 }

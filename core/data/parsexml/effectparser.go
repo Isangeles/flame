@@ -28,21 +28,24 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/object/effect"
 )
 
 // Struct for effects XML base.
 type EffectsBaseXML struct {
-	XMLName xml.Name        `xml:"base"`
+	XMLName xml.Name    `xml:"base"`
 	Effects []EffectXML `xml:"effect"`
 }
 
 // Struct for effect XML node.
 type EffectXML struct {
-	XMLName       xml.Name          `xml:"effect"`
-	ID            string            `xml:"id,attr"`
-	Duration      int64             `xml:"duration,attr"`
-	ModifiersNode ModifiersNodeXML  `xml:"modifiers"`
-	Subeffects    SubeffectsXML `xml:"subeffects"`
+	XMLName       xml.Name         `xml:"effect"`
+	ID            string           `xml:"id,attr"`
+	Duration      int64            `xml:"duration,attr"`
+	ModifiersNode ModifiersNodeXML `xml:"modifiers"`
+	Subeffects    SubeffectsXML    `xml:"subeffects"`
 }
 
 // Struct for node with subeffects.
@@ -51,9 +54,9 @@ type SubeffectsXML struct {
 	Effects []string `xml:"effect,value"`
 }
 
-// UnmarshalEffectsBase parses specified data to XML effect
-// nodes.
-func UnmarshalEffectsBase(data io.Reader) ([]EffectXML, error) {
+// UnmarshalEffectsBase retrieves all effects data from
+// specified XML data.
+func UnmarshalEffectsBase(data io.Reader) ([]*res.EffectData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := EffectsBaseXML{}
 	err := xml.Unmarshal(doc, &xmlBase)
@@ -61,5 +64,31 @@ func UnmarshalEffectsBase(data io.Reader) ([]EffectXML, error) {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
 			err)
 	}
-	return xmlBase.Effects, nil
+	effects := make([]*res.EffectData, 0) 
+	for _, xmlEffect := range xmlBase.Effects {
+		effect := buildEffectData(xmlEffect)
+		effects = append(effects, effect)
+	}
+	return effects, nil
+}
+
+// buildEffectData builds effect from XML data.
+func buildEffectData(xmlEffect EffectXML) *res.EffectData {
+	mods := buildModifiers(&xmlEffect.ModifiersNode)
+	data := res.EffectData{
+		ID: xmlEffect.ID,
+		Duration: xmlEffect.Duration * 1000,
+		Subeffects: xmlEffect.Subeffects.Effects,
+	}
+	for _, m := range mods {
+		switch mod := m.(type) {
+		case effect.HealthMod:
+			mData := res.HealthModData{mod.Min, mod.Max}
+			data.HealthMods = append(data.HealthMods, mData)
+		case effect.HitMod:
+			mData := res.HitModData{}
+			data.HitMods = append(data.HitMods, mData)
+		}
+	}
+	return &data
 }

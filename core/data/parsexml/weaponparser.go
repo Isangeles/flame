@@ -28,6 +28,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for weapons base XML doc.
@@ -48,15 +51,62 @@ type WeaponXML struct {
 	Slots      string        `xml:"slots,attr"`
 }
 
-// UnmarshalWeaponsBase parses specified data to
-// XML weapon nodes.
-func UnmarshalWeaponsBase(data io.Reader) ([]WeaponXML, error) {
+// UnmarshalWeaponsBase retrieves weapons data from specified
+// XML data.
+func UnmarshalWeaponsBase(data io.Reader) ([]*res.WeaponData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlWeaponsBase := new(WeaponsBaseXML)
-	err := xml.Unmarshal(doc, xmlWeaponsBase)
+	xmlBase := new(WeaponsBaseXML)
+	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
 	}
-	return xmlWeaponsBase.Items, nil
+	weapons := make([]*res.WeaponData, 0)
+	for _, xmlWeapon := range xmlBase.Items {
+		weapon, err := buildWeaponData(xmlWeapon)
+		if err != nil {
+			log.Err.Printf("xml:unmarshal_weapon:build_data_fail:%v", err)
+			continue
+		}
+		weapons = append(weapons, weapon)
+	}
+	return weapons, nil
+}
+
+// buildXMLWeapon creates new weapon from specified XML data.
+func buildWeaponData(xmlWeapon WeaponXML) (*res.WeaponData, error) {
+	reqs := buildReqs(&xmlWeapon.Reqs)
+	slots, err := UnmarshalItemSlots(xmlWeapon.Slots)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_slot_types:%v", err)
+	}
+	slotsID := make([]int, 0)
+	for _, s := range slots {
+		slotsID = append(slotsID, int(s))
+	}
+	dmgType, err := UnmarshalHitType(xmlWeapon.Damage.Type)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_damage_type:%v", err)
+	}
+	hitEffects := make([]res.EffectData, 0)
+	for _, xmlEffect := range xmlWeapon.Damage.Effects.Nodes {
+		eff := res.Effect(xmlEffect.ID)
+		if eff == nil {
+			log.Err.Printf("xml:build_weapon:hit_effect_not_found:%s",
+				xmlEffect.ID)
+			continue
+		}
+		hitEffects = append(hitEffects, *eff)
+	}
+	w := res.WeaponData{
+		ID:         xmlWeapon.ID,
+		Value:      xmlWeapon.Value,
+		Level:      xmlWeapon.Level,
+		DMGMin:     xmlWeapon.Damage.Min,
+		DMGMax:     xmlWeapon.Damage.Max,
+		DMGType:    int(dmgType),
+		DMGEffects: hitEffects,
+		EQReqs:     reqs,
+		Slots:      slotsID,
+	}
+	return &w, nil
 }

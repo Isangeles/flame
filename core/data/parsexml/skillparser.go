@@ -28,6 +28,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for skills XML base.
@@ -47,15 +50,51 @@ type SkillXML struct {
 	Reqs        ReqsXML          `xml:"reqs"`
 }
 
-// UnmarshalSkillsBase parses specified data to XML skill
-// nodes.
-func UnmarshalSkillsBase(data io.Reader) ([]SkillXML, error) {
+// UnmarshalSkillsBase retrieves skills data from specified
+// XML data.
+func UnmarshalSkillsBase(data io.Reader) ([]*res.SkillData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := SkillsBaseXML{}
-	err := xml.Unmarshal(doc, &xmlBase)
+	xmlBase := new(SkillsBaseXML)
+	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
 	}
-	return xmlBase.Skills, nil
+	skills := make([]*res.SkillData, 0)
+	for _, xmlSkill := range xmlBase.Skills {
+		skill, err := buildSkillData(xmlSkill)
+		if err != nil {
+			log.Err.Printf("xml:unmarshal_character:build_data_fail:%v", err)
+			continue
+		}
+		skills = append(skills, skill)
+	}
+	return skills, nil
+}
+
+// buildSkillData builds skill from XML data.
+func buildSkillData(xmlSkill SkillXML) (*res.SkillData, error) {
+	reqs := buildReqs(&xmlSkill.Reqs)
+	effects := make([]res.EffectData, 0)
+	for _, xmlEffect := range xmlSkill.Effects.Nodes {
+		eff := res.Effect(xmlEffect.ID)
+		if eff == nil {
+			log.Err.Printf("xml:build_skill_data:effect_data_not_found:%s",
+				xmlEffect.ID)
+			continue
+		}
+		effects = append(effects, *eff)
+	}
+	skillRange, err := UnmarshalSkillRange(xmlSkill.Range)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_range:%v", err)
+	}
+	data := res.SkillData{
+		ID:       xmlSkill.ID,
+		Cast:     int64(xmlSkill.CastSec * 1000),
+		Cooldown: int64(xmlSkill.CooldownSec * 1000),
+		Range:    int(skillRange),
+		Effects:  effects,
+		UseReqs:  reqs,
+	}
+	return &data, nil
 }

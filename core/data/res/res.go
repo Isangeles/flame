@@ -71,6 +71,22 @@ func Object(id string) *ObjectData {
 	return objectsData[id]
 }
 
+// Effects returns all effects resources.
+func Effects() map[string]*EffectData {
+	return effectsData
+}
+
+// Characters returns all characters
+// resources.
+func Characters() map[string]*CharacterData {
+	return charsData
+}
+
+// Objects returns all objects resources.
+func Objects() map[string]*ObjectData {
+	return objectsData
+}
+
 // SetEffectsData sets specified effects data
 // as effects resources.
 func SetEffectsData(data []*EffectData) {

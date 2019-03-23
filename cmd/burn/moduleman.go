@@ -29,6 +29,7 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/serial"
 )
@@ -97,6 +98,12 @@ func showModuleOption(cmd Command) (int, string) {
 		return 0, charsList
 	case "scenario":
 		return 10, "unsupported yet"
+	case "res-objects":
+		out := ""
+		for _, ob := range res.Objects() {
+			out = fmt.Sprintf("%s ", ob.BasicData.ID)
+		}
+		return 0, out
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
 			cmd.OptionArgs()[0], cmd.Args()[0])

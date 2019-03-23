@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
@@ -90,13 +91,6 @@ func LoadScenario(mod *module.Module, id string) error {
 		return fmt.Errorf("fail_to_open_scenario_file:%v", err)
 	}
 	defer docScen.Close()
-	npcsBasePath := filepath.FromSlash(chap.Conf().NPCPath() + "/npc" + CHARS_FILE_EXT)
-	docNPCs, err := os.Open(npcsBasePath)
-	if err != nil {
-		return fmt.Errorf("fail_to_open_characters_base_file:%v", err)
-	}
-	defer docNPCs.Close()
-	npcsLangPath := filepath.FromSlash(chap.Conf().LangPath() + "/npc" + text.LANG_FILE_EXT)
 	// Unmarshal scenario file.
 	xmlScen, err := parsexml.UnmarshalScenario(docScen)
 	if err != nil {
@@ -105,23 +99,20 @@ func LoadScenario(mod *module.Module, id string) error {
 	// Build scenario mainarea.
 	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
 	for _, xmlAreaChar := range xmlScen.Mainarea.NPCs.Characters {
-		// Unmarshal area NPC.
-		charXML, err := parsexml.UnmarshalCharacter(docNPCs, xmlAreaChar.ID)
-		if err != nil {
-			log.Err.Printf("data_scenario_unmarshal_npc:%s:fail:%v",
-				xmlAreaChar.ID, err)
+		// Retireve char data.
+		charData := res.Character(xmlAreaChar.ID)
+		if charData == nil {
+			log.Err.Printf("data:unmarshal_scenario:%s:npc_data_not_found:%s",
+				xmlScen.ID, xmlAreaChar.ID)
 			continue
 		}
 		// Build area NPC.
-		char, err := buildXMLAreaCharacter(mod, &charXML, &xmlAreaChar)
+		char, err := buildXMLAreaCharacter(mod, charData, &xmlAreaChar)
 		if err != nil {
 			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",
 				xmlAreaChar.ID, err)
 			continue
 		}
-		// Set name.
-		name := text.ReadDisplayText(npcsLangPath, char.ID())
-		char.SetName(name[char.ID()])
 		// Set serial.
 		serial.AssignSerial(char)
 		// Char to area.
@@ -195,12 +186,8 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 
 // buildXMLAreaChar creates game character from specified
 // character and area XML data.
-func buildXMLAreaCharacter(mod *module.Module, xmlChar *parsexml.CharacterXML,
+func buildXMLAreaCharacter(mod *module.Module, charData *res.CharacterData,
 	xmlAreaChar *parsexml.AreaCharXML) (*character.Character, error) {
-	charData, err := buildXMLCharacterData(xmlChar)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_build_base_char_data:%v", err)
-	}
 	char := buildCharacter(mod, charData)
 	// Set position.
 	x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)

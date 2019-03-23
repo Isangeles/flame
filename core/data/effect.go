@@ -64,14 +64,9 @@ func ImportEffects(basePath string) ([]*res.EffectData, error) {
 		return nil, fmt.Errorf("fail_to_open_effects_base_file:%v", err)
 	}
 	defer doc.Close()
-	xmlEffects, err := parsexml.UnmarshalEffectsBase(doc)
+	effects, err := parsexml.UnmarshalEffectsBase(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_effects_base:%v", err)
-	}
-	effects := make([]*res.EffectData, 0)
-	for _, xmlEffect := range xmlEffects {
-		e := buildXMLEffectData(xmlEffect)
-		effects = append(effects, e)
 	}
 	return effects, nil
 }
@@ -100,25 +95,4 @@ func ImportEffectsDir(dirPath string) ([]*res.EffectData, error) {
 		}
 	}
 	return effects, nil
-}
-
-// buildXMLEffectData builds effect from XML data.
-func buildXMLEffectData(xmlEffect parsexml.EffectXML) *res.EffectData {
-	mods := buildXMLModifiers(&xmlEffect.ModifiersNode)
-	data := res.EffectData{
-		ID: xmlEffect.ID,
-		Duration: xmlEffect.Duration * 1000,
-		Subeffects: xmlEffect.Subeffects.Effects,
-	}
-	for _, m := range mods {
-		switch mod := m.(type) {
-		case effect.HealthMod:
-			mData := res.HealthModData{mod.Min, mod.Max}
-			data.HealthMods = append(data.HealthMods, mData)
-		case effect.HitMod:
-			mData := res.HitModData{}
-			data.HitMods = append(data.HitMods, mData)
-		}
-	}
-	return &data
 }

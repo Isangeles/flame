@@ -55,8 +55,7 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 	save.Players = game.Players()
 	xml, err := parsexml.MarshalSaveGame(save)
 	if err != nil {
-		return fmt.Errorf("fail_to_marshal_game:%v",
-			err)
+		return fmt.Errorf("fail_to_marshal_game:%v", err)
 	}
 	// Create savegame file.
 	err = os.MkdirAll(dirPath, 0755)
@@ -89,15 +88,14 @@ func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGa
 	}
 	doc, err := os.Open(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_savegame_file:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_open_savegame_file:%v", err)
 	}
-	xmlGame, err := parsexml.UnmarshalGame(doc)
+	gameData, err := parsexml.UnmarshalGame(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_savegame_data:%v",
 			err)
 	}
-	save, err := buildXMLSavedGame(mod, &xmlGame)
+	save, err := buildSavedGame(mod, gameData)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_build_game_from_saved_data:%v",
 			err)
@@ -129,58 +127,49 @@ func ImportSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, 
 	return saves, nil
 }
 
-// buildXMLSavedGame build game from data in specified
-// saved game XML struct.
-func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*save.SaveGame, error) {
-	xmlChapter := &xmlGame.Chapter
+// buildSavedGame build saved game from specified data.
+func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame, error) {
+	chapterData := &gameData.Chapter
 	// Load chapter with ID from save.
-	err := LoadChapter(mod, xmlChapter.ID)
+	err := LoadChapter(mod, chapterData.ID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_chapter:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_load_chapter:%v", err)
 	}
 	mod.Chapter().ClearScenarios() // to remove start scenario
 	charsData := make([]*res.CharacterData, 0)
 	pcs := make([]*character.Character, 0)
 	// Build chapter scenarios from save.
-	for _, xmlScen := range xmlChapter.Scenarios {
+	for _, scenData := range chapterData.Scenarios {
 		subareas := make([]*scenario.Area, 0)
-		var mainarea *scenario.Area
-		for _, xmlArea := range xmlScen.AreasNode.Areas {
-			area := scenario.NewArea(xmlArea.ID)
-			for _, xmlChar := range xmlArea.CharsNode.Characters {
-				// Build chapter NPC.
-				charData, err := buildXMLCharacterData(&xmlChar)
-				if err != nil {
-					log.Err.Printf("data_build_saved_game:build_char:%s:fail:%v",
-						xmlChar.ID, err)
-					continue
-				}
-				charsData = append(charsData, charData) // save data to restore effects later
-				char := buildCharacter(mod, charData)
+		mainarea := new(scenario.Area)
+		for _, areaData := range scenData.Areas {
+			area := scenario.NewArea(areaData.ID)
+			for _, charData := range areaData.Chars {
+				charsData = append(charsData, &charData) // save data to restore effects later
+				char := buildCharacter(mod, &charData)
 				// Restore HP, mana & exp.
-				char.SetHealth(charData.HP)
-				char.SetMana(charData.Mana)
-				char.SetExperience(charData.Exp)
+				char.SetHealth(charData.SavedData.HP)
+				char.SetMana(charData.SavedData.Mana)
+				char.SetExperience(charData.SavedData.Exp)
 				// Restore position.
-				char.SetPosition(charData.PosX, charData.PosY)
-				if xmlChar.PC {
+				char.SetPosition(charData.SavedData.PosX, charData.SavedData.PosY)
+				if charData.SavedData.PC {
 					pcs = append(pcs, char)
 				}
 				area.AddCharacter(char)
 			}
-			if xmlArea.Mainarea {
+			if areaData.Mainarea {
 				mainarea = area
 			} else {
 				subareas = append(subareas, area)
 			}
 		}
 		// Create scenario from saved data.
-		scen := scenario.NewScenario(xmlScen.ID, mainarea, subareas)
+		scen := scenario.NewScenario(scenData.ID, mainarea, subareas)
 		err := mod.Chapter().AddScenario(scen)
 		if err != nil {
 			log.Err.Printf("data_build_saved_game:add_chapter_scenario:%s:fail:%v",
-				xmlScen.ID, err)
+				scenData.ID, err)
 			continue
 		}
 	}
@@ -194,10 +183,11 @@ func buildXMLSavedGame(mod *module.Module, xmlGame *parsexml.SavedGameXML) (*sav
 	}
 	// Create game from saved data.
 	game := new(save.SaveGame)
-	game.Name = xmlGame.Name
+	game.Name = gameData.Name
 	game.Mod = mod
 	game.Players = pcs
 	return game, nil
+	
 }
 
 // restoreEffects resores effects for module character.

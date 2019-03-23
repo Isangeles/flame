@@ -1,7 +1,7 @@
 /*
- * req.go
+ * game.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,21 +21,32 @@
  *
  */
 
-package data
+package res
 
-import (
-	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/module/req"
-)
+// Struct for game data.
+type GameData struct {
+	Name    string
+	Chapter ChapterData
+}
 
-// buildXMLReqs creates requirements from specified
-// XML data.
-func buildXMLReqs(xmlReqs *parsexml.ReqsXML) []req.Requirement { 
-	reqs := make([]req.Requirement, 0)
-	// Level reqs.
-	for _, xmlReq := range xmlReqs.LevelReqs {
-		req := req.NewLevelReq(xmlReq.MinLevel)
-		reqs = append(reqs, req)
-	}
-	return reqs
+// Struct for game chapter
+// data.
+type ChapterData struct {
+	ID        string
+	Scenarios []ScenarioData
+}
+
+// Struct for chapter scenario
+// data.
+type ScenarioData struct {
+	ID    string
+	Areas []AreaData
+}
+
+// Struct for scenario area
+// data.
+type AreaData struct {
+	ID       string
+	Mainarea bool
+	Chars    []CharacterData
 }

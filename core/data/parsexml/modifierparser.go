@@ -25,6 +25,8 @@ package parsexml
 
 import (
 	"encoding/xml"
+	
+	"github.com/isangeles/flame/core/module/object/effect"
 )
 
 // Struct for modifiers XML node.
@@ -44,4 +46,20 @@ type HealthModXML struct {
 // Struct for hit modifier XML node.
 type HitModXML struct {
 	XMLName xml.Name `xml:"hitMod"`
+}
+
+// buildModifiers creates modifiers from specified XML data.
+func buildModifiers(xmlModifiers *ModifiersNodeXML) []effect.Modifier {
+	mods := make([]effect.Modifier, 0)
+	// Health modifiers.
+	for _, xmlMod := range xmlModifiers.HealthMods {
+		mod := effect.HealthMod{xmlMod.MinValue, xmlMod.MaxValue}
+		mods = append(mods, mod)
+	}
+	// Hit modifiers.
+	for _ = range xmlModifiers.HitMods {
+		mod := effect.HitMod{}
+		mods = append(mods, mod)
+	}
+	return mods
 }

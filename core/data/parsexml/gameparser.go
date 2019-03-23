@@ -30,6 +30,8 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/save"
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for saved game XML node.
@@ -118,14 +120,34 @@ func MarshalSaveGame(game *save.SaveGame) (string, error) {
 	return string(out[:]), nil
 }
 
-// UnmarshalGame parses specified XML data to saved game
-// XML struct.
-func UnmarshalGame(data io.Reader) (SavedGameXML, error) {
+// UnmarshalGameData parses specified XML data to game
+// resource.
+func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlGame := new(SavedGameXML)
 	err := xml.Unmarshal(doc, xmlGame)
 	if err != nil {
-		return *xmlGame, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
 	}
-	return *xmlGame, nil
+	game := new(res.GameData)
+	game.Name = xmlGame.Name
+	game.Chapter.ID = xmlGame.Chapter.ID
+	for _, xmlScen := range xmlGame.Chapter.Scenarios {
+		scen := res.ScenarioData{ID: xmlScen.ID}
+		for _, xmlArea := range xmlScen.AreasNode.Areas {
+			area := res.AreaData{ID: xmlArea.ID}
+			for _, xmlChar := range xmlArea.CharsNode.Characters {
+				charData, err := buildCharacterData(&xmlChar)
+				if err != nil {
+					log.Err.Printf("xml:build_game:area:%s:character:%s:%v",
+						xmlArea.ID, xmlChar.ID, err)
+					continue
+				}
+				area.Chars = append(area.Chars, *charData)
+			}
+			scen.Areas = append(scen.Areas, area)
+		}
+		game.Chapter.Scenarios = append(game.Chapter.Scenarios, scen)
+	}
+	return game, nil
 }
