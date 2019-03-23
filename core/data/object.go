@@ -59,19 +59,9 @@ func ImportObjects(path string) ([]*res.ObjectData, error) {
 		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
 	}
 	defer baseFile.Close()
-	xmlObjects, err := parsexml.UnmarshalObjectsBase(baseFile)
+	objects, err := parsexml.UnmarshalObjectsBase(baseFile)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_base:%v", err)
-	}
-	objects := make([]*res.ObjectData, 0)
-	for _, xmlOb := range xmlObjects {
-		ob, err := buildXMLObjectData(&xmlOb)
-		if err != nil {
-			log.Err.Printf("data:import_object:%s:fail_to_build_xml_data:%v",
-				xmlOb.ID, err)
-			continue
-		}
-		objects = append(objects, ob)
 	}
 	return objects, nil
 }
@@ -115,18 +105,4 @@ func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
 		ob.Inventory().AddItem(it)
 	}
 	return ob
-}
-
-// buildXMLObjectData creates object data from specified XML
-// data.
-func buildXMLObjectData(xmlOb *parsexml.ObjectXML) (*res.ObjectData, error) {
-	// Basic data.
-	baseData := res.ObjectBasicData{
-		ID: xmlOb.ID,
-		Serial: xmlOb.Serial,
-		HP: xmlOb.HP,
-		MaxHP: xmlOb.MaxHP,
-	}
-	data := res.ObjectData{BasicData: baseData}
-	return &data, nil
 }

@@ -25,14 +25,16 @@ package scenario
 
 import (
 	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/effect"
 )
 
 // Area struct represents game world area.
 type Area struct {
-	id    string
-	chars []*character.Character
+	id      string
+	chars   []*character.Character
+	objects []*area.Object
 }
 
 // NewArea returns new instace of area.
@@ -52,9 +54,19 @@ func (a *Area) AddCharacter(c *character.Character) {
 	a.chars = append(a.chars, c)
 }
 
+// AddObjects adds specified object to area.
+func (a *Area) AddObject(o *area.Object) {
+	a.objects = append(a.objects, o)
+}
+
 // Chracters returns list with characters in area.
 func (a *Area) Characters() []*character.Character {
 	return a.chars
+}
+
+// Objects returns list with all object in area.
+func (a *Area) Objects() []*area.Object {
+	return a.objects
 }
 
 // ContainsCharacter checks whether area

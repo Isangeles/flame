@@ -72,7 +72,7 @@ func UnmarshalWeaponsBase(data io.Reader) ([]*res.WeaponData, error) {
 	return weapons, nil
 }
 
-// buildXMLWeapon creates new weapon from specified XML data.
+// buildXMLWeapon creates new weapon data from specified XML data.
 func buildWeaponData(xmlWeapon WeaponXML) (*res.WeaponData, error) {
 	reqs := buildReqs(&xmlWeapon.Reqs)
 	slots, err := UnmarshalItemSlots(xmlWeapon.Slots)

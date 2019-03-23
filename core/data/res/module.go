@@ -1,5 +1,5 @@
 /*
- * game.go
+ * scenario.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -23,31 +23,28 @@
 
 package res
 
-// Struct for game data.
-type GameData struct {
-	Name    string
-	Chapter ChapterData
-}
-
-// Struct for game chapter
-// data.
-type ChapterData struct {
-	ID        string
-	Scenarios []ScenarioData
-}
-
-// Struct for chapter scenario
-// data.
-type ScenarioData struct {
-	ID    string
-	Areas []AreaData
-}
-
-// Struct for scenario area
-// data.
-type AreaData struct {
+// Struct for scenario data.
+type ModuleScenarioData struct {
 	ID       string
-	Mainarea bool
-	Chars    []CharacterData
-	Objects  []ObjectData
+	Areas []ModuleAreaData
+}
+
+// Struct for area data.
+type ModuleAreaData struct {
+	ID      string
+	Main    bool
+	NPCS    []AreaCharData
+	Objects []AreaObjectData
+}
+
+// Struct for area character data.
+type AreaCharData struct {
+	ID         string
+	PosX, PosY float64
+}
+
+// Struct for area object data.
+type AreaObjectData struct {
+	ID         string
+	PosX, PosY float64
 }

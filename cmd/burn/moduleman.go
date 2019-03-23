@@ -70,7 +70,7 @@ func showModuleOption(cmd Command) (int, string) {
 	case "chapters":
 		return 0, fmt.Sprint(flame.Mod().ChaptersIds())
 	case "area-chars":
-		if flame.Game() == nil { // TODO: better check whether mod has chapter set.
+		if flame.Game() == nil {
 			return 8, fmt.Sprintf("%s:no_game_loaded", MODULE_MAN)
 		}
 		if len(cmd.TargetArgs()) < 1 {
@@ -90,18 +90,43 @@ func showModuleOption(cmd Command) (int, string) {
 			return 9, fmt.Sprintf("%s:area_not_found:%s",
 				MODULE_MAN, areaID)
 		}
-		charsList := ""
+		out := ""
 		for _, c := range area.Characters() {
-			charsList = fmt.Sprintf("%s %s", charsList,
-				c.SerialID())
+			out = fmt.Sprintf("%s %s_%s", out, c.ID(), c.Serial())
 		}
-		return 0, charsList
+		return 0, out
+	case "area-objects":
+		if flame.Game() == nil {
+			return 8, fmt.Sprintf("%s:no_game_loaded", MODULE_MAN)
+		}
+		if len(cmd.TargetArgs()) < 1 {
+			return 8, fmt.Sprintf("%s:no_enought_args_for%s",
+				MODULE_MAN, cmd.Args()[0])
+		}
+		areaID := cmd.TargetArgs()[0]
+		var area *scenario.Area
+		for _, s := range flame.Mod().Chapter().Scenarios() {
+			for _, a := range s.Areas() {
+				if a.ID() == areaID {
+					area = a
+				}
+			}
+		}
+		if area == nil {
+			return 9, fmt.Sprintf("%s:area_not_found:%s",
+				MODULE_MAN, areaID)
+		}
+		out := ""
+		for _, o := range area.Objects() {
+			out = fmt.Sprintf("%s %s_%s", out, o.ID(), o.Serial())
+		}
+		return 0, out
 	case "scenario":
 		return 10, "unsupported yet"
 	case "res-objects":
 		out := ""
 		for _, ob := range res.Objects() {
-			out = fmt.Sprintf("%s ", ob.BasicData.ID)
+			out = fmt.Sprintf("%s %s", out, ob.BasicData.ID)
 		}
 		return 0, out
 	default:

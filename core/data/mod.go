@@ -34,7 +34,6 @@ import (
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/serial"
 )
@@ -92,39 +91,54 @@ func LoadScenario(mod *module.Module, id string) error {
 	}
 	defer docScen.Close()
 	// Unmarshal scenario file.
-	xmlScen, err := parsexml.UnmarshalScenario(docScen)
+	scenData, err := parsexml.UnmarshalScenario(docScen)
 	if err != nil {
 		return fmt.Errorf("fail_to_parse_scenario_file:%v", err)
 	}
-	// Build scenario mainarea.
-	mainarea := scenario.NewArea(xmlScen.Mainarea.ID)
-	for _, xmlAreaChar := range xmlScen.Mainarea.NPCs.Characters {
-		// Retireve char data.
-		charData := res.Character(xmlAreaChar.ID)
-		if charData == nil {
-			log.Err.Printf("data:unmarshal_scenario:%s:npc_data_not_found:%s",
-				xmlScen.ID, xmlAreaChar.ID)
-			continue
-		}
-		// Build area NPC.
-		char, err := buildXMLAreaCharacter(mod, charData, &xmlAreaChar)
-		if err != nil {
-			log.Err.Printf("data_scenario_build_npc:%s:fail:%v",
-				xmlAreaChar.ID, err)
-			continue
-		}
-		// Set serial.
-		serial.AssignSerial(char)
-		// Char to area.
-		mainarea.AddCharacter(char)
-	}
+	// Build mainarea.
+	var mainarea *scenario.Area
 	subareas := make([]*scenario.Area, 0)
-	for _, xmlArea := range xmlScen.Subareas {
-		area := scenario.NewArea(xmlArea.ID)
-		// TODO: area NPCs.
+	for _, areaData := range scenData.Areas {
+		area := scenario.NewArea(areaData.ID)
+		// NPCs.
+		for _, areaChar := range areaData.NPCS {
+			// Retireve char data.
+			charData := res.Character(areaChar.ID)
+			if charData == nil {
+				log.Err.Printf("data:unmarshal_scenario:%s:area:%s:npc_data_not_found:%s",
+					scenData.ID, areaData.ID, areaChar.ID)
+				continue
+			}
+			char := buildCharacter(mod, charData)
+			// Set serial & position.
+			serial.AssignSerial(char)
+			char.SetPosition(areaChar.PosX, areaChar.PosY)
+			// Char to area.
+			area.AddCharacter(char)
+		}
+		// Objects.
+		for _, areaObject := range areaData.Objects {
+			// Retrieve object data.
+			objectData := res.Object(areaObject.ID)
+			if objectData == nil {
+				log.Err.Printf("data:unmarshal_scenario:area:%s:%s:object_data_not_found:%s",
+					scenData.ID, areaData.ID, areaObject.ID)
+				continue
+			}
+			object := buildObject(mod, objectData)
+			// Set serial & position.
+			serial.AssignSerial(object)
+			object.SetPosition(areaObject.PosX, areaObject.PosY)
+			// Object to area.
+			area.AddObject(object)
+		}
+		if areaData.Main {
+			mainarea = area
+			continue
+		}
 		subareas = append(subareas, area)
 	}
-	scen := scenario.NewScenario(xmlScen.ID, mainarea, subareas)
+	scen := scenario.NewScenario(scenData.ID, mainarea, subareas)
 	// Add scenario to active module chapter.
 	err = chap.AddScenario(scen)
 	if err != nil {
@@ -182,18 +196,4 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 		StartScenID:confValues["start_scenario"],
 	}
 	return conf, nil
-}
-
-// buildXMLAreaChar creates game character from specified
-// character and area XML data.
-func buildXMLAreaCharacter(mod *module.Module, charData *res.CharacterData,
-	xmlAreaChar *parsexml.AreaCharXML) (*character.Character, error) {
-	char := buildCharacter(mod, charData)
-	// Set position.
-	x, y, err := parsexml.UnmarshalPosition(xmlAreaChar.Position)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_position:%v", err)
-	}
-	char.SetPosition(x, y)
-	return char, nil
 }

@@ -29,8 +29,10 @@ import (
 	"io"
 	"io/ioutil"
 
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for XML objects base node.
@@ -87,7 +89,7 @@ type ObjectSkillXML struct {
 
 // UnmarshalObjectsBaseXML parses specified data to XML
 // object nodes.
-func UnmarshalObjectsBase(data io.Reader) ([]ObjectXML, error) {
+func UnmarshalObjectsBase(data io.Reader) ([]*res.ObjectData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(ObjectsBaseXML)
 	err := xml.Unmarshal(doc, xmlBase)
@@ -95,7 +97,17 @@ func UnmarshalObjectsBase(data io.Reader) ([]ObjectXML, error) {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
 			err)
 	}
-	return xmlBase.Nodes, nil
+	objects := make([]*res.ObjectData, 0)
+	for _, xmlObject := range xmlBase.Nodes {
+		object, err := buildObjectData(&xmlObject)
+		if err != nil {
+			log.Err.Printf("xml:unmarshal_object:%s:build_data_fail:%v",
+				xmlObject.ID, err)
+			continue
+		}
+		objects = append(objects, object)
+	}
+	return objects, nil
 }
 
 // xmlObjectEffects parses specified effects to XML
@@ -132,4 +144,18 @@ func xmlObjectSkills(skills ...*skill.Skill) *ObjectSkillsXML {
 		xmlSkills.Nodes = append(xmlSkills.Nodes, xmlSkill)
 	}
 	return xmlSkills
+}
+
+// buildObjectData creates object data from specified XML
+// data.
+func buildObjectData(xmlOb *ObjectXML) (*res.ObjectData, error) {
+	// Basic data.
+	baseData := res.ObjectBasicData{
+		ID:     xmlOb.ID,
+		Serial: xmlOb.Serial,
+		HP:     xmlOb.HP,
+		MaxHP:  xmlOb.MaxHP,
+	}
+	data := res.ObjectData{BasicData: baseData}
+	return &data, nil
 }

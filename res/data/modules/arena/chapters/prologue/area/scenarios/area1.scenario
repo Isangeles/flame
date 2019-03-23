@@ -4,6 +4,9 @@
     <npcs>
       <char id="testchar" position="500x300"></char>
     </npcs>
+    <objects>
+      <object id="aloe1" position="500x500"></object>
+    </objects>
     <subareas>
     </subareas>
   </mainarea>
