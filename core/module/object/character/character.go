@@ -424,7 +424,7 @@ func (c *Character) agonyHP() int {
 
 // sendCmb sends specified text message to
 // comabt log channel.
-func (c *Character) sendCmb(msg string) {
+func (c *Character) SendCmb(msg string) {
 	select {
 	case c.combatlog <- msg:
 	default:
@@ -433,7 +433,7 @@ func (c *Character) sendCmb(msg string) {
 
 // buildEffects creates new effects from specified
 // data with character as a source.
-func (c *Character) buildEffects(effectsData []res.EffectData) []*effect.Effect {
+func (c *Character) buildEffects(effectsData ...res.EffectData) []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
 	for _, ed := range effectsData {
 		e := effect.New(ed)

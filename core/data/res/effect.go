@@ -30,7 +30,6 @@ type EffectData struct {
 	Duration   int64
 	HealthMods []HealthModData
 	HitMods    []HitModData
-	Subeffects []string
 }
 
 // Struct for health modifier

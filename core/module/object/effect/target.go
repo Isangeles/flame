@@ -27,7 +27,9 @@ package effect
 type Target interface {
 	ID() string
 	Serial() string
+	Name() string
 	Health() int
+	SetHealth(val int)
 	Mana() int
 	SetMana(val int)
 	Experience() int
@@ -36,7 +38,7 @@ type Target interface {
 	Damage() (int, int)
 	Hit() Hit
 	TakeHit(h Hit)
-	TakeEffect(e *Effect)
 	Position() (x, y float64)
+	SendCmb(msg string)
 	CombatLog() chan string
 }

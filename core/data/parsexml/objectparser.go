@@ -45,7 +45,7 @@ type ObjectsBaseXML struct {
 type ObjectXML struct {
 	XMLName   xml.Name     `xml:"object"`
 	ID        string       `xml:"id,attr"`
-	Serial    string       `xml:serial,attr"`
+	Serial    string       `xml:"serial,attr"`
 	HP        int          `xml:"hp,attr"`
 	MaxHP     int          `xml:"maxhp,attr"`
 	Inventory InventoryXML `xml:"inventory"`

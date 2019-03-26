@@ -4,14 +4,6 @@
 			<hitMod />
 		</modifiers>
 	</effect>
-	<effect id="hit2" duration="1">
-		<modifiers>
-			<hitMod />
-		</modifiers>
-		<subeffects>
-			<effect>bleed1</effect>
-		</subeffects>
-	</effect>
 	<effect id="bleed1" duration="5">
 		<modifiers>
 			<healthMod min="-3" max="-1" />

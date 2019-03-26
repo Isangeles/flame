@@ -36,7 +36,7 @@ import (
 // Struct for effects XML base.
 type EffectsBaseXML struct {
 	XMLName xml.Name    `xml:"base"`
-	Effects []EffectXML `xml:"effect"`
+	Nodes   []EffectXML `xml:"effect"`
 }
 
 // Struct for effect XML node.
@@ -45,7 +45,6 @@ type EffectXML struct {
 	ID            string           `xml:"id,attr"`
 	Duration      int64            `xml:"duration,attr"`
 	ModifiersNode ModifiersNodeXML `xml:"modifiers"`
-	Subeffects    SubeffectsXML    `xml:"subeffects"`
 }
 
 // Struct for node with subeffects.
@@ -58,14 +57,14 @@ type SubeffectsXML struct {
 // specified XML data.
 func UnmarshalEffectsBase(data io.Reader) ([]*res.EffectData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := EffectsBaseXML{}
-	err := xml.Unmarshal(doc, &xmlBase)
+	xmlBase := new(EffectsBaseXML)
+	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
 			err)
 	}
 	effects := make([]*res.EffectData, 0) 
-	for _, xmlEffect := range xmlBase.Effects {
+	for _, xmlEffect := range xmlBase.Nodes {
 		effect := buildEffectData(xmlEffect)
 		effects = append(effects, effect)
 	}
@@ -78,7 +77,6 @@ func buildEffectData(xmlEffect EffectXML) *res.EffectData {
 	data := res.EffectData{
 		ID: xmlEffect.ID,
 		Duration: xmlEffect.Duration * 1000,
-		Subeffects: xmlEffect.Subeffects.Effects,
 	}
 	for _, m := range mods {
 		switch mod := m.(type) {

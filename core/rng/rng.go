@@ -42,5 +42,19 @@ func init() {
 // RollInt generates random integer from
 // specified range.
 func RollInt(min, max int) int {
-	return min + rng.Intn(max - min)
+	neg := false
+	if min < 1 && max < 1 { // handling negative range
+		neg = true
+	}
+	if min < 1 {
+		min *= -1
+	}
+	if max < 1 {
+		max *= -1
+	}
+	roll := min + rng.Intn(max - min)
+	if neg {
+		return -roll
+	}
+	return roll
 }

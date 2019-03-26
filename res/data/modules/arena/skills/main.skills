@@ -1,12 +1,12 @@
 <base>
 	<skill id="melee1" cast="0" cooldown="0" range="touch">
 	       <effects>
-			<effect id="hit1" />
+			<effect id="hit1"/>
 	       </effects>
 	</skill>
 	<skill id="fireball1" cast="3" cooldown="5" range="far">
 	       <effects>
-			<effect id="hit2" />
+			<effect id="bleed1"/>
 	       </effects>
 	</skill>
 </base>

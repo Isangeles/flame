@@ -26,7 +26,7 @@ package skill
 
 import (
 	"fmt"
-	
+
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
@@ -38,21 +38,21 @@ import (
 // All times(cast time, cooldown, etc.)
 // are in milliseconds.
 type Skill struct {
-	id, serial   string
-	name         string
-	useReqs      []req.Requirement
-	effects      []res.EffectData
-	tartype      TargetType
-	castRange    Range
-	user         SkillUser
-	target       effect.Target
-	castTimeMax  int64
-	castTime     int64
-	cooldown     int64
-	cooldownMax  int64
-	casting      bool
-	casted       bool
-	ready        bool
+	id, serial  string
+	name        string
+	useReqs     []req.Requirement
+	effects     []res.EffectData
+	tartype     TargetType
+	castRange   Range
+	user        SkillUser
+	target      effect.Target
+	castTimeMax int64
+	castTime    int64
+	cooldown    int64
+	cooldownMax int64
+	casting     bool
+	casted      bool
+	ready       bool
 }
 
 // Type for skills target
@@ -65,11 +65,11 @@ type Range int
 const (
 	// Errors.
 	OTHERS_TARGET_ERR = "only_others_target"
-	SELF_TARGET_ERR = "only_self_target"
-	NO_TARGET_ERR = "no_target"
-	REQS_NOT_MET_ERR = "reqs_not_meet"
-	RANGE_ERR = "user_too_far"
-	NOT_READY_ERR = "skill_not_ready"
+	SELF_TARGET_ERR   = "only_self_target"
+	NO_TARGET_ERR     = "no_target"
+	REQS_NOT_MET_ERR  = "reqs_not_meet"
+	RANGE_ERR         = "user_too_far"
+	NOT_READY_ERR     = "skill_not_ready"
 	// Target types.
 	Target_all TargetType = iota
 	Target_others
@@ -120,9 +120,11 @@ func (s *Skill) Activate() {
 	if s.target == nil {
 		return
 	}
-	for _, e := range s.buildEffects(s.effects) {
-		s.target.TakeEffect(e)
+	hit := effect.Hit{
+		Source:  s.user,
+		Effects: s.buildEffects(s.effects),
 	}
+	s.target.TakeHit(hit)
 }
 
 // ID returns skill ID.
@@ -190,7 +192,7 @@ func (s *Skill) CastTime() int64 {
 
 // CastTimeMax returns maximal casting
 // time in milliseconds.
-func(s *Skill) CastTimeMax() int64 {
+func (s *Skill) CastTimeMax() int64 {
 	return s.castTimeMax
 }
 

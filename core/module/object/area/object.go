@@ -119,3 +119,12 @@ func (ob *Object) SetMaxHealth(h int) {
 func (ob *Object) Inventory() *item.Inventory {
 	return ob.inventory
 }
+
+// SendCmb sends specified text message to
+// comabt log channel.
+func (o *Object) SendCmb(msg string) {
+	select {
+	case o.combatlog <- msg:
+	default:
+	}
+}

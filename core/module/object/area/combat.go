@@ -1,5 +1,5 @@
 /*
- * healthmod.go
+ * combat.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,31 +21,18 @@
  *
  */
 
-package effect
+package area
 
 import (
-	"fmt"
-	
-	"github.com/isangeles/flame/core/data/text/lang"
-	"github.com/isangeles/flame/core/rng"
+	"github.com/isangeles/flame/core/module/object/effect"
 )
 
-// Struct for health modifier.
-type HealthMod struct {
-	Min, Max int
+// Hit creates object hit.
+func (ob *Object) Hit() effect.Hit {
+	return effect.Hit{Source:ob}
 }
 
-// Affect modifies targets health points.
-func (hm HealthMod) Affect(source Target, targets ...Target) {
-	for _, t := range targets {
-		val := rng.RollInt(hm.Min, hm.Max)
-		t.SetHealth(t.Health() + val)
-		cmbMsg := fmt.Sprintf("%s:%s:%d", t.Name(),
-			lang.Text("ui", "ob_health"), val)
-		t.SendCmb(cmbMsg)
-	}
-}
-
-// Undo undos health modification on specified targets.
-func (hm HealthMod) Undo(source Target, targets ...Target) {
+// TakeHit handles hit towards object.
+func (ob *Object) TakeHit(h effect.Hit) {
+	
 }
