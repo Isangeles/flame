@@ -72,7 +72,7 @@ func init() {
 	// Load module.
 	m, err := data.Module(config.ModulePath(), config.LangID())
 	if err != nil {
-		log.Err.Printf("fail_to_load_config_module:%v", err)
+		log.Err.Printf("fail_to_load_module:%v", err)
 	}
 	flame.SetModule(m)
 	// Load CLI config.

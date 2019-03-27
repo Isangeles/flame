@@ -27,7 +27,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/core/data/text"
@@ -56,7 +55,7 @@ func Module(path, langID string) (*module.Module, error) {
 func LoadChapter(mod *module.Module, id string) error {
 	// Load chapter config file.
 	chapPath := filepath.FromSlash(mod.Conf().ChaptersPath() +
-		"/" + mod.Conf().Chapters[0])
+		"/" + mod.Conf().StartChapter)
 	chapConf, err := chapterConf(chapPath)
 	if err != nil {
 		return fmt.Errorf("fail_to_read_chapter_conf:%s:%v",
@@ -162,22 +161,17 @@ func modConf(path, lang string) (module.ModConf, error) {
 		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_int_values:%s",
 			err)
 	}
-	confValues, err := text.ReadValue(modConfPath, "name", "chapters")
+	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter")
 	if err != nil {
-		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_values:%s",
-			err)
-	}
-	chapters := strings.Split(confValues["chapters"], ";")
-	if len(chapters) < 1 {
-		return module.ModConf{}, fmt.Errorf("no_chapters_specified")
+		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_values:%s", err)
 	}
 	conf := module.ModConf{
-		Name:            confValues["name"],
+		ID:              confValues["id"],
 		Path:            path,
 		Lang:            lang,
 		NewcharAttrsMin: confInts["new_char_attrs_min"],
 		NewcharAttrsMax: confInts["new_char_attrs_max"],
-		Chapters:        chapters,
+		StartChapter:    confValues["start-chapter"],
 	}
 	return conf, nil
 }

@@ -115,6 +115,38 @@ func (ob *Object) SetMaxHealth(h int) {
 	ob.maxHP = h
 }
 
+// Live checks whether object is
+// not destroed(HP higher then 0).
+func (ob *Object) Live() bool {
+	return ob.Health() > 0
+}
+
+// Mana returns 0, object do not
+// have mana. Function to satisfy
+// effect targer interface.
+func (ob *Object) Mana() int {
+	return 0
+}
+
+// SetMana does nothing, object do not
+// have mana. Function to satisfy
+// effect targer interface.
+func (ob *Object) SetMana(v int) {
+}
+
+// Experience returns 0, object do not
+// have experience. Function to satisfy
+// effect targer interface.
+func (ob *Object) Experience() int {
+	return 0
+}
+
+// SetExperience does nothing, object do
+// not have experience. Function to satisfy
+// effect targer interface.
+func (ob *Object) SetExperience(v int) {
+}
+
 // Inventory returns object inventory.
 func (ob *Object) Inventory() *item.Inventory {
 	return ob.inventory
@@ -127,4 +159,10 @@ func (o *Object) SendCmb(msg string) {
 	case o.combatlog <- msg:
 	default:
 	}
+}
+
+// CombatLog returns object combat log
+// channel.
+func (o *Object) CombatLog() chan string {
+	return o.combatlog
 }

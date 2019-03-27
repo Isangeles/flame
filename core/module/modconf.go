@@ -29,10 +29,10 @@ import (
 
 // ModConf struct represents module configuration.
 type ModConf struct {
-	Name, Path, Lang string
-	NewcharAttrsMax  int
-	NewcharAttrsMin  int
-	Chapters         []string
+	ID, Path, Lang  string
+	NewcharAttrsMax int
+	NewcharAttrsMin int
+	StartChapter    string
 }
 
 // ChaptersPath returns path to module chapters.

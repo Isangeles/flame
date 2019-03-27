@@ -34,6 +34,7 @@ type ChapterConf struct {
 	Lang        string
 	StartScenID string
 	Scenarios   []string
+	NextChapter string
 }
 
 // FullPath returns path to chapter directory.

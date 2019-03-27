@@ -26,6 +26,7 @@ package burn
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
@@ -156,13 +157,16 @@ func setCharOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
 				CHAR_MAN, cmd.OptionArgs()[1])
 		}
-		tarchar := flame.Game().Module().Character(cmd.Args()[1])
-		if tarchar == nil {
-			return 8, fmt.Sprintf("%s:character_not_found:%s",
+		serialid := strings.Split(cmd.Args()[1], "_")
+		id := serialid[0]
+		serial := serialid[len(serialid)-1]
+		tar := flame.Game().Module().Target(id, serial)
+		if tar == nil {
+			return 8, fmt.Sprintf("%s:object_not_found:%s",
 				CHAR_MAN, cmd.Args()[1])
 		}
 		for _, char := range chars {
-			char.SetTarget(tarchar)
+			char.SetTarget(tar)
 		}
 		return 0, ""
 	default:

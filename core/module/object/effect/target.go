@@ -35,7 +35,6 @@ type Target interface {
 	Experience() int
 	SetExperience(val int)
 	Live() bool
-	Damage() (int, int)
 	Hit() Hit
 	TakeHit(h Hit)
 	Position() (x, y float64)

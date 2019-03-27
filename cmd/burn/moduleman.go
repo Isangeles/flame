@@ -65,10 +65,8 @@ func showModuleOption(cmd Command) (int, string) {
 	}
 
 	switch cmd.Args()[0] {
-	case "name":
-		return 0, flame.Mod().Name()
-	case "chapters":
-		return 0, fmt.Sprint(flame.Mod().ChaptersIds())
+	case "id", "name":
+		return 0, flame.Mod().Conf().ID
 	case "area-chars":
 		if flame.Game() == nil {
 			return 8, fmt.Sprintf("%s:no_game_loaded", MODULE_MAN)

@@ -28,6 +28,7 @@ import (
 	
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/serial"
+	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
 )
 
@@ -36,7 +37,6 @@ type Chapter struct {
 	conf        ChapterConf
 	mod         *Module
 	loadedScens []*scenario.Scenario
-	npcs        []*character.Character
 } 
 
 // NewChapters creates new instance of module chapter.
@@ -132,6 +132,21 @@ func (c *Chapter) Character(serialID string) *character.Character {
 			for _, c := range a.Characters() {
 				if c.SerialID() == serialID {
 					return c
+				}
+			}
+		}
+	}
+	return nil
+}
+
+// AreaObject retruns area object with specified ID and serial
+// or nil if no object was found.
+func (c *Chapter) AreaObject(id, serial string) *area.Object {
+	for _, s := range c.loadedScens {
+		for _, a := range s.Areas() {
+			for _, o := range a.Objects() {
+				if o.ID() == id && o.Serial() == serial {
+					return o
 				}
 			}
 		}

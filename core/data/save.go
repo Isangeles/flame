@@ -206,7 +206,7 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 		effect.SetSerial(eData.Serial)
 		effect.SetTime(eData.Time)
 		// Restore effect source.
-		source := mod.Object(eData.SourceID, eData.SourceSerial)
+		source := mod.Target(eData.SourceID, eData.SourceSerial)
 		if source == nil {
 			log.Err.Printf("data:char:%s:restore_effects:fail_to_find_source:%s",
 				char.ID(), eData.SourceID + "_" + eData.SourceSerial)

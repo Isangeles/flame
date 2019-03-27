@@ -89,7 +89,6 @@ func ReadValue(filePath string, ids ...string) (map[string]string, error) {
 		return nil, fmt.Errorf("CANT_OPEN:%s", filePath)
 	}
 	defer file.Close()
-
 	scan := bufio.NewScanner(file)
 	texts := make(map[string]string)
 	for _, id := range ids {
@@ -100,7 +99,6 @@ func ReadValue(filePath string, ids ...string) (map[string]string, error) {
 			if strings.HasPrefix(line, COMMENT_PREFIX) {
 				continue
 			}
-
 			lineParts := strings.Split(line, ID_TEXT_SEP)
 			if lineParts[0] == id {
 				t := lineParts[1]

@@ -51,11 +51,6 @@ func (m *Module) SetChapter(chapter *Chapter) error {
 	return nil
 }
 
-// Name returns module name
-func (m *Module) Name() string {
-	return m.conf.Name
-}
-
 // Path returns path to module parent directory.
 func (m *Module) Path() string {
 	return m.conf.Path
@@ -94,12 +89,6 @@ func (m *Module) NewcharAttrsMax() int {
 	return m.conf.NewcharAttrsMax
 }
 
-// ChaptersIds returns slice with module chapters
-// ID's.
-func (m *Module) ChaptersIds() []string {
-	return m.conf.Chapters
-}
-
 // Character return character with specified serial
 // ID from lodaed module characters or nil if no such
 // character was found.
@@ -107,12 +96,13 @@ func (m *Module) Character(serialID string) *character.Character {
 	return m.Chapter().Character(serialID)
 }
 
-// Object returns game object with specified serial ID
-// or nil if on object with such ID was found.
-func (m *Module) Object(id, serial string) effect.Target {
-	char := m.Character(id + "_" + serial)
+// Target returns 'targetable' game object with specified
+// serial ID or nil if on object with such ID was found.
+func (m *Module) Target(id, serial string) effect.Target {
+	char := m.Chapter().Character(id + "_" + serial)
 	if char != nil {
 		return char
 	}
-	return nil
+	ob := m.Chapter().AreaObject(id, serial)
+	return ob
 }
