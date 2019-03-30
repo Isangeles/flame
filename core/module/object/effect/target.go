@@ -35,8 +35,8 @@ type Target interface {
 	Experience() int
 	SetExperience(val int)
 	Live() bool
-	Hit() Hit
-	TakeHit(h Hit)
+	HitEffects() []*Effect
+	TakeEffect(e *Effect)
 	Position() (x, y float64)
 	SendCmb(msg string)
 	CombatLog() chan string

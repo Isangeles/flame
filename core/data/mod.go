@@ -118,13 +118,12 @@ func LoadScenario(mod *module.Module, id string) error {
 		// Objects.
 		for _, areaObject := range areaData.Objects {
 			// Retrieve object data.
-			objectData := res.Object(areaObject.ID)
-			if objectData == nil {
-				log.Err.Printf("data:unmarshal_scenario:area:%s:%s:object_data_not_found:%s",
-					scenData.ID, areaData.ID, areaObject.ID)
+			object, err := Object(mod, areaObject.ID)
+			if err != nil {
+				log.Err.Printf("data:unmarshal_scenario:area:%s:%s:%v",
+					scenData.ID, areaData.ID, err)
 				continue
 			}
-			object := buildObject(mod, objectData)
 			// Set serial & position.
 			serial.AssignSerial(object)
 			object.SetPosition(areaObject.PosX, areaObject.PosY)

@@ -47,6 +47,17 @@ type Positioner interface {
 	Position() (x, y float64)
 }
 
+// Struct for object effect
+// types.
+type Element int
+
+const (
+	Element_none Element = iota
+	Element_fire 
+	Element_frost
+	Element_nature
+)
+
 // Equals checks whether two specified objects
 // represents the same game object.
 func Equals(ob1, ob2 Object) bool {

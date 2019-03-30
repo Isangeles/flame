@@ -43,8 +43,8 @@ type SkillUser interface {
 	SetExperience(val int)
 	Live() bool
 	Damage() (int, int)
-	Hit() effect.Hit
-	TakeHit(h effect.Hit)
+	HitEffects() []*effect.Effect
+	TakeEffect(e *effect.Effect)
 	Position() (x, y float64)
 	SendCmb(msg string)
 	CombatLog() chan string

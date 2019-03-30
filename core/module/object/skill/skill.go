@@ -50,6 +50,8 @@ type Skill struct {
 	castTime    int64
 	cooldown    int64
 	cooldownMax int64
+	melee       bool
+	spell       bool
 	casting     bool
 	casted      bool
 	ready       bool
@@ -86,6 +88,8 @@ func New(data res.SkillData) *Skill {
 	s := new(Skill)
 	s.id = data.ID
 	s.name = data.Name
+	s.melee = data.Melee
+	s.spell = data.Spell
 	s.castRange = Range(data.Range)
 	s.useReqs = data.UseReqs
 	s.effects = data.Effects
@@ -120,11 +124,14 @@ func (s *Skill) Activate() {
 	if s.target == nil {
 		return
 	}
-	hit := effect.Hit{
-		Source:  s.user,
-		Effects: s.buildEffects(s.effects),
+	if s.melee {
+		for _, e := range s.user.HitEffects() {
+			s.target.TakeEffect(e)
+		}
 	}
-	s.target.TakeHit(hit)
+	for _, e := range s.buildEffects(s.effects) {
+		s.target.TakeEffect(e)
+	}
 }
 
 // ID returns skill ID.

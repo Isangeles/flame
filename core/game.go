@@ -84,6 +84,10 @@ func (g *Game) Update(delta int64) {
 	for _, c := range updateChars {
 		c.Update(delta)
 	}
+	updateObjects := g.Module().Chapter().AreaObjects()
+	for _, o := range updateObjects {
+		o.Update(delta)
+	}
 }
 
 // Pause toggles game update pause.

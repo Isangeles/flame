@@ -255,7 +255,7 @@ func showCharOption(cmd Command) (int, string) {
 	case "health", "hp":
 		out := ""
 		for _, char := range chars {
-			out += fmt.Sprintf("%d ", char.Health())
+			out += fmt.Sprintf("%s %d ", out, char.Health())
 		}
 		return 0, out
 	case "max-health", "max-hp":

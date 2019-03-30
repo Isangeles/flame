@@ -26,6 +26,7 @@ package res
 // Struct for object data. 
 type ObjectData struct {
 	BasicData ObjectBasicData
+	SavedData ObjectSavedData
 	Items     []InventoryItemData
 }
 
@@ -34,6 +35,11 @@ type ObjectBasicData struct {
 	ID        string
 	Serial    string
 	HP, MaxHP int
+}
+
+// Struct for saved object data.
+type ObjectSavedData struct {
+	PosX, PosY float64
 }
 
 // Struct for object effects data.

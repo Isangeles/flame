@@ -34,6 +34,8 @@ type SkillData struct {
 	Cast     int64
 	Cooldown int64
 	Range    int
+	Melee    bool
+	Spell    bool
 	UseReqs  []req.Requirement
 	Effects  []EffectData
 }

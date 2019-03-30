@@ -38,7 +38,9 @@ func (hitm HitMod) Affect(source Target, targets ...Target) {
 		return
 	}
 	for _, t := range targets {
-		t.TakeHit(source.Hit())
+		for _, e := range source.HitEffects() {
+			t.TakeEffect(e)
+		}
 	}
 }
 

@@ -30,6 +30,7 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/log"
@@ -43,12 +44,14 @@ type ObjectsBaseXML struct {
 
 // Struct for XML object node.
 type ObjectXML struct {
-	XMLName   xml.Name     `xml:"object"`
-	ID        string       `xml:"id,attr"`
-	Serial    string       `xml:"serial,attr"`
-	HP        int          `xml:"hp,attr"`
-	MaxHP     int          `xml:"maxhp,attr"`
-	Inventory InventoryXML `xml:"inventory"`
+	XMLName   xml.Name         `xml:"object"`
+	ID        string           `xml:"id,attr"`
+	Serial    string           `xml:"serial,attr"`
+	HP        int              `xml:"hp,attr"`
+	MaxHP     int              `xml:"max-hp,attr"`
+	Position  string           `xml:"position,value"`
+	Inventory InventoryXML     `xml:"inventory"`
+	Effects   ObjectEffectsXML `xml:"effects"`
 }
 
 // Struct for XML node with object effects.
@@ -110,6 +113,21 @@ func UnmarshalObjectsBase(data io.Reader) ([]*res.ObjectData, error) {
 	return objects, nil
 }
 
+// xmlObject parses specified area object to XML
+// object struct.
+func xmlObject(ob *area.Object) *ObjectXML {
+	xmlOb := new(ObjectXML)
+	xmlOb.ID = ob.ID()
+	xmlOb.Serial = ob.Serial()
+	xmlOb.HP = ob.Health()
+	xmlOb.MaxHP = ob.MaxHealth()
+	posX, posY := ob.Position()
+	xmlOb.Position = fmt.Sprintf("%fx%f", posX, posY)
+	xmlOb.Inventory = *xmlInventory(ob.Inventory())
+	xmlOb.Effects = *xmlObjectEffects(ob.Effects()...)
+	return xmlOb
+}
+
 // xmlObjectEffects parses specified effects to XML
 // object effects struct.
 func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffectsXML {
@@ -157,5 +175,13 @@ func buildObjectData(xmlOb *ObjectXML) (*res.ObjectData, error) {
 		MaxHP:  xmlOb.MaxHP,
 	}
 	data := res.ObjectData{BasicData: baseData}
+	// Position.
+	if xmlOb.Position != "" {
+		posX, posY, err := UnmarshalPosition(xmlOb.Position)
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_parse_position:%v", err)
+		}
+		data.SavedData.PosX, data.SavedData.PosY = posX, posY
+	}
 	return &data, nil
 }

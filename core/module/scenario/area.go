@@ -89,5 +89,11 @@ func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Tar
 			objects = append(objects, char)
 		}
 	}
+	// Objects.
+	for _, ob := range a.objects {
+		if object.Range(ob, pos) <= maxrange {
+			objects = append(objects, ob)
+		}
+	}
 	return objects
 }

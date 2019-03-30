@@ -137,13 +137,16 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 	}
 	mod.Chapter().ClearScenarios() // to remove start scenario
 	charsData := make([]*res.CharacterData, 0)
+	objectsData := make([]*res.ObjectData, 0)
 	pcs := make([]*character.Character, 0)
-	// Build chapter scenarios from save.
+	// Scenrios.
 	for _, scenData := range chapterData.Scenarios {
 		subareas := make([]*scenario.Area, 0)
 		mainarea := new(scenario.Area)
+		// Areas.
 		for _, areaData := range scenData.Areas {
 			area := scenario.NewArea(areaData.ID)
+			// Characters.
 			for _, charData := range areaData.Chars {
 				charsData = append(charsData, &charData) // save data to restore effects later
 				char := buildCharacter(mod, &charData)
@@ -157,6 +160,14 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 					pcs = append(pcs, char)
 				}
 				area.AddCharacter(char)
+			}
+			// Objects.
+			for _, obData := range areaData.Objects {
+				objectsData = append(objectsData, &obData) // save data to restore effects later
+				ob := buildObject(mod, &obData)
+				// Restore position.
+				ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
+				area.AddObject(ob)
 			}
 			if areaData.Mainarea {
 				mainarea = area

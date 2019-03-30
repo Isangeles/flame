@@ -24,15 +24,25 @@
 package area
 
 import (
+	"fmt"
+	
+	"github.com/isangeles/flame/config"
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object/effect"
 )
 
-// Hit creates object hit.
-func (ob *Object) Hit() effect.Hit {
-	return effect.Hit{Source:ob}
+// HitEffects returns all object hit effects.
+func (ob *Object) HitEffects() []*effect.Effect {
+	effects := make([]*effect.Effect, 0)
+	return effects
 }
 
-// TakeHit handles hit towards object.
-func (ob *Object) TakeHit(h effect.Hit) {
-	
+// TakeEffect handles effect casted towards object.
+func (ob *Object) TakeEffect(e *effect.Effect) {
+	ob.AddEffect(e)
+	msg := fmt.Sprintf("%s:%s:%s", ob.Name(), lang.Text("ui", "ob_effect"), e.Name())
+	if config.Debug() { // add effect serial ID to combat message
+		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
+	}
+	ob.SendCmb(msg)
 }

@@ -41,7 +41,7 @@ type Command interface {
 }
 
 // Interaface for all expressions interpreted by CI.
-// Expression is multiple commands connected by
+// Expressions are multiple commands connected by
 // special character(e.g. pipe). 
 type Expression interface {
 	Commands() []Command
@@ -56,6 +56,7 @@ const (
 	ENGINE_MAN = "engineman"
 	MODULE_MAN = "moduleman"
 	CHAR_MAN   = "charman"
+	OBJECT_MAN = "objectman"
 	
 	PIPE_ARG_EXP ExpressionType = iota
 	PIPE_TAR_ARG_EXP
@@ -73,6 +74,7 @@ func init() {
 	tools[ENGINE_MAN] = handleEngineCommand
 	tools[MODULE_MAN] = handleModuleCommand
 	tools[CHAR_MAN] = handleCharCommand
+	tools[OBJECT_MAN] = handleObjectCommand
 }
 
 // AddToolHandler adds specified command handling function as

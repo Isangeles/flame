@@ -27,6 +27,7 @@ package area
 import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 )
 
@@ -38,6 +39,7 @@ type Object struct {
 	resilience object.Resilience
 	posX, posY float64
 	inventory  *item.Inventory
+	effects    map[string]*effect.Effect
 	combatlog  chan string
 }
 
@@ -50,7 +52,22 @@ func NewObject(data res.ObjectBasicData) *Object {
 		hp:     data.HP,
 		maxHP:  data.MaxHP,
 	}
+	ob.inventory = item.NewInventory(10)
+	ob.effects = make(map[string]*effect.Effect)
+	ob.combatlog = make(chan string, 3)
 	return &ob
+}
+
+// Update updates object.
+func (ob *Object) Update(delta int64) {
+	// Effects.
+	for serial, e := range ob.effects {
+		e.Update(delta)
+		// Remove expired effects.
+		if e.Time() <= 0 {
+			delete(ob.effects, serial)
+		}
+	}
 }
 
 // ID returns object ID.
@@ -128,6 +145,13 @@ func (ob *Object) Mana() int {
 	return 0
 }
 
+// MaxMana returns 0, object do not
+// have mana. Function to satisfy
+// effect targer interface.
+func (ob *Object) MaxMana() int {
+	return 0
+}
+
 // SetMana does nothing, object do not
 // have mana. Function to satisfy
 // effect targer interface.
@@ -150,6 +174,21 @@ func (ob *Object) SetExperience(v int) {
 // Inventory returns object inventory.
 func (ob *Object) Inventory() *item.Inventory {
 	return ob.inventory
+}
+
+// AddEffects adds specified effect to object.
+func (ob *Object) AddEffect(e *effect.Effect) {
+	e.SetTarget(ob)
+	ob.effects[e.ID()+e.Serial()] = e
+}
+
+// Effects returns all obejct effects.
+func (ob *Object) Effects() []*effect.Effect {
+	effects := make([]*effect.Effect, 0)
+	for _, e := range ob.effects {
+		effects = append(effects, e)
+	}
+	return effects
 }
 
 // SendCmb sends specified text message to

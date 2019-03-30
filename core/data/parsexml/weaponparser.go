@@ -83,7 +83,7 @@ func buildWeaponData(xmlWeapon WeaponXML) (*res.WeaponData, error) {
 	for _, s := range slots {
 		slotsID = append(slotsID, int(s))
 	}
-	dmgType, err := UnmarshalHitType(xmlWeapon.Damage.Type)
+	dmgType, err := UnmarshalElementType(xmlWeapon.Damage.Type)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_damage_type:%v", err)
 	}

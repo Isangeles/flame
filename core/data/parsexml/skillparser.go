@@ -46,6 +46,8 @@ type SkillXML struct {
 	CastSec     int              `xml:"cast,attr"`
 	CooldownSec int              `xml:"cooldown,attr"`
 	Range       string           `xml:"range,attr"`
+	Melee       bool             `xml:"melee,attr"`
+	Spell       bool             `xml:"spell,attr"`
 	Effects     ObjectEffectsXML `xml:"effects"`
 	Reqs        ReqsXML          `xml:"reqs"`
 }
@@ -93,6 +95,8 @@ func buildSkillData(xmlSkill SkillXML) (*res.SkillData, error) {
 		Cast:     int64(xmlSkill.CastSec * 1000),
 		Cooldown: int64(xmlSkill.CooldownSec * 1000),
 		Range:    int(skillRange),
+		Melee:    xmlSkill.Melee,
+		Spell:    xmlSkill.Spell,
 		Effects:  effects,
 		UseReqs:  reqs,
 	}

@@ -109,6 +109,19 @@ func (c *Chapter) Characters() (chars []*character.Character) {
 	return
 }
 
+// Objects returns list with all area objects from all
+// loaded scenarios.
+func (c *Chapter) AreaObjects() (objects []*area.Object) {
+	for _, s := range c.loadedScens {
+		for _, a := range s.Areas() {
+			for _, o := range a.Objects() {
+				objects = append(objects, o)
+			}
+		}
+	}
+	return
+}
+
 // CharactersWithID returns all existing characters with
 // specified ID.
 func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {

@@ -31,7 +31,6 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/log"
 )
 
@@ -151,11 +150,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Inventory = *xmlInventory(char.Inventory())
 	xmlChar.Equipment = *xmlEquipment(char.Equipment())
 	xmlChar.Effects = *xmlObjectEffects(char.Effects()...)
-	charSkills := make([]*skill.Skill, 0)
-	for _, s := range char.Skills() {
-		charSkills = append(charSkills, s)
-	}
-	xmlChar.Skills = *xmlObjectSkills(charSkills...)
+	xmlChar.Skills = *xmlObjectSkills(char.Skills()...)
 	return xmlChar
 }
 

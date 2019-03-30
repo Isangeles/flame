@@ -29,10 +29,10 @@ import (
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
-//	"github.com/isangeles/flame/core/rng"
 )
 
 // Damage retruns min and max damage value,
@@ -51,14 +51,14 @@ func (c *Character) Damage() (int, int) {
 
 // DamgaeType returns type of damage caused by
 // character.
-func (c *Character) DamageType() effect.HitType {
+func (c *Character) DamageType() object.Element {
 	rightHandItem := c.Equipment().HandRight().Item()
 	if rightHandItem != nil {
 		if w, ok := rightHandItem.(*item.Weapon); ok {
 			w.DamageType()
 		}
 	}
-	return effect.Hit_normal
+	return object.Element_none
 }
 
 // DamageEffects returns character damage effects.
@@ -74,8 +74,8 @@ func (c *Character) DamageEffects() []*effect.Effect {
 	return effects
 }
 
-// Hit creates character hit.
-func (c *Character) Hit() effect.Hit {
+// HitEffects returns all character hit effects.
+func (c *Character) HitEffects() []*effect.Effect {
 	dmgMin, dmgMax := c.Damage()
 	healthMod := res.HealthModData{-dmgMin, -dmgMax}
 	hitData := res.EffectData{
@@ -85,13 +85,9 @@ func (c *Character) Hit() effect.Hit {
 		HealthMods: []res.HealthModData{healthMod},
 	}
 	hitEffect := c.buildEffects(hitData)
-	dmgEffects := c.DamageEffects()
-	dmgEffects = append(dmgEffects, hitEffect...)
-	return effect.Hit{
-		Source:  c,
-		Type:    c.DamageType(),
-		Effects: dmgEffects,
-	}
+	effects := c.DamageEffects()
+	effects = append(effects, hitEffect...)
+	return effects
 }
 
 // UseSkill uses specified skill on current target.
@@ -121,24 +117,12 @@ func (c *Character) UseSkill(s *skill.Skill) {
 	c.SendCmb(msg)
 }
 
-// Hit handles specified hit.
-func (c *Character) TakeHit(hit effect.Hit) {
-	// TODO: handle resists.
-	for _, e := range hit.Effects {
-		c.takeEffect(e)
-	}
-	/*
-	msg := fmt.Sprintf("%s:%s:%d", c.Name(), lang.Text("ui", "ob_health"), hit.HP)
-	c.sendCmb(msg)
-        */
-}
-
 // takeEffects adds specified effects
-func (c *Character) takeEffect(e *effect.Effect) {
+func (c *Character) TakeEffect(e *effect.Effect) {
 	// TODO: handle resists.
 	c.AddEffect(e)
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
-	if config.Debug() {
+	if config.Debug() { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
 	c.SendCmb(msg)
