@@ -1,7 +1,7 @@
 /*
  * engineman.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ func handleEngineCommand(cmd Command) (int, string) {
 		return showEngineOption(cmd)
 	case "load":
 		return loadEngineOption(cmd)
-	case "start":
+	case "start", "new":
 		return startEngineOption(cmd)
 	case "set":
 		return setEngineOption(cmd)
@@ -193,7 +193,6 @@ func startEngineOption(cmd Command) (int, string) {
 		if flame.Mod() == nil {
 			return 7, fmt.Sprintf("no_module_loaded")
 		}
-
 		pc := flame.Mod().Character(cmd.Args()[0])
 		if pc == nil {
 			return 7, fmt.Sprintf("not_found_character_with_id:'%s'",
@@ -201,13 +200,23 @@ func startEngineOption(cmd Command) (int, string) {
 		}
 		var pcs []*character.Character
 		pcs = append(pcs, pc)
-
 		_, err := flame.StartGame(pcs)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:new_game_start_fail:%s",
 				ENGINE_MAN, err)
 		}
-
+		return 0, ""
+	case "module", "mod":
+		if len(cmd.Args()) < 1 {
+			return 7, fmt.Sprintf("%s:not_enought_args_for:%s",
+				ENGINE_MAN, cmd.TargetArgs()[0])
+		}
+		name := cmd.Args()[0]
+		err := data.NewModule(name)
+		if err != nil {
+			return 8, fmt.Sprintf("%s:fail_to_create_mod:%v",
+				ENGINE_MAN, cmd.TargetArgs()[0])
+		}
 		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'",

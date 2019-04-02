@@ -63,8 +63,8 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 		return fmt.Errorf("fail_to_create_savegames_dir:%v",
 			err)
 	}
-	filePath := filepath.FromSlash(dirPath + "/" +
-		saveName + SAVEGAME_FILE_EXT)
+	filePath := filepath.FromSlash(dirPath + "/" + saveName +
+		SAVEGAME_FILE_EXT)
 	f, err := os.Create(filePath)
 	if err != nil {
 		return fmt.Errorf("fail_to_write_savegame_file:%v",

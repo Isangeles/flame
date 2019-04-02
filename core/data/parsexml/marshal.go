@@ -137,3 +137,9 @@ func MarshalEqSlot(eqSlot *character.EquipmentSlot) string {
 		return "unknow"
 	}
 }
+
+// MarshalPosition parses specified XY position
+// to string.
+func MarshalPosition(x, y float64) string {
+	return fmt.Sprintf("%fx%f", x, y)
+}

@@ -37,6 +37,10 @@ import (
 	"github.com/isangeles/flame/core/module/serial"
 )
 
+const (
+	SCENARIO_FILE_EXT = ".scenario"
+)
+
 // Module creates new module from specified path.
 func Module(path, langID string) (*module.Module, error) {
 	// Load module config file.

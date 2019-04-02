@@ -86,6 +86,49 @@ func UnmarshalScenario(data io.Reader) (*res.ModuleScenarioData, error) {
 	return scenData, nil
 }
 
+// MarshalScenario parses scenario data to XML string.
+func MarshalScenario(scenData *res.ModuleScenarioData) (string, error) {
+	xmlScen := xmlScenario(scenData)
+	out, err := xml.Marshal(xmlScen)
+	if err != nil {
+		return "", fmt.Errorf("fail_to_marshal_char:%v", err)
+	}
+	return string(out[:]), nil
+}
+
+// xmlScenario creates XML struct from specified module
+// scenario data.
+func xmlScenario(scen *res.ModuleScenarioData) *ScenarioXML {
+	xmlScen := new(ScenarioXML)
+	xmlScen.ID = scen.ID
+	for _, ad := range scen.Areas {
+		xmlArea := new(AreaXML)
+		xmlArea.ID = ad.ID
+		// Characters.
+		xmlChars := xmlArea.NPCs.Characters
+		for _, npc := range ad.NPCS {
+			xmlNPC := new(AreaCharXML)
+			xmlNPC.ID = npc.ID
+			xmlNPC.Position = MarshalPosition(npc.PosX, npc.PosY)
+			xmlChars = append(xmlChars, *xmlNPC)
+		}
+		// Objects.
+		xmlObjects := xmlArea.Objects.Nodes
+		for _, ob := range ad.Objects {
+			xmlOb := new(AreaObjectXML)
+			xmlOb.ID = ob.ID
+			xmlOb.Position = MarshalPosition(ob.PosX, ob.PosY)
+			xmlObjects = append(xmlObjects, *xmlOb)
+		}
+		if ad.Main {
+			xmlScen.Mainarea = *xmlArea
+			continue
+		}
+		xmlScen.Subareas = append(xmlScen.Subareas, *xmlArea)
+	}
+	return xmlScen
+}
+
 // buildScenarioData creates scenario data from specified
 // XML data.
 func buildScenarioData(xmlScen *ScenarioXML) *res.ModuleScenarioData {

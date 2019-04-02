@@ -25,7 +25,7 @@ package res
 
 // Struct for scenario data.
 type ModuleScenarioData struct {
-	ID       string
+	ID    string
 	Areas []ModuleAreaData
 }
 

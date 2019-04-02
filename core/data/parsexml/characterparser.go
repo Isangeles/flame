@@ -117,7 +117,7 @@ func UnmarshalCharacter(data io.Reader, charID string) (CharacterXML, error) {
 }
 
 // MarshalCharacter parses game character to XML characters
-// base.
+// base string.
 func MarshalCharacter(char *character.Character) (string, error) {
 	xmlCharBase := new(CharactersBaseXML)
 	xmlChar := xmlCharacter(char)
