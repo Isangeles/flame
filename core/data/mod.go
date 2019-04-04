@@ -1,24 +1,24 @@
 /*
  * mod.go
- * 
+ *
  * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 package data
@@ -27,14 +27,15 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
-	"github.com/isangeles/flame/log"
-	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/serial"
+	"github.com/isangeles/flame/log"
 )
 
 const (
@@ -86,8 +87,8 @@ func LoadScenario(mod *module.Module, id string) error {
 		return fmt.Errorf("no module chapter set")
 	}
 	// Load files.
-	scenPath := filepath.FromSlash(chap.Conf().ScenariosPath() + "/" +
-		id)
+	scenPath := filepath.FromSlash(chap.Conf().ScenariosPath() +
+		"/" + id)
 	docScen, err := os.Open(scenPath)
 	if err != nil {
 		return fmt.Errorf("fail_to_open_scenario_file:%v", err)
@@ -153,28 +154,55 @@ func LoadScenario(mod *module.Module, id string) error {
 // modConf loads module configuration file
 // from specified path.
 func modConf(path, lang string) (module.ModConf, error) {
+	conf := module.ModConf{Path: path, Lang: lang}
+	// Check if mod dir exists.
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return module.ModConf{}, fmt.Errorf("module_not_found:'%s':%v",
-			path, err)
+		return conf, fmt.Errorf("module_not_found:'%s':%v", path, err)
 	}
 	modConfPath := filepath.FromSlash(path + "/mod.conf")
-	confInts, err := text.ReadInt(modConfPath, "new_char_attrs_min",
-		"new_char_attrs_max")
+	// Read conf.
+	confInts, err := text.ReadInt(modConfPath, "player-attrs-min",
+		"player-attrs-max")
 	if err != nil {
-		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_int_values:%s",
-			err)
+		return conf, fmt.Errorf("fail_to_retrieve_int_values:%s", err)
 	}
-	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter")
+	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter",
+		"player-skills", "player-items", "char-skills", "char-items")
 	if err != nil {
-		return module.ModConf{}, fmt.Errorf("fail_to_retrieve_values:%s", err)
+		return conf, fmt.Errorf("fail_to_retrieve_values:%s", err)
 	}
-	conf := module.ModConf{
-		ID:              confValues["id"],
-		Path:            path,
-		Lang:            lang,
-		NewcharAttrsMin: confInts["new_char_attrs_min"],
-		NewcharAttrsMax: confInts["new_char_attrs_max"],
-		StartChapter:    confValues["start-chapter"],
+	pcSkills := strings.Split(confValues["player-skills"], ";")
+	pcItems := strings.Split(confValues["player-items"], ";")
+	charSkills := strings.Split(confValues["char-skills"], ";")
+	charItems := strings.Split(confValues["char-items"], ";")
+	// Set conf values.
+	conf.ID = confValues["id"]
+	conf.NewcharAttrsMin = confInts["player-attrs-min"]
+	conf.NewcharAttrsMax = confInts["player-attrs-max"]
+	conf.StartChapter = confValues["start-chapter"]
+	for _, sid := range pcSkills {
+		if len(sid) < 1 {
+			continue
+		}
+		conf.PlayerSkills = append(conf.PlayerSkills, sid)
+	}
+	for _, iid := range pcItems {
+		if len(iid) < 1 {
+			continue
+		}
+		conf.PlayerItems = append(conf.PlayerItems, iid)
+	}
+	for _, sid := range charSkills {
+		if len(sid) < 1 {
+			continue
+		}
+		conf.CharSkills = append(conf.CharSkills, sid)
+	}
+	for _, iid := range charItems {
+		if len(iid) < 1 {
+			continue
+		}
+		conf.CharItems = append(conf.CharItems, iid)
 	}
 	return conf, nil
 }
@@ -189,8 +217,8 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 			err)
 	}
 	conf := module.ChapterConf{
-		Path:chapterPath,
-		StartScenID:confValues["start_scenario"],
+		Path:        chapterPath,
+		StartScenID: confValues["start_scenario"],
 	}
 	return conf, nil
 }

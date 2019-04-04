@@ -72,14 +72,8 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if Mod() == nil {
 		return nil, fmt.Errorf("no module loaded")
 	}
-	// Load module data.
-	err := data.LoadModuleData(Mod())
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_data:%v",
-			err)
-	}
 	// Load start chapter for module.
-	err = data.LoadChapter(Mod(), Mod().Conf().StartChapter)
+	err := data.LoadChapter(Mod(), Mod().Conf().StartChapter)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_start_chapter:%v",
 			err)
@@ -112,12 +106,6 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 func LoadGame(saveName string) (*core.Game, error) {
 	if Mod() == nil {
 		return nil, fmt.Errorf("no module loaded")
-	}
-	// Load module data.
-	err := data.LoadModuleData(Mod())
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_data:%v",
-			err)
 	}
 	// Import saved game.
 	savesPath := config.ModuleSavegamesPath()

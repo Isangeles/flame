@@ -41,9 +41,6 @@ var (
 
 // newGameDialog starts CLI dialog for new game.
 func newGameDialog() (*core.Game, error) {
-	if flame.Mod() == nil {
-		return nil, fmt.Errorf(lang.Text("ui", "cli_no_mod_err"))
-	}
 	if len(playableChars) < 1 {
 		return nil, fmt.Errorf(lang.Text("ui", "cli_newgame_no_chars_err"))
 	}
@@ -58,7 +55,6 @@ func newGameDialog() (*core.Game, error) {
 		for i, c := range playableChars {
 			fmt.Printf("[%d]%v\n", i, charDisplayString(c))
 		}
-
 		fmt.Printf("%s:", lang.Text("ui", "cli_newgame_select_char"))
 		for scan.Scan() {
 			input := scan.Text()
@@ -82,7 +78,6 @@ func newGameDialog() (*core.Game, error) {
 			accept = true
 		}
 	}
-
 	var pcs []*character.Character
 	pcs = append(pcs, pc)
 	g, err := flame.StartGame(pcs)

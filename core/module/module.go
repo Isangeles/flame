@@ -51,16 +51,6 @@ func (m *Module) SetChapter(chapter *Chapter) error {
 	return nil
 }
 
-// Path returns path to module parent directory.
-func (m *Module) Path() string {
-	return m.conf.Path
-}
-
-// FullPath return full path to module directory.
-func (m *Module) FullPath() string {
-	return m.conf.Path
-}
-
 // Chapter returns current module chapter.
 func (m *Module) Chapter() *Chapter {
 	return m.chapter
@@ -69,24 +59,6 @@ func (m *Module) Chapter() *Chapter {
 // Conf returns module configuration.
 func (m *Module) Conf() ModConf {
 	return m.conf
-}
-
-// LangID return ID of current module
-// language.
-func (m *Module) LangID() string {
-	return m.conf.Lang
-}
-
-// NewcharAttrsMin returns minimal amount of
-// attributes points for new characer.
-func (m *Module) NewcharAttrsMin() int {
-	return m.conf.NewcharAttrsMin
-}
-
-// NewCharAttrsMax return maximal amount of
-// attributes points for new character.
-func (m *Module) NewcharAttrsMax() int {
-	return m.conf.NewcharAttrsMax
 }
 
 // Character return character with specified serial

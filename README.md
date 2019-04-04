@@ -46,6 +46,12 @@ Description: enables engine debug mode(shows debug messages in engine log), 'tru
 Flame comes with a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
 
 ### Commands:
+Create module:
+```
+  $engineman -o new -t module -a [module name]
+```
+Description: creates new module with specified name in 'data/modules' directory. New module contains one chapter and start area.
+
 Load module:
 ```
   $engineman -o load -t module -a [module name] [module path](optional)

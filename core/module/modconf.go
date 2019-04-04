@@ -33,6 +33,10 @@ type ModConf struct {
 	NewcharAttrsMax int
 	NewcharAttrsMin int
 	StartChapter    string
+	PlayerSkills    []string
+	PlayerItems     []string
+	CharSkills      []string
+	CharItems       []string
 }
 
 // ChaptersPath returns path to module chapters.

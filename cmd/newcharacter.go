@@ -29,30 +29,28 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
+
+	"github.com/isangeles/flame/cmd/log"
 )
 
 // startNewCharacterDialog starts new CLI dialog to create new playable
 // game character.
-func newCharacterDialog() (*character.Character, error) {
-	if flame.Mod() == nil {
-		return nil, fmt.Errorf(lang.Text("ui", "cli_no_mod_err"))
-	}
+func newCharacterDialog(mod *module.Module) (*character.Character, error) {
 	var (
-		name        string
-		race        character.Race
-		sex         character.Gender
-		attrs       character.Attributes
-		attrsPoints = flame.Mod().NewcharAttrsMax()
-		c           *character.Character
+		name     string
+		race     character.Race
+		sex      character.Gender
+		attrs    character.Attributes
+		attrsPts = mod.Conf().NewcharAttrsMax
+		c        *character.Character
 	)
-
-	scan := bufio.NewScanner(os.Stdin)
-
 	// Character creation dialog
+	scan := bufio.NewScanner(os.Stdin)
 	var mainAccept = false
 	for !mainAccept {
 		// Name
@@ -74,7 +72,7 @@ func newCharacterDialog() (*character.Character, error) {
 		// Attributes.
 		var accept = false
 		for !accept {
-			attrs = newAttributesDialog(attrsPoints)
+			attrs = newAttributesDialog(attrsPts)
 			fmt.Printf("%s: %s\n",
 				lang.Text("ui", "cli_newchar_attrs_summary"), attrs)
 			fmt.Printf("%s:", lang.Text("ui", "cli_accept_dialog"))
@@ -87,20 +85,20 @@ func newCharacterDialog() (*character.Character, error) {
 		// Summary.
 		charID := fmt.Sprintf("player_%s", name)
 		charData := res.CharacterBasicData{
-			ID: charID,
-			Name: name,
-			Level: 1,
-			Sex: int(sex),
-			Race: int(race),
-			Attitude: int(character.Friendly),
+			ID:        charID,
+			Name:      name,
+			Level:     1,
+			Sex:       int(sex),
+			Race:      int(race),
+			Attitude:  int(character.Friendly),
 			Alignment: int(character.True_neutral),
-			Str: attrs.Str,
-			Con: attrs.Con,
-			Dex: attrs.Dex,
-			Int: attrs.Int,
-			Wis: attrs.Wis,
+			Str:       attrs.Str,
+			Con:       attrs.Con,
+			Dex:       attrs.Dex,
+			Int:       attrs.Int,
+			Wis:       attrs.Wis,
 		}
-		c = character.New(charData)
+		c = buildCharacter(mod, &charData)
 		fmt.Printf("%s: %s\n", lang.Text("ui", "cli_newchar_summary"),
 			charDisplayString(c))
 		fmt.Printf("%s:", lang.Text("ui", "cli_accept_dialog"))
@@ -110,7 +108,6 @@ func newCharacterDialog() (*character.Character, error) {
 			mainAccept = true
 		}
 	}
-
 	return c, nil
 }
 
@@ -295,7 +292,51 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 	return
 }
 
-// isCharNameVaild Checks if specified name is valid character name.
+// isCharNameVaild Checks if specified name
+// is valid character name.
 func isCharNameValid(name string) bool {
-	return name != ""
+	return len(name) > 0
 }
+
+// buildCharacter creates new character from specified data.
+func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *character.Character {
+	char := character.New(*charData)
+	// Add character skills & items from mod config.
+	for _, sid := range mod.Conf().CharSkills {
+		s, err := data.Skill(mod, sid)
+		if err != nil {
+			log.Err.Printf("fail_to_retireve_conf_char_skill:%v", err)
+			continue
+		}
+		char.AddSkill(s)
+	}
+	for _, iid := range mod.Conf().CharItems {
+		i, err := data.Item(mod, iid)
+		if err != nil {
+			log.Err.Printf("fail_to_retireve_conf_char_item:%v", err)
+			continue
+		}
+		char.Inventory().AddItem(i)
+	}
+	// Add player skills & items from mod config.
+	for _, sid := range mod.Conf().PlayerSkills {
+		s, err := data.Skill(mod, sid)
+		if err != nil {
+			log.Err.Printf("new_char_dialog:fail_to_retrieve_new_player_skill:%v",
+				err)
+			break
+		}
+		char.AddSkill(s)
+	}
+	for _, iid := range mod.Conf().PlayerItems {
+		i, err := data.Item(mod, iid)
+		if err != nil {
+			log.Err.Printf("new_char_dialog:fail_to_retireve_new_player_items:%v",
+				err)
+			continue
+		}
+		char.Inventory().AddItem(i)
+	}
+	return char
+}
+

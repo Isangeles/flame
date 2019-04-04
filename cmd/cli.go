@@ -70,11 +70,10 @@ func init() {
 		log.Err.Printf("fail_to_load_flame_config:%v", err)
 	}
 	// Load module.
-	m, err := data.Module(config.ModulePath(), config.LangID())
+	err = loadModule(config.ModulePath(), config.LangID())
 	if err != nil {
 		log.Err.Printf("fail_to_load_module:%v", err)
 	}
-	flame.SetModule(m)
 	// Load CLI config.
 	err = loadConfig()
 	if err != nil {
@@ -122,13 +121,19 @@ func execute(input string) {
 
 		os.Exit(0)
 	case NEW_CHAR_CMD:
-		createdChar, err := newCharacterDialog()
+		if flame.Mod() == nil {
+			log.Err.Printf("no_module_loaded")
+		}
+		createdChar, err := newCharacterDialog(flame.Mod())
 		if err != nil {
 			log.Err.Printf("%s\n", err)
 			break
 		}
 		playableChars = append(playableChars, createdChar)
 	case NEW_GAME_CMD:
+		if flame.Mod() == nil {
+			log.Err.Printf("no_module_loaded")
+		}
 		g, err := newGameDialog()
 		if err != nil {
 			log.Err.Printf("%s\n", err)
@@ -137,6 +142,9 @@ func execute(input string) {
 		game = g
 		lastUpdate = time.Now()
 	case LOAD_GAME_CMD:
+		if flame.Mod() == nil {
+			log.Err.Printf("no_module_loaded")
+		}
 		g, err := loadGameDialog()
 		if err != nil {
 			log.Err.Printf("%s", err)
@@ -178,4 +186,20 @@ func gameLoop(g *core.Game) {
 	delta := dtNano / int64(time.Millisecond) // delta to milliseconds
 	g.Update(delta)
 	lastUpdate = time.Now()
+}
+
+// loadModule loads module with all module data
+// from directory with specified path.
+func loadModule(path, langID string) error {
+	m, err := data.Module(config.ModulePath(), config.LangID())
+	if err != nil {
+		return fmt.Errorf("fail_to_dir:%v", err)
+	}
+	// Load module data.
+	err = data.LoadModuleData(m)
+	if err != nil {
+		return fmt.Errorf("fail_to_load_data:%v", err)
+	}
+	flame.SetModule(m)
+	return nil
 }

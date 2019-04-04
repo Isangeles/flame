@@ -48,7 +48,7 @@ const (
 // skill.
 func Skill(mod *module.Module, id string) (*skill.Skill, error) {
 	data := res.Skill(id)
-	if data.ID == "" {
+	if data == nil {
 		return nil, fmt.Errorf("skill_not_found:%s", id)
 	}
 	s := skill.New(*data)
