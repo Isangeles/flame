@@ -29,13 +29,13 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/isangeles/flame/cmd/config"
+	"github.com/isangeles/flame/cmd/log"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
-
-	"github.com/isangeles/flame/cmd/log"
 )
 
 // startNewCharacterDialog starts new CLI dialog to create new playable
@@ -46,7 +46,7 @@ func newCharacterDialog(mod *module.Module) (*character.Character, error) {
 		race     character.Race
 		sex      character.Gender
 		attrs    character.Attributes
-		attrsPts = mod.Conf().NewcharAttrsMax
+		attrsPts = config.NewCharAttrs()
 		c        *character.Character
 	)
 	// Character creation dialog
@@ -319,7 +319,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 		char.Inventory().AddItem(i)
 	}
 	// Add player skills & items from mod config.
-	for _, sid := range mod.Conf().PlayerSkills {
+	for _, sid := range config.NewCharSkills() {
 		s, err := data.Skill(mod, sid)
 		if err != nil {
 			log.Err.Printf("new_char_dialog:fail_to_retrieve_new_player_skill:%v",
@@ -328,7 +328,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 		}
 		char.AddSkill(s)
 	}
-	for _, iid := range mod.Conf().PlayerItems {
+	for _, iid := range config.NewCharItems() {
 		i, err := data.Item(mod, iid)
 		if err != nil {
 			log.Err.Printf("new_char_dialog:fail_to_retireve_new_player_items:%v",
@@ -339,4 +339,3 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 	}
 	return char
 }
-

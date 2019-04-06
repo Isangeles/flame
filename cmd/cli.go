@@ -37,10 +37,11 @@ import (
 	"time"
 	
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/config"
+	flameconf "github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/cmd/burn"
 	"github.com/isangeles/flame/cmd/burn/syntax"
 	"github.com/isangeles/flame/cmd/log"
+	"github.com/isangeles/flame/cmd/config"
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
 )
@@ -65,17 +66,17 @@ var (
 // On init.
 func init() {
 	// Load flame config.
-	err := config.LoadConfig()
+	err := flameconf.LoadConfig()
 	if err != nil {
 		log.Err.Printf("fail_to_load_flame_config:%v", err)
 	}
 	// Load module.
-	err = loadModule(config.ModulePath(), config.LangID())
+	err = loadModule(flameconf.ModulePath(), flameconf.LangID())
 	if err != nil {
 		log.Err.Printf("fail_to_load_module:%v", err)
 	}
 	// Load CLI config.
-	err = loadConfig()
+	err = config.LoadConfig()
 	if err != nil {
 		log.Err.Printf("fail_to_load_config:%v", err)
 	}
@@ -114,7 +115,7 @@ func execute(input string) {
 			log.Err.Printf("engine_config_save_fail:%v",
 				err)
 		}
-		err = saveConfig()
+		err = config.SaveConfig()
 		if err != nil {
 			log.Err.Printf("config_save_fail:%v", err)
 		}
@@ -191,7 +192,7 @@ func gameLoop(g *core.Game) {
 // loadModule loads module with all module data
 // from directory with specified path.
 func loadModule(path, langID string) error {
-	m, err := data.Module(config.ModulePath(), config.LangID())
+	m, err := data.Module(flameconf.ModulePath(), flameconf.LangID())
 	if err != nil {
 		return fmt.Errorf("fail_to_dir:%v", err)
 	}

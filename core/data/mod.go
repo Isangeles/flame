@@ -67,8 +67,7 @@ func LoadChapter(mod *module.Module, id string) error {
 			chapPath, err)
 	}
 	chapConf.ID = id
-	// Create chapter & set as current module
-	// chapter.
+	// Create chapter & set as current module chapter.
 	startChap := module.NewChapter(mod, chapConf)
 	err = mod.SetChapter(startChap) // move to start chapter
 	if err != nil {
@@ -161,37 +160,16 @@ func modConf(path, lang string) (module.ModConf, error) {
 	}
 	modConfPath := filepath.FromSlash(path + "/mod.conf")
 	// Read conf.
-	confInts, err := text.ReadInt(modConfPath, "player-attrs-min",
-		"player-attrs-max")
-	if err != nil {
-		return conf, fmt.Errorf("fail_to_retrieve_int_values:%s", err)
-	}
 	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter",
-		"player-skills", "player-items", "char-skills", "char-items")
+		"char-skills", "char-items")
 	if err != nil {
 		return conf, fmt.Errorf("fail_to_retrieve_values:%s", err)
 	}
-	pcSkills := strings.Split(confValues["player-skills"], ";")
-	pcItems := strings.Split(confValues["player-items"], ";")
 	charSkills := strings.Split(confValues["char-skills"], ";")
 	charItems := strings.Split(confValues["char-items"], ";")
 	// Set conf values.
 	conf.ID = confValues["id"]
-	conf.NewcharAttrsMin = confInts["player-attrs-min"]
-	conf.NewcharAttrsMax = confInts["player-attrs-max"]
 	conf.StartChapter = confValues["start-chapter"]
-	for _, sid := range pcSkills {
-		if len(sid) < 1 {
-			continue
-		}
-		conf.PlayerSkills = append(conf.PlayerSkills, sid)
-	}
-	for _, iid := range pcItems {
-		if len(iid) < 1 {
-			continue
-		}
-		conf.PlayerItems = append(conf.PlayerItems, iid)
-	}
 	for _, sid := range charSkills {
 		if len(sid) < 1 {
 			continue

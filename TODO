@@ -6,8 +6,6 @@ MAJOR:
 * NPC AI
 * Scripts processor
 * Armors & misc items
-* Game objects
-* Parse imported characters to characters data objects
 MINOR:
 * More detiled readme
 * Tutorials
@@ -19,3 +17,5 @@ DONE:
 * Weapons items
 * Effects & modifiers
 * Skills
+* Game objects
+* Parse imported characters to characters data objects

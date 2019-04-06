@@ -30,11 +30,7 @@ import (
 // ModConf struct represents module configuration.
 type ModConf struct {
 	ID, Path, Lang  string
-	NewcharAttrsMax int
-	NewcharAttrsMin int
 	StartChapter    string
-	PlayerSkills    []string
-	PlayerItems     []string
 	CharSkills      []string
 	CharItems       []string
 }
