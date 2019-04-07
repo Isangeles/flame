@@ -94,18 +94,17 @@ func loadEngineOption(cmd Command) (int, string) {
 	}
 
 	switch cmd.TargetArgs()[0] {
-	case "module":
+	case "module", "mod":
 		if len(cmd.Args()) < 1 {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
 				ENGINE_MAN, cmd.TargetArgs()[1])
 		}
-
 		var modPath string
 		if len(cmd.Args()) > 1 {
 			modPath = filepath.FromSlash(cmd.Args()[1] + "/" +
 				cmd.Args()[0])
 		} else {
-			modPath = filepath.FromSlash(config.ModulePath() + "/" +
+			modPath = filepath.FromSlash("data/modules/" +
 				cmd.Args()[0])
 		}
 		m, err := data.Module(modPath, config.LangID())

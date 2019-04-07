@@ -44,6 +44,31 @@ func NewModule(name string) error {
 	if err != nil {
 		return fmt.Errorf("fail_to_create_module_dir:%v", err)
 	}
+	// Sub-dirs.
+	err = os.MkdirAll(filepath.FromSlash(path + "/characters"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_characters_dir:%v", err)
+	}
+	err = os.MkdirAll(filepath.FromSlash(path + "/items"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_items_dir:%v", err)
+	}
+	err = os.MkdirAll(filepath.FromSlash(path + "/effects"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_effects_dir:%v", err)
+	}
+	err = os.MkdirAll(filepath.FromSlash(path + "/skills"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_skills_dir:%v", err)
+	}
+	err = os.MkdirAll(filepath.FromSlash(path + "/objects"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_objects_dir:%v", err)
+	}
+	err = os.MkdirAll(filepath.FromSlash(path + "/lang"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_lang_dir:%v", err)
+	}
 	// Mod conf.
 	confPath := filepath.FromSlash(path + "/mod.conf")
 	confFile, err := os.Create(confPath)
@@ -51,7 +76,8 @@ func NewModule(name string) error {
 		return fmt.Errorf("fail_to_create_module_conf_file:%v", err)
 	}
 	defer confFile.Close()
-	conf := fmt.Sprintf("id:%s;\nstart-chapter:%s;\n", name, "prologue")
+	confFormat :=  "id:%s;\nstart-chapter:%s;\nchar-skills:%s;\nchar-items:%s;\n"
+	conf := fmt.Sprintf(confFormat, name, "prologue", "", "")
 	w := bufio.NewWriter(confFile)
 	w.WriteString(conf)
 	w.Flush()
@@ -71,6 +97,15 @@ func createChapter(path, id string) error {
 	if err != nil {
 		return fmt.Errorf("fail_to_create_dir:%v", err)
 	}
+	// Sub-dirs.
+	err = os.MkdirAll(filepath.FromSlash(path + "/npc"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_npc_dir:%v", err)
+	}
+	err = os.MkdirAll(filepath.FromSlash(path + "/lang"), 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_lang_dir:%v", err)
+	}
 	// Conf.
 	confPath := filepath.FromSlash(path + "/chapter.conf")
 	confFile, err := os.Create(confPath)
@@ -79,7 +114,7 @@ func createChapter(path, id string) error {
 	}
 	defer confFile.Close()
 	conf := fmt.Sprintf("start-scenario:%s;\nscenarios:%s;\n",
-		"area1.scenario2", "")
+		"area1.scenario", "")
 	w := bufio.NewWriter(confFile)
 	w.WriteString(conf)
 	w.Flush()

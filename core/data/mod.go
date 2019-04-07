@@ -189,14 +189,14 @@ func modConf(path, lang string) (module.ModConf, error) {
 // returns error if configuration not found or corrupted.
 func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
-	confValues, err := text.ReadValue(confPath, "start_scenario")
+	confValues, err := text.ReadValue(confPath, "start-scenario")
 	if err != nil {
 		return module.ChapterConf{}, fmt.Errorf("fail_to_read_conf_values:%v",
 			err)
 	}
 	conf := module.ChapterConf{
 		Path:        chapterPath,
-		StartScenID: confValues["start_scenario"],
+		StartScenID: confValues["start-scenario"],
 	}
 	return conf, nil
 }

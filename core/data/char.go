@@ -166,6 +166,10 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 		return fmt.Errorf("fail_to_export_char:%v", err)
 	}
 	// Create character file.
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("fail_to_create_chrs_dir:%v", err)
+	}
 	f, err := os.Create(filepath.FromSlash(dirPath+"/"+
 		strings.ToLower(char.Name())) + CHARS_FILE_EXT)
 	if err != nil {
