@@ -63,7 +63,6 @@ func ReadDisplayText(filePath string, ids ...string) map[string]string {
 			if strings.HasPrefix(line, COMMENT_PREFIX) {
 				continue
 			}
-			
 			lineParts := strings.Split(line, ID_TEXT_SEP)
 			if lineParts[0] == id {
 				t := lineParts[1]

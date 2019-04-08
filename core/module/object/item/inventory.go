@@ -1,7 +1,7 @@
 /*
  * inventory.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@ package item
 
 import (
 	"fmt"
+
+	"github.com/isangeles/flame/core/module/object"
 )
 
 // Struct for container with items.
@@ -49,9 +51,9 @@ func (inv *Inventory) Items() []Item {
 // Item returns item with specified serial ID
 // from inventory or nil if no item with such serial
 // ID was found in inventory.
-func (inv *Inventory) Item(serialID string) Item {
+func (inv *Inventory) Item(id, serial string) Item {
 	for _, i := range inv.Items() {
-		if i.SerialID() == serialID {
+		if i.ID()+i.Serial() == id+serial  {	
 			return i
 		}
 	}
@@ -65,6 +67,16 @@ func (inv *Inventory) AddItem(i Item) error {
 	}
 	inv.items = append(inv.items, i)
 	return nil
+}
+
+// RemoveItem removes specified item from inventory.
+func (inv *Inventory) RemoveItem(i Item) {
+	for _, it := range inv.items {
+		if !object.Equals(it, i) {
+			continue
+		}
+		//delete(inv.items, id)
+	}
 }
 
 // Size returns current amount of items

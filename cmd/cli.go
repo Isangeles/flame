@@ -53,6 +53,7 @@ const (
 	NEW_GAME_CMD     = "newgame"
 	LOAD_GAME_CMD    = "loadgame"
 	IMPORT_CHARS_CMD = "importchars"
+	LOOT_TARGET_CMD  = "loot"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
 )
@@ -110,7 +111,7 @@ func main() {
 func execute(input string) {
 	switch input {
 	case CLOSE_CMD:
-		err := config.SaveConfig()
+		err := flameconf.SaveConfig()
 		if err != nil {
 			log.Err.Printf("engine_config_save_fail:%v",
 				err)
@@ -119,11 +120,11 @@ func execute(input string) {
 		if err != nil {
 			log.Err.Printf("config_save_fail:%v", err)
 		}
-
 		os.Exit(0)
 	case NEW_CHAR_CMD:
 		if flame.Mod() == nil {
 			log.Err.Printf("no_module_loaded")
+			break
 		}
 		createdChar, err := newCharacterDialog(flame.Mod())
 		if err != nil {
@@ -145,6 +146,7 @@ func execute(input string) {
 	case LOAD_GAME_CMD:
 		if flame.Mod() == nil {
 			log.Err.Printf("no_module_loaded")
+			break
 		}
 		g, err := loadGameDialog()
 		if err != nil {
@@ -167,6 +169,32 @@ func execute(input string) {
 		log.Inf.Printf("imported_chars:%d\n", len(chars))
 		for _, c := range chars {
 			playableChars = append(playableChars, c)
+		}
+	case LOOT_TARGET_CMD:
+		if game == nil {
+			log.Err.Printf("no_game_started")
+			break
+		}
+		if len(game.Players()) < 1 {
+			log.Err.Printf("no_players")
+			break
+		}
+		pc := game.Players()[0]
+		tar := pc.Targets()[0]
+		if tar == nil {
+			log.Err.Printf("no_target")
+			break
+		}
+		if tar.Live() {
+			log.Err.Printf("tar_not_lootable")
+			break
+		}
+		for _, it := range tar.Inventory().Items() {
+			if !it.Loot() {
+				continue
+			}
+			pc.Inventory().AddItem(it)
+			tar.Inventory().RemoveItem(it)
 		}
 	case REPEAT_INPUT_CMD:
 		execute(lastCommand)

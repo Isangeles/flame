@@ -39,4 +39,5 @@ type WeaponData struct {
 	DMGEffects []EffectData
 	EQReqs     []req.Requirement
 	Slots      []int
+	Loot       bool
 }

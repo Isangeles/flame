@@ -199,7 +199,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	}
 	// Equipment.
 	for _, eqItData := range data.EqItems {
-		it := char.Inventory().Item(eqItData.ID)
+		it := char.Inventory().Item(eqItData.ID, eqItData.Serial)
 		if it == nil {
 			log.Err.Printf("data:character:%s:eq:fail_to_retrieve_eq_item_from_inv:%s",
 				char.ID(), eqItData.ID)

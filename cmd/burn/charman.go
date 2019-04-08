@@ -210,10 +210,10 @@ func showCharOption(cmd Command) (int, string) {
 			out = fmt.Sprintf("%s ", char.ID())
 		}
 		return 0, out
-	case "serialid":
+	case "serial":
 		out := ""
 		for _, char := range chars {
-			out = fmt.Sprintf("%s ", char.SerialID())
+			out = fmt.Sprintf("%s ", char.Serial())
 		}
 		return 0, out
 	case "items":
@@ -420,11 +420,13 @@ func equipCharOption(cmd Command) (int, string) {
 	switch cmd.Args()[0] {
 	case "hand-right":
 		for _, char := range chars {
-			itID := cmd.Args()[1]
-			it := char.Inventory().Item(itID)
+			serialid := strings.Split(cmd.Args()[1], "_")
+			id := serialid[0]
+			serial := serialid[len(serialid)-1]
+			it := char.Inventory().Item(id, serial)
 			if it == nil {
 				return 8, fmt.Sprintf("%s:%s:fail_to_retrieve_item_from_inventory:%s",
-					CHAR_MAN, char.SerialID(), itID)
+					CHAR_MAN, char.SerialID(), serialid)
 			}
 			eit, ok := it.(item.Equiper)
 			if !ok {

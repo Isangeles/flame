@@ -82,19 +82,20 @@ func LoadConfig() error {
 
 // saveConfig saves engine configuration in file.
 func SaveConfig() error {
+	// Create file.
 	f, err := os.Create(CONFIG_FILE_NAME)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-
+	// Write values.
 	w := bufio.NewWriter(f)
 	w.WriteString(fmt.Sprintf("%s\n", "# Flame engine configuration file")) // default header
-	w.WriteString(fmt.Sprintf("lang:%s;\n", langID))
-	w.WriteString(fmt.Sprintf("module:%s;%s;\n", ModuleName(), ModulePath()))
-	w.WriteString(fmt.Sprintf("debug:%v;\n", Debug()))
+	w.WriteString(fmt.Sprintf("lang:%s\n", langID))
+	w.WriteString(fmt.Sprintf("module:%s;%s\n", ModuleName(), ModulePath()))
+	w.WriteString(fmt.Sprintf("debug:%v\n", Debug()))
+	// Save.
 	w.Flush()
-
 	log.Dbg.Print("config file saved")
 	//debug.PrintStack()
 	return nil

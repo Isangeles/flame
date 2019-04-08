@@ -74,6 +74,7 @@ type EquipmentXML struct {
 type EquipmentItemXML struct {
 	XMLName xml.Name `xml:"item"`
 	ID      string   `xml:"id,attr"`
+	Serial  string   `xml:"serial,attr"`
 	Slot    string   `xml:"slot"`
 }
 
@@ -161,15 +162,15 @@ func xmlEquipment(eq *character.Equipment) *EquipmentXML {
 	handRightItem := eq.HandRight().Item()
 	if handRightItem != nil {
 		xmlEqItem := EquipmentItemXML{
-			ID:   handRightItem.ID() + "_" + handRightItem.Serial(),
-			Slot: MarshalEqSlot(eq.HandRight()),
+			ID:     handRightItem.ID(),
+			Serial: handRightItem.Serial(),
+			Slot:   MarshalEqSlot(eq.HandRight()),
 		}
 		xmlEq.Items = append(xmlEq.Items, xmlEqItem)
 	}
 	// TODO: parse all equipment slots.
 	return xmlEq
 }
-
 
 // buildCharacterData creates character resources from specified
 // XML data.
@@ -244,8 +245,9 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 			continue
 		}
 		eqItData := res.EquipmentItemData{
-			ID:   xmlEqIt.ID,
-			Slot: int(slot),
+			ID:     xmlEqIt.ID,
+			Serial: xmlEqIt.Serial,
+			Slot:   int(slot),
 		}
 		data.EqItems = append(data.EqItems, eqItData)
 	}

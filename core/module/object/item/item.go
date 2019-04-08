@@ -37,6 +37,7 @@ type Item interface {
 	SetName(n string)
 	Value() int
 	Level() int
+	Loot() bool
 }
 
 // Interface for 'equipable' items.

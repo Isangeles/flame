@@ -60,15 +60,17 @@ func LoadConfig() error {
 
 // SaveConfig Saves current config values in config file.
 func SaveConfig() error {
+	// Create file.
 	f, err := os.Create(CONFIG_FILE_NAME)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
+	// Write values.
 	w := bufio.NewWriter(f)
 	w.WriteString(fmt.Sprintf("%s\n", "# Flame CLI configuration file")) // default header
-	w.WriteString(fmt.Sprintf("restrict-mode:%v;\n", restrictMode))
-	w.WriteString(fmt.Sprintf("new-char-attrs:%d;\n", newCharAttrsPts))
+	w.WriteString(fmt.Sprintf("restrict-mode:%v\n", restrictMode))
+	w.WriteString(fmt.Sprintf("new-char-attrs:%d\n", newCharAttrsPts))
 	w.WriteString("new-char-skills:")
 	for _, sid := range newCharSkills {
 		w.WriteString(sid + ";")
@@ -79,6 +81,7 @@ func SaveConfig() error {
 		w.WriteString(iid + ";")
 	}
 	w.WriteString("\n")
+	// Save.
 	w.Flush()
 	log.Dbg.Println("config file saved")
 	return nil

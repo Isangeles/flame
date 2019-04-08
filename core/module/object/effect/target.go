@@ -23,6 +23,10 @@
 
 package effect
 
+import (
+	"github.com/isangeles/flame/core/module/object/item"
+)
+
 // Interfece for effects targets.
 type Target interface {
 	ID() string
@@ -38,6 +42,7 @@ type Target interface {
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)
 	Position() (x, y float64)
+	Inventory() *item.Inventory
 	SendCmb(msg string)
 	CombatLog() chan string
 }

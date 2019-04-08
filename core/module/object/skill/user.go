@@ -25,6 +25,7 @@ package skill
 
 import (
 	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -46,6 +47,7 @@ type SkillUser interface {
 	HitEffects() []*effect.Effect
 	TakeEffect(e *effect.Effect)
 	Position() (x, y float64)
+	Inventory() *item.Inventory
 	SendCmb(msg string)
 	CombatLog() chan string
 }

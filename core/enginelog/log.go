@@ -33,8 +33,18 @@ import (
 
 var (
 	messages []message
-	debuging  bool
+	debuging = false
 )
+
+// Messages returns all messages from log.
+func Messages() []message {
+	return messages
+}
+
+// SetDebug toggles debug mode.
+func SetDebug(dbg bool) {
+	debuging = dbg
+}
 
 // Info registers specified text as info message.
 func logInfo(msg string) {
@@ -60,19 +70,4 @@ func logDebug(msg string) {
 	m := message{time.Now(), msg, ERR}
 	messages = append(messages, m)
 	fmt.Print(msg)
-}
-
-// EnableDebug enables debug mode.
-func SetDebug(d bool) {
-	debuging = d
-}
-
-// Debug checks if debug mode is enabled.
-func Debug() bool {
-	return debuging
-}
-
-// Messages returns all messages from log.
-func Messages() []message {
-	return messages
 }

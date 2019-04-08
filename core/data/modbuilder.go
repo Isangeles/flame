@@ -23,7 +23,6 @@
 
 package data
 
-
 import (
 	"bufio"
 	"fmt"

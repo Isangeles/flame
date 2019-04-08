@@ -70,6 +70,7 @@ type InventoryItemData struct {
 // Struct for equipment item data
 // resource.
 type EquipmentItemData struct {
-	ID   string
-	Slot int
+	ID     string
+	Serial string
+	Slot   int
 }

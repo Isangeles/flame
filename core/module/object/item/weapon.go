@@ -43,6 +43,7 @@ type Weapon struct {
 	dmgEffects     []res.EffectData
 	equipReqs      []req.Requirement
 	slots          []Slot
+	loot           bool
 }
 
 // NewWeapon creates new weapon with
@@ -133,4 +134,9 @@ func (w *Weapon) EquipReqs() []req.Requirement {
 // this weapon.
 func (w *Weapon) Slots() []Slot {
 	return w.slots
+}
+
+// Loot check whether weapon is 'lootable'.
+func (w *Weapon) Loot() bool {
+	return w.loot
 }

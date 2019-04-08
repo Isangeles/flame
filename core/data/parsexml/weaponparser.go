@@ -1,7 +1,7 @@
 /*
  * weaponparser.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,14 +41,15 @@ type WeaponsBaseXML struct {
 
 // Struct for weapon XML node.
 type WeaponXML struct {
-	XMLName    xml.Name      `xml:"item"`
-	ID         string        `xml:"id,attr"`
-	Serial     string        `xml:"serial,attr"`
-	Value      int           `xml:"value,attr"`
-	Level      int           `xml:"level,attr"`
-	Damage     DamageXML     `xml:"damage"`
-	Reqs       ReqsXML       `xml:"reqs"`
-	Slots      string        `xml:"slots,attr"`
+	XMLName xml.Name  `xml:"item"`
+	ID      string    `xml:"id,attr"`
+	Serial  string    `xml:"serial,attr"`
+	Value   int       `xml:"value,attr"`
+	Level   int       `xml:"level,attr"`
+	Loot    bool      `xml:"loot,attr"`
+	Damage  DamageXML `xml:"damage"`
+	Reqs    ReqsXML   `xml:"reqs"`
+	Slots   string    `xml:"slots,attr"`
 }
 
 // UnmarshalWeaponsBase retrieves weapons data from specified
@@ -107,6 +108,7 @@ func buildWeaponData(xmlWeapon WeaponXML) (*res.WeaponData, error) {
 		DMGEffects: hitEffects,
 		EQReqs:     reqs,
 		Slots:      slotsID,
+		Loot:       xmlWeapon.Loot,
 	}
 	return &w, nil
 }
