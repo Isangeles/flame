@@ -28,6 +28,7 @@ type ObjectData struct {
 	BasicData ObjectBasicData
 	SavedData ObjectSavedData
 	Items     []InventoryItemData
+	Effects   []ObjectEffectData	
 }
 
 // Struct for basic object data.

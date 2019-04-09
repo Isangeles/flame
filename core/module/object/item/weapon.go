@@ -38,12 +38,12 @@ type Weapon struct {
 	name           string
 	value          int
 	level          int
+	loot           bool
 	dmgMin, dmgMax int
 	dmgType        object.Element
 	dmgEffects     []res.EffectData
 	equipReqs      []req.Requirement
 	slots          []Slot
-	loot           bool
 }
 
 // NewWeapon creates new weapon with
@@ -53,11 +53,12 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		id:         data.ID,
 		name:       data.Name,
 		value:      data.Value,
+		level:      data.Level,
+		loot:       data.Loot,
 		dmgMin:     data.DMGMin,
 		dmgMax:     data.DMGMax,
 		dmgType:    object.Element(data.DMGType),
 		dmgEffects: data.DMGEffects,
-		level:      data.Level,
 		equipReqs:  data.EQReqs,
 	}
 	for _, sid := range data.Slots {

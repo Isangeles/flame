@@ -71,11 +71,11 @@ func (inv *Inventory) AddItem(i Item) error {
 
 // RemoveItem removes specified item from inventory.
 func (inv *Inventory) RemoveItem(i Item) {
-	for _, it := range inv.items {
+	for id, it := range inv.items {
 		if !object.Equals(it, i) {
 			continue
 		}
-		//delete(inv.items, id)
+		inv.items = append(inv.items[:id], inv.items[id+1:]...)
 	}
 }
 

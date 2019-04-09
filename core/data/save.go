@@ -45,8 +45,7 @@ var (
 	SAVEGAME_FILE_EXT = ".savegame"
 )
 
-// SaveGame saves specified game to savegame
-// file.
+// SaveGame saves specified game to savegame file.
 func SaveGame(game *core.Game, dirPath, saveName string) error {
 	// Parse game data.
 	save := new(save.SaveGame)

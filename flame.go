@@ -117,8 +117,7 @@ func LoadGame(saveName string) (*core.Game, error) {
 	// Load chapter data(to build quests, characters, erc.).
 	err = data.LoadChapterData(Mod().Chapter())
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_data:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
 	}
 	SetGame(core.LoadGame(sav))
 	return game, nil

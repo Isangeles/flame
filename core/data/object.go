@@ -105,5 +105,16 @@ func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
 		it.SetSerial(data.Serial)
 		ob.Inventory().AddItem(it)
 	}
+	// Effects.
+	for _, data := range data.Effects {
+		eff, err := Effect(mod, data.ID)
+		if err != nil {
+			log.Err.Printf("data:build_object:%s:fail_to_retrieve_effect:%s",
+				ob.ID(), data.ID)
+			continue
+		}
+		eff.SetSerial(data.Serial)
+		ob.AddEffect(eff)
+	}
 	return ob
 }

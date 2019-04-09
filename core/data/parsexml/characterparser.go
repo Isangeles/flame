@@ -229,12 +229,12 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 		data.SavedData.PosX, data.SavedData.PosY = posX, posY
 	}
 	// Items.
-	for _, xmlInvIt := range xmlChar.Inventory.Items {
-		invItData := res.InventoryItemData{
-			ID:     xmlInvIt.ID,
-			Serial: xmlInvIt.Serial,
+	for _, xmlIt := range xmlChar.Inventory.Items {
+		itData := res.InventoryItemData{
+			ID:     xmlIt.ID,
+			Serial: xmlIt.Serial,
 		}
-		data.Items = append(data.Items, invItData)
+		data.Items = append(data.Items, itData)
 	}
 	// Equipment.
 	for _, xmlEqIt := range xmlChar.Equipment.Items {

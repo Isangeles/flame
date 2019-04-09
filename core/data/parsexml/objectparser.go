@@ -183,5 +183,24 @@ func buildObjectData(xmlOb *ObjectXML) (*res.ObjectData, error) {
 		}
 		data.SavedData.PosX, data.SavedData.PosY = posX, posY
 	}
+	// Items.
+	for _, xmlIt := range xmlOb.Inventory.Items {
+		itData := res.InventoryItemData{
+			ID:     xmlIt.ID,
+			Serial: xmlIt.Serial,
+		}
+		data.Items = append(data.Items, itData)
+	}
+	// Effects.
+	for _, xmlEffect := range xmlOb.Effects.Nodes {
+		effectData := res.ObjectEffectData{
+			ID:           xmlEffect.ID,
+			Serial:       xmlEffect.Serial,
+			Time:         xmlEffect.Time,
+			SourceID:     xmlEffect.Source.ID,
+			SourceSerial: xmlEffect.Source.Serial,
+		}
+		data.Effects = append(data.Effects, effectData)
+	}
 	return &data, nil
 }
