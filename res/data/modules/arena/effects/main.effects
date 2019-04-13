@@ -6,7 +6,7 @@
 	</effect>
 	<effect id="bleed1" duration="5">
 		<modifiers>
-			<healthMod min="-3" max="-1" />
+			<healthMod min="-1" max="-3" />
 		</modifiers>
 	</effect>
 </base>
