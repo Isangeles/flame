@@ -39,7 +39,8 @@ import (
 // loadGameDialog starts CLI dialog for loading
 // saved game.
 func loadGameDialog() (*core.Game, error) {
-	saves, err := data.SavegamesFiles(config.ModuleSavegamesPath())
+	savePattern := fmt.Sprintf(".*%s", data.SAVEGAME_FILE_EXT)
+	saves, err := data.DirFilesNames(config.ModuleSavegamesPath(), savePattern)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_retrieve_save_files:%v")
 	}
@@ -49,7 +50,7 @@ func loadGameDialog() (*core.Game, error) {
 	for !accept {
 		fmt.Printf("%s:\n", lang.Text("ui", "cli_loadgame_saves"))
 		for i, s := range saves {
-			fmt.Printf("[%d]%v\n", i, s.Name())
+			fmt.Printf("[%d]%v\n", i, s)
 		}
 		fmt.Printf("%s:", lang.Text("ui", "cli_loadgame_select_save"))
 		for scan.Scan() {
@@ -59,7 +60,7 @@ func loadGameDialog() (*core.Game, error) {
 				fmt.Printf("%s:%s\n", lang.Text("ui", "cli_nan_error"), input)
 			}
 			if id >= 0 && id < len(saves) {
-				savename = saves[id].Name()
+				savename = saves[id]
 				break
 			}
 		}

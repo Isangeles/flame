@@ -27,9 +27,6 @@ package data
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-	"strings"
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text/lang"
@@ -88,21 +85,4 @@ func LoadChapterData(chapter *module.Chapter) error {
 	}
 	res.SetCharactersData(npcData)
 	return nil
-}
-
-// SavegamesFiles returns info's about all save files
-// in directory with specified path.
-func SavegamesFiles(dirPath string) ([]os.FileInfo, error) {
-	files, err := ioutil.ReadDir(dirPath)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v",
-			err)
-	}
-	savegames := make([]os.FileInfo, 0)
-	for _, fInfo := range files {
-		if strings.HasSuffix(fInfo.Name(), SAVEGAME_FILE_EXT) {
-			savegames = append(savegames, fInfo)
-		}
-	}
-	return savegames, nil
 }

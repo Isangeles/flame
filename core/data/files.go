@@ -1,5 +1,5 @@
 /*
- * rng.go
+ * files.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,40 +21,30 @@
  *
  */
 
-// Package for random number generator.
-package rng
+package data
 
 import (
-	"math/rand"
-	"time"
+	"fmt"
+	"io/ioutil"
+	"regexp"
 )
 
-var (
-	rng *rand.Rand
-)
-
-// On init.
-func init() {
-	src := rand.NewSource(time.Now().UnixNano())
-	rng = rand.New(src)
-}
-
-// RollInt generates random integer from
-// specified range.
-func RollInt(min, max int) int {
-	neg := false
-	if min < 1 && max < 1 { // handling negative range
-		neg = true
+// DirFilesNames returns names of all files matching specified
+// file name pattern in directory with specified path.
+func DirFilesNames(path, pattern string) ([]string, error) {
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	if min < 1 {
-		min *= -1
+	names := make([]string, 0)
+	for _, info := range files {
+		match, err := regexp.MatchString(pattern, info.Name())
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_execute_pattern:%v", err)
+		}
+		if match {
+			names = append(names, info.Name())
+		}
 	}
-	if max < 1 {
-		max *= -1
-	}
-	roll := min + rng.Intn(max - min)
-	if neg {
-		return -roll
-	}
-	return roll
+	return names, nil
 }
