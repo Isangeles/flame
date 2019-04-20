@@ -41,7 +41,6 @@ func LoadModuleData(mod *module.Module) error {
 	if err != nil {
 		return fmt.Errorf("fail_to_load_effects:%v", err)
 	}
-	// Translate.
 	for _, ed := range effectsData {
 		ed.Name = lang.TextDir(mod.Conf().LangPath(), ed.ID)
 	}
@@ -51,7 +50,6 @@ func LoadModuleData(mod *module.Module) error {
 	if err != nil {
 		return fmt.Errorf("fail_to_load_skills:%v", err)
 	}
-	// Translate.
 	for _, sd := range skillsData {
 		sd.Name = lang.TextDir(mod.Conf().LangPath(), sd.ID)
 	}
@@ -61,7 +59,6 @@ func LoadModuleData(mod *module.Module) error {
 	if err != nil {
 		return fmt.Errorf("fail_to_load_weapons:%v", err)
 	}
-	// Translate.
 	for _, wd := range weaponsData {
 		wd.Name = lang.TextDir(mod.Conf().LangPath(), wd.ID)
 	}
@@ -84,5 +81,8 @@ func LoadChapterData(chapter *module.Chapter) error {
 		return fmt.Errorf("fail_to_load_npc:%v", err)
 	}
 	res.SetCharactersData(npcData)
+	for _, npcd := range npcData {
+		npcd.BasicData.Name = lang.TextDir(chapter.Conf().LangPath(), npcd.BasicData.ID)
+	}
 	return nil
 }
