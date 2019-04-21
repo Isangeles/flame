@@ -21,16 +21,17 @@
  *
  */
 
-package data
+package main
 
 import (
 	"bufio"
 	"fmt"
-	"path/filepath"
 	"os"
+	"path/filepath"
 
-	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/parsexml"
+	"github.com/isangeles/flame/core/data/res"
 )
 
 // NewModule creates new module directory
@@ -44,27 +45,27 @@ func NewModule(name string) error {
 		return fmt.Errorf("fail_to_create_module_dir:%v", err)
 	}
 	// Sub-dirs.
-	err = os.MkdirAll(filepath.FromSlash(path + "/characters"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/characters"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_characters_dir:%v", err)
 	}
-	err = os.MkdirAll(filepath.FromSlash(path + "/items"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/items"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_items_dir:%v", err)
 	}
-	err = os.MkdirAll(filepath.FromSlash(path + "/effects"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/effects"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_effects_dir:%v", err)
 	}
-	err = os.MkdirAll(filepath.FromSlash(path + "/skills"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/skills"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_skills_dir:%v", err)
 	}
-	err = os.MkdirAll(filepath.FromSlash(path + "/objects"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/objects"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_objects_dir:%v", err)
 	}
-	err = os.MkdirAll(filepath.FromSlash(path + "/lang"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/lang"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_lang_dir:%v", err)
 	}
@@ -75,13 +76,13 @@ func NewModule(name string) error {
 		return fmt.Errorf("fail_to_create_module_conf_file:%v", err)
 	}
 	defer confFile.Close()
-	confFormat :=  "id:%s;\nstart-chapter:%s;\nchar-skills:%s;\nchar-items:%s;\n"
+	confFormat := "id:%s;\nstart-chapter:%s;\nchar-skills:%s;\nchar-items:%s;\n"
 	conf := fmt.Sprintf(confFormat, name, "prologue", "", "")
 	w := bufio.NewWriter(confFile)
 	w.WriteString(conf)
 	w.Flush()
 	// Start chapter.
-	err = createChapter(path + "/chapters/prologue", "prologue")
+	err = createChapter(path+"/chapters/prologue", "prologue")
 	if err != nil {
 		return fmt.Errorf("fail_to_create_chapter:%v", err)
 	}
@@ -97,11 +98,11 @@ func createChapter(path, id string) error {
 		return fmt.Errorf("fail_to_create_dir:%v", err)
 	}
 	// Sub-dirs.
-	err = os.MkdirAll(filepath.FromSlash(path + "/npc"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/npc"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_npc_dir:%v", err)
 	}
-	err = os.MkdirAll(filepath.FromSlash(path + "/lang"), 0755)
+	err = os.MkdirAll(filepath.FromSlash(path+"/lang"), 0755)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_lang_dir:%v", err)
 	}
@@ -130,7 +131,7 @@ func createChapter(path, id string) error {
 	if err != nil {
 		return fmt.Errorf("fail_to_marshal_start_scenario:%v", err)
 	}
-	scenPath := filepath.FromSlash(scensPath + "/area1" + SCENARIO_FILE_EXT)
+	scenPath := filepath.FromSlash(scensPath + "/area1" + data.SCENARIO_FILE_EXT)
 	scenFile, err := os.Create(scenPath)
 	if err != nil {
 		return fmt.Errorf("fail_to_create_start_scenario_file:%v", err)

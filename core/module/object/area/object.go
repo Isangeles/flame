@@ -48,6 +48,7 @@ type Object struct {
 func NewObject(data res.ObjectBasicData) *Object {
 	ob := Object{
 		id:     data.ID,
+		name:   data.Name, 
 		serial: data.Serial,
 		hp:     data.HP,
 		maxHP:  data.MaxHP,

@@ -68,6 +68,9 @@ func LoadModuleData(mod *module.Module) error {
 	if err != nil {
 		return fmt.Errorf("fail_to_load_area_objects:%v", err)
 	}
+	for _, od := range objectsData {
+		od.BasicData.Name = lang.TextDir(mod.Conf().LangPath(), od.BasicData.ID)
+	}
 	res.SetObjectsData(objectsData)
 	return nil
 }

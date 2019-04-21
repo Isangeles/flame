@@ -34,6 +34,7 @@ type ObjectData struct {
 // Struct for basic object data.
 type ObjectBasicData struct {
 	ID        string
+	Name      string
 	Serial    string
 	HP, MaxHP int
 }

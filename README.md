@@ -48,9 +48,9 @@ Flame comes with a simple textual interface that uses [Burn](https://github.com/
 ### Commands:
 Create module:
 ```
-  $engineman -o new -t module -a [module name]
+  $newmod
 ```
-Description: creates new module with specified name in 'data/modules' directory. New module contains one chapter and start area.
+Description: Starts new module creation dialog. New module will be created in 'data/modules' directory. New module contains one chapter and start area.
 
 Load module:
 ```

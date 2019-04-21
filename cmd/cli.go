@@ -51,6 +51,7 @@ const (
 	CLOSE_CMD        = "close"
 	NEW_CHAR_CMD     = "newchar"
 	NEW_GAME_CMD     = "newgame"
+	NEW_MOD_CMD      = "newmod"
 	LOAD_GAME_CMD    = "loadgame"
 	IMPORT_CHARS_CMD = "importchars"
 	LOOT_TARGET_CMD  = "loot"
@@ -143,6 +144,11 @@ func execute(input string) {
 		}
 		game = g
 		lastUpdate = time.Now()
+	case NEW_MOD_CMD:
+		err := newModDialog()
+		if err != nil {
+			log.Err.Printf("fail_to_create_module:%v", err)
+		}
 	case LOAD_GAME_CMD:
 		if flame.Mod() == nil {
 			log.Err.Printf("no_module_loaded")

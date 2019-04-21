@@ -205,18 +205,6 @@ func startEngineOption(cmd Command) (int, string) {
 				ENGINE_MAN, err)
 		}
 		return 0, ""
-	case "module", "mod":
-		if len(cmd.Args()) < 1 {
-			return 7, fmt.Sprintf("%s:not_enought_args_for:%s",
-				ENGINE_MAN, cmd.TargetArgs()[0])
-		}
-		name := cmd.Args()[0]
-		err := data.NewModule(name)
-		if err != nil {
-			return 8, fmt.Sprintf("%s:fail_to_create_mod:%v",
-				ENGINE_MAN, cmd.TargetArgs()[0])
-		}
-		return 0, ""
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'",
 			ENGINE_MAN, cmd.OptionArgs()[0], cmd.TargetArgs()[0])

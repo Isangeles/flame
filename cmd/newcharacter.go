@@ -57,13 +57,12 @@ func newCharacterDialog(mod *module.Module) (*character.Character, error) {
 		fmt.Printf("%s:", lang.Text("ui", "cli_newchar_name"))
 		for scan.Scan() {
 			name = scan.Text()
-			if isCharNameValid(name) {
-				break
-			} else {
-				fmt.Printf("%s\n",
-					lang.Text("ui", "cli_newchar_invalid_name_err"))
+			if !charNameValid(name) {
+				fmt.Printf("%s\n", lang.Text("ui", "cli_newchar_invalid_name_err"))
 				fmt.Printf("%s:", lang.Text("ui", "cli_newchar_name"))
+				continue
 			}
+			break
 		}
 		// Race.
 		race = raceDialog()
@@ -292,9 +291,9 @@ func newAttributesDialog(attrsPoints int) (attrs character.Attributes) {
 	return
 }
 
-// isCharNameVaild Checks if specified name
+// charNameVaild Checks if specified name
 // is valid character name.
-func isCharNameValid(name string) bool {
+func charNameValid(name string) bool {
 	return len(name) > 0
 }
 
