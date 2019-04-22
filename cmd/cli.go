@@ -35,15 +35,17 @@ import (
 	"os"
 	"strings"
 	"time"
-	
+
 	"github.com/isangeles/flame"
 	flameconf "github.com/isangeles/flame/config"
-	"github.com/isangeles/flame/cmd/burn"
-	"github.com/isangeles/flame/cmd/burn/syntax"
-	"github.com/isangeles/flame/cmd/log"
-	"github.com/isangeles/flame/cmd/config"
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
+	"github.com/isangeles/flame/core/module/object/character"
+
+	"github.com/isangeles/flame/cmd/burn"
+	"github.com/isangeles/flame/cmd/burn/syntax"
+	"github.com/isangeles/flame/cmd/config"
+	"github.com/isangeles/flame/cmd/log"
 )
 
 const (
@@ -61,6 +63,7 @@ const (
 
 var (
 	game        *core.Game
+	activePC    *character.Character
 	lastCommand string
 	lastUpdate  time.Time
 )
@@ -94,6 +97,8 @@ func main() {
 			cmd := strings.TrimPrefix(input, COMMAND_PREFIX)
 			execute(cmd)
 			lastCommand = cmd
+		} else if activePC != nil {
+			activePC.SendChat(input)
 		} else {
 			log.Inf.Println(input)
 		}
@@ -143,6 +148,7 @@ func execute(input string) {
 			break
 		}
 		game = g
+		activePC = game.Players()[0]
 		lastUpdate = time.Now()
 	case NEW_MOD_CMD:
 		err := newModDialog()
@@ -160,6 +166,7 @@ func execute(input string) {
 			break
 		}
 		game = g
+		activePC = game.Players()[0]
 		lastUpdate = time.Now()
 	case IMPORT_CHARS_CMD:
 		if flame.Mod() == nil {

@@ -119,11 +119,6 @@ func (g *Game) Players() []*character.Character {
 func (g *Game) listenWorld() {
 	// Players.
 	for _, pc := range g.pcs {
-		select {
-		case msg := <-pc.CombatLog():
-			log.Cmb.Printf(msg)
-		default:
-		}
 		// Near objects.
 		area, err := g.Module().Chapter().CharacterArea(pc)
 		if err != nil {
@@ -133,6 +128,8 @@ func (g *Game) listenWorld() {
 			select {
 			case msg := <-tar.CombatLog():
 				log.Cmb.Printf(msg)
+			case msg := <-tar.ChatLog():
+				log.Cht.Printf(fmt.Sprintf("%s:%s", tar.Name(), msg))
 			default:
 			}
 		}

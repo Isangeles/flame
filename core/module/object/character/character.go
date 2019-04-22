@@ -60,8 +60,10 @@ type Character struct {
 	targets          []effect.Target
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
+	chatlog          chan string
 	combatlog        chan string
 	onSkillActivated func(s *skill.Skill)
+	onChatSent       func(t string)
 }
 
 const (
@@ -86,6 +88,7 @@ func New(data res.CharacterBasicData) *Character {
 	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
 	c.skills = make(map[string]*skill.Skill)
+	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	// Set level.
 	for i := 0; i < data.Level; i++ {
@@ -392,10 +395,21 @@ func (c *Character) CombatLog() chan string {
 	return c.combatlog
 }
 
+// ChatLog returns character speech log channel.
+func (c *Character) ChatLog() chan string {
+	return c.chatlog
+}
+
 // SetOnSkillActivatedFunc sets function triggered after
 // activation one of character skills.
 func (c *Character) SetOnSkillActivatedFunc(f func (s *skill.Skill)) {
 	c.onSkillActivated = f
+}
+
+// SetOnChatSentFunc sets function triggered after sending text
+// on character chat channel.
+func (c *Character) SetOnChatSentFunc(f func (t string)) {
+	c.onChatSent = f
 }
 
 // Interrupt stops any acction(like skill
@@ -405,6 +419,27 @@ func (c *Character) Interrupt() {
 		if s.Casting() {
 			s.StopCast()
 		}
+	}
+}
+
+// SendChat sends specified text to character
+// speech log channel.
+func (c *Character) SendChat(t string) {
+	select {
+	case c.chatlog <- t:
+		if c.onChatSent != nil {
+			c.onChatSent(t)
+		}
+	default:
+	}
+}
+
+// SendCmb sends specified text message to
+// comabt log channel.
+func (c *Character) SendCombat(t string) {
+	select {
+	case c.combatlog <- t:
+	default:
 	}
 }
 
@@ -420,15 +455,6 @@ func (c *Character) levelup() {
 // agony state.
 func (c *Character) agonyHP() int {
 	return 10 / 100 * c.MaxHealth()
-}
-
-// sendCmb sends specified text message to
-// comabt log channel.
-func (c *Character) SendCmb(msg string) {
-	select {
-	case c.combatlog <- msg:
-	default:
-	}
 }
 
 // buildEffects creates new effects from specified

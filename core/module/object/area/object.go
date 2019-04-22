@@ -40,6 +40,7 @@ type Object struct {
 	posX, posY float64
 	inventory  *item.Inventory
 	effects    map[string]*effect.Effect
+	chatlog    chan string
 	combatlog  chan string
 }
 
@@ -55,6 +56,7 @@ func NewObject(data res.ObjectBasicData) *Object {
 	}
 	ob.inventory = item.NewInventory(10)
 	ob.effects = make(map[string]*effect.Effect)
+	ob.chatlog = make(chan string, 1)
 	ob.combatlog = make(chan string, 3)
 	return &ob
 }
@@ -194,15 +196,20 @@ func (ob *Object) Effects() []*effect.Effect {
 
 // SendCmb sends specified text message to
 // comabt log channel.
-func (o *Object) SendCmb(msg string) {
+func (ob *Object) SendCombat(msg string) {
 	select {
-	case o.combatlog <- msg:
+	case ob.combatlog <- msg:
 	default:
 	}
 }
 
 // CombatLog returns object combat log
 // channel.
-func (o *Object) CombatLog() chan string {
-	return o.combatlog
+func (ob *Object) CombatLog() chan string {
+	return ob.combatlog
+}
+
+// ChatLog returns object speech log channel.
+func (ob *Object) ChatLog() chan string {
+	return ob.chatlog
 }

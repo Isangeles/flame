@@ -95,7 +95,7 @@ func (c *Character) UseSkill(s *skill.Skill) {
 	if c.Casting() || c.Moving() {
 		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 			lang.Text("ui", "cant_do_right_now"))
-		c.SendCmb(msg)
+		c.SendCombat(msg)
 		return
 	}
 	charSkill := c.skills[s.ID()+s.Serial()]
@@ -108,13 +108,13 @@ func (c *Character) UseSkill(s *skill.Skill) {
 				c.SetDestPoint(tar.Position())
 			}
 			msg := fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
-			c.SendCmb(msg)
+			c.SendCombat(msg)
 		}
 		return
 	}
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 		lang.Text("ui", "skill_not_known"))
-	c.SendCmb(msg)
+	c.SendCombat(msg)
 }
 
 // takeEffects adds specified effects
@@ -125,5 +125,5 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	if config.Debug() { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
-	c.SendCmb(msg)
+	c.SendCombat(msg)
 }

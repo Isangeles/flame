@@ -44,5 +44,5 @@ func (ob *Object) TakeEffect(e *effect.Effect) {
 	if config.Debug() { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
-	ob.SendCmb(msg)
+	ob.SendCombat(msg)
 }

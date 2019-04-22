@@ -43,6 +43,7 @@ type Target interface {
 	TakeEffect(e *Effect)
 	Position() (x, y float64)
 	Inventory() *item.Inventory
-	SendCmb(msg string)
+	SendCombat(msg string)
 	CombatLog() chan string
+	ChatLog() chan string
 }

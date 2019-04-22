@@ -42,7 +42,7 @@ func (hm HealthMod) Affect(source Target, targets ...Target) {
 		t.SetHealth(t.Health() + val)
 		cmbMsg := fmt.Sprintf("%s:%s:%d", t.Name(),
 			lang.Text("ui", "ob_health"), val)
-		t.SendCmb(cmbMsg)
+		t.SendCombat(cmbMsg)
 	}
 }
 
