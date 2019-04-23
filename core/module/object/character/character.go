@@ -38,32 +38,33 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id, serial       string
-	name             string
-	level            int
-	hp, maxHP        int
-	mana, maxMana    int
-	exp, maxExp      int
-	live             bool
-	agony            bool
-	sex              Gender
-	race             Race
-	attitude         Attitude
-	alignment        Alignment
-	guild            Guild
-	attributes       Attributes
-	resilience       object.Resilience
-	posX, posY       float64
-	destX, destY     float64
-	inventory        *item.Inventory
-	equipment        *Equipment
-	targets          []effect.Target
-	effects          map[string]*effect.Effect
-	skills           map[string]*skill.Skill
-	chatlog          chan string
-	combatlog        chan string
-	onSkillActivated func(s *skill.Skill)
-	onChatSent       func(t string)
+	id, serial        string
+	name              string
+	level             int
+	hp, maxHP         int
+	mana, maxMana     int
+	exp, maxExp       int
+	live              bool
+	agony             bool
+	sex               Gender
+	race              Race
+	attitude          Attitude
+	alignment         Alignment
+	guild             Guild
+	attributes        Attributes
+	resilience        object.Resilience
+	posX, posY        float64
+	destX, destY      float64
+	defX, defY        float64
+	inventory         *item.Inventory
+	equipment         *Equipment
+	targets           []effect.Target
+	effects           map[string]*effect.Effect
+	skills            map[string]*skill.Skill
+	chatlog           chan string
+	combatlog         chan string
+	onSkillActivated  func(s *skill.Skill)
+	onChatSent        func(t string)
 }
 
 const (
@@ -105,16 +106,16 @@ func (c *Character) Update(delta int64) {
 	if c.Moving() {
 		c.Interrupt() // interrupt current acction
 		if c.posX < c.destX {
-			c.Move(c.posX+1, c.posY)
+			c.posX += 1
 		}
 		if c.posX > c.destX {
-			c.Move(c.posX-1, c.posY)
+			c.posX -= 1
 		}
 		if c.posY < c.destY {
-			c.Move(c.posX, c.posY+1)
+			c.posY += 1
 		}
 		if c.posY > c.destY {
-			c.Move(c.posX, c.posY-1)
+			c.posY -= 1
 		}
 	}
 	// Check experience value.
@@ -132,7 +133,7 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
-	// Effects.              
+	// Effects.
 	for serial, e := range c.effects {
 		e.Update(delta)
 		// Remove expired effects.
@@ -260,9 +261,14 @@ func (c *Character) Position() (float64, float64) {
 	return c.posX, c.posY
 }
 
-// DestPoint return current destination point position.
+// DestPoint returns current destination point position.
 func (c *Character) DestPoint() (float64, float64) {
 	return c.destX, c.destY
+}
+
+// DefaultPosition returns character default position.
+func (c *Character) DefaultPosition() (float64, float64) {
+	return c.defX, c.defY
 }
 
 // SightRange returns current sight range.
@@ -311,17 +317,18 @@ func (c *Character) SetPosition(x, y float64) {
 	c.destX, c.destY = x, y
 }
 
-// Move moves characters to specified XY position
-// without changing destination point.
-func (c *Character) Move(x, y float64) {
-	c.posX, c.posY = x, y
-}
-
 // SetDestPoint sets specified XY position as current
 // destionation point of character.
 func (c *Character) SetDestPoint(x, y float64) {
 	c.destX, c.destY = x, y
 }
+
+// SetDefaultPosition sets specified XY position as
+// default character position.
+func (c *Character) SetDefaultPosition(x, y float64) {
+	c.defX, c.defY = x, y
+}
+
 
 // SetSerial sets specified serial value for this
 // character.
@@ -402,13 +409,13 @@ func (c *Character) ChatLog() chan string {
 
 // SetOnSkillActivatedFunc sets function triggered after
 // activation one of character skills.
-func (c *Character) SetOnSkillActivatedFunc(f func (s *skill.Skill)) {
+func (c *Character) SetOnSkillActivatedFunc(f func(s *skill.Skill)) {
 	c.onSkillActivated = f
 }
 
 // SetOnChatSentFunc sets function triggered after sending text
 // on character chat channel.
-func (c *Character) SetOnChatSentFunc(f func (t string)) {
+func (c *Character) SetOnChatSentFunc(f func(t string)) {
 	c.onChatSent = f
 }
 

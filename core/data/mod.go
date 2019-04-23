@@ -116,6 +116,7 @@ func LoadScenario(mod *module.Module, id string) error {
 			// Set serial & position.
 			serial.AssignSerial(char)
 			char.SetPosition(areaChar.PosX, areaChar.PosY)
+			char.SetDefaultPosition(areaChar.PosX, areaChar.PosY)
 			// Char to area.
 			area.AddCharacter(char)
 		}

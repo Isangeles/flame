@@ -1,43 +1,44 @@
 /*
  * chapter.go
- * 
+ *
  * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 package module
 
 import (
 	"fmt"
-	
-	"github.com/isangeles/flame/core/module/scenario"
-	"github.com/isangeles/flame/core/module/serial"
+
 	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Chapter struct represents module chapter
 type Chapter struct {
-	conf        ChapterConf
-	mod         *Module
-	loadedScens []*scenario.Scenario
-} 
+	conf            ChapterConf
+	mod             *Module
+	loadedScens     []*scenario.Scenario
+	onScenarioAdded func(s *scenario.Scenario)
+}
 
 // NewChapters creates new instance of module chapter.
 func NewChapter(mod *Module, conf ChapterConf) *Chapter {
@@ -182,6 +183,12 @@ func (c *Chapter) CharacterArea(char *character.Character) (*scenario.Area, erro
 	return nil, fmt.Errorf("character not found in any active scenario")
 }
 
+// SetOnScenarioAddedFunc sets function triggered after adding
+// new scenario to chapter.
+func (c *Chapter) SetOnScenarioAddedFunc(f func(s *scenario.Scenario)) {
+	c.onScenarioAdded = f
+}
+
 // generateSerials generates unique serial values
 // for all chapter objects without serial value.
 func (c *Chapter) generateSerials() {
@@ -200,7 +207,7 @@ func (c *Chapter) generateSerials() {
 			if e.Serial() != "" {
 				continue
 			}
-			serial.AssignSerial(e)			
+			serial.AssignSerial(e)
 		}
 		for _, s := range char.Skills() {
 			if s.Serial() != "" {

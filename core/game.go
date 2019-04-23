@@ -27,11 +27,11 @@ package core
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/core/data/save"
+	"github.com/isangeles/flame/core/ai"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/serial"
+	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/log"
 )
 
@@ -39,38 +39,30 @@ import (
 // module and PCs.
 type Game struct {
 	mod    *module.Module
-	pcs    []*character.Character
+	pcs    map[string]*character.Character
+	npcAI  *ai.AI
 	paused bool
 }
 
-// NewGame returns new instance of game struct.
-func NewGame(mod *module.Module, players []*character.Character) (*Game, error) {
+// NewGame creates new game for specified module.
+func NewGame(mod *module.Module) (*Game, error) {
 	g := new(Game)
 	g.mod = mod
-	g.pcs = players
-	// Get start scenario.
-	chapter := g.Module().Chapter()
-	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_retrieve_start_scenario:%v",
-			err)
+	g.pcs = make(map[string]*character.Character)
+	g.npcAI = ai.New()
+	if g.mod.Chapter() == nil {
+		return nil, fmt.Errorf("no_active_module_chapter")
 	}
-	// All players to main area of start scenario.
-	startArea := startScen.Mainarea()
-	for _, pc := range g.pcs {
-		serial.AssignSerial(pc)
-		startArea.AddCharacter(pc)
+	// Chapter NPCs under AI control.
+	for _, c := range g.mod.Chapter().Characters() {
+		if g.pcs[c.ID() + c.Serial()] != nil { // ommit players
+			continue
+		}
+		g.npcAI.AddCharacter(c)		
 	}
+	// Events.
+	g.mod.Chapter().SetOnScenarioAddedFunc(g.onModScenarioAdded)
 	return g, nil
-}
-
-// LoadGame creates game from loaded module
-// state and PCs.
-func LoadGame(save *save.SaveGame) *Game {
-	g := new(Game)
-	g.mod = save.Mod
-	g.pcs = save.Players
-	return g
 }
 
 // Update updates game, delta value must be
@@ -80,14 +72,18 @@ func (g *Game) Update(delta int64) {
 	if g.paused {
 		return
 	}
+	// Characters.
 	updateChars := g.Module().Chapter().Characters()
 	for _, c := range updateChars {
 		c.Update(delta)
 	}
+	// Area objects.
 	updateObjects := g.Module().Chapter().AreaObjects()
 	for _, o := range updateObjects {
 		o.Update(delta)
 	}
+	// AI.
+	g.npcAI.Update(delta)
 }
 
 // Pause toggles game update pause.
@@ -108,13 +104,27 @@ func (g *Game) Module() *module.Module {
 	return g.mod
 }
 
+// AddPlayer adds specified character to game as player.
+func (g *Game) AddPlayer(char *character.Character) {
+	g.pcs[char.ID() + char.Serial()] = char
+	g.npcAI.RemoveCharacter(char)
+}
+
 // Players returns all game PCs.
-func (g *Game) Players() []*character.Character {
-	return g.pcs
+func (g *Game) Players() (pcs []*character.Character) {
+	for _, pc := range g.pcs {
+		pcs = append(pcs, pc)
+	}
+	return
+}
+
+// AI returns game AI.
+func (g *Game) AI() *ai.AI {
+	return g.npcAI
 }
 
 // listenWorld listens players and near objects
-// messages channels ands prints messages to 
+// messages channels and prints messages to 
 // engine log.
 func (g *Game) listenWorld() {
 	// Players.
@@ -132,6 +142,18 @@ func (g *Game) listenWorld() {
 				log.Cht.Printf(fmt.Sprintf("%s:%s", tar.Name(), msg))
 			default:
 			}
+		}
+	}
+}
+
+// Triggered after adding new scneario to module chapter.
+func (g *Game) onModScenarioAdded(s *scenario.Scenario) {
+	for _, a := range s.Areas() {
+		for _, c := range a.Characters() {
+			if g.pcs[c.ID() + c.Serial()] != nil {
+				continue
+			}
+			g.npcAI.AddCharacter(c)
 		}
 	}
 }

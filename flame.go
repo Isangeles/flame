@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 const (
@@ -92,11 +93,25 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 		return nil, fmt.Errorf("fail_to_load_start_scenario:%v",
 			err)
 	}
-	// Create new game.
-	game, err = core.NewGame(mod, pcs)
+	// All players to main area of start scenario.
+	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_create_new_game:%v",
+		return nil, fmt.Errorf("fail_to_retrieve_start_scenario:%v",
 			err)
+	}
+	startArea := startScen.Mainarea()
+	for _, pc := range pcs {
+		serial.AssignSerial(pc)
+		startArea.AddCharacter(pc)
+	}
+	// Create new game.
+	game, err = core.NewGame(mod)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_create_game:%v", err)
+	}
+	SetGame(game)
+	for _, pc := range pcs {
+		game.AddPlayer(pc)
 	}
 	return game, nil
 }
@@ -119,6 +134,13 @@ func LoadGame(saveName string) (*core.Game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_module_data:%v", err)
 	}
-	SetGame(core.LoadGame(sav))
+	game, err := core.NewGame(mod)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_create_game:%v", err)
+	}
+	SetGame(game)
+	for _, pc := range sav.Players {
+		game.AddPlayer(pc)
+	}
 	return game, nil
 }

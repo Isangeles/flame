@@ -33,8 +33,8 @@ import (
 
 // Module struct represents engine module.
 type Module struct {
-	conf    ModConf
-	chapter *Chapter
+	conf            ModConf
+	chapter         *Chapter
 }
 
 // NewModule creates new instance of module with specified configuration
