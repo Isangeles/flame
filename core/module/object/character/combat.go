@@ -92,10 +92,10 @@ func (c *Character) HitEffects() []*effect.Effect {
 
 // UseSkill uses specified skill on current target.
 func (c *Character) UseSkill(s *skill.Skill) {
-	if c.Casting() || c.Moving() {
+	if c.Casting() || c.Moving() || c.cooldown > 0 {
 		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 			lang.Text("ui", "cant_do_right_now"))
-		c.SendCombat(msg)
+		c.SendPrivate(msg)
 		return
 	}
 	charSkill := c.skills[s.ID()+s.Serial()]
@@ -108,13 +108,13 @@ func (c *Character) UseSkill(s *skill.Skill) {
 				c.SetDestPoint(tar.Position())
 			}
 			msg := fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
-			c.SendCombat(msg)
+			c.SendPrivate(msg)
 		}
 		return
 	}
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
 		lang.Text("ui", "skill_not_known"))
-	c.SendCombat(msg)
+	c.SendPrivate(msg)
 }
 
 // takeEffects adds specified effects

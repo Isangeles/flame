@@ -38,37 +38,40 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id, serial        string
-	name              string
-	level             int
-	hp, maxHP         int
-	mana, maxMana     int
-	exp, maxExp       int
-	live              bool
-	agony             bool
-	sex               Gender
-	race              Race
-	attitude          Attitude
-	alignment         Alignment
-	guild             Guild
-	attributes        Attributes
-	resilience        object.Resilience
-	posX, posY        float64
-	destX, destY      float64
-	defX, defY        float64
-	inventory         *item.Inventory
-	equipment         *Equipment
-	targets           []effect.Target
-	effects           map[string]*effect.Effect
-	skills            map[string]*skill.Skill
-	chatlog           chan string
-	combatlog         chan string
-	onSkillActivated  func(s *skill.Skill)
-	onChatSent        func(t string)
+	id, serial       string
+	name             string
+	level            int
+	hp, maxHP        int
+	mana, maxMana    int
+	exp, maxExp      int
+	live             bool
+	agony            bool
+	sex              Gender
+	race             Race
+	attitude         Attitude
+	alignment        Alignment
+	guild            Guild
+	attributes       Attributes
+	resilience       object.Resilience
+	posX, posY       float64
+	destX, destY     float64
+	defX, defY       float64
+	cooldown         int64 // millis
+	inventory        *item.Inventory
+	equipment        *Equipment
+	targets          []effect.Target
+	effects          map[string]*effect.Effect
+	skills           map[string]*skill.Skill
+	chatlog          chan string
+	combatlog        chan string
+	privlog          chan string
+	onSkillActivated func(s *skill.Skill)
+	onChatSent       func(t string)
 }
 
 const (
-	base_exp = 1000
+	base_exp  = 1000
+	global_cd = 2000 // millis
 )
 
 // New creates new character from specified data.
@@ -102,6 +105,13 @@ func New(data res.CharacterBasicData) *Character {
 
 // Update updates character.
 func (c *Character) Update(delta int64) {
+	// Global cooldown.
+	if c.cooldown > 0 {
+		c.cooldown -= delta
+	}
+	if c.cooldown < 0 {
+		c.cooldown = 0
+	}
 	// Move to dest point.
 	if c.Moving() {
 		c.Interrupt() // interrupt current acction
@@ -149,6 +159,7 @@ func (c *Character) Update(delta int64) {
 			if c.onSkillActivated != nil {
 				c.onSkillActivated(s)
 			}
+			c.cooldown = global_cd
 		}
 	}
 }
@@ -329,7 +340,6 @@ func (c *Character) SetDefaultPosition(x, y float64) {
 	c.defX, c.defY = x, y
 }
 
-
 // SetSerial sets specified serial value for this
 // character.
 func (c *Character) SetSerial(serial string) {
@@ -397,6 +407,15 @@ func (c *Character) Casting() bool {
 	return false
 }
 
+// Fighting checks if character is in combat.
+func (c *Character) Fighting() bool {
+	tar := c.Targets()[0]
+	if tar != nil || c.Attitude().ForTarget(tar) == Hostile {
+		return object.Range(c, tar) <= c.SightRange()
+	}
+	return false
+}
+
 // CombatLog returns character combat log channel.
 func (c *Character) CombatLog() chan string {
 	return c.combatlog
@@ -405,6 +424,11 @@ func (c *Character) CombatLog() chan string {
 // ChatLog returns character speech log channel.
 func (c *Character) ChatLog() chan string {
 	return c.chatlog
+}
+
+// PrivateLog returns character private log channel.
+func (c *Character) PrivateLog() chan string {
+	return c.privlog
 }
 
 // SetOnSkillActivatedFunc sets function triggered after
@@ -441,11 +465,20 @@ func (c *Character) SendChat(t string) {
 	}
 }
 
-// SendCmb sends specified text message to
+// SendCombat sends specified text message to
 // comabt log channel.
 func (c *Character) SendCombat(t string) {
 	select {
 	case c.combatlog <- t:
+	default:
+	}
+}
+
+// SendPrivate sends specified text to character
+// private log.
+func (c *Character) SendPrivate(t string) {
+	select {
+	case c.privlog <- t:
 	default:
 	}
 }

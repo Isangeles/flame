@@ -51,4 +51,5 @@ type SkillUser interface {
 	SendCombat(msg string)
 	CombatLog() chan string
 	ChatLog() chan string
+	PrivateLog() chan string
 }

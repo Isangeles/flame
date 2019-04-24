@@ -169,18 +169,18 @@ func (c *Chapter) AreaObject(id, serial string) *area.Object {
 }
 
 // CharacterArea returns area where specified character
-// is present, or error if there is no such area.
-func (c *Chapter) CharacterArea(char *character.Character) (*scenario.Area, error) {
+// is present, or nil if no such area was found.
+func (c *Chapter) CharacterArea(char *character.Character) *scenario.Area {
 	for _, s := range c.loadedScens {
 		for _, a := range s.Areas() {
 			for _, c := range a.Characters() {
 				if c.SerialID() == char.SerialID() {
-					return a, nil
+					return a
 				}
 			}
 		}
 	}
-	return nil, fmt.Errorf("character not found in any active scenario")
+	return nil
 }
 
 // SetOnScenarioAddedFunc sets function triggered after adding

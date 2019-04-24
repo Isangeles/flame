@@ -1,7 +1,7 @@
 /*
  * attitude.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
  
 package character
 
+import (
+	"github.com/isangeles/flame/core/module/object/effect"
+)
+
 // Type for charactes attitudes.
 type Attitude int
 
@@ -31,6 +35,18 @@ const (
 	Neutral
 	Hostile
 )
+
+// ForTarget returns attitude for specified target.
+func (a Attitude) ForTarget(tar effect.Target) Attitude {
+	char, ok := tar.(*Character)
+	if !ok {
+		return Neutral
+	}
+	if char.Attitude() == Hostile {
+		return Hostile
+	}
+	return a
+}
 
 // Id returns attitude ID.
 func (a Attitude) Id() string {

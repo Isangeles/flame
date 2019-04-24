@@ -27,7 +27,6 @@ package core
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/core/ai"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
@@ -40,7 +39,7 @@ import (
 type Game struct {
 	mod    *module.Module
 	pcs    map[string]*character.Character
-	npcAI  *ai.AI
+	ai     *AI
 	paused bool
 }
 
@@ -49,16 +48,13 @@ func NewGame(mod *module.Module) (*Game, error) {
 	g := new(Game)
 	g.mod = mod
 	g.pcs = make(map[string]*character.Character)
-	g.npcAI = ai.New()
+	g.ai = NewAI(g)
 	if g.mod.Chapter() == nil {
 		return nil, fmt.Errorf("no_active_module_chapter")
 	}
 	// Chapter NPCs under AI control.
 	for _, c := range g.mod.Chapter().Characters() {
-		if g.pcs[c.ID() + c.Serial()] != nil { // ommit players
-			continue
-		}
-		g.npcAI.AddCharacter(c)		
+		g.ai.AddCharacter(c)
 	}
 	// Events.
 	g.mod.Chapter().SetOnScenarioAddedFunc(g.onModScenarioAdded)
@@ -83,7 +79,7 @@ func (g *Game) Update(delta int64) {
 		o.Update(delta)
 	}
 	// AI.
-	g.npcAI.Update(delta)
+	g.ai.Update(delta)
 }
 
 // Pause toggles game update pause.
@@ -106,8 +102,8 @@ func (g *Game) Module() *module.Module {
 
 // AddPlayer adds specified character to game as player.
 func (g *Game) AddPlayer(char *character.Character) {
-	g.pcs[char.ID() + char.Serial()] = char
-	g.npcAI.RemoveCharacter(char)
+	g.pcs[char.ID()+char.Serial()] = char
+	g.ai.RemoveCharacter(char)
 }
 
 // Players returns all game PCs.
@@ -119,19 +115,19 @@ func (g *Game) Players() (pcs []*character.Character) {
 }
 
 // AI returns game AI.
-func (g *Game) AI() *ai.AI {
-	return g.npcAI
+func (g *Game) AI() *AI {
+	return g.ai
 }
 
 // listenWorld listens players and near objects
-// messages channels and prints messages to 
+// messages channels and prints messages to
 // engine log.
 func (g *Game) listenWorld() {
 	// Players.
 	for _, pc := range g.pcs {
 		// Near objects.
-		area, err := g.Module().Chapter().CharacterArea(pc)
-		if err != nil {
+		area := g.Module().Chapter().CharacterArea(pc)
+		if area == nil {
 			continue
 		}
 		for _, tar := range area.NearTargets(pc, pc.SightRange()) {
@@ -140,6 +136,10 @@ func (g *Game) listenWorld() {
 				log.Cmb.Printf(msg)
 			case msg := <-tar.ChatLog():
 				log.Cht.Printf(fmt.Sprintf("%s:%s", tar.Name(), msg))
+			case msg := <-tar.PrivateLog():
+				if tar == pc {
+					log.Inf.Printf(msg)
+				}
 			default:
 			}
 		}
@@ -150,10 +150,10 @@ func (g *Game) listenWorld() {
 func (g *Game) onModScenarioAdded(s *scenario.Scenario) {
 	for _, a := range s.Areas() {
 		for _, c := range a.Characters() {
-			if g.pcs[c.ID() + c.Serial()] != nil {
+			if g.pcs[c.ID()+c.Serial()] != nil {
 				continue
 			}
-			g.npcAI.AddCharacter(c)
+			g.ai.AddCharacter(c)
 		}
 	}
 }

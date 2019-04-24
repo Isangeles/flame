@@ -317,7 +317,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 		}
 		char.Inventory().AddItem(i)
 	}
-	// Add player skills & items from mod config.
+	// Add player skills & items from interface config.
 	for _, sid := range config.NewCharSkills() {
 		s, err := data.Skill(mod, sid)
 		if err != nil {

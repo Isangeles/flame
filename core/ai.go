@@ -21,11 +21,13 @@
  * 
  */
 
-package ai
+package core
 
 import (
 	"github.com/isangeles/flame/core/rng"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/object/skill"
 )
 
 var (
@@ -34,13 +36,15 @@ var (
 
 // Struct for controlling non-player characters.
 type AI struct {
+	game      *Game
 	npcs      map[string]*character.Character
 	moveTimer int64
 }
 
-// New creates new AI.
-func New() *AI {
+// NewAI creates new AI.
+func NewAI(g *Game) *AI {
 	ai := new(AI)
+	ai.game = g
 	ai.npcs = make(map[string]*character.Character)
 	return ai
 }
@@ -51,7 +55,7 @@ func (ai *AI) Update(delta int64) {
 	// Move around.
 	if ai.moveTimer >= move_freq {
 		for _, npc := range ai.npcs {
-			if npc.Moving() {
+			if npc.Casting() || npc.Moving() || npc.Fighting() {
 				continue
 			}
 			posX, posY := npc.Position()
@@ -63,6 +67,35 @@ func (ai *AI) Update(delta int64) {
 			ai.moveAround(npc)
 		}
 		ai.moveTimer = 0
+	}
+	// Combat.
+	for _, npc := range ai.npcs {
+		tar := npc.Targets()[0]
+		if tar == nil || npc.Attitude().ForTarget(tar) != character.Hostile {
+			area := ai.game.Module().Chapter().CharacterArea(npc)
+			if area == nil {
+				continue
+			}
+			for _, t := range area.NearTargets(npc, npc.SightRange()) {
+				if t == npc || !t.Live() {
+					continue
+				}
+				if npc.Attitude().ForTarget(t) == character.Hostile {
+					tar = t
+					break
+				}
+			}
+			if tar == nil {
+				continue
+			}
+			npc.SetTarget(tar)
+		}
+		skill := ai.combatSkill(npc, npc.Targets()[0])
+		if skill == nil {
+			continue
+		}
+		npc.UseSkill(skill)
+		break
 	}
 }
 
@@ -92,4 +125,13 @@ func (ai *AI) moveAround(npc *character.Character) {
 		posX -= 1
 	}
 	npc.SetDestPoint(posX, posY)
+}
+
+// combatSkill selects NPC skill to use in combat or nil if specified
+// NPC has no skills to use.
+func (ai *AI) combatSkill(npc *character.Character, tar effect.Target) *skill.Skill {
+	if len(npc.Skills()) < 1 {
+		return nil
+	}
+	return npc.Skills()[0]
 }

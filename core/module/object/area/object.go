@@ -42,6 +42,7 @@ type Object struct {
 	effects    map[string]*effect.Effect
 	chatlog    chan string
 	combatlog  chan string
+	privatelog chan string
 }
 
 // New creates new area object from
@@ -212,4 +213,9 @@ func (ob *Object) CombatLog() chan string {
 // ChatLog returns object speech log channel.
 func (ob *Object) ChatLog() chan string {
 	return ob.chatlog
+}
+
+// PrivateLog returns object private log channel.
+func (ob *Object) PrivateLog() chan string {
+	return ob.privatelog
 }
