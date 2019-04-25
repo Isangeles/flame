@@ -346,15 +346,6 @@ func (c *Character) SetSerial(serial string) {
 	c.serial = serial
 }
 
-// Moving checks whether character is moving.
-func (c *Character) Moving() bool {
-	if c.posX != c.destX || c.posY != c.destY {
-		return true
-	} else {
-		return false
-	}
-}
-
 // Effects returns character all effects.
 func (c *Character) Effects() []*effect.Effect {
 	effs := make([]*effect.Effect, 0)
@@ -394,6 +385,15 @@ func (c *Character) Targets() []effect.Target {
 // target.
 func (c *Character) SetTarget(t effect.Target) {
 	c.targets[0] = t
+}
+
+// Moving checks whether character is moving.
+func (c *Character) Moving() bool {
+	if c.posX != c.destX || c.posY != c.destY {
+		return true
+	} else {
+		return false
+	}
 }
 
 // Casting checks whether any of character

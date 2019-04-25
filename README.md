@@ -1,7 +1,10 @@
 ## Introduction
   Flame is RPG game engine written from scratch in Go.
   
-  The main goal is to create simple, flexible, extensible and completely modular game engine. Engine provides build-in CLI frontend to easy run and debug modules. Engine does not come with any graphical interface, instead is designed to be used with external GUI's(e.g. [Mural](https://github.com/isangeles/mural)).
+  The main goal is to create simple, flexible, extensible and completely modular game engine.
+  Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
+
+  Engine provides build-in CLI frontend to easy run and debug modules. Engine does not come with any graphical interface, instead is designed to be used with external GUI's(e.g. [Mural](https://github.com/isangeles/mural)).
   
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
@@ -9,6 +12,14 @@
   
   Currently in a very early development stage.
 
+
+  ### List of games that use Flame:
+  #### Arena ####
+  
+  Description: simple demo game that presents engine and [Mural GUI](https://github.com/isangeles/mural) features.
+  
+  Download: [Linux](https://drive.google.com/open?id=1CAUiHdGq8sxrrNWkRwF1QSaNSVWLKDVg), [Windows](https://drive.google.com/open?id=1rR_k_39o-hqTywUZO628ggA3iN7ZBZTJ)
+  
 ## Build & Run
   Get sources from git:
 ```
@@ -26,7 +37,7 @@
 ## Configuration
 Configuration values are loaded from '.flame' file in Flame executable directory.
 
-### Configuration values
+### Configuration values:
 ```
   lang:[language ID];
 ```
@@ -42,7 +53,7 @@ Description: specifies module to load at start, module ID is ID specified in 'mo
 ```
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
 
-## Flame CLI:
+## Flame CLI
 Flame comes with a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
 
 ### Commands:

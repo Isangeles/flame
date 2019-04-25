@@ -1,5 +1,5 @@
 <base>
-	<char id="testchar" gender="male" race="human" attitude="hostile" alignment="chaotic_good" guild="" level="1">
+	<char id="testchar" gender="male" race="human" attitude="neutral" alignment="chaotic_good" guild="" level="1">
       	      <stats>4;4;3;1;0;</stats>
 	</char>
 </base>

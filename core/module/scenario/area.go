@@ -24,6 +24,8 @@
 package scenario
 
 import (
+	"math"
+	
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
@@ -44,7 +46,7 @@ func NewArea(id string) (*Area) {
 	return a
 }
 
-// Id returns area ID.
+// ID returns area ID.
 func (a *Area) ID() string {
 	return a.id
 }
@@ -92,6 +94,27 @@ func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Tar
 	// Objects.
 	for _, ob := range a.objects {
 		if object.Range(ob, pos) <= maxrange {
+			objects = append(objects, ob)
+		}
+	}
+	return objects
+}
+
+// NearObjects returns all objects within specified range from specified
+// XY position.
+func (a *Area) NearObjects(x, y, maxrange float64) []object.Positioner {
+	objects := make([]object.Positioner, 0)
+	// Characters.
+	for _, char := range a.chars {
+		charX, charY := char.Position()
+		if math.Hypot(charX - x, charY - y) <= maxrange {
+			objects = append(objects, char)
+		}
+	}
+	// Objects.
+	for _, ob := range a.objects {
+		obX, obY := ob.Position()
+		if math.Hypot(obX - x, obY - y) <= maxrange {
 			objects = append(objects, ob)
 		}
 	}

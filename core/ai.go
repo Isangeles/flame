@@ -1,37 +1,39 @@
 /*
  * ai.go
- * 
+ *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 package core
 
 import (
-	"github.com/isangeles/flame/core/rng"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/rng"
 )
 
 var (
-	move_freq int64 = 3000 // millisec
+	// Random actions frequences(in millis).
+	move_freq int64 = 3000
+	chat_freq int64 = 5000
 )
 
 // Struct for controlling non-player characters.
@@ -39,6 +41,7 @@ type AI struct {
 	game      *Game
 	npcs      map[string]*character.Character
 	moveTimer int64
+	chatTimer int64
 }
 
 // NewAI creates new AI.
@@ -52,10 +55,12 @@ func NewAI(g *Game) *AI {
 // Update updates AI.
 func (ai *AI) Update(delta int64) {
 	ai.moveTimer += delta
-	// Move around.
-	if ai.moveTimer >= move_freq {
-		for _, npc := range ai.npcs {
-			if npc.Casting() || npc.Moving() || npc.Fighting() {
+	ai.chatTimer += delta
+	// NPCs.
+	for _, npc := range ai.npcs {
+		// Move around.
+		if ai.moveTimer >= move_freq {
+			if npc.Casting() || npc.Moving() || npc.Fighting() || npc.Agony() {
 				continue
 			}
 			posX, posY := npc.Position()
@@ -66,10 +71,14 @@ func (ai *AI) Update(delta int64) {
 			}
 			ai.moveAround(npc)
 		}
-		ai.moveTimer = 0
-	}
-	// Combat.
-	for _, npc := range ai.npcs {
+		// Random chat.
+		if ai.chatTimer >= chat_freq {
+			if npc.Casting() || npc.Moving() || npc.Fighting() || npc.Agony() {
+				continue
+			}
+			ai.saySomething(npc)
+		}
+		// Combat.
 		tar := npc.Targets()[0]
 		if tar == nil || npc.Attitude().ForTarget(tar) != character.Hostile {
 			area := ai.game.Module().Chapter().CharacterArea(npc)
@@ -97,17 +106,23 @@ func (ai *AI) Update(delta int64) {
 		npc.UseSkill(skill)
 		break
 	}
+	// Reset timers.
+	if ai.moveTimer >= move_freq {
+		ai.moveTimer = 0
+	}
+	if ai.chatTimer >= chat_freq {
+		ai.chatTimer = 0
+	}
 }
 
-// AddCharacter adds specified character to control
-// by AI.
+// AddCharacter adds specified character to control by AI.
 func (ai *AI) AddCharacter(char *character.Character) {
-	ai.npcs[char.ID() + char.Serial()] = char
+	ai.npcs[char.ID()+char.Serial()] = char
 }
 
 // RemoveCharacters removes specified character from AI control.
 func (ai *AI) RemoveCharacter(char *character.Character) {
-	delete(ai.npcs, char.ID() + char.Serial())
+	delete(ai.npcs, char.ID()+char.Serial())
 }
 
 // moveAround moves specified character in random direction.
@@ -125,6 +140,12 @@ func (ai *AI) moveAround(npc *character.Character) {
 		posX -= 1
 	}
 	npc.SetDestPoint(posX, posY)
+}
+
+// saySomething sends random text on NPC chat channel.
+func (ai *AI) saySomething(npc *character.Character) {
+	// TODO: retireve random text from lang file.
+	npc.SendChat("TEST")
 }
 
 // combatSkill selects NPC skill to use in combat or nil if specified
