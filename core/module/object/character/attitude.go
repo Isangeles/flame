@@ -23,12 +23,18 @@
  
 package character
 
-import (
+import (	
 	"github.com/isangeles/flame/core/module/object/effect"
 )
 
-// Type for charactes attitudes.
+// Type for character attitude.
 type Attitude int
+
+// Struct for saved attitude.
+type AttitudeMemory struct {
+	Target   effect.Target
+	Attitude Attitude
+}
 
 const (
 	Friendly Attitude = iota
@@ -36,20 +42,8 @@ const (
 	Hostile
 )
 
-// ForTarget returns attitude for specified target.
-func (a Attitude) ForTarget(tar effect.Target) Attitude {
-	char, ok := tar.(*Character)
-	if !ok {
-		return Neutral
-	}
-	if char.Attitude() == Hostile {
-		return Hostile
-	}
-	return a
-}
-
-// Id returns attitude ID.
-func (a Attitude) Id() string {
+// ID returns attitude ID.
+func (a Attitude) ID() string {
 	switch a {
 	case Friendly:
 		return "att_friendly"

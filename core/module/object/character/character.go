@@ -62,6 +62,7 @@ type Character struct {
 	targets          []effect.Target
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
+	memory           map[string]*AttitudeMemory
 	chatlog          chan string
 	combatlog        chan string
 	privlog          chan string
@@ -92,6 +93,7 @@ func New(data res.CharacterBasicData) *Character {
 	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
 	c.skills = make(map[string]*skill.Skill)
+	c.memory = make(map[string]*AttitudeMemory)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	// Set level.
@@ -252,6 +254,22 @@ func (c *Character) Attitude() Attitude {
 	return c.attitude
 }
 
+// AttitudeFor returns attitude for specified target.
+func (c *Character) AttitudeFor(tar effect.Target) Attitude {
+	mem := c.memory[tar.ID() + tar.Serial()]
+	if mem != nil {
+		return mem.Attitude
+	}
+	char, ok := tar.(*Character)
+	if !ok {
+		return Neutral
+	}
+	if char.Attitude() == Hostile {
+		return Hostile
+	}
+	return c.Attitude()
+}
+
 // Guild returns character guild.
 func (c *Character) Guild() Guild {
 	return c.guild
@@ -410,7 +428,7 @@ func (c *Character) Casting() bool {
 // Fighting checks if character is in combat.
 func (c *Character) Fighting() bool {
 	tar := c.Targets()[0]
-	if tar != nil || c.Attitude().ForTarget(tar) == Hostile {
+	if tar != nil && c.AttitudeFor(tar) == Hostile {
 		return object.Range(c, tar) <= c.SightRange()
 	}
 	return false
@@ -481,6 +499,19 @@ func (c *Character) SendPrivate(t string) {
 	case c.privlog <- t:
 	default:
 	}
+}
+
+// Memory returns character attitude memory.
+func (c *Character) Memory() (mem []*AttitudeMemory) {
+	for _, am := range c.memory {
+		mem = append(mem, am)
+	}
+	return
+}
+
+// Memorize saves attitude towards specified character.
+func (c *Character) Memorize(tar effect.Target, a Attitude) {
+	c.memory[tar.ID() + tar.Serial()] = &AttitudeMemory{tar, a}
 }
 
 // levelup promotes character to next level.

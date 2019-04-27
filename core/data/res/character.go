@@ -25,12 +25,13 @@ package res
 
 // Struct for character data resource.
 type CharacterData struct {
-	BasicData  CharacterBasicData
-	SavedData  CharacterSavedData
-	Items      []InventoryItemData
-	EqItems    []EquipmentItemData
-	Effects    []ObjectEffectData
-	Skills     []ObjectSkillData
+	BasicData CharacterBasicData
+	SavedData CharacterSavedData
+	Items     []InventoryItemData
+	EqItems   []EquipmentItemData
+	Effects   []ObjectEffectData
+	Skills    []ObjectSkillData
+	Memory    []AttitudeMemoryData
 }
 
 // Struct for basic character data.
@@ -73,4 +74,11 @@ type EquipmentItemData struct {
 	ID     string
 	Serial string
 	Slot   int
+}
+
+// Struct for attitude memory data.
+type AttitudeMemoryData struct {
+	ObjectID     string
+	ObjectSerial string
+	Attitude     int
 }

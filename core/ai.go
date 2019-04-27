@@ -80,7 +80,7 @@ func (ai *AI) Update(delta int64) {
 		}
 		// Combat.
 		tar := npc.Targets()[0]
-		if tar == nil || npc.Attitude().ForTarget(tar) != character.Hostile {
+		if tar == nil || npc.AttitudeFor(tar) != character.Hostile {
 			area := ai.game.Module().Chapter().CharacterArea(npc)
 			if area == nil {
 				continue
@@ -89,7 +89,7 @@ func (ai *AI) Update(delta int64) {
 				if t == npc || !t.Live() {
 					continue
 				}
-				if npc.Attitude().ForTarget(t) == character.Hostile {
+				if npc.AttitudeFor(t) == character.Hostile {
 					tar = t
 					break
 				}

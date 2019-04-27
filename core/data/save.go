@@ -135,7 +135,7 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 		return nil, fmt.Errorf("fail_to_load_chapter:%v", err)
 	}
 	mod.Chapter().ClearScenarios() // to remove start scenario
-	charsData := make([]*res.CharacterData, 0)
+	charsData := make([]res.CharacterData, 0)
 	objectsData := make([]*res.ObjectData, 0)
 	pcs := make([]*character.Character, 0)
 	// Scenrios.
@@ -147,7 +147,7 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 			area := scenario.NewArea(areaData.ID)
 			// Characters.
 			for _, charData := range areaData.Chars {
-				charsData = append(charsData, &charData) // save data to restore effects later
+				charsData = append(charsData, charData) // save data to restore effects later
 				char := buildCharacter(mod, &charData)
 				// Restore HP, mana & exp.
 				char.SetHealth(charData.SavedData.HP)
@@ -183,11 +183,16 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 			continue
 		}
 	}
-	// Restore characters effects.
+	// Restore characters effects & memory.
 	for _, cd := range charsData {
-		err := restoreCharEffects(mod, cd)
+		err := restoreCharEffects(mod, &cd)
 		if err != nil {
 			log.Err.Printf("data:build_saved_game:restore_effects:char%s:%v",
+				cd.BasicData.ID, err)
+		}
+		err = restoreCharMemory(mod, &cd)
+		if err != nil {
+			log.Err.Printf("data:build_saved_game:restore_memory:char%s:%v",
 				cd.BasicData.ID, err)
 		}
 	}
@@ -197,7 +202,6 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 	game.Mod = mod
 	game.Players = pcs
 	return game, nil
-	
 }
 
 // restoreEffects resores effects for module character.
@@ -223,6 +227,26 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 		}
 		effect.SetSource(source)
 		char.AddEffect(effect)
+	}
+	return nil
+}
+
+// restoreCharMemory restores attitude memory for module character.
+func restoreCharMemory(mod *module.Module, data *res.CharacterData) error {
+	char := mod.Character(data.BasicData.ID + "_" + data.BasicData.Serial)
+	if char == nil {
+		return fmt.Errorf("char_not_found")
+	}
+	for _, memData := range data.Memory {
+		tar := mod.Target(memData.ObjectID, memData.ObjectSerial)
+		if tar == nil {
+			log.Err.Printf("data:char:%s:restore_memory:att_target_not_found:%s_%s",
+				char.ID(), memData.ObjectID, memData.ObjectSerial)
+			continue
+		}
+		att := character.Attitude(memData.Attitude)
+		log.Dbg.Printf("restore_mem:%s_%s", tar.ID(), tar.Serial())
+		char.Memorize(tar, att)
 	}
 	return nil
 }

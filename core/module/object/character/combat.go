@@ -33,6 +33,7 @@ import (
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/log"
 )
 
 // Damage retruns min and max damage value,
@@ -121,6 +122,12 @@ func (c *Character) UseSkill(s *skill.Skill) {
 func (c *Character) TakeEffect(e *effect.Effect) {
 	// TODO: handle resists.
 	c.AddEffect(e)
+	if e.Source() == nil {
+		log.Err.Printf("char_combat:%s_%s:fail_to_take_effect:%s_%s:no source",
+			c.ID(), c.Serial(), e.ID(), e.Serial())
+		return
+	}
+	c.Memorize(e.Source(), Hostile)
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
 	if config.Debug() { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())

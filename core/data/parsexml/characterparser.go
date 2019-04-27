@@ -62,6 +62,7 @@ type CharacterXML struct {
 	Equipment EquipmentXML     `xml:"equipment"`
 	Effects   ObjectEffectsXML `xml:"effects"`
 	Skills    ObjectSkillsXML  `xml:"skills"`
+	Memory    MemoryXML        `xml:"memory"`
 }
 
 // Struct for equipment XML node.
@@ -76,6 +77,20 @@ type EquipmentItemXML struct {
 	ID      string   `xml:"id,attr"`
 	Serial  string   `xml:"serial,attr"`
 	Slot    string   `xml:"slot"`
+}
+
+// Struct for attitude memory XML node.
+type MemoryXML struct {
+	XMLName xml.Name            `xml:"memory"`
+	Nodes   []MemoryAttitudeXML `xml:"attitude"`
+}
+
+// Struct for attitude memodry XML node.
+type MemoryAttitudeXML struct {
+	XMLName  xml.Name `xml:"attitude"`
+	ID       string   `xml:"id,attr"`
+	Serial   string   `xml:"serial,attr"`
+	Attitude string   `xml:"attitude,attr"`
 }
 
 // UnmarshalCharactersBase retrieve all characters data
@@ -152,6 +167,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Equipment = *xmlEquipment(char.Equipment())
 	xmlChar.Effects = *xmlObjectEffects(char.Effects()...)
 	xmlChar.Skills = *xmlObjectSkills(char.Skills()...)
+	xmlChar.Memory = *xmlMemory(char.Memory())
 	return xmlChar
 }
 
@@ -170,6 +186,22 @@ func xmlEquipment(eq *character.Equipment) *EquipmentXML {
 	}
 	// TODO: parse all equipment slots.
 	return xmlEq
+}
+
+// xmlMemory parses specified character attitude memodry to
+// XML memory node.
+func xmlMemory(mem []*character.AttitudeMemory) *MemoryXML {
+	xmlMem := new(MemoryXML)
+	for _, am := range mem {
+		attAttr := marshalAttitude(am.Attitude)
+		xmlAtt := MemoryAttitudeXML{
+			ID:       am.Target.ID(),
+			Serial:   am.Target.Serial(),
+			Attitude: attAttr,
+		}
+		xmlMem.Nodes = append(xmlMem.Nodes, xmlAtt)
+	}
+	return xmlMem
 }
 
 // buildCharacterData creates character resources from specified
@@ -269,6 +301,21 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 			Serial: xmlSkill.Serial,
 		}
 		data.Skills = append(data.Skills, skillData)
+	}
+	// Memory.
+	for _, xmlAtt := range xmlChar.Memory.Nodes {
+		att, err := UnmarshalAttitude(xmlAtt.Attitude)
+		if err != nil {
+			log.Err.Printf("xml:build_character:%s:fail_to_parse_att_mem:%s",
+				xmlChar.ID, err)
+			continue
+		}
+		attData := res.AttitudeMemoryData{
+			ObjectID:     xmlAtt.ID,
+			ObjectSerial: xmlAtt.Serial,
+			Attitude:     int(att),
+		}
+		data.Memory = append(data.Memory, attData)
 	}
 	return &data, nil
 }
