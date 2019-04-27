@@ -64,7 +64,7 @@ type SavedAreasXML struct {
 // Struct for saved scenario area XML node.
 type SavedAreaXML struct {
 	XMLName     xml.Name           `xml:"area"`
-	ID          string             `xml:id,attr"`
+	ID          string             `xml:"id,attr"`
 	Mainarea    bool               `xml:"mainarea,attr"`
 	CharsNode   SavedCharactersXML `xml:"characters"`
 	ObjectsNode SavedObjectsXML    `xml:"objects"`
@@ -154,7 +154,7 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 	for _, xmlScen := range xmlGame.Chapter.Scenarios {
 		scen := res.ScenarioData{ID: xmlScen.ID}
 		// Areas.
-		for _, xmlArea := range xmlScen.AreasNode.Areas {
+		for _, xmlArea := range xmlScen.AreasNode.Areas {	
 			area := res.AreaData{ID: xmlArea.ID}
 			// Characters.
 			for _, xmlChar := range xmlArea.CharsNode.Characters {

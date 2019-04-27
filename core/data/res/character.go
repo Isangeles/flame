@@ -56,6 +56,7 @@ type CharacterBasicData struct {
 type CharacterSavedData struct {
 	PC         bool
 	PosX, PosY float64
+	DefX, DefY float64
 	HP         int
 	Mana       int
 	Exp        int

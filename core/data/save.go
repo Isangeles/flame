@@ -144,7 +144,7 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 		mainarea := new(scenario.Area)
 		// Areas.
 		for _, areaData := range scenData.Areas {
-			area := scenario.NewArea(areaData.ID)
+			area := scenario.NewArea(areaData.ID)		 
 			// Characters.
 			for _, charData := range areaData.Chars {
 				charsData = append(charsData, charData) // save data to restore effects later
@@ -153,8 +153,9 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 				char.SetHealth(charData.SavedData.HP)
 				char.SetMana(charData.SavedData.Mana)
 				char.SetExperience(charData.SavedData.Exp)
-				// Restore position.
+				// Restore current and default position.
 				char.SetPosition(charData.SavedData.PosX, charData.SavedData.PosY)
+				char.SetDefaultPosition(charData.SavedData.DefX, charData.SavedData.DefY)
 				if charData.SavedData.PC {
 					pcs = append(pcs, char)
 				}
@@ -245,7 +246,6 @@ func restoreCharMemory(mod *module.Module, data *res.CharacterData) error {
 			continue
 		}
 		att := character.Attitude(memData.Attitude)
-		log.Dbg.Printf("restore_mem:%s_%s", tar.ID(), tar.Serial())
 		char.Memorize(tar, att)
 	}
 	return nil

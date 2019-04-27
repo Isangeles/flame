@@ -42,27 +42,28 @@ type CharactersBaseXML struct {
 
 // Struct for XML character node.
 type CharacterXML struct {
-	XMLName   xml.Name         `xml:"char"`
-	ID        string           `xml:"id,attr"`
-	Serial    string           `xml:"serial,attr"`
-	Name      string           `xml:"name,attr"`
-	Gender    string           `xml:"gender,attr"`
-	Race      string           `xml:"race,attr"`
-	Attitude  string           `xml:"attitude,attr"`
-	Alignment string           `xml:"alignment,attr"`
-	Guild     string           `xml:"guild,attr"`
-	Level     int              `xml:"level,attr"`
-	Stats     string           `xml:"stats,value"`
-	PC        bool             `xml:"pc,attr"`
-	HP        int              `xml:"hp, attr"`
-	Mana      int              `xml:"mana,attr"`
-	Exp       int              `xml:"exp,attr"`
-	Position  string           `xml:"position,value"`
-	Inventory InventoryXML     `xml:"inventory"`
-	Equipment EquipmentXML     `xml:"equipment"`
-	Effects   ObjectEffectsXML `xml:"effects"`
-	Skills    ObjectSkillsXML  `xml:"skills"`
-	Memory    MemoryXML        `xml:"memory"`
+	XMLName     xml.Name         `xml:"char"`
+	ID          string           `xml:"id,attr"`
+	Serial      string           `xml:"serial,attr"`
+	Name        string           `xml:"name,attr"`
+	Gender      string           `xml:"gender,attr"`
+	Race        string           `xml:"race,attr"`
+	Attitude    string           `xml:"attitude,attr"`
+	Alignment   string           `xml:"alignment,attr"`
+	Guild       string           `xml:"guild,attr"`
+	Level       int              `xml:"level,attr"`
+	Stats       string           `xml:"stats,value"`
+	PC          bool             `xml:"pc,attr"`
+	HP          int              `xml:"hp,attr"`
+	Mana        int              `xml:"mana,attr"`
+	Exp         int              `xml:"exp,attr"`
+	Position    string           `xml:"position,value"`
+	DefPosition string           `xml:"default-position,value"`
+	Inventory   InventoryXML     `xml:"inventory"`
+	Equipment   EquipmentXML     `xml:"equipment"`
+	Effects     ObjectEffectsXML `xml:"effects"`
+	Skills      ObjectSkillsXML  `xml:"skills"`
+	Memory      MemoryXML        `xml:"memory"`
 }
 
 // Struct for equipment XML node.
@@ -163,6 +164,8 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Exp = char.Experience()
 	posX, posY := char.Position()
 	xmlChar.Position = fmt.Sprintf("%fx%f", posX, posY)
+	defX, defY := char.DefaultPosition()
+	xmlChar.DefPosition = fmt.Sprintf("%fx%f", defX, defY)
 	xmlChar.Inventory = *xmlInventory(char.Inventory())
 	xmlChar.Equipment = *xmlEquipment(char.Equipment())
 	xmlChar.Effects = *xmlObjectEffects(char.Effects()...)
@@ -252,13 +255,20 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	data.SavedData.HP = xmlChar.HP
 	data.SavedData.Mana = xmlChar.Mana
 	data.SavedData.Exp = xmlChar.Exp
-	// Position.
+	// Current & default position.
 	if xmlChar.Position != "" {
 		posX, posY, err := UnmarshalPosition(xmlChar.Position)
 		if err != nil {
 			return nil, fmt.Errorf("fail_to_parse_position:%v", err)
 		}
 		data.SavedData.PosX, data.SavedData.PosY = posX, posY
+	}
+	if xmlChar.DefPosition != "" {
+		defX, defY, err := UnmarshalPosition(xmlChar.DefPosition)
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_parse_default_position:%v", err)
+		}
+		data.SavedData.DefX, data.SavedData.DefY = defX, defY
 	}
 	// Items.
 	for _, xmlIt := range xmlChar.Inventory.Items {
