@@ -24,6 +24,9 @@
 package core
 
 import (
+	"fmt"
+	
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/skill"
@@ -144,8 +147,16 @@ func (ai *AI) moveAround(npc *character.Character) {
 
 // saySomething sends random text on NPC chat channel.
 func (ai *AI) saySomething(npc *character.Character) {
-	// TODO: retireve random text from lang file.
-	npc.SendChat("TEST")
+	switch npc.Race() {
+	case character.Human:
+		t := lang.AllText(ai.game.Module().Conf().LangPath(), "random_chat", npc.Race().ID())
+		if len(t) < 1 {
+			return
+		}
+		id := rng.RollInt(1, len(t))
+		id -= 1
+		npc.SendChat(t[id])
+	}
 }
 
 // combatSkill selects NPC skill to use in combat or nil if specified

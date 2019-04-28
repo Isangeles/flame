@@ -79,20 +79,17 @@ func ReadDisplayText(filePath string, ids ...string) map[string]string {
 }
 
 
-// ReadAllDisplayText retrives all text values with specified IDs from file 
+// ReadAllValues retrives all text values with specified IDs from file 
 // with sepcified path. Returns map with text values as values and IDs as keys.
 // In case of error(file/ID not found) returns string with error message 
 // instead of text. 
-func ReadAllDisplayText(filePath string, ids ...string) map[string][]string {
-	texts := make(map[string][]string)
+func ReadAllValues(filePath string, ids ...string) (map[string][]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		t := make([]string, 1)
-		t[0] = fmt.Sprintf("CANT_OPEN:%s", filePath)
-		texts["err"] = t
-		return texts
+		return nil, fmt.Errorf("CANT_OPEN:%s", filePath)
 	}
 	defer file.Close()
+	texts := make(map[string][]string)
 	scann := bufio.NewScanner(file)
 	for _, id := range ids {
 		values := make([]string, 0)
@@ -108,12 +105,8 @@ func ReadAllDisplayText(filePath string, ids ...string) map[string][]string {
 				texts[id] = values
 			}
 		}
-		if len(values) < 1 {
-			values = append(values, fmt.Sprintf("TEXT_NOT_FONUD:%v", id))
-			texts[id] = values
-		}
 	}
-	return texts
+	return texts, nil
 }
 
 // ReadValue retrives text values with specified IDs from file 
