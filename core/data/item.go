@@ -67,13 +67,12 @@ func Item(mod *module.Module, id string) (item.Item, error) {
 func ImportWeapons(basePath string) ([]*res.WeaponData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_weapons_base_file:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
 	}
 	defer doc.Close()
 	weapons, err := parsexml.UnmarshalWeaponsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_weapons:%v", err)
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
 	}
 	return weapons, nil
 }
@@ -93,7 +92,7 @@ func ImportWeaponsDir(dirPath string) ([]*res.WeaponData, error) {
 		baseFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
 		weaps, err := ImportWeapons(baseFilePath)
 		if err != nil {
-			log.Err.Printf("data_weapons_import:%s:fail_to_load_weapons_file:%v",
+			log.Err.Printf("data_weapons_import:%s:fail_to_import_base:%v",
 				baseFilePath, err)
 			continue
 		}

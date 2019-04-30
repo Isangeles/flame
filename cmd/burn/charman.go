@@ -220,7 +220,7 @@ func showCharOption(cmd Command) (int, string) {
 		out := ""
 		for _, char := range chars {
 			for _, it := range char.Inventory().Items() {
-				out += fmt.Sprintf("%s ", it.SerialID())
+				out += fmt.Sprintf("%s_%s ", it.ID(), it.Serial())
 			}
 		}
 		return 0, out
@@ -228,7 +228,7 @@ func showCharOption(cmd Command) (int, string) {
 		out := ""
 		for _, char := range chars {
 			for _, it := range char.Equipment().Items() {
-				out += fmt.Sprintf("%s:", it.SerialID())
+				out += fmt.Sprintf("%s_%s:", it.ID(), it.Serial())
 				for _, s := range it.Slots() {
 					out += fmt.Sprintf("%s ", s.ID())
 				}
@@ -430,13 +430,13 @@ func equipCharOption(cmd Command) (int, string) {
 			}
 			eit, ok := it.(item.Equiper)
 			if !ok {
-				return 8, fmt.Sprintf("%s:%s:item_not_equipable:%s",
-					CHAR_MAN, char.SerialID(), it.SerialID())
+				return 8, fmt.Sprintf("%s:%s_%s:item_not_equipable:%s",
+					CHAR_MAN, char.ID(), char.Serial(), serialid)
 			}
 			err := char.Equipment().EquipHandRight(eit)
 			if err != nil {
-				return 8, fmt.Sprintf("%s:%s:fail_to_equip_item:%v",
-					CHAR_MAN, char.SerialID(), err)
+				return 8, fmt.Sprintf("%s:%s_%s:fail_to_equip_item:%v",
+					CHAR_MAN, char.ID(), char.Serial(), err)
 			}
 		}
 		return 0, ""

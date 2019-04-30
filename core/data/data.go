@@ -81,11 +81,17 @@ func LoadChapterData(chapter *module.Chapter) error {
 	// NPC.
 	npcData, err := ImportCharactersDataDir(chapter.Conf().NPCPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_load_npc:%v", err)
+		return fmt.Errorf("fail_to_import_npc:%v", err)
 	}
-	res.SetCharactersData(npcData)
 	for _, npcd := range npcData {
 		npcd.BasicData.Name = lang.TextDir(chapter.Conf().LangPath(), npcd.BasicData.ID)
 	}
+	res.SetCharactersData(npcData)
+	// Dialogs.
+	dialogData, err := ImportDialogsDir(chapter.Conf().DialogsPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_import_dialogs:%v", err)
+	}
+	res.SetDialogsData(dialogData)
 	return nil
 }

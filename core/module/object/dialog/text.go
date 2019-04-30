@@ -1,7 +1,7 @@
 /*
- * damageparser.go
+ * text.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,17 +21,27 @@
  *
  */
 
-package parsexml
+package dialog
 
 import (
-	"encoding/xml"
+	"github.com/isangeles/flame/core/data/res"
 )
 
-// Struct for damage XML node.
-type DamageXML struct {
-	XMLName xml.Name         `xml:"damage"`
-	Type    string           `xml:"type,attr"`
-	Min     int              `xml:"min,value"`
-	Max     int              `xml:"max,value"`
-	Effects ObjectEffectsXML `xml:"effects"`
+// Structoo for dialog text.
+type Text struct {
+	id      string
+	start   bool
+	answers []*Answer
+}
+
+// NewText creates new dialog text.
+func NewText(data *res.DialogTextData) *Text {
+	t := new(Text)
+	t.id = data.ID
+	t.start = data.Start
+	for _, ad := range data.Answers {
+		a := NewAnswer(ad)
+		t.answers = append(t.answers, a)
+	}
+	return t
 }

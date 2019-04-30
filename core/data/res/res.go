@@ -29,6 +29,7 @@ var (
 	weaponsData map[string]*WeaponData
 	charsData   map[string]*CharacterData
 	objectsData map[string]*ObjectData
+	dialogsData map[string]*DialogData
 )
 
 // Effect returns resources for effect
@@ -71,20 +72,56 @@ func Object(id string) *ObjectData {
 	return objectsData[id]
 }
 
+// Dialog returns dialog resource data
+// for dialog with specified ID or empty
+// dialog resurce struct if data for specified
+// ID was not found. 
+func Dialog(id string) *DialogData {
+	return dialogsData[id]
+}
+
 // Effects returns all effects resources.
-func Effects() map[string]*EffectData {
-	return effectsData
+func Effects() (d []*EffectData) {
+	for _, ed := range effectsData {
+		d = append(d, ed)
+	}
+	return
 }
 
 // Characters returns all characters
 // resources.
-func Characters() map[string]*CharacterData {
-	return charsData
+func Characters() (d []*CharacterData) {
+	for _, cd := range charsData {
+		d = append(d, cd)
+	}
+	return
 }
 
 // Objects returns all objects resources.
-func Objects() map[string]*ObjectData {
-	return objectsData
+func Objects() (d []*ObjectData) {
+	for _, od := range objectsData {
+		d = append(d, od)
+	}
+	return
+}
+
+// Dialogs returns all dialogs resources.
+func Dialogs() (d []*DialogData) {
+	for _, dd := range dialogsData {
+		d = append(d, dd)
+	}
+	return
+}
+
+// AddDialogsData adds specified dialogs data
+// to dialogs resources.
+func AddDialogsData(data ...*DialogData) {
+	if dialogsData == nil {
+		dialogsData = make(map[string]*DialogData)
+	}
+	for _, dd := range data {
+		dialogsData[dd.ID] = dd
+	}
 }
 
 // SetEffectsData sets specified effects data
@@ -129,5 +166,14 @@ func SetObjectsData(data []*ObjectData) {
 	objectsData = make(map[string]*ObjectData)
 	for _, od := range data {
 		objectsData[od.BasicData.ID] = od
+	}
+}
+
+// SetDialogsData sets specified dialogs data as
+// dialogs resources.
+func SetDialogsData(data []*DialogData) {
+	dialogsData = make(map[string]*DialogData)
+	for _, dd := range data {
+		dialogsData[dd.ID] = dd
 	}
 }

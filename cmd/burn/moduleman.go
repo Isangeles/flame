@@ -127,6 +127,12 @@ func showModuleOption(cmd Command) (int, string) {
 			out = fmt.Sprintf("%s %s", out, ob.BasicData.ID)
 		}
 		return 0, out
+	case "res-dialogs":
+		out := ""
+		for _, dl := range res.Dialogs() {
+			out = fmt.Sprintf("%s %s", out, dl.ID)
+		}
+		return 0, out
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
 			cmd.OptionArgs()[0], cmd.Args()[0])

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<base>
+  <dialog id="testDialog1">
+    <text id="testDialog1_1" start="true">
+      <answer id="bye1" to="end" />
+    </text>
+  </dialog>
+</base>

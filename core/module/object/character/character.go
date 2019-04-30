@@ -30,6 +30,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/object/dialog"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
@@ -63,6 +64,7 @@ type Character struct {
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*AttitudeMemory
+	dialogs          map[string]*dialog.Dialog
 	chatlog          chan string
 	combatlog        chan string
 	privlog          chan string
@@ -94,6 +96,7 @@ func New(data res.CharacterBasicData) *Character {
 	c.effects = make(map[string]*effect.Effect)
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*AttitudeMemory)
+	c.dialogs = make(map[string]*dialog.Dialog)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	// Set level.
@@ -512,6 +515,15 @@ func (c *Character) Memory() (mem []*AttitudeMemory) {
 // Memorize saves attitude towards specified character.
 func (c *Character) Memorize(tar effect.Target, a Attitude) {
 	c.memory[tar.ID() + tar.Serial()] = &AttitudeMemory{tar, a}
+}
+
+// Dialog returns dialog for specified character.
+func (c *Character) Dialog(char Character) *dialog.Dialog {
+	// TODO: find proper dialog for specified character.
+	for _, d := range c.dialogs {
+		return d
+	}
+	return nil
 }
 
 // levelup promotes character to next level.

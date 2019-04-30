@@ -52,8 +52,7 @@ type WeaponXML struct {
 	Slots   string    `xml:"slots,attr"`
 }
 
-// UnmarshalWeaponsBase retrieves weapons data from specified
-// XML data.
+// UnmarshalWeaponsBase retrieves weapons data from specified  XML data.
 func UnmarshalWeaponsBase(data io.Reader) ([]*res.WeaponData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(WeaponsBaseXML)
