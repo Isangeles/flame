@@ -1,7 +1,7 @@
 /*
  * levelreq.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
 
 package req
 
+import (
+	"github.com/isangeles/flame/core/data/res"
+)
+
 // Struct for level requirement.
 type LevelReq struct {
 	minLevel int
@@ -31,9 +35,9 @@ type LevelReq struct {
 
 // NewLevelReq creates new level requirement
 // with specified level value.
-func NewLevelReq(level int) *LevelReq {
+func NewLevelReq(data res.LevelReqData) *LevelReq {
 	req := new(LevelReq)
-	req.minLevel = level
+	req.minLevel = data.Min
 	return req
 }
 

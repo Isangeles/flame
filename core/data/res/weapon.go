@@ -23,10 +23,6 @@
 
 package res
 
-import (
-	"github.com/isangeles/flame/core/module/req"
-)
-
 // Strunt for weapon resource data.
 type WeaponData struct {
 	ID         string
@@ -37,7 +33,7 @@ type WeaponData struct {
 	DMGMax     int
 	DMGType    int
 	DMGEffects []EffectData
-	EQReqs     []req.Requirement
+	EQReqs     []ReqData
 	Slots      []int
 	Loot       bool
 }

@@ -1,7 +1,7 @@
 /*
  * reqparser.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,8 @@ package parsexml
 
 import (
 	"encoding/xml"
-
+	
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -51,11 +52,14 @@ func xmlLevelReq(req *req.LevelReq) *LevelReqXML {
 
 // buildReqs creates requirements from specified
 // XML data.
-func buildReqs(xmlReqs *ReqsXML) []req.Requirement { 
-	reqs := make([]req.Requirement, 0)
+func buildReqs(xmlReqs *ReqsXML) []res.ReqData { 
+	reqs := make([]res.ReqData, 0)
 	// Level reqs.
 	for _, xmlReq := range xmlReqs.LevelReqs {
-		req := req.NewLevelReq(xmlReq.MinLevel)
+		req := res.LevelReqData{
+			Min: xmlReq.MinLevel,
+		        Max: -1, // TODO: support max value
+		}
 		reqs = append(reqs, req)
 	}
 	return reqs

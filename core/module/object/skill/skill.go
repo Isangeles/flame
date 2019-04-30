@@ -91,10 +91,10 @@ func New(data res.SkillData) *Skill {
 	s.melee = data.Melee
 	s.spell = data.Spell
 	s.castRange = Range(data.Range)
-	s.useReqs = data.UseReqs
 	s.effects = data.Effects
 	s.castTimeMax = data.Cast
 	s.cooldownMax = data.Cooldown
+	s.useReqs = req.NewRequirements(data.UseReqs...)
 	return s
 }
 

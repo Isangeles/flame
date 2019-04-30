@@ -47,7 +47,7 @@ const (
 func NewDialog(data *res.DialogData) (*Dialog, error) {
 	d := new(Dialog)
 	d.id = data.ID
-	d.reqs = data.Reqs
+	d.reqs = req.NewRequirements(data.Reqs...)
 	for _, td := range data.Texts {
 		t := NewText(td)
 		d.texts = append(d.texts, t)

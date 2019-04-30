@@ -59,8 +59,8 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		dmgMax:     data.DMGMax,
 		dmgType:    object.Element(data.DMGType),
 		dmgEffects: data.DMGEffects,
-		equipReqs:  data.EQReqs,
 	}
+	w.equipReqs = req.NewRequirements(data.EQReqs...)
 	for _, sid := range data.Slots {
 		w.slots = append(w.slots, Slot(sid))
 	}

@@ -23,10 +23,6 @@
 
 package res
 
-import (
-	"github.com/isangeles/flame/core/module/req"
-)
-
 // Struct for skill data.
 type SkillData struct {
 	ID       string
@@ -36,7 +32,7 @@ type SkillData struct {
 	Range    int
 	Melee    bool
 	Spell    bool
-	UseReqs  []req.Requirement
+	UseReqs  []ReqData
 	Effects  []EffectData
 }
 

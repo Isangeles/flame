@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,10 +26,25 @@
 package req
 
 import (
+	"github.com/isangeles/flame/core/data/res"
 )
 
 // Interface for requirements.
 type Requirement interface {
 	Meet() bool
 	SetMeet(meet bool)
+}
+
+// NewRequirements creates new requirements from
+// specified data.
+func NewRequirements(data ...res.ReqData) []Requirement {
+	reqs := make([]Requirement, 0)
+	for _, d := range data {
+		switch d := d.(type) {
+		case res.LevelReqData:
+			lreq := NewLevelReq(d)
+			reqs = append(reqs, lreq)
+		}
+	}
+	return reqs
 }
