@@ -25,12 +25,14 @@ package dialog
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for dialog text answer.
 type Answer struct {
-	id string
-	to string
+	id   string
+	to   string
+	reqs []req.Requirement
 }
 
 // NewAnswer creates new dialog answer.
@@ -38,5 +40,11 @@ func NewAnswer(data *res.DialogAnswerData) *Answer {
 	a := new(Answer)
 	a.id = data.ID
 	a.to = data.To
+	a.reqs = req.NewRequirements(data.Reqs)
 	return a
+}
+
+// Reqs returns answer requirements.
+func (a *Answer) Reqs() []req.Requirement {
+	return a.reqs
 }

@@ -59,3 +59,8 @@ type ObjectSkillData struct {
 	Serial   string
 	Cooldown int64
 }
+
+// Struct for object dialog data.
+type ObjectDialogData struct {
+	ID string
+}

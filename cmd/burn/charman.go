@@ -252,6 +252,14 @@ func showCharOption(cmd Command) (int, string) {
 			}
 		}
 		return 0, out
+	case "dialogs":
+		out := ""
+		for _, char := range chars {
+			for _, d := range char.Dialogs() {
+				out += fmt.Sprintf("%s ", d.ID())
+			}
+		}
+		return 0, out
 	case "health", "hp":
 		out := ""
 		for _, char := range chars {

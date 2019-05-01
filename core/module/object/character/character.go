@@ -526,6 +526,19 @@ func (c *Character) Dialog(char Character) *dialog.Dialog {
 	return nil
 }
 
+// Dialogs returns all character dialogs.
+func (c *Character) Dialogs() (dls []*dialog.Dialog) {
+	for _, d := range c.dialogs {
+		dls = append(dls, d)
+	}
+	return
+}
+
+// AddDialog adds specified dialog to character.
+func (c *Character) AddDialog(d *dialog.Dialog) {
+	c.dialogs[d.ID()] = d
+}
+
 // levelup promotes character to next level.
 func (c *Character) levelup() {
 	c.level += 1

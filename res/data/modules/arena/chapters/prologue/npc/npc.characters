@@ -1,5 +1,8 @@
 <base>
 	<char id="testchar" gender="male" race="human" attitude="neutral" alignment="chaotic_good" guild="" level="1">
       	      <stats>4;4;3;1;0;</stats>
+	      <dialogs>
+		<dialog id="testDialog1"/>
+	      </dialogs>
 	</char>
 </base>

@@ -32,6 +32,7 @@ type CharacterData struct {
 	Effects   []ObjectEffectData
 	Skills    []ObjectSkillData
 	Memory    []AttitudeMemoryData
+	Dialogs   []ObjectDialogData
 }
 
 // Struct for basic character data.

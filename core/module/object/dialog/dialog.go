@@ -44,7 +44,7 @@ const (
 )
 
 // NewDialog creates new dialog.
-func NewDialog(data *res.DialogData) (*Dialog, error) {
+func NewDialog(data res.DialogData) (*Dialog, error) {
 	d := new(Dialog)
 	d.id = data.ID
 	d.reqs = req.NewRequirements(data.Reqs...)
@@ -55,10 +55,18 @@ func NewDialog(data *res.DialogData) (*Dialog, error) {
 			d.currentText = t
 		}
 	}
+	if len(d.texts) < 1 {
+		return nil, fmt.Errorf("no_texts")
+	}
 	if d.currentText == nil {
-		return nil, fmt.Errorf("no start text")
+		d.currentText = d.texts[0]
 	}
 	return d, nil
+}
+
+// ID returns dialog ID.
+func (d *Dialog) ID() string {
+	return d.id
 }
 
 // Restart moves dialog to starting text.

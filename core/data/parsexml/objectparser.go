@@ -31,6 +31,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/area"
+	"github.com/isangeles/flame/core/module/object/dialog"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/log"
@@ -88,6 +89,18 @@ type ObjectSkillXML struct {
 	ID       string   `xml:"id,attr"`
 	Serial   string   `xml:"serial,attr"`
 	Cooldown int64    `xml:"cooldown,attr"`
+}
+
+// Struct for object dialogs XML node.
+type ObjectDialogsXML struct {
+	XMLName xml.Name          `xml:"dialogs"`
+	Nodes   []ObjectDialogXML `xml:"dialog"`
+}
+
+// Struct for object dialog XML node.
+type ObjectDialogXML struct {
+	XMLName xml.Name `xml:"dialog"`
+	ID      string   `xml:"id,attr"`
 }
 
 // UnmarshalObjectsBaseXML parses specified data to XML
@@ -162,6 +175,19 @@ func xmlObjectSkills(skills ...*skill.Skill) *ObjectSkillsXML {
 		xmlSkills.Nodes = append(xmlSkills.Nodes, xmlSkill)
 	}
 	return xmlSkills
+}
+
+// xmlObjectDialogs parses specified dialogs to XML
+// object dialogs struct.
+func xmlObjectDialogs(dialogs ...*dialog.Dialog) *ObjectDialogsXML {
+	xmlDialogs := new(ObjectDialogsXML)
+	for _, d := range dialogs {
+		xmlDialog := ObjectDialogXML{
+			ID: d.ID(),
+		}
+		xmlDialogs.Nodes = append(xmlDialogs.Nodes, xmlDialog)
+	}
+	return xmlDialogs
 }
 
 // buildObjectData creates object data from specified XML

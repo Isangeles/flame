@@ -231,9 +231,21 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 				char.ID(), err)
 			continue
 		}
-		skill.SetSerial(skillData.Serial)
+		if len(skillData.Serial) > 0 {
+			skill.SetSerial(skillData.Serial)
+		}
 		skill.SetCooldown(skillData.Cooldown)
 		char.AddSkill(skill)
+	}
+	// Dialogs.
+	for _, dialogData := range data.Dialogs {
+		dialog, err := Dialog(dialogData.ID)
+		if err != nil {
+			log.Err.Printf("data:buil_character:%s:fail_to_retrieve_dialog:%v",
+				char.ID(), err)
+			continue
+		}
+		char.AddDialog(dialog)
 	}
 	// Add character skills & items from mod config.
 	for _, sid := range mod.Conf().CharSkills {

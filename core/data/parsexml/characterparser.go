@@ -64,6 +64,7 @@ type CharacterXML struct {
 	Effects     ObjectEffectsXML `xml:"effects"`
 	Skills      ObjectSkillsXML  `xml:"skills"`
 	Memory      MemoryXML        `xml:"memory"`
+	Dialogs     ObjectDialogsXML `xml:"dialogs"`
 }
 
 // Struct for equipment XML node.
@@ -171,6 +172,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Effects = *xmlObjectEffects(char.Effects()...)
 	xmlChar.Skills = *xmlObjectSkills(char.Skills()...)
 	xmlChar.Memory = *xmlMemory(char.Memory())
+	xmlChar.Dialogs = *xmlObjectDialogs(char.Dialogs()...)
 	return xmlChar
 }
 
@@ -326,6 +328,13 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 			Attitude:     int(att),
 		}
 		data.Memory = append(data.Memory, attData)
+	}
+	// Dialogs.
+	for _, xmlDialog := range xmlChar.Dialogs.Nodes {
+		dialogData := res.ObjectDialogData{
+			ID: xmlDialog.ID,
+		}
+		data.Dialogs = append(data.Dialogs, dialogData)
 	}
 	return &data, nil
 }

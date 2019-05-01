@@ -40,6 +40,7 @@ type DialogTextData struct {
 
 // Dialog answer data struct.
 type DialogAnswerData struct {
-	ID string
-	To string
+	ID   string
+	To   string
+	Reqs []ReqData
 }
