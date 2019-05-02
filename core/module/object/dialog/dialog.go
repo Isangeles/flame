@@ -37,6 +37,14 @@ type Dialog struct {
 	currentText *Text
 	texts       []*Text
 	reqs        []req.Requirement
+	owner       Talker
+}
+
+// Interface for objects with dialogs.
+type Talker interface {
+	Name() string
+	SendChat(t string)
+	Dialogs() []*Dialog
 }
 
 const (
@@ -78,10 +86,9 @@ func (d *Dialog) Restart() {
 	}
 }
 
-// Answers returns all answers for current
-// dialog phase.
-func (d *Dialog) Answers() []*Answer {
-	return d.currentText.answers
+// Text returns current dialog text.
+func (d *Dialog) Text() *Text {
+	return d.currentText
 }
 
 // Next moves dialog forward for specified
@@ -106,4 +113,15 @@ func (d *Dialog) Finished() bool {
 // Requirements returns all dialog requirements.
 func (d *Dialog) Requirements() []req.Requirement {
 	return d.reqs
+}
+
+// SetOwner sets dialog owner.
+func (d *Dialog) SetOwner(t Talker) {
+	d.owner = t
+}
+
+// Owner returns dialog owner or nil
+// if dialog don't have owner.
+func (d *Dialog) Owner() Talker {
+	return d.owner
 }

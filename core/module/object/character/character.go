@@ -534,8 +534,10 @@ func (c *Character) Dialogs() (dls []*dialog.Dialog) {
 	return
 }
 
-// AddDialog adds specified dialog to character.
+// AddDialog adds specified dialog to character and
+// sets character as dialog owner.
 func (c *Character) AddDialog(d *dialog.Dialog) {
+	d.SetOwner(c)
 	c.dialogs[d.ID()] = d
 }
 

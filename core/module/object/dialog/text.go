@@ -45,3 +45,13 @@ func NewText(data *res.DialogTextData) *Text {
 	}
 	return t
 }
+
+// ID returns dialog text ID.
+func (t *Text) ID() string {
+	return t.id
+}
+
+// Answers returns all dialog text answers.
+func (t *Text) Answers() []*Answer {
+	return t.answers
+}

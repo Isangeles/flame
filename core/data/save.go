@@ -59,15 +59,13 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 	// Create savegame file.
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
-		return fmt.Errorf("fail_to_create_savegames_dir:%v",
-			err)
+		return fmt.Errorf("fail_to_create_savegames_dir:%v", err)
 	}
 	filePath := filepath.FromSlash(dirPath + "/" + saveName +
 		SAVEGAME_FILE_EXT)
 	f, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("fail_to_write_savegame_file:%v",
-			err)
+		return fmt.Errorf("fail_to_write_savegame_file:%v", err)
 	}
 	defer f.Close()
 	// Write data to file.
@@ -94,6 +92,17 @@ func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGa
 		return nil, fmt.Errorf("fail_to_unmarshal_savegame_data:%v",
 			err)
 	}
+	// Load chapter with ID from save.
+	err = LoadChapter(mod, gameData.Chapter.ID)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_chapter:%v", err)
+	}
+	// Load chapter data(to build quests, characters, erc.).
+	err = LoadChapterData(mod.Chapter())
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_load_chapter_data:%v", err)
+	}
+	mod.Chapter().ClearScenarios() // to remove start scenario
 	save, err := buildSavedGame(mod, gameData)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_build_game_from_saved_data:%v",
@@ -129,12 +138,6 @@ func ImportSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, 
 // buildSavedGame build saved game from specified data.
 func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame, error) {
 	chapterData := &gameData.Chapter
-	// Load chapter with ID from save.
-	err := LoadChapter(mod, chapterData.ID)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_chapter:%v", err)
-	}
-	mod.Chapter().ClearScenarios() // to remove start scenario
 	charsData := make([]res.CharacterData, 0)
 	objectsData := make([]*res.ObjectData, 0)
 	pcs := make([]*character.Character, 0)

@@ -74,13 +74,12 @@ func LoadConfig() error {
 			modName = modNamePath[0]
 		}
 	}
-	lang.SetLangPath(langPath + "/" + LangID())
-
+	lang.SetLangPath(LangPath())
 	log.Dbg.Print("config file loaded")
 	return nil
 }
 
-// saveConfig saves engine configuration in file.
+// SaveConfig saves engine configuration in file.
 func SaveConfig() error {
 	// Create file.
 	f, err := os.Create(CONFIG_FILE_NAME)
@@ -134,6 +133,12 @@ func SetLang(lng string) error {
 	// TODO check if specified language is supported
 	langID = lng
 	return nil
+}
+
+// LangPath returns path to current lang
+// directory.
+func LangPath() string {
+	return filepath.FromSlash(langPath + "/" + langID)
 }
 
 // SetDebug toggles debug mode.

@@ -44,6 +44,11 @@ func NewAnswer(data *res.DialogAnswerData) *Answer {
 	return a
 }
 
+// ID returns answer ID.
+func (a *Answer) ID() string {
+	return a.id
+}
+
 // Reqs returns answer requirements.
 func (a *Answer) Reqs() []req.Requirement {
 	return a.reqs

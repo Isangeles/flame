@@ -57,6 +57,7 @@ const (
 	LOAD_GAME_CMD    = "loadgame"
 	IMPORT_CHARS_CMD = "importchars"
 	LOOT_TARGET_CMD  = "loot"
+	TALK_TARGET_CMD  = "talk"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
 )
@@ -209,6 +210,26 @@ func execute(input string) {
 			pc.Inventory().AddItem(it)
 			tar.Inventory().RemoveItem(it)
 		}
+	case TALK_TARGET_CMD:
+		if activePC == nil {
+			log.Err.Printf("no active PC")
+			break
+		}
+		tar := activePC.Targets()[0]
+		if tar == nil {
+			log.Err.Printf("no target")
+			break
+		}
+		tarChar, ok := tar.(*character.Character)
+		if !ok {
+			log.Err.Printf("invalid target")
+			break
+		}
+		if len(tarChar.Dialogs()) < 1 {
+			log.Err.Printf("no target dialogs")
+		}	
+		dlg := tarChar.Dialogs()[0]
+		talkDialog(dlg)
 	case REPEAT_INPUT_CMD:
 		execute(lastCommand)
 		return

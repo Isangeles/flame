@@ -129,10 +129,9 @@ func Texts(langFile string, ids ...string) map[string]string {
 	return texts
 }
 
-// TextDir search all lang files in directory
-// with specified path for text with specified ID.
-// If file/ID was not found returns string with
-// error message.
+// TextDir search all lang files in directory with specified
+// path for text with specified ID.
+// If file/ID was not found returns string with error message.
 // Results are cached.
 func TextDir(path, id string) string {
 	files, err := ioutil.ReadDir(path)

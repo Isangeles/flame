@@ -1,2 +1,5 @@
 newmod_name:Module ID
 newmod_invalid_id_err:Invalid module ID
+talk_dialog:Dialog
+talk_answers_select:Select answer
+talk_no_answer_id_error:Enter valid answer ID

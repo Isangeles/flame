@@ -40,10 +40,13 @@ const (
 	DIALOGS_FILE_EXT = ".dialogs"
 )
 
+// Dialog returns new dialog with specified ID or
+// error if data was not found or dialog creation
+// failed.
 func Dialog(id string) (*dialog.Dialog, error) {
 	data := res.Dialog(id)
 	if data == nil {
-		return nil, fmt.Errorf("dialog_not_found")
+		return nil, fmt.Errorf("dialog_not_found:%s", id)
 	}
 	d, err := dialog.NewDialog(*data)
 	if err != nil {

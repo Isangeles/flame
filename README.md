@@ -102,6 +102,24 @@ Import exported characters:
 Description: imports all characters from XML files in
 data/modules/[module]/characters directory.
 
+Set target:
+```
+  $charman -o set -t [ID]_[serial] -a target [ID]_[serial]
+```
+Description: sets object with specified serial ID(-a) as target of character with specified serial ID(-t). 
+
+Loot target:
+```
+  $loot
+```
+Description: transfers all items from current dead target to active PC.
+
+Talk with with target:
+```
+  $talk
+```
+Description: starts dialog with current PC target.
+
 Save game:
 ```
   $engineman -o save -t game -a [save file name]
