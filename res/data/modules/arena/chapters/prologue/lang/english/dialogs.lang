@@ -1,2 +1,6 @@
 testDialog1_1:Hi
+dTutorial1_1:Hi, I'm tutorial character. Can you bring me some of this aloe, that grows nearby?
+dTutorial1_1_1:Sure.
+dTutorial1_2m:Thank you, I will wait here
+dTutorial1_2f:Thank you, good lady, I will wait here
 bye1:Bye

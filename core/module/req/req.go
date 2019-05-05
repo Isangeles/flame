@@ -44,6 +44,10 @@ func NewRequirements(data ...res.ReqData) []Requirement {
 		case res.LevelReqData:
 			lreq := NewLevelReq(d)
 			reqs = append(reqs, lreq)
+		case res.GenderReqData:
+			
+			greq := NewGenderReq(d)
+			reqs = append(reqs, greq)
 		}
 	}
 	return reqs

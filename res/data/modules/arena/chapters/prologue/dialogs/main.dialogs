@@ -1,8 +1,26 @@
 <?xml version="1.0"?>
 <base>
   <dialog id="testDialog1">
-    <text id="testDialog1_1" start="true">
-      <answer id="bye1" to="end" />
+    <text id="testDialog1_1" start="true" ordinal="0">
+      <answer id="bye1" to="end"/>
+    </text>
+  </dialog>
+  <dialog id="dTutorial1">
+    <text id="dTutorial1_1" start="true" ordinal="0">
+      <answer id="dTutorial1_1_1" to="1"/>
+      <answer id="bye1" to="end"/>
+    </text>
+    <text id="dTutorial1_2m" ordinal="1">
+      <answer id="bye1" to="end"/>
+      <reqs>
+	<genderReq type="male"/>
+      </reqs>
+    </text>
+    <text id="dTutorial1_2f" ordinal="1">
+      <answer id="bye1" to="end"/>
+      <reqs>
+	<genderReq type="female"/>
+      </reqs>
     </text>
   </dialog>
 </base>

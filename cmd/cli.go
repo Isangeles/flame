@@ -58,6 +58,7 @@ const (
 	IMPORT_CHARS_CMD = "importchars"
 	LOOT_TARGET_CMD  = "loot"
 	TALK_TARGET_CMD  = "talk"
+	FIND_TARGET_CMD  = "target"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
 )
@@ -230,6 +231,8 @@ func execute(input string) {
 		}	
 		dlg := tarChar.Dialogs()[0]
 		talkDialog(dlg)
+	case FIND_TARGET_CMD:
+		targetDialog()
 	case REPEAT_INPUT_CMD:
 		execute(lastCommand)
 		return

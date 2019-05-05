@@ -25,21 +25,29 @@ package parsexml
 
 import (
 	"encoding/xml"
-	
+
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for requirements XML node.
 type ReqsXML struct {
-	XMLName   xml.Name      `xml:"reqs"`
-	LevelReqs []LevelReqXML `xml:"levelReq"`
+	XMLName    xml.Name       `xml:"reqs"`
+	LevelReqs  []LevelReqXML  `xml:"levelReq"`
+	GenderReqs []GenderReqXML `xml:"genderReq"`
 }
 
 // Struct for level requirement XML node.
 type LevelReqXML struct {
 	XMLName  xml.Name `xml:"levelReq"`
 	MinLevel int      `xml:"min,value"`
+}
+
+// Struct for gender requirement XML node.
+type GenderReqXML struct {
+	XMLName xml.Name `xml:"genderReq"`
+	Type    string   `xml:"type,attr"`
 }
 
 // xmlLevelReq parses specified level requirement to
@@ -52,13 +60,24 @@ func xmlLevelReq(req *req.LevelReq) *LevelReqXML {
 
 // buildReqs creates requirements from specified
 // XML data.
-func buildReqs(xmlReqs *ReqsXML) []res.ReqData { 
+func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
 	reqs := make([]res.ReqData, 0)
 	// Level reqs.
 	for _, xmlReq := range xmlReqs.LevelReqs {
 		req := res.LevelReqData{
 			Min: xmlReq.MinLevel,
-		        Max: -1, // TODO: support max value
+			Max: -1, // TODO: support max value
+		}
+		reqs = append(reqs, req)
+	}
+	// Gender reqs.
+	for _, xmlReq := range xmlReqs.GenderReqs {
+		gen, err := UnmarshalGender(xmlReq.Type)
+		if err != nil {
+			log.Err.Printf("xml:parse_req:fail_to_parse_gender:%v", err)
+		}
+		req := res.GenderReqData{
+			Type: int(gen),
 		}
 		reqs = append(reqs, req)
 	}

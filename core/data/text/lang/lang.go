@@ -94,6 +94,11 @@ func AllText(path, filename, id string) []string {
 		texts[0] = fmt.Sprintf("read_lang_file_error:%v", err)
 		return texts
 	}
+	if len(values) < 1 {
+		texts := make([]string, 1)
+		texts[0] = fmt.Sprintf("text_not_found:%s", id)
+		return texts
+	}
 	texts := values[id]
 	allcache[filename + id] = texts // cache result
 	return texts

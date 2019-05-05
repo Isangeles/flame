@@ -32,7 +32,9 @@ import (
 func (char *Character) MeetReq(r req.Requirement) bool {
 	switch r := r.(type) {
 	case *req.LevelReq:
-		return char.Level() >= r.MinLevel() 
+		return char.Level() >= r.MinLevel()
+	case *req.GenderReq:
+		return int(char.Gender()) == r.Type()
 	default:
 		return true
 	}

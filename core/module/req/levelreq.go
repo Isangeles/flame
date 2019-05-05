@@ -29,21 +29,21 @@ import (
 
 // Struct for level requirement.
 type LevelReq struct {
-	minLevel int
-	meet     bool
+	min  int
+	meet bool
 }
 
 // NewLevelReq creates new level requirement
 // with specified level value.
 func NewLevelReq(data res.LevelReqData) *LevelReq {
 	req := new(LevelReq)
-	req.minLevel = data.Min
+	req.min = data.Min
 	return req
 }
 
 // MinLevel returns minimal required level.
 func (lr *LevelReq) MinLevel() int {
-	return lr.minLevel
+	return lr.min
 }
 
 // Meet checks whether requirements

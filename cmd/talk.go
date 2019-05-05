@@ -30,15 +30,17 @@ import (
 	"strconv"
 
 	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/dialog"
 	flameconf "github.com/isangeles/flame/config"
 )
 
 // talkDialog starts talk CLI dialog with specified
 // game dialog.
-func talkDialog(d *dialog.Dialog) error {
+func talkDialog(d *dialog.Dialog) {
 	if game == nil {
-		return fmt.Errorf("no game")
+		fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "no_game_err"))
+		return
 	}
 	mod := game.Module()
 	langPath := mod.Chapter().Conf().LangPath()
@@ -46,7 +48,11 @@ func talkDialog(d *dialog.Dialog) error {
 	d.Restart()
 	for !d.Finished() {
 		fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "talk_dialog"))
-		phase := d.Text()
+		phase := dialogPhase(d.Texts(), activePC)
+		if phase == nil {
+			fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "talk_no_phase_err"))
+			return
+		}
 		dlgText := lang.AllText(langPath, "dialogs", phase.ID())[0]
 		fmt.Printf("[%s]:%s\n", d.Owner().Name(), dlgText)
 		var (
@@ -54,11 +60,12 @@ func talkDialog(d *dialog.Dialog) error {
 			ansText string
 		)
 		for ans == nil {
-			fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "talk_answers_select"))
+			fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "talk_answers"))
 			for i, a := range phase.Answers() {
 				ansText = lang.AllText(langPath, "dialogs", a.ID())[0]
 				fmt.Printf("[%d]%s\n", i, ansText)
 			}
+			fmt.Printf("%s:", lang.TextDir(flameconf.LangPath(), "talk_answers_select"))
 			scan.Scan()
 			input := scan.Text()
 			id, err := strconv.Atoi(input)
@@ -68,13 +75,22 @@ func talkDialog(d *dialog.Dialog) error {
 				continue
 			}
 			if id < 0 || id > len(phase.Answers())-1 {
-				fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "talk_no_answer_id_error"))
+				fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "talk_no_answer_id_err"))
 				continue
 			}
 			ans = phase.Answers()[id]
 		}
 		fmt.Printf("[%s]:%s\n", activePC.Name(), ansText)
 		d.Next(ans)
+	}
+}
+
+// dialogPhase selects dialog phase with requirements met by specified character.
+func dialogPhase(texts []*dialog.Text, char *character.Character) *dialog.Text {
+	for _, t := range texts {
+		if char.MeetReqs(t.Requirements()) {
+			return t
+		}
 	}
 	return nil
 }

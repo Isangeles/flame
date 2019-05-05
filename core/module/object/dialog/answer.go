@@ -49,7 +49,7 @@ func (a *Answer) ID() string {
 	return a.id
 }
 
-// Reqs returns answer requirements.
-func (a *Answer) Reqs() []req.Requirement {
+// Requirements returns answer requirements.
+func (a *Answer) Requirements() []req.Requirement {
 	return a.reqs
 }

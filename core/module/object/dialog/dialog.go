@@ -26,7 +26,7 @@ package dialog
 import (
 	"fmt"
 	
-	"github.com/isangeles/flame/core/data/res"	
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -34,7 +34,7 @@ import (
 type Dialog struct {
 	id          string
 	finished    bool
-	currentText *Text
+	currentText []*Text
 	texts       []*Text
 	reqs        []req.Requirement
 	owner       Talker
@@ -60,14 +60,14 @@ func NewDialog(data res.DialogData) (*Dialog, error) {
 		t := NewText(td)
 		d.texts = append(d.texts, t)
 		if t.start {
-			d.currentText = t
+			d.currentText = append(d.currentText, t)
 		}
 	}
 	if len(d.texts) < 1 {
-		return nil, fmt.Errorf("no_texts")
+		return nil, fmt.Errorf("no texts")
 	}
-	if d.currentText == nil {
-		d.currentText = d.texts[0]
+	if len(d.currentText) < 1 {
+		d.currentText = append(d.currentText, d.texts[0])
 	}
 	return d, nil
 }
@@ -79,15 +79,26 @@ func (d *Dialog) ID() string {
 
 // Restart moves dialog to starting text.
 func (d *Dialog) Restart() {
+	d.currentText = make([]*Text, 0)
 	for _, t := range d.texts {
 		if t.start {
-			d.currentText = t
+			d.currentText = append(d.currentText, t)
 		}
 	}
+	if len(d.currentText) < 1 {
+		d.currentText = append(d.currentText, d.texts[0])
+	}
+	d.finished = false
 }
 
-// Text returns current dialog text.
+// Text returns first active dialog text.
 func (d *Dialog) Text() *Text {
+	return d.currentText[0]
+}
+
+// Texts returns all dialog texts for
+// current dialog phase.
+func (d *Dialog) Texts() []*Text {
 	return d.currentText
 }
 
@@ -97,10 +108,12 @@ func (d *Dialog) Text() *Text {
 func (d *Dialog) Next(a *Answer) {
 	if a.to == END_DIALOG_ID {
 		d.finished = true
+		return
 	}
+	d.currentText = make([]*Text, 0)
 	for _, t := range d.texts {
-		if t.id == a.to {
-			d.currentText = t
+		if t.ordinalID == a.to {
+			d.currentText = append(d.currentText, t)
 		}
 	}
 }

@@ -50,8 +50,10 @@ type DialogXML struct {
 type TextXML struct {
 	XMLName xml.Name    `xml:"text"`
 	ID      string      `xml:"id,attr"`
+	Ordinal string      `xml:"ordinal,attr"`
 	Start   bool        `xml:"start,attr"`
 	Answers []AnswerXML `xml:"answer"`
+	Reqs    ReqsXML     `xml:"reqs"`
 }
 
 // Struct for dialog answer XML node.
@@ -59,6 +61,7 @@ type AnswerXML struct {
 	XMLName xml.Name `xml:"answer"`
 	ID      string   `xml:"id,attr"`
 	To      string   `xml:"to,attr"`
+	Reqs    ReqsXML  `xml:"reqs"`
 }
 
 // UnmarshalDialogsBase retrieves dialogs data from specified XML data.
@@ -88,13 +91,16 @@ func buildDialogData(xmlDialog DialogXML) (*res.DialogData, error) {
 	for _, xmlText := range xmlDialog.Texts {
 		dtd := new(res.DialogTextData)
 		dtd.ID = xmlText.ID
+		dtd.OrdinalID = xmlText.Ordinal
 		dtd.Start = xmlText.Start
 		for _, xmlAnswer := range xmlText.Answers {
 			dad := new(res.DialogAnswerData)
 			dad.ID = xmlAnswer.ID
 			dad.To = xmlAnswer.To
+			dad.Reqs = buildReqs(&xmlAnswer.Reqs)
 			dtd.Answers = append(dtd.Answers, dad)
 		}
+		dtd.Reqs = buildReqs(&xmlText.Reqs)
 		dd.Texts = append(dd.Texts, dtd)
 	}
 	return dd, nil

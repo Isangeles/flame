@@ -30,3 +30,8 @@ type ReqData interface{}
 type LevelReqData struct {
 	Min, Max int
 }
+
+// Struct for gender requirement data.
+type GenderReqData struct {
+	Type int
+}

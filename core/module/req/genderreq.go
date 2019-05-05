@@ -1,5 +1,5 @@
 /*
- * text.go
+ * genderreq.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,47 +21,36 @@
  *
  */
 
-package dialog
+package req
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/req"
 )
 
-// Structoo for dialog text.
-type Text struct {
-	id        string
-	ordinalID string
-	start     bool
-	reqs      []req.Requirement
-	answers   []*Answer
+// Struct for gender requirement.
+type GenderReq struct {
+	genType int
+	meet    bool
 }
 
-// NewText creates new dialog text.
-func NewText(data *res.DialogTextData) *Text {
-	t := new(Text)
-	t.id = data.ID
-	t.ordinalID = data.OrdinalID
-	t.start = data.Start
-	t.reqs = req.NewRequirements(data.Reqs...)
-	for _, ad := range data.Answers {
-		a := NewAnswer(ad)
-		t.answers = append(t.answers, a)
-	}
-	return t
+// NewGenderReq creates new gender requirement.
+func NewGenderReq(data res.GenderReqData) *GenderReq {
+	gr := new(GenderReq)
+	gr.genType = data.Type
+	return gr
 }
 
-// ID returns dialog text ID.
-func (t *Text) ID() string {
-	return t.id
+// Type returns ID of required gender type.
+func (gr *GenderReq) Type() int {
+	return gr.genType
 }
 
-// Answers returns all dialog text answers.
-func (t *Text) Answers() []*Answer {
-	return t.answers
+// Meet checks wheter requirement is set as meet.
+func (gr *GenderReq) Meet() bool {
+	return gr.meet 
 }
 
-// Requirements requrements for dialog text.
-func (t *Text) Requirements() []req.Requirement {
-	return t.reqs
+// SetMeet sets requirement as meet/not meet.
+func (gr *GenderReq) SetMeet(meet bool) {
+	gr.meet = meet
 }

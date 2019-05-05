@@ -33,9 +33,11 @@ type DialogData struct {
 
 // Dialog text data struct.
 type DialogTextData struct {
-	ID      string
-	Start   bool
-	Answers []*DialogAnswerData
+	ID        string
+	OrdinalID string
+	Start     bool
+	Answers   []*DialogAnswerData
+	Reqs  []ReqData
 }
 
 // Dialog answer data struct.

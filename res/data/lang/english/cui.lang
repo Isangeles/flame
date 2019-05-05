@@ -1,5 +1,12 @@
 newmod_name:Module ID
 newmod_invalid_id_err:Invalid module ID
 talk_dialog:Dialog
+talk_answers:Answers
 talk_answers_select:Select answer
-talk_no_answer_id_error:Enter valid answer ID
+target_near_targets:Near targets
+target_select_target:Select target
+talk_no_answer_id_err:Enter valid answer ID
+talk_no_phase_err:No suitable dialog phase found
+target_no_targets_err:No targets nearby
+invalid_input_err:Invalid input value
+no_game_err:No game loaded
