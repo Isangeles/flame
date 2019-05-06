@@ -48,12 +48,13 @@ type DialogXML struct {
 
 // Struct for dialog text XML node.
 type TextXML struct {
-	XMLName xml.Name    `xml:"text"`
-	ID      string      `xml:"id,attr"`
-	Ordinal string      `xml:"ordinal,attr"`
-	Start   bool        `xml:"start,attr"`
-	Answers []AnswerXML `xml:"answer"`
-	Reqs    ReqsXML     `xml:"reqs"`
+	XMLName   xml.Name     `xml:"text"`
+	ID        string       `xml:"id,attr"`
+	Ordinal   string       `xml:"ordinal,attr"`
+	Start     bool         `xml:"start,attr"`
+	Answers   []AnswerXML  `xml:"answer"`
+	Reqs      ReqsXML      `xml:"reqs"`
+	TalkerMods ModifiersXML `xml:"talker>modifiers"`
 }
 
 // Struct for dialog answer XML node.
@@ -80,6 +81,7 @@ func UnmarshalDialogsBase(data io.Reader) ([]*res.DialogData, error) {
 			continue
 		}
 		dialogs = append(dialogs, dialog)
+		fmt.Printf("xml_dlg:%s:texts:%v\n", xmlDialog.ID, xmlDialog.Texts)
 	}
 	return dialogs, nil
 }

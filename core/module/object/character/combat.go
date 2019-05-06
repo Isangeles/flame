@@ -79,11 +79,13 @@ func (c *Character) DamageEffects() []*effect.Effect {
 func (c *Character) HitEffects() []*effect.Effect {
 	dmgMin, dmgMax := c.Damage()
 	healthMod := res.HealthModData{-dmgMin, -dmgMax}
+	mods := make([]res.ModifierData, 1)
+	mods[0] = healthMod
 	hitData := res.EffectData{
 		ID: c.ID() + c.Serial() + "_hit",
 		Name: "hit",
 		Duration: 1000,
-		HealthMods: []res.HealthModData{healthMod},
+		Modifiers: mods,
 	}
 	hitEffect := c.buildEffects(hitData)
 	effects := c.DamageEffects()

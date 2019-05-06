@@ -91,11 +91,6 @@ func (d *Dialog) Restart() {
 	d.finished = false
 }
 
-// Text returns first active dialog text.
-func (d *Dialog) Text() *Text {
-	return d.currentText[0]
-}
-
 // Texts returns all dialog texts for
 // current dialog phase.
 func (d *Dialog) Texts() []*Text {

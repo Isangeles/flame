@@ -23,8 +23,27 @@
 
 package effect
 
+import (
+	"github.com/isangeles/flame/core/data/res"
+)
+
 // Interface for object modifiers.
 type Modifier interface {
 	Affect(source Target, targets ...Target)
 	Undo(source Target, targets ...Target)
+}
+
+// NewModifiers creatas modifiers for specified data.
+func NewModifiers(data ...res.ModifierData) (mods []Modifier) {
+	for _, md := range data {
+		switch md := md.(type) {
+		case res.HealthModData:
+			hpMod := HealthMod{md.Min, md.Max}
+			mods = append(mods, hpMod)
+		case res.HitModData:
+			hitMod := HitMod{}
+			mods = append(mods, hitMod)
+		}
+	}
+	return
 }

@@ -21,6 +21,11 @@
       <reqs>
 	<genderReq type="female"/>
       </reqs>
+      <talker>
+	<modifiers>
+	  <flagMod>aloeSearch1</flagMod>
+	</modifiers>
+      </talker>
     </text>
   </dialog>
 </base>

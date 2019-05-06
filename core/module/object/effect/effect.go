@@ -45,15 +45,7 @@ func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
 	e.name = data.Name
-	// Modifiers.
-	for _, m := range data.HealthMods {
-		hpMod := HealthMod{m.Min, m.Max}
-		e.modifiers = append(e.modifiers, hpMod)
-	}
-	for _ = range data.HitMods {
-		hitMod := HitMod{}
-		e.modifiers = append(e.modifiers, hitMod)
-	}
+	e.modifiers = NewModifiers(data.Modifiers...)
 	e.duration = int64(data.Duration)
 	e.SetTime(data.Duration)
 	return e

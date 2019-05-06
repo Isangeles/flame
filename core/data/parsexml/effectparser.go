@@ -28,9 +28,8 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	
+
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/effect"
 )
 
 // Struct for effects XML base.
@@ -41,10 +40,10 @@ type EffectsBaseXML struct {
 
 // Struct for effect XML node.
 type EffectXML struct {
-	XMLName       xml.Name         `xml:"effect"`
-	ID            string           `xml:"id,attr"`
-	Duration      int64            `xml:"duration,attr"`
-	ModifiersNode ModifiersNodeXML `xml:"modifiers"`
+	XMLName       xml.Name     `xml:"effect"`
+	ID            string       `xml:"id,attr"`
+	Duration      int64        `xml:"duration,attr"`
+	ModifiersNode ModifiersXML `xml:"modifiers"`
 }
 
 // Struct for node with subeffects.
@@ -63,7 +62,7 @@ func UnmarshalEffectsBase(data io.Reader) ([]*res.EffectData, error) {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
 			err)
 	}
-	effects := make([]*res.EffectData, 0) 
+	effects := make([]*res.EffectData, 0)
 	for _, xmlEffect := range xmlBase.Nodes {
 		effect := buildEffectData(xmlEffect)
 		effects = append(effects, effect)
@@ -75,18 +74,9 @@ func UnmarshalEffectsBase(data io.Reader) ([]*res.EffectData, error) {
 func buildEffectData(xmlEffect EffectXML) *res.EffectData {
 	mods := buildModifiers(&xmlEffect.ModifiersNode)
 	data := res.EffectData{
-		ID: xmlEffect.ID,
-		Duration: xmlEffect.Duration * 1000,
-	}
-	for _, m := range mods {
-		switch mod := m.(type) {
-		case effect.HealthMod:
-			mData := res.HealthModData{mod.Min, mod.Max}
-			data.HealthMods = append(data.HealthMods, mData)
-		case effect.HitMod:
-			mData := res.HitModData{}
-			data.HitMods = append(data.HitMods, mData)
-		}
+		ID:        xmlEffect.ID,
+		Duration:  xmlEffect.Duration * 1000,
+		Modifiers: mods,
 	}
 	return &data
 }

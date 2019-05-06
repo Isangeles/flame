@@ -37,8 +37,7 @@ type Requirement interface {
 
 // NewRequirements creates new requirements from
 // specified data.
-func NewRequirements(data ...res.ReqData) []Requirement {
-	reqs := make([]Requirement, 0)
+func NewRequirements(data ...res.ReqData) (reqs []Requirement) {
 	for _, d := range data {
 		switch d := d.(type) {
 		case res.LevelReqData:
@@ -50,5 +49,5 @@ func NewRequirements(data ...res.ReqData) []Requirement {
 			reqs = append(reqs, greq)
 		}
 	}
-	return reqs
+	return
 }
