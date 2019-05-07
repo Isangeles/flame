@@ -10,3 +10,5 @@ talk_no_phase_err:No suitable dialog phase found
 target_no_targets_err:No targets nearby
 invalid_input_err:Invalid input value
 no_game_err:No game loaded
+no_pc_err:No active player
+no_tar_err:No target

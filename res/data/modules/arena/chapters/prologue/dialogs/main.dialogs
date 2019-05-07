@@ -23,7 +23,7 @@
       </reqs>
       <talker>
 	<modifiers>
-	  <flagMod>aloeSearch1</flagMod>
+	  <healthMod min="-50" max="-50"></healthMod>
 	</modifiers>
       </talker>
     </text>

@@ -35,3 +35,10 @@
   0.0x0.0 12.0x131.0 130.0x201.0
 ```
   Shows positions of all game characters in the area with ID 'area1_test'.
+
+## Commands
+Set target:
+```
+  $charman -o set -t [ID]_[serial] -a target [ID]_[serial]
+```
+Description: sets object with specified serial ID(-a) as target of character with specified serial ID(-t). 

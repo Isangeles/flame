@@ -22,8 +22,7 @@
  */
 
 // Command line interface for flame engine.
-// Uses flame command interpreter(CI) to handle user input and communicate
-// with Flame Engine.
+// Uses Burn CI to handle user input and communicate with Flame Engine.
 // All commands to be handled by CI must starts with dollar sign($),
 // otherwise input is directly send to out(like 'echo').
 // Type '$close' to close CLI.
@@ -59,6 +58,7 @@ const (
 	LOOT_TARGET_CMD  = "loot"
 	TALK_TARGET_CMD  = "talk"
 	FIND_TARGET_CMD  = "target"
+	TARGET_INFO_CMD  = "tarinfo"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
 )
@@ -233,6 +233,8 @@ func execute(input string) {
 		talkDialog(dlg)
 	case FIND_TARGET_CMD:
 		targetDialog()
+	case TARGET_INFO_CMD:
+		targetInfoDialog()
 	case REPEAT_INPUT_CMD:
 		execute(lastCommand)
 		return

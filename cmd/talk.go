@@ -70,12 +70,13 @@ func talkDialog(d *dialog.Dialog) {
 			input := scan.Text()
 			id, err := strconv.Atoi(input)
 			if err != nil {
-				fmt.Printf("%s:%s\n", lang.TextDir(flameconf.LangPath(), "cli_nan_error"),
-					input)
+				fmt.Printf("%s:%s\n", lang.TextDir(flameconf.LangPath(),
+					"cli_nan_error"), input)
 				continue
 			}
 			if id < 0 || id > len(phase.Answers())-1 {
-				fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "talk_no_answer_id_err"))
+				fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(),
+					"talk_no_answer_id_err"))
 				continue
 			}
 			ans = phase.Answers()[id]

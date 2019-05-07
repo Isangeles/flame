@@ -104,9 +104,15 @@ data/modules/[module]/characters directory.
 
 Set target:
 ```
-  $charman -o set -t [ID]_[serial] -a target [ID]_[serial]
+  $target
 ```
-Description: sets object with specified serial ID(-a) as target of character with specified serial ID(-t). 
+Description: searches current area for nearby targets to set for active PC.
+
+Target information:
+```
+  $tarinfo
+```
+Description: prints informations about active PC target.
 
 Loot target:
 ```

@@ -38,7 +38,7 @@ import (
 	"github.com/isangeles/flame/core/module/object/character"
 )
 
-// startNewCharacterDialog starts new CLI dialog to create new playable
+// startNewCharacterDialog starts CLI dialog to create new playable
 // game character.
 func newCharacterDialog(mod *module.Module) (*character.Character, error) {
 	var (

@@ -25,16 +25,19 @@ package dialog
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/object/effect"	
 	"github.com/isangeles/flame/core/module/req"
 )
 
 // Structoo for dialog text.
 type Text struct {
-	id        string
-	ordinalID string
-	start     bool
-	reqs      []req.Requirement
-	answers   []*Answer
+	id         string
+	ordinalID  string
+	start      bool
+	reqs       []req.Requirement
+	talkerMods []effect.Modifier
+	ownerMods  []effect.Modifier
+	answers    []*Answer
 }
 
 // NewText creates new dialog text.
@@ -44,6 +47,8 @@ func NewText(data *res.DialogTextData) *Text {
 	t.ordinalID = data.OrdinalID
 	t.start = data.Start
 	t.reqs = req.NewRequirements(data.Reqs...)
+	t.talkerMods = effect.NewModifiers(data.TalkerMods...)
+	t.ownerMods = effect.NewModifiers(data.OwnerMods...)
 	for _, ad := range data.Answers {
 		a := NewAnswer(ad)
 		t.answers = append(t.answers, a)
@@ -64,4 +69,14 @@ func (t *Text) Answers() []*Answer {
 // Requirements requrements for dialog text.
 func (t *Text) Requirements() []req.Requirement {
 	return t.reqs
+}
+
+// TalkerModifiers retruns modifiers for talker.
+func (t *Text) TalkerModifiers() []effect.Modifier {
+	return t.talkerMods
+}
+
+// OnwerModifiers returns modifiers for dialog owner.
+func (t *Text) OwnerModifiers() []effect.Modifier {
+	return t.ownerMods
 }
