@@ -43,7 +43,9 @@ type DialogTextData struct {
 
 // Dialog answer data struct.
 type DialogAnswerData struct {
-	ID   string
-	To   string
-	Reqs []ReqData
+	ID         string
+	To         string
+	Reqs       []ReqData
+	TalkerMods []ModifierData
+	OwnerMods  []ModifierData
 }

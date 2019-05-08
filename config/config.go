@@ -49,22 +49,18 @@ var (
 	langPath      = "data/lang"
 )
 
-// loadConfig loads engine configuration file.
+// LoadConfig loads engine configuration file.
 func LoadConfig() error {
-	confModVal, err := text.ReadValue(CONFIG_FILE_NAME, "module")
-	if err != nil {
-		return err
-	}
-	confValues, err := text.ReadValue(CONFIG_FILE_NAME, "lang", "debug")
+	// Retrieve values from conf file.
+	values, err := text.ReadValue(CONFIG_FILE_NAME, "module", "lang", "debug")
 	if err != nil {
 		SaveConfig() // replace 'corrupted' config with default config
-		return fmt.Errorf("fail_to_load_some_conf_values:%v", err)
+		return fmt.Errorf("fail_to_load_conf_values:%v", err)
 	}
-
-	langID = confValues["lang"]
-	SetDebug(confValues["debug"] == "true")
-	// Auto load module.
-	modNamePath := strings.Split(confModVal["module"], ";")
+	// Set values.
+	langID = values["lang"]
+	SetDebug(values["debug"] == "true")
+	modNamePath := strings.Split(values["module"], ";")
 	if modNamePath[0] != "" {
 		if len(modNamePath) < 2 {
 			modName = modNamePath[0]
@@ -84,7 +80,7 @@ func SaveConfig() error {
 	// Create file.
 	f, err := os.Create(CONFIG_FILE_NAME)
 	if err != nil {
-		return err
+		return fmt.Errorf("fail_to_create_conf_file:%v", err)
 	}
 	defer f.Close()
 	// Write values.
@@ -96,7 +92,6 @@ func SaveConfig() error {
 	// Save.
 	w.Flush()
 	log.Dbg.Print("config file saved")
-	//debug.PrintStack()
 	return nil
 }
 
@@ -130,7 +125,7 @@ func ModuleName() string {
 
 // SetLang sets language with specified ID as current language.
 func SetLang(lng string) error {
-	// TODO check if specified language is supported
+	// TODO: check if specified language is supported.
 	langID = lng
 	return nil
 }

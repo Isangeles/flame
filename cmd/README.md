@@ -1,5 +1,5 @@
 ## Introduction
-  Flame CLI is textual interface for [Flame engine](https://github.com/isangeles/flame).
+  Burn Shell is command line interface for [Flame engine](https://github.com/isangeles/flame).
 
   CLI uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) to handle user input and communicate with engine.
   

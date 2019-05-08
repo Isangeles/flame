@@ -25,7 +25,7 @@
 ```
   $ go get -u github.com/isangeles/flame
 ```
-  Build Flame CLI:
+  Build CLI:
 ```
   $ go build github.com/isangeles/flame/cmd
 ```
@@ -53,8 +53,8 @@ Description: specifies module to load at start, module ID is ID specified in 'mo
 ```
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
 
-## Flame CLI
-Flame comes with a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
+## Burn Shell
+Flame comes with [Burn Shell](https://github.com/Isangeles/flame/tree/master/cmd), a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
 
 ### Commands:
 Create module:

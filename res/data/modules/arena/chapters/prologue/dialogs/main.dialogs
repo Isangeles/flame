@@ -7,7 +7,13 @@
   </dialog>
   <dialog id="dTutorial1">
     <text id="dTutorial1_1" start="true" ordinal="0">
-      <answer id="dTutorial1_1_1" to="1"/>
+      <answer id="dTutorial1_1_1" to="1">
+      <owner>
+	<modifiers>
+	  <healthMod min="-50" max="-50"></healthMod>
+	</modifiers>
+      </owner>
+      </answer>
       <answer id="bye1" to="end"/>
     </text>
     <text id="dTutorial1_2m" ordinal="1">
