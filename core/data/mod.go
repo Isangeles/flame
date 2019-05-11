@@ -71,8 +71,7 @@ func LoadChapter(mod *module.Module, id string) error {
 	startChap := module.NewChapter(mod, chapConf)
 	err = mod.SetChapter(startChap) // move to start chapter
 	if err != nil {
-		return fmt.Errorf("fail_to_set_mod_chapter:%v",
-			err)
+		return fmt.Errorf("fail_to_set_mod_chapter:%v", err)
 	}
 	return nil
 }

@@ -247,22 +247,5 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 		}
 		char.AddDialog(dialog)
 	}
-	// Add character skills & items from mod config.
-	for _, sid := range mod.Conf().CharSkills {
-		s, err := Skill(mod, sid)
-		if err != nil {
-			log.Err.Printf("fail_to_retireve_conf_char_skill:%v", err)
-			continue
-		}
-		char.AddSkill(s)
-	}
-	for _, iid := range mod.Conf().CharItems {
-		i, err := Item(mod, iid)
-		if err != nil {
-			log.Err.Printf("fail_to_retireve_conf_char_item:%v", err)
-			continue
-		}
-		char.Inventory().AddItem(i)
-	}
 	return char
 }
