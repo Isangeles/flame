@@ -51,6 +51,7 @@ type CharacterBasicData struct {
 	Dex       int
 	Int       int
 	Wis       int
+	Flags     []FlagData
 }
 
 // Struct for saved character data.

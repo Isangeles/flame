@@ -26,19 +26,28 @@ package effect
 import (
 	"fmt"
 	
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/rng"
 )
 
 // Struct for health modifier.
 type HealthMod struct {
-	Min, Max int
+	min, max int
+}
+
+// NewHealthMod creates new health modifier.
+func NewHealthMod(data res.HealthModData) *HealthMod {
+	hm := new(HealthMod)
+	hm.min = data.Min
+	hm.max = data.Max
+	return hm
 }
 
 // Affect modifies targets health points.
-func (hm HealthMod) Affect(source Target, targets ...Target) {
+func (hm *HealthMod) Affect(source Target, targets ...Target) {
 	for _, t := range targets {
-		val := rng.RollInt(hm.Min, hm.Max)
+		val := rng.RollInt(hm.min, hm.max)
 		t.SetHealth(t.Health() + val)
 		cmbMsg := fmt.Sprintf("%s:%s:%d", t.Name(),
 			lang.Text("ui", "ob_health"), val)
@@ -47,5 +56,5 @@ func (hm HealthMod) Affect(source Target, targets ...Target) {
 }
 
 // Undo undos health modification on specified targets.
-func (hm HealthMod) Undo(source Target, targets ...Target) {
+func (hm *HealthMod) Undo(source Target, targets ...Target) {
 }

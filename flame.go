@@ -90,14 +90,12 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	// Load chapter scenario.
 	err = data.LoadScenario(Mod(), chapter.Conf().StartScenID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_start_scenario:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
 	}
 	// All players to main area of start scenario.
 	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_retrieve_start_scenario:%v",
-			err)
+		return nil, fmt.Errorf("fail_to_retrieve_start_scenario:%v", err)
 	}
 	startArea := startScen.Mainarea()
 	for _, pc := range pcs {

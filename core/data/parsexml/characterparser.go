@@ -30,6 +30,7 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/log"
 )
@@ -65,6 +66,7 @@ type CharacterXML struct {
 	Skills      ObjectSkillsXML  `xml:"skills"`
 	Memory      MemoryXML        `xml:"memory"`
 	Dialogs     ObjectDialogsXML `xml:"dialogs"`
+	Flags       []FlagXML        `xml:"flags>flag"`
 }
 
 // Struct for equipment XML node.
@@ -87,12 +89,18 @@ type MemoryXML struct {
 	Nodes   []MemoryAttitudeXML `xml:"attitude"`
 }
 
-// Struct for attitude memodry XML node.
+// Struct for attitude memory XML node.
 type MemoryAttitudeXML struct {
 	XMLName  xml.Name `xml:"attitude"`
 	ID       string   `xml:"id,attr"`
 	Serial   string   `xml:"serial,attr"`
 	Attitude string   `xml:"attitude,attr"`
+}
+
+// Struct for flag XML node.
+type FlagXML struct {
+	XMLName xml.Name `xml:"flag"`
+	ID      string   `xml:"id,attr"`
 }
 
 // UnmarshalCharactersBase retrieve all characters data
@@ -173,6 +181,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Skills = *xmlObjectSkills(char.Skills()...)
 	xmlChar.Memory = *xmlMemory(char.Memory())
 	xmlChar.Dialogs = *xmlObjectDialogs(char.Dialogs()...)
+	xmlChar.Flags = xmlFlags(char.Flags())
 	return xmlChar
 }
 
@@ -207,6 +216,16 @@ func xmlMemory(mem []*character.AttitudeMemory) *MemoryXML {
 		xmlMem.Nodes = append(xmlMem.Nodes, xmlAtt)
 	}
 	return xmlMem
+}
+
+// xmlFlags parses specified flags to
+// XML flags nodes.
+func xmlFlags(flags []flag.Flag) (xmlFlags []FlagXML) {
+	for _, f := range flags {
+		xmlFlag := FlagXML{ID: f.ID()}
+		xmlFlags = append(xmlFlags, xmlFlag)
+	}
+	return
 }
 
 // buildCharacterData creates character resources from specified
@@ -251,6 +270,11 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	data.BasicData.Dex = attributes.Dex
 	data.BasicData.Int = attributes.Int
 	data.BasicData.Wis = attributes.Wis
+	// Flags.
+	for _, xmlFlag := range xmlChar.Flags {
+		flagData := res.FlagData{ID: xmlFlag.ID}
+		data.BasicData.Flags = append(data.BasicData.Flags, flagData)
+	}
 	// Save.
 	data.SavedData.PC = xmlChar.PC
 	// HP, mana, exp.

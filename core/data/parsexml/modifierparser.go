@@ -34,6 +34,7 @@ type ModifiersXML struct {
 	XMLName    xml.Name       `xml:"modifiers"`
 	HealthMods []HealthModXML `xml:"healthMod"`
 	HitMods    []HitModXML    `xml:"hitMod"`
+	FlagMods   []FlagModXML   `xml:"flagMod"`
 }
 
 // Struct for health modifier XML node.
@@ -48,6 +49,13 @@ type HitModXML struct {
 	XMLName xml.Name `xml:"hitMod"`
 }
 
+// Struct for flag modifier XML node.
+type FlagModXML struct {
+	XMLName xml.Name `xml:"flagMod"`
+	ID      string   `xml:"id,attr"`
+	Disable bool     `xml:"disable,attr"`
+}
+
 // buildModifiers creates modifiers from specified XML data.
 func buildModifiers(xmlModifiers *ModifiersXML) (mods []res.ModifierData) {
 	// Health modifiers.
@@ -58,6 +66,11 @@ func buildModifiers(xmlModifiers *ModifiersXML) (mods []res.ModifierData) {
 	// Hit modifiers.
 	for _ = range xmlModifiers.HitMods {
 		mod := res.HitModData{}
+		mods = append(mods, mod)
+	}
+	// Flag modifiers.
+	for _, xmlMod := range xmlModifiers.FlagMods {
+		mod := res.FlagModData{xmlMod.ID, xmlMod.Disable}
 		mods = append(mods, mod)
 	}
 	return

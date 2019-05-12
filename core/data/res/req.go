@@ -35,3 +35,8 @@ type LevelReqData struct {
 type GenderReqData struct {
 	Type int
 }
+
+// Struct for flag requirement data.
+type FlagReqData struct {
+	ID string
+}

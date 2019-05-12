@@ -34,7 +34,9 @@ import (
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/serial"
+	"github.com/isangeles/flame/log"
 )
 
 // Character struct represents game character.
@@ -65,6 +67,7 @@ type Character struct {
 	skills           map[string]*skill.Skill
 	memory           map[string]*AttitudeMemory
 	dialogs          map[string]*dialog.Dialog
+	flags            map[string]flag.Flag
 	chatlog          chan string
 	combatlog        chan string
 	privlog          chan string
@@ -97,6 +100,7 @@ func New(data res.CharacterBasicData) *Character {
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*AttitudeMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
+	c.flags = make(map[string]flag.Flag)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	// Set level.
@@ -104,6 +108,11 @@ func New(data res.CharacterBasicData) *Character {
 		oldMaxExp := c.MaxExperience()
 		c.levelup()
 		c.SetExperience(oldMaxExp)
+	}
+	// Add flags.
+	for _, fData := range data.Flags {
+		f := flag.Flag(fData.ID)
+		c.flags[f.ID()] = f
 	}
 	return &c
 }
@@ -539,6 +548,26 @@ func (c *Character) Dialogs() (dls []*dialog.Dialog) {
 func (c *Character) AddDialog(d *dialog.Dialog) {
 	d.SetOwner(c)
 	c.dialogs[d.ID()] = d
+}
+
+// Flags returns all active flags.
+func (c *Character) Flags() (flags []flag.Flag) {
+	for _, f := range c.flags {
+		flags = append(flags, f)
+	}
+	return
+}
+
+// AddFlag adds specified flag.
+func (c *Character) AddFlag(f flag.Flag) {
+	c.flags[f.ID()] = f
+	log.Dbg.Printf("char:%s_%s:add_flag:%s", c.ID(), c.Serial(), f)
+}
+
+// RemoveFlag removes specified flag.
+func (c *Character)RemoveFlag(f flag.Flag) {
+	delete(c.flags, f.ID())
+	log.Dbg.Printf("char:%s_%s:remove_flag:%s", c.ID(), c.Serial(), f)
 }
 
 // levelup promotes character to next level.

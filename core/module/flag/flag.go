@@ -1,5 +1,5 @@
 /*
- * effect.go
+ * flag.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,32 +21,19 @@
  *
  */
 
-package res
+package flag
 
-// Struct for effect data resource.
-type EffectData struct {
-	ID         string
-	Name       string
-	Duration   int64
-	Modifiers  []ModifierData
+// Type for flags.
+type Flag string
+
+// Interface for flags owners.
+type Flagger interface {
+	AddFlag(f Flag)
+	RemoveFlag(f Flag)
+	Flags() []Flag
 }
 
-// Interface for modifier data.
-type ModifierData interface{}
-
-// Struct for health modifier
-// data.
-type HealthModData struct {
-	Min, Max int
-}
-
-// Struct for hit modifier
-// data.
-type HitModData struct {}
-
-// Struct for flag modifier
-// data.
-type FlagModData struct {
-	ID string
-	On bool
+// ID returns flag ID.
+func (f Flag) ID() string {
+	return string(f)
 }

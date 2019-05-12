@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * flagmod.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -25,28 +25,43 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/flag"
 )
 
-// Interface for object modifiers.
-type Modifier interface {
-	Affect(source Target, targets ...Target)
-	Undo(source Target, targets ...Target)
+// Struct for flag modifier.
+type FlagMod struct {
+	flagID string
+	flagOn bool
 }
 
-// NewModifiers creatas modifiers for specified data.
-func NewModifiers(data ...res.ModifierData) (mods []Modifier) {
-	for _, md := range data {
-		switch md := md.(type) {
-		case res.HealthModData:
-			hpMod := NewHealthMod(md)
-			mods = append(mods, hpMod)
-		case res.HitModData:
-			hitMod := NewHitMod()
-			mods = append(mods, hitMod)
-		case res.FlagModData:
-			flagMod := NewFlagMod(md)
-			mods = append(mods, flagMod)
+// NewFlagMod create new flag modifier.
+func NewFlagMod(data res.FlagModData) *FlagMod {
+	fm := new(FlagMod)
+	fm.flagID = data.ID
+	fm.flagOn = data.On
+	return fm
+}
+
+// Affect modifies targets flags.
+func (fm *FlagMod) Affect(source Target, targets ...Target) {
+	for _, t := range targets {
+		flagger, ok := t.(flag.Flagger)
+		if !ok {
+			return
 		}
+		f := flag.Flag(fm.flagID)
+		flagger.AddFlag(f)
 	}
-	return
+}
+
+// Undo undos flag modifications on specified targets.
+func (fm *FlagMod) Undo(source Target, targets ...Target) {
+	for _, t := range targets {
+		flagger, ok := t.(flag.Flagger)
+		if !ok {
+			return
+		}
+		f := flag.Flag(fm.flagID)
+		flagger.RemoveFlag(f)
+	}
 }

@@ -43,10 +43,12 @@ func NewRequirements(data ...res.ReqData) (reqs []Requirement) {
 		case res.LevelReqData:
 			lreq := NewLevelReq(d)
 			reqs = append(reqs, lreq)
-		case res.GenderReqData:
-			
+		case res.GenderReqData:	
 			greq := NewGenderReq(d)
 			reqs = append(reqs, greq)
+		case res.FlagReqData:
+			freq := NewFlagReq(d)
+			reqs = append(reqs, freq)
 		}
 	}
 	return

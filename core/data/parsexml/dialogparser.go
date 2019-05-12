@@ -103,7 +103,6 @@ func buildDialogData(xmlDialog DialogXML) (*res.DialogData, error) {
 			dad.To = xmlAnswer.To
 			dad.Reqs = buildReqs(&xmlAnswer.Reqs)
 			dad.TalkerMods = buildModifiers(&xmlText.TalkerMods)
-			dad.OwnerMods = buildModifiers(&xmlText.OwnerMods)
 			dtd.Answers = append(dtd.Answers, dad)
 		}
 		dtd.Reqs = buildReqs(&xmlText.Reqs)

@@ -1,5 +1,5 @@
 /*
- * effect.go
+ * flagreq.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,32 +21,36 @@
  *
  */
 
-package res
+package req
 
-// Struct for effect data resource.
-type EffectData struct {
-	ID         string
-	Name       string
-	Duration   int64
-	Modifiers  []ModifierData
+import (
+	"github.com/isangeles/flame/core/data/res"
+)
+
+// Struct for flag requirement.
+type FlagReq struct {
+	flagID string
+	meet   bool
 }
 
-// Interface for modifier data.
-type ModifierData interface{}
-
-// Struct for health modifier
-// data.
-type HealthModData struct {
-	Min, Max int
+// NewFlagReq creates new flag requirement.
+func NewFlagReq(data res.FlagReqData) *FlagReq {
+	fr := new(FlagReq)
+	fr.flagID = data.ID
+	return fr
 }
 
-// Struct for hit modifier
-// data.
-type HitModData struct {}
+// FlagID returns ID of required flag.
+func (fr *FlagReq) FlagID() string {
+	return fr.flagID
+}
 
-// Struct for flag modifier
-// data.
-type FlagModData struct {
-	ID string
-	On bool
+// Meet checks wheter requirement is set as meet.
+func (fr *FlagReq) Meet() bool {
+	return fr.meet 
+}
+
+// SetMeet sets requirement as meet/not meet.
+func (fr *FlagReq) SetMeet(meet bool) {
+	fr.meet = meet
 }

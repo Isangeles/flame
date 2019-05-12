@@ -30,6 +30,7 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
+	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -260,6 +261,14 @@ func showCharOption(cmd Command) (int, string) {
 			}
 		}
 		return 0, out
+	case "flags":
+		out := ""
+		for _, char := range chars {
+			for _, f := range char.Flags() {
+				out += fmt.Sprintf("%s ", f.ID())
+			}
+		}
+		return 0, out
 	case "health", "hp":
 		out := ""
 		for _, char := range chars {
@@ -397,6 +406,17 @@ func addCharOption(cmd Command) (int, string) {
 					CHAR_MAN, err)
 			}
 			char.AddSkill(skill)
+		}
+		return 0, ""
+	case "flag":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		for _, char := range chars {
+			id := cmd.Args()[1]
+			flag := flag.Flag(id)
+			char.AddFlag(flag)
 		}
 		return 0, ""
 	default:

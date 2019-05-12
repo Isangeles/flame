@@ -64,3 +64,8 @@ type ObjectSkillData struct {
 type ObjectDialogData struct {
 	ID string
 }
+
+// Struct for flag data.
+type FlagData struct {
+	ID string 
+}

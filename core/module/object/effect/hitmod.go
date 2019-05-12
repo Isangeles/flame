@@ -27,13 +27,13 @@ package effect
 type HitMod struct {}
 
 // NewHitMod creates hit modifier.
-func NewHitMod() HitMod {
-	hitm := HitMod{}
+func NewHitMod() *HitMod {
+	hitm := new(HitMod)
 	return hitm
 }
 
 // Affect takes source damage and attacks specified targets.
-func (hitm HitMod) Affect(source Target, targets ...Target) {
+func (hitm *HitMod) Affect(source Target, targets ...Target) {
 	if source == nil {
 		return
 	}
@@ -45,5 +45,5 @@ func (hitm HitMod) Affect(source Target, targets ...Target) {
 }
 
 // Undo does nothing.
-func (hitm HitMod) Undo(source Target, targets ...Target) {
+func (hitm *HitMod) Undo(source Target, targets ...Target) {
 }

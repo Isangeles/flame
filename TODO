@@ -1,9 +1,6 @@
 MAJOR:
 * Combat system
-* Dialogs system
 * Quests system
-* Player-NPC interaction
-* NPC AI
 * Scripts processor
 * Armors & misc items
 MINOR:
@@ -19,3 +16,6 @@ DONE:
 * Skills
 * Game objects
 * Parse imported characters to characters data objects
+* NPC AI
+* Player-NPC interaction
+* Dialogs system

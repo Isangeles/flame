@@ -26,6 +26,7 @@ package area
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -40,6 +41,7 @@ type Object struct {
 	posX, posY float64
 	inventory  *item.Inventory
 	effects    map[string]*effect.Effect
+	flags      map[string]flag.Flag
 	chatlog    chan string
 	combatlog  chan string
 	privatelog chan string
@@ -57,6 +59,7 @@ func NewObject(data res.ObjectBasicData) *Object {
 	}
 	ob.inventory = item.NewInventory(10)
 	ob.effects = make(map[string]*effect.Effect)
+	ob.flags = make(map[string]flag.Flag)
 	ob.chatlog = make(chan string, 1)
 	ob.combatlog = make(chan string, 3)
 	return &ob
@@ -193,6 +196,19 @@ func (ob *Object) Effects() []*effect.Effect {
 		effects = append(effects, e)
 	}
 	return effects
+}
+
+// AddFlag adds specified flag.
+func (ob *Object) AddFlag(f flag.Flag) {
+	ob.flags[f.ID()] = f
+}
+
+// Flags returns all object flags.
+func (ob *Object) Flags() (flags []flag.Flag) {
+	for _, f := range ob.flags {
+		flags = append(flags, f)
+	}
+	return
 }
 
 // SendCmb sends specified text message to

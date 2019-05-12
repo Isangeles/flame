@@ -36,6 +36,7 @@ type ReqsXML struct {
 	XMLName    xml.Name       `xml:"reqs"`
 	LevelReqs  []LevelReqXML  `xml:"levelReq"`
 	GenderReqs []GenderReqXML `xml:"genderReq"`
+	FlagReqs   []FlagReqXML   `xml:"flagReq"`
 }
 
 // Struct for level requirement XML node.
@@ -48,6 +49,12 @@ type LevelReqXML struct {
 type GenderReqXML struct {
 	XMLName xml.Name `xml:"genderReq"`
 	Type    string   `xml:"type,attr"`
+}
+
+// Struct for flag requirement XML node.
+type FlagReqXML struct {
+	XMLName xml.Name `xml:"flagReq"`
+	ID      string   `xml:"id,attr"`
 }
 
 // xmlLevelReq parses specified level requirement to
@@ -79,6 +86,11 @@ func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
 		req := res.GenderReqData{
 			Type: int(gen),
 		}
+		reqs = append(reqs, req)
+	}
+	// Flag reqs.
+	for _, xmlReq := range xmlReqs.FlagReqs {
+		req := res.FlagReqData{xmlReq.ID}
 		reqs = append(reqs, req)
 	}
 	return reqs
