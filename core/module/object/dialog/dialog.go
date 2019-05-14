@@ -42,6 +42,7 @@ type Dialog struct {
 
 // Interface for objects with dialogs.
 type Talker interface {
+	ID() string
 	Name() string
 	SendChat(t string)
 	Dialogs() []*Dialog
@@ -56,8 +57,8 @@ func NewDialog(data res.DialogData) (*Dialog, error) {
 	d := new(Dialog)
 	d.id = data.ID
 	d.reqs = req.NewRequirements(data.Reqs...)
-	for _, td := range data.Texts {
-		t := NewText(td)
+	for _, sd := range data.Stages {
+		t := NewText(sd)
 		d.texts = append(d.texts, t)
 		if t.start {
 			d.currentText = append(d.currentText, t)

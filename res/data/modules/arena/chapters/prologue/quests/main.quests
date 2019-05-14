@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<base>
+  <quest id="qAloeSearch1">
+    <stage id="qAloeSearch1_s1" start="true" next="qAloeSearch1_s2">
+      <objectives>
+        <finisher>
+	  <reqs>
+	    <itemReq id="imAloeLeafs" amount="1"/>
+	  </reqs>
+	</finisher>
+      </objectives>
+    </stage>
+    <stage id="qAloeSearch1_s2" next="end">
+      <objectives>
+        <finisher>
+	  <reqs>
+	    <talkReq dialog="dAloeSearch1"
+		     phase="2"
+		     answer="dAloeSearch1_3_1"/>
+	  </reqs>
+	</finisher>
+      </objectives>
+    </stage>
+  </quest>
+</base>

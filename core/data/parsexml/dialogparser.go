@@ -43,12 +43,12 @@ type DialogsBaseXML struct {
 type DialogXML struct {
 	XMLName xml.Name  `xml:"dialog"`
 	ID      string    `xml:"id,attr"`
-	Texts   []TextXML `xml:"text"`
+	Stages  []TextXML `xml:"stage"`
 }
 
 // Struct for dialog text XML node.
 type TextXML struct {
-	XMLName    xml.Name     `xml:"text"`
+	XMLName    xml.Name     `xml:"stage"`
 	ID         string       `xml:"id,attr"`
 	Ordinal    string       `xml:"ordinal,attr"`
 	Start      bool         `xml:"start,attr"`
@@ -92,12 +92,12 @@ func UnmarshalDialogsBase(data io.Reader) ([]*res.DialogData, error) {
 func buildDialogData(xmlDialog DialogXML) (*res.DialogData, error) {
 	dd := new(res.DialogData)
 	dd.ID = xmlDialog.ID
-	for _, xmlText := range xmlDialog.Texts {
-		dtd := new(res.DialogTextData)
-		dtd.ID = xmlText.ID
-		dtd.OrdinalID = xmlText.Ordinal
-		dtd.Start = xmlText.Start
-		for _, xmlAnswer := range xmlText.Answers {
+	for _, xmlStage := range xmlDialog.Stages {
+		dtd := new(res.DialogStageData)
+		dtd.ID = xmlStage.ID
+		dtd.OrdinalID = xmlStage.Ordinal
+		dtd.Start = xmlStage.Start
+		for _, xmlAnswer := range xmlStage.Answers {
 			dad := new(res.DialogAnswerData)
 			dad.ID = xmlAnswer.ID
 			dad.To = xmlAnswer.To
@@ -106,10 +106,10 @@ func buildDialogData(xmlDialog DialogXML) (*res.DialogData, error) {
 			dad.OwnerMods = buildModifiers(&xmlAnswer.OwnerMods)
 			dtd.Answers = append(dtd.Answers, dad)
 		}
-		dtd.Reqs = buildReqs(&xmlText.Reqs)
-		dtd.TalkerMods = buildModifiers(&xmlText.TalkerMods)
-		dtd.OwnerMods = buildModifiers(&xmlText.OwnerMods)
-		dd.Texts = append(dd.Texts, dtd)
+		dtd.Reqs = buildReqs(&xmlStage.Reqs)
+		dtd.TalkerMods = buildModifiers(&xmlStage.TalkerMods)
+		dtd.OwnerMods = buildModifiers(&xmlStage.OwnerMods)
+		dd.Stages = append(dd.Stages, dtd)
 	}
 	return dd, nil
 }

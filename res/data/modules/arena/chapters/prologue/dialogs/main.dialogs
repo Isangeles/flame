@@ -1,37 +1,37 @@
 <?xml version="1.0"?>
 <base>
   <dialog id="testDialog1">
-    <text id="testDialog1_1" start="true" ordinal="0">
+    <stage id="testDialog1_1" start="true" ordinal="0">
       <answer id="bye1" to="end"/>
-    </text>
+    </stage>
   </dialog>
-  <dialog id="dTutorial1">
-    <text id="dTutorial1_1" start="true" ordinal="0">
-      <answer id="dTutorial1_1_1" to="1">
+  <dialog id="dAloeSearch1">
+    <stage id="dAloeSearch1_1" start="true" ordinal="0">
+      <answer id="dAloeSearch1_1_1" to="1">
       <owner>
 	<modifiers>
-	  <flagMod id="qAloeSearch_info"></flagMod>
+	  <flagMod id="fAloeSearch_info"></flagMod>
 	</modifiers>
       </owner>
       </answer>
       <answer id="bye1" to="end"/>
-    </text>
-    <text id="dTutorial1_2m" ordinal="1">
+    </stage>
+    <stage id="dAloeSearch1_2m" ordinal="1">
       <answer id="bye1" to="end"/>
       <reqs>
 	<genderReq type="male"/>
       </reqs>
-    </text>
-    <text id="dTutorial1_2f" ordinal="1">
+    </stage>
+    <stage id="dAloeSearch1_2f" ordinal="1">
       <answer id="bye1" to="end"/>
       <reqs>
 	<genderReq type="female"/>
       </reqs>
       <talker>
 	<modifiers>
-	  <flagMod id="qAloeSearch_start"></flagMod>
+	  <flagMod id="fAloeSearch_start"></flagMod>
 	</modifiers>
       </talker>
-    </text>
+    </stage>
   </dialog>
 </base>

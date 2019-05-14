@@ -65,7 +65,7 @@ func ImportDialogs(basePath string) ([]*res.DialogData, error) {
 	defer doc.Close()
 	dialogs, err := parsexml.UnmarshalDialogsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail_to_unmarshal_dialogs_base:%v", err)
 	}
 	return dialogs, nil
 }

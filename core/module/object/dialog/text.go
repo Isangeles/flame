@@ -41,7 +41,7 @@ type Text struct {
 }
 
 // NewText creates new dialog text.
-func NewText(data *res.DialogTextData) *Text {
+func NewText(data *res.DialogStageData) *Text {
 	t := new(Text)
 	t.id = data.ID
 	t.ordinalID = data.OrdinalID

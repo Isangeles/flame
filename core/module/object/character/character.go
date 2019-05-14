@@ -41,8 +41,7 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id, serial       string
-	name             string
+	id, serial, name string
 	level            int
 	hp, maxHP        int
 	mana, maxMana    int
@@ -68,6 +67,8 @@ type Character struct {
 	memory           map[string]*AttitudeMemory
 	dialogs          map[string]*dialog.Dialog
 	flags            map[string]flag.Flag
+	lastKilled       map[string]effect.Target
+	lastTalked       map[string]dialog.Talker
 	chatlog          chan string
 	combatlog        chan string
 	privlog          chan string
@@ -101,6 +102,8 @@ func New(data res.CharacterBasicData) *Character {
 	c.memory = make(map[string]*AttitudeMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.flags = make(map[string]flag.Flag)
+	c.lastKilled = make(map[string]effect.Target)
+	c.lastTalked = make(map[string]dialog.Talker)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	// Set level.
@@ -565,9 +568,25 @@ func (c *Character) AddFlag(f flag.Flag) {
 }
 
 // RemoveFlag removes specified flag.
-func (c *Character)RemoveFlag(f flag.Flag) {
+func (c *Character) RemoveFlag(f flag.Flag) {
 	delete(c.flags, f.ID())
 	log.Dbg.Printf("char:%s_%s:remove_flag:%s", c.ID(), c.Serial(), f)
+}
+
+// LastKilled returns all targets killed by character.
+func (c *Character) LastKilled() (tars []effect.Target) {
+	for _, t := range c.lastKilled {
+		tars = append(tars, t)
+	}
+	return
+}
+
+// LastTalked returns all objects that character talk with.
+func (c *Character) LastTalked() (objs []dialog.Talker) {
+	for _, o := range c.lastTalked {
+		objs = append(objs, o)
+	}
+	return
 }
 
 // levelup promotes character to next level.

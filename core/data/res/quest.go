@@ -1,5 +1,5 @@
 /*
- * dialog.go
+ * quest.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -23,29 +23,23 @@
 
 package res
 
-// Dialog data struct.
-type DialogData struct {
+// Struct for quest data.
+type QuestData struct {
 	ID     string
-	Stages []*DialogStageData
-	Reqs   []ReqData
+	Stages []QuestStageData
 }
 
-// Dialog text data struct.
-type DialogStageData struct {
+// Struct for quest stage data.
+type QuestStageData struct {
 	ID         string
-	OrdinalID  string
 	Start      bool
-	Answers    []*DialogAnswerData
-	Reqs       []ReqData
-	TalkerMods []ModifierData
-	OwnerMods  []ModifierData
+	Next       string
+	Objectives []QuestObjectiveData
 }
 
-// Dialog answer data struct.
-type DialogAnswerData struct {
-	ID         string
-	To         string
-	Reqs       []ReqData
-	TalkerMods []ModifierData
-	OwnerMods  []ModifierData
+// Struct for quest objective data.
+type QuestObjectiveData struct {
+	ID       string
+	Finisher bool
+	Reqs     []ReqData
 }
