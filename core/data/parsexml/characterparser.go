@@ -83,15 +83,15 @@ type EquipmentItemXML struct {
 	Slot    string   `xml:"slot"`
 }
 
-// Struct for attitude memory XML node.
+// Struct for character memory XML node.
 type MemoryXML struct {
-	XMLName xml.Name            `xml:"memory"`
-	Nodes   []MemoryAttitudeXML `xml:"attitude"`
+	XMLName xml.Name          `xml:"memory"`
+	Nodes   []TargetMemoryXML `xml:"target"`
 }
 
-// Struct for attitude memory XML node.
-type MemoryAttitudeXML struct {
-	XMLName  xml.Name `xml:"attitude"`
+// Struct for target memory XML node.
+type TargetMemoryXML struct {
+	XMLName  xml.Name `xml:"target"`
 	ID       string   `xml:"id,attr"`
 	Serial   string   `xml:"serial,attr"`
 	Attitude string   `xml:"attitude,attr"`
@@ -202,13 +202,13 @@ func xmlEquipment(eq *character.Equipment) *EquipmentXML {
 	return xmlEq
 }
 
-// xmlMemory parses specified character attitude memodry to
+// xmlMemory parses specified character target memory to
 // XML memory node.
-func xmlMemory(mem []*character.AttitudeMemory) *MemoryXML {
+func xmlMemory(mem []*character.TargetMemory) *MemoryXML {
 	xmlMem := new(MemoryXML)
 	for _, am := range mem {
 		attAttr := marshalAttitude(am.Attitude)
-		xmlAtt := MemoryAttitudeXML{
+		xmlAtt := TargetMemoryXML{
 			ID:       am.Target.ID(),
 			Serial:   am.Target.Serial(),
 			Attitude: attAttr,

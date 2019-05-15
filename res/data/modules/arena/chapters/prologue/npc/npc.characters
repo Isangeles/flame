@@ -4,5 +4,8 @@
 	      <dialogs>
 		<dialog id="dAloeSearch1"/>
 	      </dialogs>
+	      <skills>
+		<skill id="melee1"/>
+	      </skills>
 	</char>
 </base>

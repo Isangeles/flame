@@ -122,14 +122,21 @@ func (c *Character) UseSkill(s *skill.Skill) {
 
 // takeEffects adds specified effects
 func (c *Character) TakeEffect(e *effect.Effect) {
-	// TODO: handle resists.
-	c.AddEffect(e)
 	if e.Source() == nil {
 		log.Err.Printf("char_combat:%s_%s:fail_to_take_effect:%s_%s:no source",
 			c.ID(), c.Serial(), e.ID(), e.Serial())
 		return
 	}
-	c.Memorize(e.Source(), Hostile)
+	// TODO: handle resists
+	// Add effect.
+	c.AddEffect(e)
+	// Memorize source as hostile.
+	mem := TargetMemory{
+		Target: e.Source(),
+		Attitude: Hostile,
+	}
+	c.MemorizeTarget(&mem)
+	// Send combat message.
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
 	if config.Debug() { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())

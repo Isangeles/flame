@@ -249,7 +249,11 @@ func restoreCharMemory(mod *module.Module, data *res.CharacterData) error {
 			continue
 		}
 		att := character.Attitude(memData.Attitude)
-		char.Memorize(tar, att)
+		mem := character.TargetMemory{
+			Target:   tar,
+			Attitude: att,
+		}
+		char.MemorizeTarget(&mem)
 	}
 	return nil
 }

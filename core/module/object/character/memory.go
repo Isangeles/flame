@@ -1,7 +1,7 @@
 /*
- * attitude.go
+ * memory.go
  * 
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,25 +23,27 @@
  
 package character
 
-// Type for character attitude.
-type Attitude int
-
-const (
-	Friendly Attitude = iota
-	Neutral
-	Hostile
+import (
+	"github.com/isangeles/flame/core/module/object/effect"
 )
 
-// ID returns attitude ID.
-func (a Attitude) ID() string {
-	switch a {
-	case Friendly:
-		return "att_friendly"
-	case Neutral:
-		return "att_neutral"
-	case Hostile:
-		return "att_hostile"
-	default:
-		return "att_unknown"
+// Struct for saved data about target.
+type TargetMemory struct {
+	Target   effect.Target
+	Attitude Attitude
+	Talked   bool
+	Killed   bool
+}
+
+// Memory returns character tergets memory.
+func (c *Character) Memory() (mem []*TargetMemory) {
+	for _, am := range c.memory {
+		mem = append(mem, am)
 	}
+	return
+}
+
+// MemorizeTarget saves specified target memory.
+func (c *Character) MemorizeTarget(mem *TargetMemory) {
+	c.memory[mem.Target.ID() + mem.Target.Serial()] = mem
 }

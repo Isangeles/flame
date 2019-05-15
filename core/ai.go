@@ -82,6 +82,7 @@ func (ai *AI) Update(delta int64) {
 		// Combat.
 		tar := npc.Targets()[0]
 		if tar == nil || npc.AttitudeFor(tar) != character.Hostile {
+			// Look for hostile target.
 			area := ai.game.Module().Chapter().CharacterArea(npc)
 			if area == nil {
 				continue
@@ -100,11 +101,13 @@ func (ai *AI) Update(delta int64) {
 			}
 			npc.SetTarget(tar)
 		}
-		skill := ai.combatSkill(npc, npc.Targets()[0])
-		if skill == nil {
-			continue
+		if npc.Fighting() {
+			skill := ai.combatSkill(npc, npc.Targets()[0])
+			if skill == nil {
+				continue
+			}
+			npc.UseSkill(skill)
 		}
-		npc.UseSkill(skill)
 		break
 	}
 	// Reset timers.

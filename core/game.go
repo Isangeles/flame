@@ -125,6 +125,11 @@ func (g *Game) AI() *AI {
 func (g *Game) listenWorld() {
 	// Players.
 	for _, pc := range g.pcs {
+		select {
+		case msg := <-pc.PrivateLog():
+			log.Inf.Printf(msg)
+		default:
+		}
 		// Near objects.
 		area := g.Module().Chapter().CharacterArea(pc)
 		if area == nil {
