@@ -5,7 +5,7 @@
       <objectives>
         <finisher>
 	  <reqs>
-	    <itemReq id="imAloeLeafs" amount="1"/>
+	    <item-req id="imAloeLeafs" amount="1"/>
 	  </reqs>
 	</finisher>
       </objectives>
@@ -14,9 +14,7 @@
       <objectives>
         <finisher>
 	  <reqs>
-	    <talkReq dialog="dAloeSearch1"
-		     phase="2"
-		     answer="dAloeSearch1_3_1"/>
+	    <flag-req id="fAloeSearch_talk1"/>
 	  </reqs>
 	</finisher>
       </objectives>

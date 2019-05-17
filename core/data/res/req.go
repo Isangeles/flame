@@ -40,3 +40,10 @@ type GenderReqData struct {
 type FlagReqData struct {
 	ID string
 }
+
+// ItemReqData return item
+// requirement data.
+type ItemReqData struct {
+	ID     string
+	Amount int
+}

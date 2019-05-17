@@ -1,7 +1,7 @@
 /*
- * req.go
+ * itemreq.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,38 +21,43 @@
  *
  */
 
-// Package for requirements(e.g. weapon
-// equip requirements).
 package req
 
 import (
 	"github.com/isangeles/flame/core/data/res"
 )
 
-// Interface for requirements.
-type Requirement interface {
-	Meet() bool
-	SetMeet(meet bool)
+// Struct for item requirement.
+type ItemReq struct {
+	itemID string
+	amount int
+	meet   bool
 }
 
-// NewRequirements creates new requirements from
-// specified data.
-func NewRequirements(data ...res.ReqData) (reqs []Requirement) {
-	for _, d := range data {
-		switch d := d.(type) {
-		case res.LevelReqData:
-			lreq := NewLevelReq(d)
-			reqs = append(reqs, lreq)
-		case res.GenderReqData:	
-			greq := NewGenderReq(d)
-			reqs = append(reqs, greq)
-		case res.FlagReqData:
-			freq := NewFlagReq(d)
-			reqs = append(reqs, freq)
-		case res.ItemReqData:
-			ireq := NewItemReq(d)
-			reqs = append(reqs, ireq)
-		}
-	}
-	return
+// NewItemReq creates new item requirement.
+func NewItemReq(data res.ItemReqData) *ItemReq {
+	ir := new(ItemReq)
+	ir.itemID = data.ID
+	ir.amount = data.Amount
+	return ir
+}
+
+// ItemID returns ID of required item.
+func (ir *ItemReq) ItemID() string {
+	return ir.itemID
+}
+
+// ItemAmount returns amount of required items.
+func (ir *ItemReq) ItemAmount() int {
+	return ir.amount
+}
+
+// Meet checks wheter requirement is set as meet.
+func (ir *ItemReq) Meet() bool {
+	return ir.meet 
+}
+
+// SetMeet sets requirement as meet/not meet.
+func (ir *ItemReq) SetMeet(meet bool) {
+	ir.meet = meet
 }

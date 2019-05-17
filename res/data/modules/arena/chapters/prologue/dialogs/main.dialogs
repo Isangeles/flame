@@ -19,13 +19,13 @@
     <stage id="dAloeSearch1_2m" ordinal="1">
       <answer id="bye1" to="end"/>
       <reqs>
-	<genderReq type="male"/>
+	<gender-req type="male"/>
       </reqs>
     </stage>
     <stage id="dAloeSearch1_2f" ordinal="1">
       <answer id="bye1" to="end"/>
       <reqs>
-	<genderReq type="female"/>
+	<gender-req type="female"/>
       </reqs>
       <talker>
 	<modifiers>

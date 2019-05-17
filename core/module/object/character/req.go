@@ -35,6 +35,17 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 		return char.Level() >= r.MinLevel()
 	case *req.GenderReq:
 		return int(char.Gender()) == r.Type()
+	case *req.FlagReq:
+		f := char.flags[r.FlagID()]
+		return len(f.ID()) > 0
+	case *req.ItemReq:
+		count := 0
+		for _, i := range char.Inventory().Items() {
+			if i.ID() == r.ItemID() {
+				count++
+			}
+		}
+		return count >= r.ItemAmount()
 	default:
 		return true
 	}

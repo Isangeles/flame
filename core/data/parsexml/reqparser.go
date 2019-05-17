@@ -34,27 +34,35 @@ import (
 // Struct for requirements XML node.
 type ReqsXML struct {
 	XMLName    xml.Name       `xml:"reqs"`
-	LevelReqs  []LevelReqXML  `xml:"levelReq"`
-	GenderReqs []GenderReqXML `xml:"genderReq"`
-	FlagReqs   []FlagReqXML   `xml:"flagReq"`
+	LevelReqs  []LevelReqXML  `xml:"level-req"`
+	GenderReqs []GenderReqXML `xml:"gender-req"`
+	FlagReqs   []FlagReqXML   `xml:"flag-req"`
+	ItemReqs   []ItemReqXML   `xml:"item-req"`
 }
 
 // Struct for level requirement XML node.
 type LevelReqXML struct {
-	XMLName  xml.Name `xml:"levelReq"`
+	XMLName  xml.Name `xml:"level-req"`
 	MinLevel int      `xml:"min,value"`
 }
 
 // Struct for gender requirement XML node.
 type GenderReqXML struct {
-	XMLName xml.Name `xml:"genderReq"`
+	XMLName xml.Name `xml:"gender-req"`
 	Type    string   `xml:"type,attr"`
 }
 
 // Struct for flag requirement XML node.
 type FlagReqXML struct {
-	XMLName xml.Name `xml:"flagReq"`
+	XMLName xml.Name `xml:"flag-req"`
 	ID      string   `xml:"id,attr"`
+}
+
+// Struct for item requirement XML node.
+type ItemReqXML struct {
+	XMLName xml.Name `xml:"item-req"`
+	ID      string   `xml:"id,attr"`
+	Amount  int      `xml:"amount,attr"`
 }
 
 // xmlLevelReq parses specified level requirement to
@@ -91,6 +99,11 @@ func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
 	// Flag reqs.
 	for _, xmlReq := range xmlReqs.FlagReqs {
 		req := res.FlagReqData{xmlReq.ID}
+		reqs = append(reqs, req)
+	}
+	// Item reqs.
+	for _, xmlReq := range xmlReqs.ItemReqs {
+		req := res.ItemReqData{xmlReq.ID, xmlReq.Amount}
 		reqs = append(reqs, req)
 	}
 	return reqs
