@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<base>
+  <item id="imAloeLeaves1"
+	value="5"
+	level="1"
+	loot="true"/>
+</base>

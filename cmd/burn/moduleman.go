@@ -133,6 +133,12 @@ func showModuleOption(cmd Command) (int, string) {
 			out = fmt.Sprintf("%s %s", out, dl.ID)
 		}
 		return 0, out
+	case "res-miscs":
+		out := ""
+		for _, md := range res.MiscItems() {
+			out = fmt.Sprintf("%s %s", out, md.ID)
+		}
+		return 0, out
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", ENGINE_MAN,
 			cmd.OptionArgs()[0], cmd.Args()[0])

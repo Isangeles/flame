@@ -31,7 +31,6 @@ import (
 type Item interface {
 	ID() string
 	Serial() string
-	SerialID() string
 	SetSerial(serial string)
 	Name() string
 	SetName(n string)
@@ -44,7 +43,6 @@ type Item interface {
 type Equiper interface {
 	ID()        string
 	Serial()    string
-	SerialID()  string
 	EquipReqs() []req.Requirement
 	Slots()     []Slot
 }

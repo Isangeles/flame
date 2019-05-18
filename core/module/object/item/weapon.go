@@ -24,8 +24,6 @@
 package item
 
 import (
-	"fmt"
-
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/req"
@@ -75,12 +73,6 @@ func (w *Weapon) ID() string {
 // Serial returns weapon serial value.
 func (w *Weapon) Serial() string {
 	return w.serial
-}
-
-// SerialID returns weapon ID and serial
-// separated by '_'.
-func (w *Weapon) SerialID() string {
-	return fmt.Sprintf("%s_%s", w.ID(), w.Serial())
 }
 
 // SetSerial sets specified value as serial

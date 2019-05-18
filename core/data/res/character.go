@@ -64,13 +64,6 @@ type CharacterSavedData struct {
 	Exp        int
 }
 
-// Struct for inventory item data
-// resource.
-type InventoryItemData struct {
-	ID     string
-	Serial string
-}
-
 // Struct for equipment item data
 // resource.
 type EquipmentItemData struct {

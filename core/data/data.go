@@ -63,6 +63,15 @@ func LoadModuleData(mod *module.Module) error {
 		wd.Name = lang.TextDir(mod.Conf().LangPath(), wd.ID)
 	}
 	res.SetWeaponsData(weaponsData)
+	// Misc items.
+	miscItemsData, err := ImportMiscItemsDir(mod.Conf().ItemsPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_load_misc_items:%v", err)
+	}
+	for _, md := range miscItemsData {
+		md.Name = lang.TextDir(mod.Conf().LangPath(), md.ID)
+	}
+	res.SetMiscItemsData(miscItemsData)
 	// Area objects.
 	objectsData, err := ImportObjectsDir(mod.Conf().ObjectsPath())
 	if err != nil {

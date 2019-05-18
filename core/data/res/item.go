@@ -1,5 +1,5 @@
 /*
- * weapon.go
+ * item.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -36,4 +36,20 @@ type WeaponData struct {
 	EQReqs     []ReqData
 	Slots      []int
 	Loot       bool
+}
+
+// Struct for miscellaneous items.
+type MiscItemData struct {
+	ID     string
+	Name   string
+	Value  int
+	Level  int
+	Loot   bool
+}
+
+// Struct for inventory item data
+// resource.
+type InventoryItemData struct {
+	ID     string
+	Serial string
 }

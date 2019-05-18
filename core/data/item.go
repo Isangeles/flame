@@ -39,7 +39,8 @@ import (
 )
 
 const (
-	WEAPONS_FILE_EXT = ".weapons"
+	WEAPONS_FILE_EXT    = ".weapons"
+	MISC_ITEMS_FILE_EXT = ".misc"
 )
 
 // Item creates new instance of item with specified ID
@@ -54,6 +55,10 @@ func Item(mod *module.Module, id string) (item.Item, error) {
 		weaponData := res.Weapon(id)
 		w := item.NewWeapon(*weaponData)
 		i = w
+	case res.MiscItem(id).ID != "":
+		miscData := res.MiscItem(id)
+		m := item.NewMisc(*miscData)
+		i = m
 	default:
 		return nil, fmt.Errorf("item_data_not_found:%s", id)
 	}
@@ -90,15 +95,52 @@ func ImportWeaponsDir(dirPath string) ([]*res.WeaponData, error) {
 			continue
 		}
 		baseFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
-		weaps, err := ImportWeapons(baseFilePath)
+		impWeapons, err := ImportWeapons(baseFilePath)
 		if err != nil {
 			log.Err.Printf("data_weapons_import:%s:fail_to_import_base:%v",
 				baseFilePath, err)
 			continue
 		}
-		for _, w := range weaps {
-			weapons = append(weapons, w)
-		}
+		weapons = append(weapons, impWeapons...)
 	}
 	return weapons, nil
+}
+
+// ImportMiscItems imports all XML miscellaneous items from file
+// with specified path.
+func ImportMiscItems(basePath string) ([]*res.MiscItemData, error) {
+	doc, err := os.Open(basePath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
+	}
+	defer doc.Close()
+	miscs, err := parsexml.UnmarshalMiscItemsBase(doc)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+	}
+	return miscs, nil
+}
+
+// ImportMiscItemsDir imports all miscellaneous items from files
+// in specified directory.
+func ImportMiscItemsDir(dirPath string) ([]*res.MiscItemData, error) {
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+	}
+	miscs := make([]*res.MiscItemData, 0)
+	for _, fInfo := range files {
+		if !strings.HasSuffix(fInfo.Name(), MISC_ITEMS_FILE_EXT) {
+			continue
+		}
+		baseFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
+		impMiscs, err := ImportMiscItems(baseFilePath)
+		if err != nil {
+			log.Err.Printf("data_misc_items_import:%s:fail_to_import_base:%v",
+				baseFilePath, err)
+			continue
+		}
+		miscs = append(miscs, impMiscs...)
+	}
+	return miscs, nil
 }

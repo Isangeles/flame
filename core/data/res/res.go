@@ -27,6 +27,7 @@ var (
 	effectsData map[string]*EffectData
 	skillsData  map[string]*SkillData
 	weaponsData map[string]*WeaponData
+	miscsData   map[string]*MiscItemData
 	charsData   map[string]*CharacterData
 	objectsData map[string]*ObjectData
 	dialogsData map[string]*DialogData
@@ -54,6 +55,14 @@ func Skill(id string) *SkillData {
 // ID was not found.
 func Weapon(id string) *WeaponData {
 	return weaponsData[id]
+}
+
+// Misc returns misc item resource data
+// for miscellaneous item with specified ID or empty
+// misc item resurce struct if data for specified
+// ID was not found.
+func MiscItem(id string) *MiscItemData {
+	return miscsData[id]
 }
 
 // Character returns character resource data
@@ -97,6 +106,24 @@ func Characters() (d []*CharacterData) {
 	return
 }
 
+// Weapons returns all weapons
+// resources.
+func Weapons() (d []*WeaponData) {
+	for _, wd := range weaponsData {
+		d = append(d, wd)
+	}
+	return
+}
+
+// MiscItems returns all misc items
+// resources.
+func MiscItems() (d []*MiscItemData) {
+	for _, md := range miscsData {
+		d = append(d, md)
+	}
+	return
+}
+
 // Objects returns all objects resources.
 func Objects() (d []*ObjectData) {
 	for _, od := range objectsData {
@@ -111,6 +138,28 @@ func Dialogs() (d []*DialogData) {
 		d = append(d, dd)
 	}
 	return
+}
+
+// AddWeaponData adds specified weapon data to
+// weapons resources.
+func AddWeaponData(data ...*WeaponData) {
+	if weaponsData == nil {
+		weaponsData = make(map[string]*WeaponData)
+	}
+	for _, wd := range data {
+		weaponsData[wd.ID] = wd
+	}
+}
+
+// AddMiscItemData adds specified misc item data to
+// misc items resources.
+func AddMiscItemData(data ...*MiscItemData) {
+	if miscsData == nil {
+		miscsData = make(map[string]*MiscItemData)
+	}
+	for _, md := range data {
+		miscsData[md.ID] = md
+	}
 }
 
 // AddDialogsData adds specified dialogs data
@@ -148,6 +197,15 @@ func SetWeaponsData(data []*WeaponData) {
 	weaponsData = make(map[string]*WeaponData)
 	for _, wd := range data {
 		weaponsData[wd.ID] = wd
+	}
+}
+
+// SetMiscItemsData sets specified misc items data as
+// misc items resources.
+func SetMiscItemsData(data []*MiscItemData) {
+	miscsData = make(map[string]*MiscItemData)
+	for _, md := range data {
+		miscsData[md.ID] = md
 	}
 }
 
