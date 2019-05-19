@@ -46,7 +46,7 @@ func init() {
 
 // AssignSerial assigns and registers unique serial value to
 // specified object among all previously registered objects with
-// same ID, only registers serial if object already has uniqe
+// same ID, or only registers serial if object already has unique
 // serial value.
 // Assigns new serial if specified object has serial
 // value but its not unique among previously
@@ -56,7 +56,7 @@ func AssignSerial(s Serialer) {
 	serialers := base[s.ID()]
 	// Check whether this is first object with such ID.
 	if serialers == nil {
-		if s.Serial() == "" {
+		if len(s.Serial()) < 1 {
 			s.SetSerial("0")
 		}
 		regSerial(s)

@@ -102,7 +102,9 @@ func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
 				ob.ID(), data.ID)
 			continue
 		}
-		it.SetSerial(data.Serial)
+		if len(data.Serial) > 0 {
+			it.SetSerial(data.Serial)
+		}
 		ob.Inventory().AddItem(it)
 	}
 	// Effects.
@@ -113,7 +115,9 @@ func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
 				ob.ID(), data.ID)
 			continue
 		}
-		eff.SetSerial(data.Serial)
+		if len(data.Serial) > 0 {
+			eff.SetSerial(data.Serial)
+		}
 		ob.AddEffect(eff)
 	}
 	return ob

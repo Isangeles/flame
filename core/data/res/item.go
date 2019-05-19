@@ -27,6 +27,7 @@ package res
 type WeaponData struct {
 	ID         string
 	Name       string
+	Info       string
 	Value      int
 	Level      int
 	DMGMin     int
@@ -42,6 +43,7 @@ type WeaponData struct {
 type MiscItemData struct {
 	ID     string
 	Name   string
+	Info   string
 	Value  int
 	Level  int
 	Loot   bool

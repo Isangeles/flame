@@ -150,7 +150,7 @@ func (ai *AI) moveAround(npc *character.Character) {
 func (ai *AI) saySomething(npc *character.Character) {
 	switch npc.Race() {
 	case character.Human:
-		t := lang.AllText(ai.game.Module().Conf().LangPath(), "random_chat", npc.Race().ID())
+		t := lang.AllText(ai.game.Module().Conf().ChatLangPath(), npc.Race().ID())
 		if len(t) < 1 {
 			return
 		}

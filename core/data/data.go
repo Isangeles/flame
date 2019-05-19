@@ -60,7 +60,11 @@ func LoadModuleData(mod *module.Module) error {
 		return fmt.Errorf("fail_to_load_weapons:%v", err)
 	}
 	for _, wd := range weaponsData {
-		wd.Name = lang.TextDir(mod.Conf().LangPath(), wd.ID)
+		nameInfo := lang.AllText(mod.Conf().ItemsLangPath(), wd.ID)
+		wd.Name = nameInfo[0]
+		if len(nameInfo) > 1 {
+			wd.Info = nameInfo[1]
+		}
 	}
 	res.SetWeaponsData(weaponsData)
 	// Misc items.
@@ -69,7 +73,11 @@ func LoadModuleData(mod *module.Module) error {
 		return fmt.Errorf("fail_to_load_misc_items:%v", err)
 	}
 	for _, md := range miscItemsData {
-		md.Name = lang.TextDir(mod.Conf().LangPath(), md.ID)
+		nameInfo := lang.AllText(mod.Conf().ItemsLangPath(), md.ID)
+		md.Name = nameInfo[0]
+		if len(nameInfo) > 1 {
+			md.Info = nameInfo[1]
+		}
 	}
 	res.SetMiscItemsData(miscItemsData)
 	// Area objects.

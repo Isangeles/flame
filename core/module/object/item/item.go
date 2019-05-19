@@ -33,6 +33,7 @@ type Item interface {
 	Serial() string
 	SetSerial(serial string)
 	Name() string
+	Info() string
 	SetName(n string)
 	Value() int
 	Level() int

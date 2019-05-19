@@ -74,3 +74,13 @@ func (c ModConf) SkillsPath() string {
 func (c ModConf) LangPath() string {
 	return filepath.FromSlash(c.Path + "/lang/" + c.Lang)
 }
+
+// ItemsLangPath returns path to items lang file.
+func (c ModConf) ItemsLangPath() string {
+	return filepath.FromSlash(c.LangPath() + "/items")
+}
+
+// ChatLangPath returns path to random chat lang file.
+func (c ModConf) ChatLangPath() string {
+	return filepath.FromSlash(c.LangPath() + "/random_chat")
+}

@@ -51,11 +51,11 @@ func Item(mod *module.Module, id string) (item.Item, error) {
 	var i item.Item
 	// Find data resources.
 	switch {
-	case res.Weapon(id).ID != "":
+	case res.Weapon(id) != nil:
 		weaponData := res.Weapon(id)
 		w := item.NewWeapon(*weaponData)
 		i = w
-	case res.MiscItem(id).ID != "":
+	case res.MiscItem(id) != nil:
 		miscData := res.MiscItem(id)
 		m := item.NewMisc(*miscData)
 		i = m

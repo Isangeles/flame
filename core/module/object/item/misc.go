@@ -32,6 +32,7 @@ type Misc struct {
 	id     string
 	serial string
 	name   string
+	info   string
 	value  int
 	level  int
 	loot   bool
@@ -42,6 +43,7 @@ func NewMisc(data res.MiscItemData) *Misc {
 	m := Misc{
 		id:     data.ID,
 		name:   data.Name,
+		info:   data.Info,
 		value:  data.Value,
 		loot:   data.Loot,
 	}
@@ -66,6 +68,11 @@ func (m *Misc) SetSerial(s string) {
 // Name returns item name.
 func (m *Misc) Name() string {
 	return m.name
+}
+
+// Info returns item info.
+func (m *Misc) Info() string {
+	return m.info
 }
 
 // SetName sets item name.

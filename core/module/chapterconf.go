@@ -72,3 +72,8 @@ func (cc ChapterConf) DialogsPath() string {
 func (cc ChapterConf) AreasPath() string {
 	return filepath.FromSlash(cc.FullPath() + "/area")
 }
+
+// DialogsLangPath returns path to dialogs lang file.
+func (cc ChapterConf) DialogsLangPath() string {
+	return filepath.FromSlash(cc.LangPath() + "/dialogs")
+}

@@ -1,5 +1,8 @@
+<?xml version="1.0"?>
 <base>
-	<object id="aloe1" max-hp="1">
-		<inventory cap="5"></inventory>
-	</object>
+  <object id="aloe1" max-hp="1">
+    <inventory cap="5">
+      <item id="imAloeLeaves1"/>
+    </inventory>
+  </object>
 </base>
