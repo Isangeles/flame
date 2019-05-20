@@ -1,5 +1,5 @@
 /*
- * tarinfo.go
+ * cli.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -25,31 +25,31 @@ package main
 
 import (
 	"fmt"
-	
-	"github.com/isangeles/flame/core/data/text/lang"
-	flameconf "github.com/isangeles/flame/config"
 )
 
-// targetInfoDialog starts CLI dialog that prints informations
-// about current PC target.
-func targetInfoDialog() error {
-	if activePC == nil {
-		return fmt.Errorf("%s\n", lang.TextDir(flameconf.LangPath(), "no_pc_err"))
+// lootDialog start CLI dialog current
+// PC target loot.
+func lootDialog() error {
+	if game == nil {
+		return fmt.Errorf("no_game_started")
 	}
-	tar := activePC.Targets()[0]
+	if len(game.Players()) < 1 {
+		return fmt.Errorf("no_players")
+	}
+	pc := game.Players()[0]
+	tar := pc.Targets()[0]
 	if tar == nil {
-		return fmt.Errorf("%s\n", lang.TextDir(flameconf.LangPath(), "no_tar_err"))
+		return fmt.Errorf("no_target")
 	}
-	// Name.
-	info := fmt.Sprintf("%s:%s", lang.TextDir(flameconf.LangPath(), "ob_name"),
-		tar.Name())
-	// Health.
-	info += fmt.Sprintf("\n%s:%d", lang.TextDir(flameconf.LangPath(), "ob_health"),
-		tar.Health())
-	// Mana.
-	info += fmt.Sprintf("\n%s:%d", lang.TextDir(flameconf.LangPath(), "ob_mana"),
-		tar.Mana())
-	// Print.
-	fmt.Printf("%s\n", info)
+	if tar.Live() {
+		return fmt.Errorf("tar_not_lootable")
+	}
+	for _, it := range tar.Inventory().Items() {
+		if !it.Loot() {
+			continue
+		}
+		pc.Inventory().AddItem(it)
+		tar.Inventory().RemoveItem(it)
+	}
 	return nil
 }

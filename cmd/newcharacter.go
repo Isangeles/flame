@@ -29,7 +29,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/isangeles/flame/cmd/config"
+	"github.com/isangeles/flame"
+	flameconf "github.com/isangeles/flame/cmd/config"
 	"github.com/isangeles/flame/cmd/log"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/res"
@@ -41,18 +42,20 @@ import (
 // startNewCharacterDialog starts CLI dialog to create new playable
 // game character.
 func newCharacterDialog(mod *module.Module) (*character.Character, error) {
+	if flame.Mod() == nil {
+		return nil, fmt.Errorf("no_module_loaded")
+	}
 	var (
 		name     string
 		race     character.Race
 		sex      character.Gender
 		attrs    character.Attributes
-		attrsPts = config.NewCharAttrs()
+		attrsPts = flameconf.NewCharAttrs()
 		c        *character.Character
 	)
 	// Character creation dialog
 	scan := bufio.NewScanner(os.Stdin)
-	var mainAccept = false
-	for !mainAccept {
+	for mainAccept := false; !mainAccept; {
 		// Name
 		fmt.Printf("%s:", lang.Text("ui", "cli_newchar_name"))
 		for scan.Scan() {
@@ -69,8 +72,7 @@ func newCharacterDialog(mod *module.Module) (*character.Character, error) {
 		// Gender.
 		sex = genderDialog()
 		// Attributes.
-		var accept = false
-		for !accept {
+		for accept := false; !accept; {
 			attrs = newAttributesDialog(attrsPts)
 			fmt.Printf("%s: %s\n",
 				lang.Text("ui", "cli_newchar_attrs_summary"), attrs)
@@ -318,7 +320,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 		char.Inventory().AddItem(i)
 	}
 	// Add player skills & items from interface config.
-	for _, sid := range config.NewCharSkills() {
+	for _, sid := range flameconf.NewCharSkills() {
 		s, err := data.Skill(mod, sid)
 		if err != nil {
 			log.Err.Printf("new_char_dialog:fail_to_retrieve_new_player_skill:%v",
@@ -327,7 +329,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 		}
 		char.AddSkill(s)
 	}
-	for _, iid := range config.NewCharItems() {
+	for _, iid := range flameconf.NewCharItems() {
 		i, err := data.Item(mod, iid)
 		if err != nil {
 			log.Err.Printf("new_char_dialog:fail_to_retireve_new_player_items:%v",

@@ -130,10 +130,6 @@ func execute(input string) {
 		}
 		os.Exit(0)
 	case NEW_CHAR_CMD:
-		if flame.Mod() == nil {
-			log.Err.Printf("no_module_loaded")
-			break
-		}
 		createdChar, err := newCharacterDialog(flame.Mod())
 		if err != nil {
 			log.Err.Printf("%s\n", err)
@@ -141,12 +137,9 @@ func execute(input string) {
 		}
 		playableChars = append(playableChars, createdChar)
 	case NEW_GAME_CMD:
-		if flame.Mod() == nil {
-			log.Err.Printf("no_module_loaded")
-		}
 		g, err := newGameDialog()
 		if err != nil {
-			log.Err.Printf("%s\n", err)
+			log.Err.Printf("%s:%v", NEW_GAME_CMD, err)
 			break
 		}
 		game = g
@@ -155,30 +148,23 @@ func execute(input string) {
 	case NEW_MOD_CMD:
 		err := newModDialog()
 		if err != nil {
-			log.Err.Printf("fail_to_create_module:%v", err)
-		}
-	case LOAD_GAME_CMD:
-		if flame.Mod() == nil {
-			log.Err.Printf("no_module_loaded")
+			log.Err.Printf("%s:%v", NEW_MOD_CMD, err)
 			break
 		}
+	case LOAD_GAME_CMD:
 		g, err := loadGameDialog()
 		if err != nil {
-			log.Err.Printf("%s", err)
+			log.Err.Printf("%s:%v", LOAD_GAME_CMD, err)
 			break
 		}
 		game = g
 		activePC = game.Players()[0]
 		lastUpdate = time.Now()
 	case IMPORT_CHARS_CMD:
-		if flame.Mod() == nil {
-			log.Err.Printf("no_module_loaded")
-			break
-		}
 		chars, err := data.ImportCharactersDir(flame.Mod(),
 			flame.Mod().Conf().CharactersPath())
 		if err != nil {
-			log.Err.Printf("fail_to_import_module_characters:%v\n", err)
+			log.Err.Printf("%s:%v", IMPORT_CHARS_CMD, err)
 			break
 		}
 		log.Inf.Printf("imported_chars:%d\n", len(chars))
@@ -186,59 +172,33 @@ func execute(input string) {
 			playableChars = append(playableChars, c)
 		}
 	case LOOT_TARGET_CMD:
-		if game == nil {
-			log.Err.Printf("no_game_started")
+		err := lootDialog()
+		if err != nil {
+			log.Err.Printf("%s:%v", LOOT_TARGET_CMD, err)
 			break
-		}
-		if len(game.Players()) < 1 {
-			log.Err.Printf("no_players")
-			break
-		}
-		pc := game.Players()[0]
-		tar := pc.Targets()[0]
-		if tar == nil {
-			log.Err.Printf("no_target")
-			break
-		}
-		if tar.Live() {
-			log.Err.Printf("tar_not_lootable")
-			break
-		}
-		for _, it := range tar.Inventory().Items() {
-			if !it.Loot() {
-				continue
-			}
-			pc.Inventory().AddItem(it)
-			tar.Inventory().RemoveItem(it)
 		}
 	case TALK_TARGET_CMD:
-		if activePC == nil {
-			log.Err.Printf("no active PC")
+		err := talkDialog()
+		if err != nil {
+			log.Err.Printf("%s:%v", TALK_TARGET_CMD, err)
 			break
 		}
-		tar := activePC.Targets()[0]
-		if tar == nil {
-			log.Err.Printf("no target")
-			break
-		}
-		tarChar, ok := tar.(*character.Character)
-		if !ok {
-			log.Err.Printf("invalid target")
-			break
-		}
-		if len(tarChar.Dialogs()) < 1 {
-			log.Err.Printf("no target dialogs")
-		}	
-		dlg := tarChar.Dialogs()[0]
-		talkDialog(dlg)
 	case FIND_TARGET_CMD:
-		targetDialog()
+		err := targetDialog()
+		if err != nil {
+			log.Err.Printf("%s:%v", FIND_TARGET_CMD, err)
+			break
+		}
 	case TARGET_INFO_CMD:
-		targetInfoDialog()
+		err := targetInfoDialog()
+		if err != nil {
+			log.Err.Printf("%s:%v", TARGET_INFO_CMD, err)
+			break
+		}
 	case REPEAT_INPUT_CMD:
 		execute(lastCommand)
 		return
-	default:
+	default: // pass command to CI
 		exp, err := syntax.NewSTDExpression(input)
 		if err != nil {
 			log.Err.Printf("command_build_error:%v", err)

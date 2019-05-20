@@ -38,13 +38,27 @@ import (
 
 // talkDialog starts talk CLI dialog with specified
 // game dialog.
-func talkDialog(d *dialog.Dialog) {
+func talkDialog() error {
 	if game == nil {
-		fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "no_game_err"))
-		return
+		return fmt.Errorf("%s\n", lang.TextDir(flameconf.LangPath(), "no_game_err"))
 	}
+	if activePC == nil {
+		return fmt.Errorf("no_active_pc")
+	}
+	tar := activePC.Targets()[0]
+	if tar == nil {
+		return fmt.Errorf("no_target")
+	}
+	tarChar, ok := tar.(*character.Character)
+	if !ok {
+		return fmt.Errorf("invalid_target")
+	}
+	if len(tarChar.Dialogs()) < 1 {
+		return fmt.Errorf("no_target_dialogs")
+	}	
+	d := tarChar.Dialogs()[0]
 	mod := game.Module()
-	langPath := mod.Chapter().Conf().LangPath()
+	dialogsLangPath := mod.Chapter().Conf().DialogsLangPath()
 	scan := bufio.NewScanner(os.Stdin)
 	d.Restart()
 	// Dialog.
@@ -53,11 +67,10 @@ func talkDialog(d *dialog.Dialog) {
 		// Dialog phase.
 		phase := dialogPhase(d.Texts(), activePC)
 		if phase == nil {
-			fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "talk_no_phase_err"))
-			return
+			return fmt.Errorf("%s\n", lang.TextDir(flameconf.LangPath(), "talk_no_phase_err"))
 		}
 		// Dialog phase text.
-		dlgText := lang.AllText(langPath, "dialogs", phase.ID())[0]
+		dlgText := lang.AllText(dialogsLangPath, phase.ID())[0]
 		fmt.Printf("[%s]:%s\n", d.Owner().Name(), dlgText)
 		// Phase modifiers.
 		for _, mod := range phase.OwnerModifiers() {
@@ -75,10 +88,18 @@ func talkDialog(d *dialog.Dialog) {
 			ansText string
 		)
 		for ans == nil {
+			// Select answers.
+			answers := make([]*dialog.Answer, 0)
+			for _, a := range phase.Answers() {
+				if !activePC.MeetReqs(a.Requirements()) {
+					continue
+				}
+				answers = append(answers, a)
+			}
 			// Print answers.
 			fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "talk_answers"))
-			for i, a := range phase.Answers() {
-				ansText = lang.AllText(langPath, "dialogs", a.ID())[0]
+			for i, a := range answers {
+				ansText = lang.AllText(dialogsLangPath, a.ID())[0]
 				fmt.Printf("[%d]%s\n", i, ansText)
 			}
 			// Select answer.
@@ -97,6 +118,7 @@ func talkDialog(d *dialog.Dialog) {
 				continue
 			}
 			ans = phase.Answers()[id]
+			ansText = lang.AllText(dialogsLangPath, ans.ID())[0]
 			// Answer modifiers.
 			for _, mod := range phase.OwnerModifiers() {
 				if owner, ok := d.Owner().(effect.Target); ok {
@@ -113,6 +135,7 @@ func talkDialog(d *dialog.Dialog) {
 		// Dialog progress.
 		d.Next(ans)
 	}
+	return nil
 }
 
 // dialogPhase selects dialog phase with requirements met by specified character.

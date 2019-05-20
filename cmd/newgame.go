@@ -41,16 +41,15 @@ var (
 
 // newGameDialog starts CLI dialog for new game.
 func newGameDialog() (*core.Game, error) {
+	if flame.Mod() == nil {
+		return nil, fmt.Errorf("no_module_loaded")
+	}
 	if len(playableChars) < 1 {
 		return nil, fmt.Errorf(lang.Text("ui", "cli_newgame_no_chars_err"))
 	}
-	var (
-		pc *character.Character
-	)
-
+	var pc *character.Character
 	scan := bufio.NewScanner(os.Stdin)
-	var accept bool
-	for !accept {
+	for accept := false; !accept; {
 		fmt.Printf("%s:\n", lang.Text("ui", "cli_newgame_chars"))
 		for i, c := range playableChars {
 			fmt.Printf("[%d]%v\n", i, charDisplayString(c))

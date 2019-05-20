@@ -36,10 +36,9 @@ import (
 
 // targetDialog starts target CLI dialog for
 // active player.
-func targetDialog() {
+func targetDialog() error {
 	if game == nil {
-		fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "no_game_err"))
-		return
+		return fmt.Errorf("%s\n", lang.TextDir(flameconf.LangPath(), "no_game_err"))
 	}
 	mod := game.Module()
 	area := mod.Chapter().CharacterArea(activePC)
@@ -49,8 +48,7 @@ func targetDialog() {
 		fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "target_near_targets"))
 		targets := area.NearTargets(activePC, activePC.SightRange())
 		if len(targets) < 1 {
-			fmt.Printf("%s\n", lang.TextDir(flameconf.LangPath(), "target_no_targets_err"))
-			return
+			return nil
 		}
 		for i, t := range targets {
 			fmt.Printf("[%d]%s\n", i, t.Name())
@@ -71,4 +69,5 @@ func targetDialog() {
 		tar = targets[id]
 	}
 	activePC.SetTarget(tar)
+	return nil
 }

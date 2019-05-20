@@ -43,7 +43,7 @@ func NewAnswer(data *res.DialogAnswerData) *Answer {
 	a := new(Answer)
 	a.id = data.ID
 	a.to = data.To
-	a.reqs = req.NewRequirements(data.Reqs)
+	a.reqs = req.NewRequirements(data.Reqs...)
 	a.talkerMods = effect.NewModifiers(data.TalkerMods...)
 	a.ownerMods = effect.NewModifiers(data.OwnerMods...) 
 	return a

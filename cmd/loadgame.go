@@ -39,6 +39,9 @@ import (
 // loadGameDialog starts CLI dialog for loading
 // saved game.
 func loadGameDialog() (*core.Game, error) {
+	if flame.Mod() == nil {
+		return nil, fmt.Errorf("no_module_loaded")
+	}
 	savePattern := fmt.Sprintf(".*%s", data.SAVEGAME_FILE_EXT)
 	saves, err := data.DirFilesNames(config.ModuleSavegamesPath(), savePattern)
 	if err != nil {
@@ -46,8 +49,7 @@ func loadGameDialog() (*core.Game, error) {
 	}
 	savename := ""
 	scan := bufio.NewScanner(os.Stdin)
-	accept := false
-	for !accept {
+	for accept := false; !accept; {
 		fmt.Printf("%s:\n", lang.Text("ui", "cli_loadgame_saves"))
 		for i, s := range saves {
 			fmt.Printf("[%d]%v\n", i, s)
