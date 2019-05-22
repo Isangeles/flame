@@ -133,6 +133,12 @@ func showModuleOption(cmd Command) (int, string) {
 			out = fmt.Sprintf("%s %s", out, dl.ID)
 		}
 		return 0, out
+	case "res-quests":
+		out := ""
+		for _, qr := range res.Quests() {
+			out = fmt.Sprintf("%s %s", out, qr.ID)
+		}
+		return 0, out
 	case "res-miscs":
 		out := ""
 		for _, md := range res.MiscItems() {

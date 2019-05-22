@@ -31,6 +31,7 @@ var (
 	charsData   map[string]*CharacterData
 	objectsData map[string]*ObjectData
 	dialogsData map[string]*DialogData
+	questsData  map[string]*QuestData
 )
 
 // Effect returns resources for effect
@@ -50,43 +51,45 @@ func Skill(id string) *SkillData {
 }
 
 // Weapon returns weapon resource data
-// for weapon with specified ID or empty
-// weapon resurce struct if data for specified
-// ID was not found.
+// for weapon with specified ID or nil if
+// data for specified ID was not found.
 func Weapon(id string) *WeaponData {
 	return weaponsData[id]
 }
 
 // Misc returns misc item resource data
-// for miscellaneous item with specified ID or empty
-// misc item resurce struct if data for specified
-// ID was not found.
+// for miscellaneous item with specified ID or
+// nil if data for specified ID was not found.
 func MiscItem(id string) *MiscItemData {
 	return miscsData[id]
 }
 
 // Character returns character resource data
-// for character with specified ID or empty
-// character resurce struct if data for specified
-// ID was not found. 
+// for character with specified ID or nil
+// if data for specified ID was not found. 
 func Character(id string) *CharacterData {
 	return charsData[id]
 }
 
 // Object returns object resource data
-// for object with specified ID or empty
-// object resurce struct if data for specified
-// ID was not found. 
+// for object with specified ID or nil
+// if data for specified ID was not found. 
 func Object(id string) *ObjectData {
 	return objectsData[id]
 }
 
 // Dialog returns dialog resource data
-// for dialog with specified ID or empty
-// dialog resurce struct if data for specified
-// ID was not found. 
+// for dialog with specified ID or nil
+// if data for specified ID was not found. 
 func Dialog(id string) *DialogData {
 	return dialogsData[id]
+}
+
+// Quest returns quest resource data
+// for quest with specified ID or nil
+// if data for specified ID was not found. 
+func Quest(id string) *QuestData {
+	return questsData[id]
 }
 
 // Effects returns all effects resources.
@@ -140,6 +143,14 @@ func Dialogs() (d []*DialogData) {
 	return
 }
 
+// Quests returns all quests resources.
+func Quests() (d []*QuestData) {
+	for _, qd := range questsData {
+		d = append(d, qd)
+	}
+	return
+}
+
 // AddWeaponData adds specified weapon data to
 // weapons resources.
 func AddWeaponData(data ...*WeaponData) {
@@ -170,6 +181,17 @@ func AddDialogsData(data ...*DialogData) {
 	}
 	for _, dd := range data {
 		dialogsData[dd.ID] = dd
+	}
+}
+
+// AddQuestsData adds specified quests data
+// to quests resources.
+func AddQuestsData(data ...*QuestData) {
+	if questsData == nil {
+		questsData = make(map[string]*QuestData)
+	}
+	for _, qd := range data {
+		questsData[qd.ID] = qd
 	}
 }
 
@@ -233,5 +255,14 @@ func SetDialogsData(data []*DialogData) {
 	dialogsData = make(map[string]*DialogData)
 	for _, dd := range data {
 		dialogsData[dd.ID] = dd
+	}
+}
+
+// SetQuestsData sets specified quests data as
+// quests resources.
+func SetQuestsData(data []*QuestData) {
+	questsData = make(map[string]*QuestData)
+	for _, qd := range data {
+		questsData[qd.ID] = qd
 	}
 }

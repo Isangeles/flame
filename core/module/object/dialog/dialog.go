@@ -34,7 +34,7 @@ import (
 type Dialog struct {
 	id          string
 	finished    bool
-	currentText []*Text
+	activeTexts []*Text
 	texts       []*Text
 	reqs        []req.Requirement
 	owner       Talker
@@ -61,14 +61,14 @@ func NewDialog(data res.DialogData) (*Dialog, error) {
 		t := NewText(sd)
 		d.texts = append(d.texts, t)
 		if t.start {
-			d.currentText = append(d.currentText, t)
+			d.activeTexts = append(d.activeTexts, t)
 		}
 	}
 	if len(d.texts) < 1 {
 		return nil, fmt.Errorf("no texts")
 	}
-	if len(d.currentText) < 1 {
-		d.currentText = append(d.currentText, d.texts[0])
+	if len(d.activeTexts) < 1 {
+		d.activeTexts = append(d.activeTexts, d.texts[0])
 	}
 	return d, nil
 }
@@ -80,14 +80,14 @@ func (d *Dialog) ID() string {
 
 // Restart moves dialog to starting text.
 func (d *Dialog) Restart() {
-	d.currentText = make([]*Text, 0)
+	d.activeTexts = make([]*Text, 0)
 	for _, t := range d.texts {
 		if t.start {
-			d.currentText = append(d.currentText, t)
+			d.activeTexts = append(d.activeTexts, t)
 		}
 	}
-	if len(d.currentText) < 1 {
-		d.currentText = append(d.currentText, d.texts[0])
+	if len(d.activeTexts) < 1 {
+		d.activeTexts = append(d.activeTexts, d.texts[0])
 	}
 	d.finished = false
 }
@@ -95,7 +95,7 @@ func (d *Dialog) Restart() {
 // Texts returns all dialog texts for
 // current dialog phase.
 func (d *Dialog) Texts() []*Text {
-	return d.currentText
+	return d.activeTexts
 }
 
 // Next moves dialog forward for specified
@@ -106,10 +106,10 @@ func (d *Dialog) Next(a *Answer) {
 		d.finished = true
 		return
 	}
-	d.currentText = make([]*Text, 0)
+	d.activeTexts = make([]*Text, 0)
 	for _, t := range d.texts {
 		if t.ordinalID == a.to {
-			d.currentText = append(d.currentText, t)
+			d.activeTexts = append(d.activeTexts, t)
 		}
 	}
 }

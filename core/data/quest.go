@@ -1,5 +1,5 @@
 /*
- * dialog.go
+ * quest.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -32,65 +32,62 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/dialog"
+	"github.com/isangeles/flame/core/module/object/quest"
 	"github.com/isangeles/flame/log"
 )
 
 const (
-	DIALOGS_FILE_EXT = ".dialogs"
+	QUESTS_FILE_EXT = ".quests"
 )
 
-// Dialog returns new dialog with specified ID or
-// error if data was not found or dialog creation
+// Quest returns new quest with specified ID or
+// error if data was not found or quest creation
 // failed.
-func Dialog(id string) (*dialog.Dialog, error) {
-	data := res.Dialog(id)
+func Quest(id string) (*quest.Quest, error) {
+	data := res.Quest(id)
 	if data == nil {
-		return nil, fmt.Errorf("dialog_not_found:%s", id)
+		return nil, fmt.Errorf("res_not_found:%s", id)
 	}
-	d, err := dialog.NewDialog(*data)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_create_dialog:%v", err)
-	}
-	return d, nil
+	q := quest.NewQuest(*data)
+	return q, nil
 }
 
-// ImportDialogs imports all dialogs from base file with
+// ImportQuests imports all auests from base file with
 // specified path.
-func ImportDialogs(basePath string) ([]*res.DialogData, error) {
+func ImportQuests(basePath string) ([]*res.QuestData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
 	}
 	defer doc.Close()
-	dialogs, err := parsexml.UnmarshalDialogsBase(doc)
+	quests, err := parsexml.UnmarshalQuestsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_dialogs_base:%v", err)
+		return nil, fmt.Errorf("fail_to_unmarshal_quests_base:%v", err)
 	}
-	return dialogs, nil
+	return quests, nil
 }
 
-// ImportDialogsDir imports all dialogs from base files in
+// ImportQuestsDir imports all quests from base files in
 // directory with specified path.
-func ImportDialogsDir(dirPath string) ([]*res.DialogData, error) {
+func ImportQuestsDir(dirPath string) ([]*res.QuestData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
 	}
-	dialogs := make([]*res.DialogData, 0)
+	quests := make([]*res.QuestData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), DIALOGS_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), QUESTS_FILE_EXT) {
 			continue
 		}
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		dd, err := ImportDialogs(basePath)
+		impQuests, err := ImportQuests(basePath)
 		if err != nil {
-			log.Err.Printf("data_dialogs_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data_quests_import:%s:fail_to_import_base:%v",
 				basePath, err)
 		}
-		for _, d := range dd {
-			dialogs = append(dialogs, d)
+		for _, q := range impQuests {
+			quests = append(quests, q)
 		}
 	}
-	return dialogs, nil
+	return quests, nil
 }

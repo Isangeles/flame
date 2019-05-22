@@ -105,10 +105,16 @@ func LoadChapterData(chapter *module.Chapter) error {
 	}
 	res.SetCharactersData(npcData)
 	// Dialogs.
-	dialogData, err := ImportDialogsDir(chapter.Conf().DialogsPath())
+	dialogsData, err := ImportDialogsDir(chapter.Conf().DialogsPath())
 	if err != nil {
 		return fmt.Errorf("fail_to_import_dialogs:%v", err)
 	}
-	res.SetDialogsData(dialogData)
+	res.SetDialogsData(dialogsData)
+	// Quests.
+	questsData, err := ImportQuestsDir(chapter.Conf().QuestsPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_import_quests:%v", err)
+	}
+	res.SetQuestsData(questsData)
 	return nil
 }

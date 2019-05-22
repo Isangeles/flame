@@ -1,7 +1,7 @@
 /*
  * chapterconf.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,6 +65,11 @@ func (cc ChapterConf) NPCPath() string {
 // DialogsPath returns path to chapter dialogs directory.
 func (cc ChapterConf) DialogsPath() string {
 	return filepath.FromSlash(cc.FullPath() + "/dialogs")
+}
+
+// QuestsPath retruns path to chapter quests directory.
+func (cc ChapterConf) QuestsPath() string {
+	return filepath.FromSlash(cc.FullPath() + "/quests")
 }
 
 // AreasPath returns path to chapter

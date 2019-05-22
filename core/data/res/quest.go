@@ -26,12 +26,15 @@ package res
 // Struct for quest data.
 type QuestData struct {
 	ID     string
+	Name   string
+	Info   string
 	Stages []QuestStageData
 }
 
 // Struct for quest stage data.
 type QuestStageData struct {
 	ID         string
+	Info       string
 	Start      bool
 	Next       string
 	Objectives []QuestObjectiveData
@@ -40,6 +43,7 @@ type QuestStageData struct {
 // Struct for quest objective data.
 type QuestObjectiveData struct {
 	ID       string
+	Name     string
 	Finisher bool
 	Reqs     []ReqData
 }

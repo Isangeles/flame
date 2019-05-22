@@ -34,6 +34,7 @@ import (
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/object/quest"
 	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
@@ -66,6 +67,7 @@ type Character struct {
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
+	quests           map[string]*quest.Quest
 	flags            map[string]flag.Flag
 	chatlog          chan string
 	combatlog        chan string
@@ -99,6 +101,7 @@ func New(data res.CharacterBasicData) *Character {
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
+	c.quests = make(map[string]*quest.Quest)
 	c.flags = make(map[string]flag.Flag)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)

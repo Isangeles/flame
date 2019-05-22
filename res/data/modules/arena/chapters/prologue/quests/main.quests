@@ -3,20 +3,20 @@
   <quest id="qAloeSearch1">
     <stage id="qAloeSearch1_s1" start="true" next="qAloeSearch1_s2">
       <objectives>
-        <finisher>
+        <objective finisher="true">
 	  <reqs>
 	    <item-req id="imAloeLeafs" amount="1"/>
 	  </reqs>
-	</finisher>
+	</objective>
       </objectives>
     </stage>
     <stage id="qAloeSearch1_s2" next="end">
       <objectives>
-        <finisher>
+        <objective finisher="true">
 	  <reqs>
 	    <flag-req id="fAloeSearch_talk1"/>
 	  </reqs>
-	</finisher>
+	</objective>
       </objectives>
     </stage>
   </quest>
