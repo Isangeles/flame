@@ -124,7 +124,7 @@ func addObjectOption(cmd Command) (int, string) {
 				CHAR_MAN, cmd.Args()[0])
 		}
 		id := cmd.Args()[1]
-		item, err := data.Item(flame.Game().Module(), id)
+		item, err := data.Item(id)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:fail_to_retrieve_item:%v",
 				OBJECT_MAN, err)

@@ -32,7 +32,6 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
@@ -47,7 +46,7 @@ const (
 // for specified module, returns error if item data with such ID
 // was not found or module failed to assign serial value for
 // item.
-func Item(mod *module.Module, id string) (item.Item, error) {
+func Item(id string) (item.Item, error) {
 	var i item.Item
 	// Find data resources.
 	switch {

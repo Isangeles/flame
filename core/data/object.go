@@ -96,7 +96,7 @@ func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
 	ob := area.NewObject(data.BasicData)
 	// Inventory.
 	for _, data := range data.Items {
-		it, err := Item(mod, data.ID)
+		it, err := Item(data.ID)
 		if err != nil {
 			log.Err.Printf("data:build_object:%s:fail_to_retrieve_inv_item:%s",
 				ob.ID(), data.ID)

@@ -24,6 +24,8 @@
 package quest
 
 import (
+	"fmt"
+	
 	"github.com/isangeles/flame/core/data/res"
 )
 
@@ -74,4 +76,17 @@ func (q *Quest) Info() string {
 // stage.
 func (q *Quest) ActiveStage() *Stage {
 	return q.activeStage
+}
+
+// SetActiveStage sets active stage to quest stage with
+// specified ID, returns error if no stage with such ID
+// was found.
+func (q *Quest) SetActiveStage(sid string) error {
+	for _, s := range q.stages {
+		if s.ID() == sid {
+			q.activeStage = s
+			return nil
+		}
+	}
+	return fmt.Errorf("no_such_stage_found:%s", sid)
 }

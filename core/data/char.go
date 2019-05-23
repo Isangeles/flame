@@ -54,7 +54,7 @@ func Character(mod *module.Module, charID string) (*character.Character, error) 
 	char := buildCharacter(mod, data)
 	// Add skills & items from mod config.
 	for _, sid := range mod.Conf().CharSkills {
-		s, err := Skill(mod, sid)
+		s, err := Skill(sid)
 		if err != nil {
 			log.Err.Printf("fail_to_retireve_conf_char_skill:%v", err)
 			continue
@@ -62,7 +62,7 @@ func Character(mod *module.Module, charID string) (*character.Character, error) 
 		char.AddSkill(s)
 	}
 	for _, iid := range mod.Conf().CharItems {
-		i, err := Item(mod, iid)
+		i, err := Item(iid)
 		if err != nil {
 			log.Err.Printf("fail_to_retireve_conf_char_item:%v", err)
 			continue
@@ -188,7 +188,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	char := character.New(data.BasicData)
 	// Inventory.
 	for _, invItData := range data.Items {
-		it, err := Item(mod, invItData.ID)
+		it, err := Item(invItData.ID)
 		if err != nil {
 			log.Err.Printf("data:character:%s:fail_to_retrieve_inv_item:%v",
 				char.ID(), err)
@@ -225,7 +225,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	}
 	// Skills.
 	for _, skillData := range data.Skills {
-		skill, err := Skill(mod, skillData.ID)
+		skill, err := Skill(skillData.ID)
 		if err != nil {
 			log.Err.Printf("data:build_character:%s:fail_to_retrieve_skill:%v",
 				char.ID(), err)

@@ -560,6 +560,19 @@ func (c *Character) RemoveFlag(f flag.Flag) {
 	log.Dbg.Printf("char:%s_%s:remove_flag:%s", c.ID(), c.Serial(), f)
 }
 
+// Quests return all character quests.
+func (c *Character) Quests() (qs []*quest.Quest) {
+	for _, q := range c.quests {
+		qs = append(qs, q)
+	}
+	return
+}
+
+// AddQuests adds specified quests for character.
+func (c *Character) AddQuest(q *quest.Quest) {
+	c.quests[q.ID()] = q
+}
+
 // levelup promotes character to next level.
 func (c *Character) levelup() {
 	c.level += 1

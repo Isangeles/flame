@@ -261,6 +261,14 @@ func showCharOption(cmd Command) (int, string) {
 			}
 		}
 		return 0, out
+	case "quests":
+		out := ""
+		for _, char := range chars {
+			for _, q := range char.Quests() {
+				out += fmt.Sprintf("%s ", q.ID())
+			}
+		}
+		return 0, out
 	case "flags":
 		out := ""
 		for _, char := range chars {
@@ -364,8 +372,8 @@ func addCharOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
 				CHAR_MAN, cmd.Args()[0])
 		}
-		itemID := cmd.Args()[1]
-		item, err := data.Item(flame.Game().Module(), itemID)
+		id := cmd.Args()[1]
+		item, err := data.Item(id)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:fail_to_retrieve_item:%v",
 				CHAR_MAN, err)
@@ -399,13 +407,28 @@ func addCharOption(cmd Command) (int, string) {
 				CHAR_MAN, cmd.Args()[0])
 		}
 		for _, char := range chars {
-			skillID := cmd.Args()[1]
-			skill, err := data.Skill(flame.Game().Module(), skillID)
+			id := cmd.Args()[1]
+			skill, err := data.Skill(id)
 			if err != nil {
 				return 8, fmt.Sprintf("%s:fail_to_retrieve_skill:%v",
 					CHAR_MAN, err)
 			}
 			char.AddSkill(skill)
+		}
+		return 0, ""
+	case "quest":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		for _, char := range chars {
+			id := cmd.Args()[1]
+			q, err := data.Quest(id)
+			if err != nil {
+				return 8, fmt.Sprintf("%s:fail_to_retrieve_quest:%v",
+					CHAR_MAN, err)
+			}
+			char.AddQuest(q)
 		}
 		return 0, ""
 	case "flag":

@@ -32,7 +32,6 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
@@ -46,7 +45,7 @@ const (
 // for specified module, returns error if skill data with such
 // ID was not found or module failed to assing serial value for
 // skill.
-func Skill(mod *module.Module, id string) (*skill.Skill, error) {
+func Skill(id string) (*skill.Skill, error) {
 	data := res.Skill(id)
 	if data == nil {
 		return nil, fmt.Errorf("skill_not_found:%s", id)
