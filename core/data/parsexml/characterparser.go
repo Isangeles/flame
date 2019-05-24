@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/object/quest"
 	"github.com/isangeles/flame/log"
 )
 
@@ -43,30 +44,31 @@ type CharactersBaseXML struct {
 
 // Struct for XML character node.
 type CharacterXML struct {
-	XMLName     xml.Name         `xml:"char"`
-	ID          string           `xml:"id,attr"`
-	Serial      string           `xml:"serial,attr"`
-	Name        string           `xml:"name,attr"`
-	Gender      string           `xml:"gender,attr"`
-	Race        string           `xml:"race,attr"`
-	Attitude    string           `xml:"attitude,attr"`
-	Alignment   string           `xml:"alignment,attr"`
-	Guild       string           `xml:"guild,attr"`
-	Level       int              `xml:"level,attr"`
-	Stats       string           `xml:"stats,value"`
-	PC          bool             `xml:"pc,attr"`
-	HP          int              `xml:"hp,attr"`
-	Mana        int              `xml:"mana,attr"`
-	Exp         int              `xml:"exp,attr"`
-	Position    string           `xml:"position,value"`
-	DefPosition string           `xml:"default-position,value"`
-	Inventory   InventoryXML     `xml:"inventory"`
-	Equipment   EquipmentXML     `xml:"equipment"`
-	Effects     ObjectEffectsXML `xml:"effects"`
-	Skills      ObjectSkillsXML  `xml:"skills"`
-	Memory      MemoryXML        `xml:"memory"`
-	Dialogs     ObjectDialogsXML `xml:"dialogs"`
-	Flags       []FlagXML        `xml:"flags>flag"`
+	XMLName     xml.Name            `xml:"char"`
+	ID          string              `xml:"id,attr"`
+	Serial      string              `xml:"serial,attr"`
+	Name        string              `xml:"name,attr"`
+	Gender      string              `xml:"gender,attr"`
+	Race        string              `xml:"race,attr"`
+	Attitude    string              `xml:"attitude,attr"`
+	Alignment   string              `xml:"alignment,attr"`
+	Guild       string              `xml:"guild,attr"`
+	Level       int                 `xml:"level,attr"`
+	Stats       string              `xml:"stats,value"`
+	PC          bool                `xml:"pc,attr"`
+	HP          int                 `xml:"hp,attr"`
+	Mana        int                 `xml:"mana,attr"`
+	Exp         int                 `xml:"exp,attr"`
+	Position    string              `xml:"position,value"`
+	DefPosition string              `xml:"default-position,value"`
+	Inventory   InventoryXML        `xml:"inventory"`
+	Equipment   EquipmentXML        `xml:"equipment"`
+	Effects     ObjectEffectsXML    `xml:"effects"`
+	Skills      ObjectSkillsXML     `xml:"skills"`
+	Memory      MemoryXML           `xml:"memory"`
+	Dialogs     ObjectDialogsXML    `xml:"dialogs"`
+	Quests      []CharacterQuestXML `xml:"quests>quest"`
+	Flags       []FlagXML           `xml:"flags>flag"`
 }
 
 // Struct for equipment XML node.
@@ -100,6 +102,12 @@ type TargetMemoryXML struct {
 // Struct for flag XML node.
 type FlagXML struct {
 	XMLName xml.Name `xml:"flag"`
+	ID      string   `xml:"id,attr"`
+}
+
+// Struct for character quest XML node.
+type CharacterQuestXML struct {
+	XMLName xml.Name `xml:"quest"`
 	ID      string   `xml:"id,attr"`
 }
 
@@ -181,6 +189,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Skills = *xmlObjectSkills(char.Skills()...)
 	xmlChar.Memory = *xmlMemory(char.Memory())
 	xmlChar.Dialogs = *xmlObjectDialogs(char.Dialogs()...)
+	xmlChar.Quests = xmlQuests(char.Quests())
 	xmlChar.Flags = xmlFlags(char.Flags())
 	return xmlChar
 }
@@ -218,12 +227,20 @@ func xmlMemory(mem []*character.TargetMemory) *MemoryXML {
 	return xmlMem
 }
 
-// xmlFlags parses specified flags to
-// XML flags nodes.
+// xmlFlags parses specified flags to  XML flags nodes.
 func xmlFlags(flags []flag.Flag) (xmlFlags []FlagXML) {
 	for _, f := range flags {
 		xmlFlag := FlagXML{ID: f.ID()}
 		xmlFlags = append(xmlFlags, xmlFlag)
+	}
+	return
+}
+
+// xmlQuests parses specified qiests to XML quests nodes.
+func xmlQuests(quests []*quest.Quest) (xmlQuests []CharacterQuestXML) {
+	for _, q := range quests {
+		xmlQuest := CharacterQuestXML{ID: q.ID()}
+		xmlQuests = append(xmlQuests, xmlQuest)
 	}
 	return
 }
@@ -359,6 +376,13 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 			ID: xmlDialog.ID,
 		}
 		data.Dialogs = append(data.Dialogs, dialogData)
+	}
+	// Quests.
+	for _, xmlQuest := range xmlChar.Quests {
+		questData := res.CharacterQuestData{
+			ID: xmlQuest.ID,
+		}
+		data.Quests = append(data.Quests, questData)
 	}
 	return &data, nil
 }

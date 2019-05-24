@@ -241,11 +241,21 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	for _, dialogData := range data.Dialogs {
 		dialog, err := Dialog(dialogData.ID)
 		if err != nil {
-			log.Err.Printf("data:buil_character:%s:fail_to_retrieve_dialog:%v",
+			log.Err.Printf("data:build_character:%s:fail_to_retrieve_dialog:%v",
 				char.ID(), err)
 			continue
 		}
 		char.AddDialog(dialog)
+	}
+	// Quests.
+	for _, questData := range data.Quests {
+		quest, err := Quest(questData.ID)
+		if err != nil {
+			log.Err.Printf("data:build_character:%s:fail_to_retrieve_quest:%v",
+				char.ID(), err)
+			continue
+		}
+		char.AddQuest(quest)
 	}
 	return char
 }
