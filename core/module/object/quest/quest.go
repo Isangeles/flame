@@ -38,8 +38,14 @@ type Quest struct {
 	stages      []*Stage
 }
 
-// NewQuest creates quest.
-func NewQuest(data res.QuestData) *Quest {
+// Interface for objects with quests.
+type Quester interface {
+	Quests() []*Quest
+	AddQuest(q *Quest)
+}
+
+// New creates quest.
+func New(data res.QuestData) *Quest {
 	q := new(Quest)
 	q.id = data.ID
 	q.name = data.Name

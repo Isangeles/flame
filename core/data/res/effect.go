@@ -50,3 +50,9 @@ type FlagModData struct {
 	ID string
 	On bool
 }
+
+// Struct for quest modifier
+// data.
+type QuestModData struct {
+	ID string
+}

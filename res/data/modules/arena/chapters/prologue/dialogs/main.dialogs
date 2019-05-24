@@ -10,7 +10,7 @@
       <answer id="dAloeSearch1_1_1" to="1">
       <owner>
 	<modifiers>
-	  <flagMod id="fAloeSearch_info"></flagMod>
+	  <flag-mod id="fAloeSearch_info"/>
 	</modifiers>
       </owner>
       </answer>
@@ -29,7 +29,8 @@
       </reqs>
       <talker>
 	<modifiers>
-	  <flagMod id="fAloeSearch_start"></flagMod>
+	  <flag-mod id="fAloeSearch_start"/>
+	  <quest-mod start="qAloeSearch1"/>
 	</modifiers>
       </talker>
     </stage>

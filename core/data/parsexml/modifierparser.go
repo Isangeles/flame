@@ -32,28 +32,35 @@ import (
 // Struct for modifiers XML node.
 type ModifiersXML struct {
 	XMLName    xml.Name       `xml:"modifiers"`
-	HealthMods []HealthModXML `xml:"healthMod"`
-	HitMods    []HitModXML    `xml:"hitMod"`
-	FlagMods   []FlagModXML   `xml:"flagMod"`
+	HealthMods []HealthModXML `xml:"health-mod"`
+	HitMods    []HitModXML    `xml:"hit-mod"`
+	FlagMods   []FlagModXML   `xml:"flag-mod"`
+	QuestMods  []QuestModXML  `xml:"quest-mod"`
 }
 
 // Struct for health modifier XML node.
 type HealthModXML struct {
-	XMLName  xml.Name `xml:"healthMod"`
+	XMLName  xml.Name `xml:"health-mod"`
 	MinValue int      `xml:"min,attr"`
 	MaxValue int      `xml:"max,attr"`
 }
 
 // Struct for hit modifier XML node.
 type HitModXML struct {
-	XMLName xml.Name `xml:"hitMod"`
+	XMLName xml.Name `xml:"hit-mod"`
 }
 
 // Struct for flag modifier XML node.
 type FlagModXML struct {
-	XMLName xml.Name `xml:"flagMod"`
+	XMLName xml.Name `xml:"flag-mod"`
 	ID      string   `xml:"id,attr"`
 	Disable bool     `xml:"disable,attr"`
+}
+
+// Struct for quest modifier XML node.
+type QuestModXML struct {
+	XMLName xml.Name `xml:"quest-mod"`
+	Start   string   `xml:"start,attr"`
 }
 
 // buildModifiers creates modifiers from specified XML data.
@@ -71,6 +78,11 @@ func buildModifiers(xmlModifiers *ModifiersXML) (mods []res.ModifierData) {
 	// Flag modifiers.
 	for _, xmlMod := range xmlModifiers.FlagMods {
 		mod := res.FlagModData{xmlMod.ID, xmlMod.Disable}
+		mods = append(mods, mod)
+	}
+	// Quest modifiers.
+	for _, xmlMod := range xmlModifiers.QuestMods {
+		mod := res.QuestModData{xmlMod.Start}
 		mods = append(mods, mod)
 	}
 	return

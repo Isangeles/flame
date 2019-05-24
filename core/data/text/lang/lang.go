@@ -21,9 +21,8 @@
  * 
  */
 
-// This package provides easy way to retrieve
-// data from transalation files inside data lang
-// directory.
+// This package provides easy way to retrieve data from transalation
+// files inside data lang directory.
 // Results are cached under lang file + id key, so lang file is open
 // only in case when there was no previous requests for specified
 // lang file + id pair.

@@ -1,5 +1,5 @@
 /*
- * modifier.go
+ * questmod.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -25,31 +25,39 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/object/quest"
+	"github.com/isangeles/flame/log"
 )
 
-// Interface for object modifiers.
-type Modifier interface {
-	Affect(source Target, targets ...Target)
-	Undo(source Target, targets ...Target)
+// Struct for quest modifier.
+type QuestMod struct {
+	questID string
 }
 
-// NewModifiers creatas modifiers for specified data.
-func NewModifiers(data ...res.ModifierData) (mods []Modifier) {
-	for _, md := range data {
-		switch md := md.(type) {
-		case res.HealthModData:
-			hpMod := NewHealthMod(md)
-			mods = append(mods, hpMod)
-		case res.HitModData:
-			hitMod := NewHitMod()
-			mods = append(mods, hitMod)
-		case res.FlagModData:
-			flagMod := NewFlagMod(md)
-			mods = append(mods, flagMod)
-		case res.QuestModData:
-			questMod := NewQuestMod(md)
-			mods = append(mods, questMod)
+// NewQuestMod creates new quest modifier.
+func NewQuestMod(data res.QuestModData) *QuestMod {
+	qm := new(QuestMod)
+	qm.questID = data.ID
+	return qm
+}
+
+// Affect modifiers targets quests.
+func (qm *QuestMod) Affect(source Target, targets ...Target) {
+	for _, t := range targets {
+		quester, ok := t.(quest.Quester)
+		if !ok {
+			return
 		}
+		qData := res.Quest(qm.questID)
+		if qData == nil {
+			log.Err.Printf("q_mod:quest_data_not_found:%s", qm.questID)
+			return
+		}
+		q := quest.New(*qData)
+		quester.AddQuest(q)
 	}
-	return
+}
+
+// Undo undos modifications on specified target.
+func (qm *QuestMod) Undo(source Target, targets ...Target) {
 }

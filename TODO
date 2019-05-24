@@ -2,16 +2,15 @@ MAJOR:
 * Combat system
 * Quests system
 * Scripts processor
-* Armors & misc items
+* Armor items
+* Switching chapters
 MINOR:
-* More detiled readme
 * Tutorials
-* More tools/options for CI
 DONE:
-* Generating of unique serial IDs for game objects
+* Generating of unique serial values for game objects
 * Save/load game mechanism
 * Game characters inventory and equipment
-* Weapons items
+* Weapons & misc  items
 * Effects & modifiers
 * Skills
 * Game objects
@@ -19,3 +18,4 @@ DONE:
 * NPC AI
 * Player-NPC interaction
 * Dialogs system
+* Flags for objects

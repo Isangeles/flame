@@ -48,7 +48,7 @@ func Quest(id string) (*quest.Quest, error) {
 	if data == nil {
 		return nil, fmt.Errorf("res_not_found:%s", id)
 	}
-	q := quest.NewQuest(*data)
+	q := quest.New(*data)
 	return q, nil
 }
 

@@ -52,8 +52,8 @@ const (
 	END_DIALOG_ID = "end"
 )
 
-// NewDialog creates new dialog.
-func NewDialog(data res.DialogData) (*Dialog, error) {
+// New creates new dialog.
+func New(data res.DialogData) (*Dialog, error) {
 	d := new(Dialog)
 	d.id = data.ID
 	d.reqs = req.NewRequirements(data.Reqs...)
