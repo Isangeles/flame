@@ -35,7 +35,7 @@ type SkillUser interface {
 	Serial() string
 	Name() string
 	Skills() []*Skill
-	MeetReqs(r []req.Requirement) bool
+	MeetReqs(r ...req.Requirement) bool
 	Health() int
 	SetHealth(val int)
 	Mana() int

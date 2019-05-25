@@ -35,6 +35,11 @@ type Requirement interface {
 	SetMeet(meet bool)
 }
 
+// Interface for requirements targets.
+type RequirementsTarget interface {
+	MeetReqs(reqs ...Requirement) bool
+}
+
 // NewRequirements creates new requirements from
 // specified data.
 func NewRequirements(data ...res.ReqData) (reqs []Requirement) {

@@ -31,10 +31,11 @@ import (
 // Struct for quest stage
 // objective.
 type Objective struct {
-	id       string
-	name     string
-	finisher bool
-	reqs     []req.Requirement
+	id        string
+	name      string
+	finisher  bool
+	completed bool
+	reqs      []req.Requirement
 }
 
 // NewObjective creates quest objective.
@@ -43,7 +44,7 @@ func NewObjective(data res.QuestObjectiveData) *Objective {
 	o.id = data.ID
 	o.name = data.Name
 	o.finisher = data.Finisher
-	o.reqs = req.NewRequirements(data.Reqs)
+	o.reqs = req.NewRequirements(data.Reqs...)
 	return o
 }
 
@@ -61,6 +62,17 @@ func (o *Objective) Name() string {
 // should complete whole stage.
 func (o *Objective) Finisher() bool {
 	return o.finisher
+}
+
+// Completed checks if objective was marked
+// as completed.
+func (o *Objective) Completed() bool {
+	return o.completed
+}
+
+// SetComplete sets objective as complete/not complete.
+func (o *Objective) SetComplete(complete bool) {
+	o.completed = complete
 }
 
 // Reqs returns objective requirements.

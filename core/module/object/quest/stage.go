@@ -25,15 +25,17 @@ package quest
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/flag"
 )
 
 // Struct for quest stage.
 type Stage struct {
-	id         string
-	name, info string
-	start      bool
-	next       string
-	objectives []*Objective
+	id            string
+	name, info    string
+	start         bool
+	next          string
+	objectives    []*Objective
+	completeFlags []flag.Flag
 }
 
 // NewStage creates quest stage.
@@ -46,6 +48,11 @@ func NewStage(data res.QuestStageData) *Stage {
 	for _, od := range data.Objectives {
 		o := NewObjective(od)
 		s.objectives = append(s.objectives, o)
+	}
+	// Flags.
+	for _, fd := range data.CompleteFlags {
+		f := flag.Flag(fd.ID)
+		s.completeFlags = append(s.completeFlags, f)
 	}
 	return s
 }
@@ -75,4 +82,33 @@ func (s *Stage) Start() bool {
 // stage after completing this one.
 func (s *Stage) NextStageID() string {
 	return s.next
+}
+
+// Objectives returns all objectives of quest
+// stage.
+func (s *Stage) Objectives() []*Objective {
+	return s.objectives
+}
+
+// Completed check if stage is completed.
+// Stage is completed if all objectives are
+// marked as completed or at least one, which
+// is marked as finisher.
+func (s *Stage) Completed() bool {
+	for _, o := range s.objectives {
+		if o.Completed() && o.Finisher() {
+			return true
+		}
+	}
+	for _, o := range s.objectives {
+		if !o.Completed() {
+			return false
+		}
+	}
+	return true
+}
+
+// CompleteFlags returns flags for finishing stage.
+func (s *Stage) CompleteFlags() []flag.Flag {
+	return s.completeFlags
 }

@@ -33,11 +33,12 @@ type QuestData struct {
 
 // Struct for quest stage data.
 type QuestStageData struct {
-	ID         string
-	Info       string
-	Start      bool
-	Next       string
-	Objectives []QuestObjectiveData
+	ID            string
+	Info          string
+	Start         bool
+	Next          string
+	Objectives    []QuestObjectiveData
+	CompleteFlags []FlagData
 }
 
 // Struct for quest objective data.

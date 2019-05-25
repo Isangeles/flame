@@ -264,7 +264,7 @@ func showCharOption(cmd Command) (int, string) {
 	case "quests":
 		out := ""
 		for _, char := range chars {
-			for _, q := range char.Quests() {
+			for _, q := range char.Journal().Quests() {
 				out += fmt.Sprintf("%s ", q.ID())
 			}
 		}
@@ -428,7 +428,7 @@ func addCharOption(cmd Command) (int, string) {
 				return 8, fmt.Sprintf("%s:fail_to_retrieve_quest:%v",
 					CHAR_MAN, err)
 			}
-			char.AddQuest(q)
+			char.Journal().AddQuest(q)
 		}
 		return 0, ""
 	case "flag":

@@ -5,10 +5,15 @@
       <objectives>
         <objective finisher="true">
 	  <reqs>
-	    <item-req id="imAloeLeafs" amount="1"/>
+	    <item-req id="imAloeLeaves1" amount="1"/>
 	  </reqs>
 	</objective>
       </objectives>
+      <on-complete>
+	<flags>
+	  <flag id="qAloeSearch1_s1_f1"/>
+	</flags>
+      </on-complete>
     </stage>
     <stage id="qAloeSearch1_s2" next="end">
       <objectives>

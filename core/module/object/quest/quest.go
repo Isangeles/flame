@@ -27,6 +27,7 @@ import (
 	"fmt"
 	
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for quest.
@@ -40,8 +41,8 @@ type Quest struct {
 
 // Interface for objects with quests.
 type Quester interface {
-	Quests() []*Quest
-	AddQuest(q *Quest)
+	Journal() *Journal
+	MeetReqs(reqs ...req.Requirement) bool
 }
 
 // New creates quest.

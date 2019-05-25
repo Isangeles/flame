@@ -109,6 +109,7 @@ type FlagXML struct {
 type CharacterQuestXML struct {
 	XMLName xml.Name `xml:"quest"`
 	ID      string   `xml:"id,attr"`
+	Stage   string   `xml:"stage,attr"`
 }
 
 // UnmarshalCharactersBase retrieve all characters data
@@ -189,7 +190,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Skills = *xmlObjectSkills(char.Skills()...)
 	xmlChar.Memory = *xmlMemory(char.Memory())
 	xmlChar.Dialogs = *xmlObjectDialogs(char.Dialogs()...)
-	xmlChar.Quests = xmlQuests(char.Quests())
+	xmlChar.Quests = xmlQuests(char.Journal().Quests())
 	xmlChar.Flags = xmlFlags(char.Flags())
 	return xmlChar
 }
@@ -239,7 +240,12 @@ func xmlFlags(flags []flag.Flag) (xmlFlags []FlagXML) {
 // xmlQuests parses specified qiests to XML quests nodes.
 func xmlQuests(quests []*quest.Quest) (xmlQuests []CharacterQuestXML) {
 	for _, q := range quests {
-		xmlQuest := CharacterQuestXML{ID: q.ID()}
+		xmlQuest := CharacterQuestXML{
+			ID: q.ID(),
+		}
+		if s := q.ActiveStage(); s != nil {
+			xmlQuest.Stage = s.ID()
+		}
 		xmlQuests = append(xmlQuests, xmlQuest)
 	}
 	return
@@ -289,7 +295,7 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	data.BasicData.Wis = attributes.Wis
 	// Flags.
 	for _, xmlFlag := range xmlChar.Flags {
-		flagData := res.FlagData{ID: xmlFlag.ID}
+		flagData := buildFlagData(xmlFlag)
 		data.BasicData.Flags = append(data.BasicData.Flags, flagData)
 	}
 	// Save.
@@ -380,9 +386,16 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	// Quests.
 	for _, xmlQuest := range xmlChar.Quests {
 		questData := res.CharacterQuestData{
-			ID: xmlQuest.ID,
+			ID:    xmlQuest.ID,
+			Stage: xmlQuest.Stage,
 		}
 		data.Quests = append(data.Quests, questData)
 	}
 	return &data, nil
+}
+
+// buildFlagData builds flag data from specified XML data.
+func buildFlagData(xmlFlag FlagXML) (res.FlagData) {
+	flagData := res.FlagData{ID: xmlFlag.ID}
+	return flagData
 }

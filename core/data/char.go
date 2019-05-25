@@ -255,7 +255,12 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 				char.ID(), err)
 			continue
 		}
-		char.AddQuest(quest)
+		err = quest.SetActiveStage(questData.Stage)
+		if err != nil {
+			log.Err.Printf("data:build_character:%s:quest:%s:fail_to_set_active_stage:%v",
+				err)
+		}
+		char.Journal().AddQuest(quest)
 	}
 	return char
 }

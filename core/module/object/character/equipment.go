@@ -92,7 +92,7 @@ func newEquipmentSlot(sType EquipmentSlotType) *EquipmentSlot {
 // Equip add specified equipable item to all 
 // compatible slots.
 func (eq *Equipment) Equip(it item.Equiper) error {
-	if !eq.char.MeetReqs(it.EquipReqs()) {
+	if !eq.char.MeetReqs(it.EquipReqs()...) {
 		return fmt.Errorf("reqs_not_meet")
 	}
 	for _, s := range it.Slots() {
@@ -131,7 +131,7 @@ func (eq *Equipment) Unequip(it item.Equiper) error {
 // equiphandright assigns specified 'equipable' item to right hand slot,
 // returns error if equip fail(e.q. equip reqs aren't meet).
 func (eq *Equipment) EquipHandRight(it item.Equiper) error {
-	if !eq.char.MeetReqs(it.EquipReqs()) {
+	if !eq.char.MeetReqs(it.EquipReqs()...) {
 		return fmt.Errorf("reqs_not_meet")
 	}
 	if len(it.Slots()) != 1 || it.Slots()[0] != item.Hand {

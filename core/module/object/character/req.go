@@ -53,7 +53,7 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 
 // ReqsMeet checks whether all specified requirements
 // are meet by character.
-func (char *Character) MeetReqs(reqs []req.Requirement) bool {
+func (char *Character) MeetReqs(reqs ...req.Requirement) bool {
 	for _, r := range reqs {
 		if !char.MeetReq(r) {
 			return false

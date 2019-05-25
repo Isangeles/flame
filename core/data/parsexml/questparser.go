@@ -48,11 +48,12 @@ type QuestXML struct {
 
 // Struct for quest stage XML node.
 type QuestStageXML struct {
-	XMLName    xml.Name            `xml:"stage"`
-	ID         string              `xml:"id,attr"`
-	Start      bool                `xml:"start,attr"`
-	Next       string              `xml:"next,attr"`
-	Objectives []QuestObjectiveXML `xml:"objectives>objective"`
+	XMLName       xml.Name            `xml:"stage"`
+	ID            string              `xml:"id,attr"`
+	Start         bool                `xml:"start,attr"`
+	Next          string              `xml:"next,attr"`
+	Objectives    []QuestObjectiveXML `xml:"objectives>objective"`
+	CompleteFlags []FlagXML           `xml:"on-complete>flags>flag"`
 }
 
 // Struct for quest objective XML node.
@@ -91,12 +92,18 @@ func buildQuestData(xmlQuest QuestXML) (*res.QuestData, error) {
 	for _, xmlStage := range xmlQuest.Stages {
 		qsd := res.QuestStageData{}
 		qsd.ID = xmlStage.ID
+		qsd.Start = xmlStage.Start
+		qsd.Next = xmlStage.Next
 		for _, xmlObjective := range xmlStage.Objectives {
 			qod := res.QuestObjectiveData{}
 			qod.ID = xmlObjective.ID
 			qod.Finisher = xmlObjective.Finisher
 			qod.Reqs = buildReqs(&xmlObjective.Reqs)
 			qsd.Objectives = append(qsd.Objectives, qod)
+		}
+		for _, xmlFlag := range xmlStage.CompleteFlags {
+			fd := buildFlagData(xmlFlag)
+			qsd.CompleteFlags = append(qsd.CompleteFlags, fd)
 		}
 		qd.Stages = append(qd.Stages, qsd)
 	}

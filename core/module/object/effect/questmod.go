@@ -54,7 +54,7 @@ func (qm *QuestMod) Affect(source Target, targets ...Target) {
 			return
 		}
 		q := quest.New(*qData)
-		quester.AddQuest(q)
+		quester.Journal().AddQuest(q)
 	}
 }
 

@@ -62,12 +62,12 @@ type Character struct {
 	cooldown         int64 // millis
 	inventory        *item.Inventory
 	equipment        *Equipment
+	journal          *quest.Journal
 	targets          []effect.Target
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
-	quests           map[string]*quest.Quest
 	flags            map[string]flag.Flag
 	chatlog          chan string
 	combatlog        chan string
@@ -96,12 +96,12 @@ func New(data res.CharacterBasicData) *Character {
 	c.live = true
 	c.inventory = item.NewInventory(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
+	c.journal = quest.NewJournal(&c)
 	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
-	c.quests = make(map[string]*quest.Quest)
 	c.flags = make(map[string]flag.Flag)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
@@ -113,8 +113,8 @@ func New(data res.CharacterBasicData) *Character {
 		c.SetExperience(oldMaxExp)
 	}
 	// Add flags.
-	for _, fData := range data.Flags {
-		f := flag.Flag(fData.ID)
+	for _, fd := range data.Flags {
+		f := flag.Flag(fd.ID)
 		c.flags[f.ID()] = f
 	}
 	return &c
@@ -160,6 +160,8 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
+	// Journal.
+	c.Journal().Update(delta)
 	// Effects.
 	for serial, e := range c.effects {
 		e.Update(delta)
@@ -560,17 +562,9 @@ func (c *Character) RemoveFlag(f flag.Flag) {
 	log.Dbg.Printf("char:%s_%s:remove_flag:%s", c.ID(), c.Serial(), f)
 }
 
-// Quests return all character quests.
-func (c *Character) Quests() (qs []*quest.Quest) {
-	for _, q := range c.quests {
-		qs = append(qs, q)
-	}
-	return
-}
-
-// AddQuests adds specified quests for character.
-func (c *Character) AddQuest(q *quest.Quest) {
-	c.quests[q.ID()] = q
+// Journal returns quest journal.
+func (c *Character) Journal() *quest.Journal {
+	return c.journal
 }
 
 // levelup promotes character to next level.
