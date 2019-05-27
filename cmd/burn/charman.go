@@ -46,7 +46,6 @@ func handleCharCommand(cmd Command) (int, string) {
 	if len(cmd.OptionArgs()) < 1 {
 		return 3, fmt.Sprintf("%s:no_option_args", CHAR_MAN)
 	}
-
 	switch cmd.OptionArgs()[0] {
 	case "set":
 		return setCharOption(cmd)
@@ -56,6 +55,8 @@ func handleCharCommand(cmd Command) (int, string) {
 		return exportCharOption(cmd)
 	case "add":
 		return addCharOption(cmd)
+	case "remove":
+		return removeCharOption(cmd)
 	case "equip":
 		return equipCharOption(cmd)
 	case "cast":
@@ -440,6 +441,102 @@ func addCharOption(cmd Command) (int, string) {
 			id := cmd.Args()[1]
 			flag := flag.Flag(id)
 			char.AddFlag(flag)
+		}
+		return 0, ""
+	default:
+		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
+			cmd.OptionArgs()[0], cmd.Args()[0])
+	}
+}
+
+// removeCharOption handles 'remove' option for charman CI tool.
+func removeCharOption(cmd Command) (int, string) {
+	if len(cmd.TargetArgs()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_target_args_for:%s",
+			CHAR_MAN, cmd.OptionArgs()[0])
+	}
+	if len(cmd.Args()) < 1 {
+		return 5, fmt.Sprintf("%s:no_enought_args_for:%s",
+			CHAR_MAN, cmd.OptionArgs()[0])
+	}
+	chars := make([]*character.Character, 0)
+	for _, id := range cmd.TargetArgs() {
+		char := flame.Game().Module().Character(id)
+		if char == nil {
+			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
+				id)
+		}
+		chars = append(chars, char)
+	}
+	switch cmd.Args()[0] {
+	case "item":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		serialid := strings.Split(cmd.Args()[1], "_")
+		id := serialid[0]
+		serial := serialid[len(serialid)-1]
+		for _, char := range chars {
+			for _, i := range char.Inventory().Items() {
+				if i.ID() == id && i.Serial() == serial {
+					char.Inventory().RemoveItem(i)
+				}
+			}
+		}
+		return 0, ""
+	case "effect":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		for _, char := range chars {
+			effectID := cmd.Args()[1]
+			effect, err := data.Effect(flame.Game().Module(), effectID)
+			if err != nil {
+				return 8, fmt.Sprintf("%s:fail_to_retrieve_effect:%v",
+					CHAR_MAN, err)
+			}
+			char.RemoveEffect(effect)
+		}
+		return 0, ""
+	case "skill":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		for _, char := range chars {
+			id := cmd.Args()[1]
+			for _, s := range char.Skills() {
+				if s.ID() == id {
+					char.RemoveSkill(s)
+				}
+			}
+		}
+		return 0, ""
+	case "quest":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		for _, char := range chars {
+			id := cmd.Args()[1]
+			for _, q := range char.Journal().Quests() {
+				if q.ID() == id {
+					char.Journal().RemoveQuest(q)
+				}
+			}
+		}
+		return 0, ""
+	case "flag":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.Args()[0])
+		}
+		for _, char := range chars {
+			id := cmd.Args()[1]
+			flag := flag.Flag(id)
+			char.RemoveFlag(flag)
 		}
 		return 0, ""
 	default:

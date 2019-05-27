@@ -61,6 +61,12 @@ Talk with with target:
 ```
 Description: starts dialog with current PC target.
 
+Show quests journal:
+```
+  $quests
+```
+Description: shows active PC quests.
+
 Exit program:
 ```
   $close

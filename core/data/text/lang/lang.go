@@ -154,7 +154,7 @@ func TextDir(path, id string) string {
 			return text[id]
 		}
 	}
-	return fmt.Sprintf("text_not_found_in:%s", path)
+	return fmt.Sprintf("text_not_found:%s", id)
 }
 
 // SetLangPath sets specified path as

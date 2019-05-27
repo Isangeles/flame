@@ -304,7 +304,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 	char := character.New(*charData)
 	// Add character skills & items from mod config.
 	for _, sid := range mod.Conf().CharSkills {
-		s, err := data.Skill(mod, sid)
+		s, err := data.Skill(sid)
 		if err != nil {
 			log.Err.Printf("fail_to_retireve_conf_char_skill:%v", err)
 			continue
@@ -312,7 +312,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 		char.AddSkill(s)
 	}
 	for _, iid := range mod.Conf().CharItems {
-		i, err := data.Item(mod, iid)
+		i, err := data.Item(iid)
 		if err != nil {
 			log.Err.Printf("fail_to_retireve_conf_char_item:%v", err)
 			continue
@@ -321,7 +321,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 	}
 	// Add player skills & items from interface config.
 	for _, sid := range flameconf.NewCharSkills() {
-		s, err := data.Skill(mod, sid)
+		s, err := data.Skill(sid)
 		if err != nil {
 			log.Err.Printf("new_char_dialog:fail_to_retrieve_new_player_skill:%v",
 				err)
@@ -330,7 +330,7 @@ func buildCharacter(mod *module.Module, charData *res.CharacterBasicData) *chara
 		char.AddSkill(s)
 	}
 	for _, iid := range flameconf.NewCharItems() {
-		i, err := data.Item(mod, iid)
+		i, err := data.Item(iid)
 		if err != nil {
 			log.Err.Printf("new_char_dialog:fail_to_retireve_new_player_items:%v",
 				err)

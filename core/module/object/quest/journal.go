@@ -59,9 +59,14 @@ func (j *Journal) Quests() (qs []*Quest) {
 	return
 }
 
-// AddQuests adds specified quests for character.
+// AddQuests adds specified quest.
 func (j *Journal) AddQuest(q *Quest) {
 	j.quests[q.ID()] = q
+}
+
+// RemoveQuest removes specified quest.
+func (j *Journal) RemoveQuest(q *Quest) {
+	delete(j.quests, q.ID())
 }
 
 // checkQuest checks quest progress.
@@ -71,19 +76,17 @@ func (j *Journal) checkQuest(q *Quest) {
 	}
 	// Check previous stages.
 	for _, s := range q.Stages() {
+		if s.Ordinal() > q.ActiveStage().Ordinal() {
+			continue
+		}
+		j.checkStage(s)
 		// Move back to previous incompleted stage.
-		if !s.Completed() && s.Ordinal() < q.ActiveStage().Ordinal() {
+		if !s.Completed() {
 			q.SetActiveStage(s)
 		}
 	}
 	// Check active stage objectives.
-	for _, o := range q.ActiveStage().Objectives() {
-		if !j.owner.MeetReqs(o.Reqs()...) {
-			o.SetComplete(false)
-			continue
-		}
-		o.SetComplete(true)
-	}
+	j.checkStage(q.ActiveStage())
 	// Move to next stage.
 	if q.ActiveStage().Completed() {
 		if flager, ok := j.owner.(flag.Flagger); ok {
@@ -98,5 +101,17 @@ func (j *Journal) checkQuest(q *Quest) {
 			}
 		}
 		q.SetActiveStage(nextStage)
+	}
+}
+
+// checkStage checks progress of specified
+// quest stage.
+func (j *Journal) checkStage(s *Stage) {
+	for _, o := range s.Objectives() {
+		if !j.owner.MeetReqs(o.Reqs()...) {
+			o.SetComplete(false)
+			continue
+		}
+		o.SetComplete(true)
 	}
 }

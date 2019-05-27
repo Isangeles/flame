@@ -1,5 +1,5 @@
 /*
- * cli.go
+ * quests.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -25,31 +25,23 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/isangeles/flame/core/data/text/lang"
+	flameconf "github.com/isangeles/flame/config"
 )
 
-// lootDialog start CLI dialog current
-// PC target loot.
-func lootDialog() error {
-	if game == nil {
-		return fmt.Errorf("no_game_started")
+// questsDialog starts quests journal CLI dialog.
+func questsDialog() error {
+	if activePC == nil {
+		return fmt.Errorf("no active PC")
 	}
-	if len(game.Players()) < 1 {
-		return fmt.Errorf("no_players")
-	}
-	pc := game.Players()[0]
-	tar := pc.Targets()[0]
-	if tar == nil {
-		return fmt.Errorf("no_target")
-	}
-	if false {
-		return fmt.Errorf("tar_not_lootable")
-	}
-	for _, it := range tar.Inventory().Items() {
-		if !it.Loot() {
+	fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "quests_list"))
+	for i, q := range activePC.Journal().Quests() {
+		fmt.Printf("[%d]%s\n", i, q.ID())
+		if q.ActiveStage() == nil {
 			continue
 		}
-		pc.Inventory().AddItem(it)
-		tar.Inventory().RemoveItem(it)
+		fmt.Printf("\t%s\n", q.ActiveStage().ID())
 	}
 	return nil
 }

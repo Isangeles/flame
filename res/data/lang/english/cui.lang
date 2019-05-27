@@ -5,6 +5,7 @@ talk_answers:Answers
 talk_answers_select:Select answer
 target_near_targets:Near targets
 target_select_target:Select target
+quests_list:Quests
 talk_no_answer_id_err:Enter valid answer ID
 talk_no_phase_err:No suitable dialog phase found
 target_no_targets_err:No targets nearby

@@ -91,7 +91,7 @@ func talkDialog() error {
 			// Select answers.
 			answers := make([]*dialog.Answer, 0)
 			for _, a := range phase.Answers() {
-				if !activePC.MeetReqs(a.Requirements()) {
+				if !activePC.MeetReqs(a.Requirements()...) {
 					continue
 				}
 				answers = append(answers, a)
@@ -141,7 +141,7 @@ func talkDialog() error {
 // dialogPhase selects dialog phase with requirements met by specified character.
 func dialogPhase(texts []*dialog.Text, char *character.Character) *dialog.Text {
 	for _, t := range texts {
-		if char.MeetReqs(t.Requirements()) {
+		if char.MeetReqs(t.Requirements()...) {
 			return t
 		}
 	}

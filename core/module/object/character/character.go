@@ -396,6 +396,11 @@ func (c *Character) AddEffect(e *effect.Effect) {
 	c.effects[e.ID()+e.Serial()] = e
 }
 
+// RemoveEffect removes effect from character.
+func (c *Character) RemoveEffect(e *effect.Effect) {
+	delete(c.effects, e.ID()+e.Serial())
+}
+
 // Skills return all character skills.
 func (c *Character) Skills() []*skill.Skill {
 	skills := make([]*skill.Skill, 0)
@@ -409,6 +414,11 @@ func (c *Character) Skills() []*skill.Skill {
 // skills.
 func (c *Character) AddSkill(s *skill.Skill) {
 	c.skills[s.ID()+s.Serial()] = s
+}
+
+// RemoveSkill removes specified skill.
+func (c *Character) RemoveSkill(s *skill.Skill) {
+	delete(c.skills, s.ID()+s.Serial())
 }
 
 // Targets returns character targets.

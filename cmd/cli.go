@@ -59,6 +59,7 @@ const (
 	TALK_TARGET_CMD  = "talk"
 	FIND_TARGET_CMD  = "target"
 	TARGET_INFO_CMD  = "tarinfo"
+	QUESTS_CMD       = "quests"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
 )
@@ -194,6 +195,11 @@ func execute(input string) {
 		if err != nil {
 			log.Err.Printf("%s:%v", TARGET_INFO_CMD, err)
 			break
+		}
+	case QUESTS_CMD:
+		err := questsDialog()
+		if err != nil {
+			log.Err.Printf("%s:%v", QUESTS_CMD, err)
 		}
 	case REPEAT_INPUT_CMD:
 		execute(lastCommand)
