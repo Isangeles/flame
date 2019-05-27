@@ -44,7 +44,7 @@ type Skill struct {
 	effects     []res.EffectData
 	tartype     TargetType
 	castRange   Range
-	user        SkillUser
+	user        effect.Target
 	target      effect.Target
 	castTimeMax int64
 	castTime    int64
@@ -163,7 +163,7 @@ func (s *Skill) SetName(name string) {
 
 // Cast starts skill casting with specified targetable object
 // as skill user.
-func (s *Skill) Cast(user SkillUser, target effect.Target) error {
+func (s *Skill) Cast(user effect.Target, target effect.Target) error {
 	if !s.Ready() {
 		return fmt.Errorf(NOT_READY_ERR)
 	}
@@ -183,7 +183,7 @@ func (s *Skill) Cast(user SkillUser, target effect.Target) error {
 	}
 	s.user = user
 	s.target = target
-	if !user.MeetReqs(s.useReqs...) {
+	if !s.user.MeetReqs(s.useReqs...) {
 		return fmt.Errorf(REQS_NOT_MET_ERR)
 	}
 	s.castTime = 0

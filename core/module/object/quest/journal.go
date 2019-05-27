@@ -44,6 +44,9 @@ func NewJournal(quester Quester) *Journal {
 // Update updates journal quests.
 func (j *Journal) Update(delta int64) {
 	for _, q := range j.quests {
+		if q.Completed() {
+			continue
+		}
 		j.checkQuest(q)
 	}
 }
@@ -66,23 +69,34 @@ func (j *Journal) checkQuest(q *Quest) {
 	if q.ActiveStage() == nil {
 		return
 	}
-	stage := q.ActiveStage()
-	for _, o := range stage.Objectives() {
+	// Check previous stages.
+	for _, s := range q.Stages() {
+		// Move back to previous incompleted stage.
+		if !s.Completed() && s.Ordinal() < q.ActiveStage().Ordinal() {
+			q.SetActiveStage(s)
+		}
+	}
+	// Check active stage objectives.
+	for _, o := range q.ActiveStage().Objectives() {
 		if !j.owner.MeetReqs(o.Reqs()...) {
 			o.SetComplete(false)
 			continue
 		}
 		o.SetComplete(true)
 	}
-	if stage.Completed() {
-		err := q.SetActiveStage(stage.NextStageID())
-		if err != nil {
-			return
-		}
+	// Move to next stage.
+	if q.ActiveStage().Completed() {
 		if flager, ok := j.owner.(flag.Flagger); ok {
-			for _, f := range stage.CompleteFlags() {
+			for _, f := range q.ActiveStage().CompleteFlags() {
 				flager.AddFlag(f)
 			}
 		}
+		var nextStage *Stage
+		for _, s := range q.Stages() {
+			if s.ID() == q.ActiveStage().NextStageID() {
+				nextStage = s
+			}
+		}
+		q.SetActiveStage(nextStage)
 	}
 }

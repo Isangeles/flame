@@ -24,8 +24,6 @@
 package quest
 
 import (
-	"fmt"
-	
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
 )
@@ -35,6 +33,7 @@ type Quest struct {
 	id          string
 	name        string
 	info        string
+	completed   bool
 	activeStage *Stage
 	stages      []*Stage
 }
@@ -44,6 +43,10 @@ type Quester interface {
 	Journal() *Journal
 	MeetReqs(reqs ...req.Requirement) bool
 }
+
+const (
+	END_QUEST_ID = "end"
+)
 
 // New creates quest.
 func New(data res.QuestData) *Quest {
@@ -78,6 +81,17 @@ func (q *Quest) Info() string {
 	return q.info
 }
 
+// Completed check if quest was marked
+// as completed.
+func (q *Quest) Completed() bool {
+	return q.completed
+}
+
+// Stages returns all stages of the quest.
+func (q *Quest) Stages() []*Stage {
+	return q.stages
+}
+
 // ActiveStage returns active quest
 // stage or nil if there is no active
 // stage.
@@ -85,15 +99,8 @@ func (q *Quest) ActiveStage() *Stage {
 	return q.activeStage
 }
 
-// SetActiveStage sets active stage to quest stage with
-// specified ID, returns error if no stage with such ID
-// was found.
-func (q *Quest) SetActiveStage(sid string) error {
-	for _, s := range q.stages {
-		if s.ID() == sid {
-			q.activeStage = s
-			return nil
-		}
-	}
-	return fmt.Errorf("no_such_stage_found:%s", sid)
+// SetActiveStage sets specified stage as
+// active stage.
+func (q *Quest) SetActiveStage(s *Stage) {
+	q.activeStage = s
 }

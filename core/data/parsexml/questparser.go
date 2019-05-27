@@ -50,7 +50,7 @@ type QuestXML struct {
 type QuestStageXML struct {
 	XMLName       xml.Name            `xml:"stage"`
 	ID            string              `xml:"id,attr"`
-	Start         bool                `xml:"start,attr"`
+	Ordinal       int                 `xml:"ordinal,attr"`
 	Next          string              `xml:"next,attr"`
 	Objectives    []QuestObjectiveXML `xml:"objectives>objective"`
 	CompleteFlags []FlagXML           `xml:"on-complete>flags>flag"`
@@ -92,7 +92,7 @@ func buildQuestData(xmlQuest QuestXML) (*res.QuestData, error) {
 	for _, xmlStage := range xmlQuest.Stages {
 		qsd := res.QuestStageData{}
 		qsd.ID = xmlStage.ID
-		qsd.Start = xmlStage.Start
+		qsd.Ordinal = xmlStage.Ordinal
 		qsd.Next = xmlStage.Next
 		for _, xmlObjective := range xmlStage.Objectives {
 			qod := res.QuestObjectiveData{}

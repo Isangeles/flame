@@ -1,5 +1,5 @@
 /*
- * quest.go
+ * req.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,30 +21,13 @@
  *
  */
 
-package res
+package area
 
-// Struct for quest data.
-type QuestData struct {
-	ID     string
-	Name   string
-	Info   string
-	Stages []QuestStageData
-}
+import (
+	"github.com/isangeles/flame/core/module/req"
+)
 
-// Struct for quest stage data.
-type QuestStageData struct {
-	ID            string
-	Info          string
-	Ordinal       int
-	Next          string
-	Objectives    []QuestObjectiveData
-	CompleteFlags []FlagData
-}
-
-// Struct for quest objective data.
-type QuestObjectiveData struct {
-	ID       string
-	Name     string
-	Finisher bool
-	Reqs     []ReqData
+// MeetReqs check if object meet specified requirements.
+func (ob *Object) MeetReqs(reqs ...req.Requirement) bool {
+	return true
 }

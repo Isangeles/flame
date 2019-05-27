@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <base>
   <quest id="qAloeSearch1">
-    <stage id="qAloeSearch1_s1" start="true" next="qAloeSearch1_s2">
+    <stage id="qAloeSearch1_s1" ordinal="0" next="qAloeSearch1_s2">
       <objectives>
         <objective finisher="true">
 	  <reqs>
@@ -15,7 +15,7 @@
 	</flags>
       </on-complete>
     </stage>
-    <stage id="qAloeSearch1_s2" next="end">
+    <stage id="qAloeSearch1_s2" ordinal="1" next="end">
       <objectives>
         <objective finisher="true">
 	  <reqs>

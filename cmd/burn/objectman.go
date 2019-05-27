@@ -74,7 +74,6 @@ func showObjectOption(cmd Command) (int, string) {
 		}
 		objects = append(objects, ob)
 	}
-
 	switch cmd.Args()[0] {
 	case "health", "hp":
 		out := ""

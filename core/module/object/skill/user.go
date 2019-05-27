@@ -24,32 +24,11 @@
 package skill
 
 import (
-	"github.com/isangeles/flame/core/module/object/effect"
-	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for skill users.
 type SkillUser interface {
-	ID() string
-	Serial() string
-	Name() string
 	Skills() []*Skill
-	MeetReqs(r ...req.Requirement) bool
-	Health() int
-	SetHealth(val int)
-	Mana() int
-	SetMana(val int)
-	Experience() int
-	SetExperience(val int)
-	Live() bool
-	Damage() (int, int)
-	HitEffects() []*effect.Effect
-	TakeEffect(e *effect.Effect)
-	Position() (x, y float64)
-	Inventory() *item.Inventory
-	SendCombat(msg string)
-	CombatLog() chan string
-	ChatLog() chan string
-	PrivateLog() chan string
+	MeetReqs(reqs ...req.Requirement) bool
 }

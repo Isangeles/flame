@@ -32,6 +32,7 @@ import (
 type Stage struct {
 	id            string
 	name, info    string
+	ordinal       int
 	start         bool
 	next          string
 	objectives    []*Objective
@@ -43,7 +44,8 @@ func NewStage(data res.QuestStageData) *Stage {
 	s := new(Stage)
 	s.id = data.ID
 	s.info = data.Info
-	s.start = data.Start
+	s.ordinal = data.Ordinal
+	s.start = s.ordinal == 0
 	s.next = data.Next
 	for _, od := range data.Objectives {
 		o := NewObjective(od)
@@ -70,6 +72,11 @@ func (s *Stage) Name() string {
 // Info returns stage info.
 func (s *Stage) Info() string {
 	return s.info
+}
+
+// Ordinal returns stage ordinal number.
+func (s *Stage) Ordinal() int {
+	return s.ordinal
 }
 
 // Start checks if stage is quest
