@@ -41,7 +41,7 @@ func lootDialog() error {
 	if tar == nil {
 		return fmt.Errorf("no_target")
 	}
-	if false {
+	if !tar.Live() {
 		return fmt.Errorf("tar_not_lootable")
 	}
 	for _, it := range tar.Inventory().Items() {

@@ -67,6 +67,12 @@ Show quests journal:
 ```
 Description: shows active PC quests.
 
+Use character skill:
+```
+  $useskill
+```
+Description: starts dialog to use one of active PC skills.
+
 Exit program:
 ```
   $close

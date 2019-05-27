@@ -60,6 +60,7 @@ const (
 	FIND_TARGET_CMD  = "target"
 	TARGET_INFO_CMD  = "tarinfo"
 	QUESTS_CMD       = "quests"
+	USE_SKILL_CMD    = "useskill"
 	REPEAT_INPUT_CMD = "!"
 	INPUT_INDICATOR  = ">"
 )
@@ -200,6 +201,11 @@ func execute(input string) {
 		err := questsDialog()
 		if err != nil {
 			log.Err.Printf("%s:%v", QUESTS_CMD, err)
+		}
+	case USE_SKILL_CMD:
+		err := useSkillDialog()
+		if err != nil {
+			log.Err.Printf("%s:%v", USE_SKILL_CMD, err)
 		}
 	case REPEAT_INPUT_CMD:
 		execute(lastCommand)
