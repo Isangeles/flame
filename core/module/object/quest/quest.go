@@ -31,8 +31,6 @@ import (
 // Struct for quest.
 type Quest struct {
 	id          string
-	name        string
-	info        string
 	completed   bool
 	activeStage *Stage
 	stages      []*Stage
@@ -52,8 +50,6 @@ const (
 func New(data res.QuestData) *Quest {
 	q := new(Quest)
 	q.id = data.ID
-	q.name = data.Name
-	q.info = data.Info
 	for _, sd := range data.Stages {
 		s := NewStage(sd)
 		q.stages = append(q.stages, s)
@@ -69,16 +65,6 @@ func New(data res.QuestData) *Quest {
 // ID returns quest ID.
 func (q *Quest) ID() string {
 	return q.id
-}
-
-// Name returns quest name.
-func (q *Quest) Name() string {
-	return q.name
-}
-
-// Info returns quest info.
-func (q *Quest) Info() string {
-	return q.info
 }
 
 // Completed check if quest was marked

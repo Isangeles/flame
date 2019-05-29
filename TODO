@@ -1,6 +1,5 @@
 MAJOR:
 * Combat system
-* Quests system
 * Scripts processor
 * Armor items
 * Switching chapters
@@ -19,3 +18,4 @@ DONE:
 * Player-NPC interaction
 * Dialogs system
 * Flags for objects
+* Quests system

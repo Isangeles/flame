@@ -36,12 +36,19 @@ func questsDialog() error {
 		return fmt.Errorf("no active PC")
 	}
 	fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "quests_list"))
+	mod := game.Module()
+	questsLangPath := mod.Chapter().Conf().QuestsLangPath()
 	for i, q := range activePC.Journal().Quests() {
-		fmt.Printf("[%d]%s\n", i, q.ID())
+		questInfo := lang.AllText(questsLangPath, q.ID())
+		fmt.Printf("[%d]%s\n", i, questInfo[0])
+		if len(questInfo) > 1 {
+			fmt.Printf("\t%s\n", questInfo[1])
+		}
 		if q.ActiveStage() == nil {
 			continue
 		}
-		fmt.Printf("\t%s\n", q.ActiveStage().ID())
+		stageInfo := lang.AllText(questsLangPath, q.ActiveStage().ID())
+		fmt.Printf("\t%s\n", stageInfo[0])
 	}
 	return nil
 }

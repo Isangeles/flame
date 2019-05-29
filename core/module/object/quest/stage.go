@@ -31,7 +31,6 @@ import (
 // Struct for quest stage.
 type Stage struct {
 	id            string
-	name, info    string
 	ordinal       int
 	start         bool
 	next          string
@@ -43,7 +42,6 @@ type Stage struct {
 func NewStage(data res.QuestStageData) *Stage {
 	s := new(Stage)
 	s.id = data.ID
-	s.info = data.Info
 	s.ordinal = data.Ordinal
 	s.start = s.ordinal == 0
 	s.next = data.Next
@@ -62,16 +60,6 @@ func NewStage(data res.QuestStageData) *Stage {
 // ID returns stage ID.
 func (s *Stage) ID() string {
 	return s.id
-}
-
-// Name returns stage name.
-func (s *Stage) Name() string {
-	return s.name
-}
-
-// Info returns stage info.
-func (s *Stage) Info() string {
-	return s.info
 }
 
 // Ordinal returns stage ordinal number.

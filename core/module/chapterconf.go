@@ -82,3 +82,8 @@ func (cc ChapterConf) AreasPath() string {
 func (cc ChapterConf) DialogsLangPath() string {
 	return filepath.FromSlash(cc.LangPath() + "/dialogs")
 }
+
+// QuestsLangPath returns path to quests lang file.
+func (cc ChapterConf) QuestsLangPath() string {
+	return filepath.FromSlash(cc.LangPath() + "/quests")
+}

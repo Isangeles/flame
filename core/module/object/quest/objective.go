@@ -32,7 +32,6 @@ import (
 // objective.
 type Objective struct {
 	id        string
-	name      string
 	finisher  bool
 	completed bool
 	reqs      []req.Requirement
@@ -42,7 +41,6 @@ type Objective struct {
 func NewObjective(data res.QuestObjectiveData) *Objective {
 	o := new(Objective)
 	o.id = data.ID
-	o.name = data.Name
 	o.finisher = data.Finisher
 	o.reqs = req.NewRequirements(data.Reqs...)
 	return o
@@ -51,11 +49,6 @@ func NewObjective(data res.QuestObjectiveData) *Objective {
 // ID returns objective ID.
 func (o *Objective) ID() string {
 	return o.id
-}
-
-// Name returns objective name.
-func (o *Objective) Name() string {
-	return o.name
 }
 
 // Finisher checks if completing objective

@@ -73,8 +73,8 @@ func Text(langFile, id string) string {
 	return text
 }
 
-// Text returns all texts with specified ID from lang file with specified path.
-// In case of error(file/ID not found) returns string with error  message.
+// AllText returns all texts with specified ID from lang file with specified path.
+// In case of error(file/ID not found) returns string with error message.
 // Results are cached under lang file + id key, so lang file is open
 // only in case when there was no previous requests for specified
 // lang file + id pair.
@@ -155,6 +155,36 @@ func TextDir(path, id string) string {
 		}
 	}
 	return fmt.Sprintf("text_not_found:%s", id)
+}
+
+// AllTextDir search all lang files in directory with specified
+// path for texts with specified ID.
+// If file/ID was not found returns string with error message.
+// Results are cached.
+func AllTextDir(path, id string) []string {
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		errText := make([]string, 1)
+		errText[0] = fmt.Sprintf("read_dir_fail:%v", err)
+		return errText
+	}
+	for _, info := range files {
+		if !strings.HasSuffix(info.Name(), LANG_FILE_EXT) {
+			continue
+		}
+		if allcache[info.Name() + id] != nil {
+			return allcache[info.Name() + id]
+		}
+		fullpath := filepath.FromSlash(path + "/" + info.Name())
+		text, err := text.ReadAllValues(fullpath, id)
+		if err == nil {
+			allcache[info.Name() + id] = text[id] // cache result
+			return text[id]
+		}
+	}
+	errText := make([]string, 1)
+	errText[0] = fmt.Sprintf("text_not_found:%s", id)
+	return errText
 }
 
 // SetLangPath sets specified path as
