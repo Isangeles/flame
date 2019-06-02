@@ -1,7 +1,7 @@
 /*
  * message.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,13 +38,24 @@ const (
 )
 
 // Struct for log messages.
-type message struct {
+type Message struct {
+	id      string
 	date    time.Time
 	text    string
 	mType   MessageType
 }
 
+// ID returns message ID.
+func (m Message) ID() string {
+	return m.id
+}
+
 // Text returns text content of message.
-func (m message) String() string {
+func (m Message) String() string {
 	return m.text
+}
+
+// Date returns message date.
+func (m Message) Date() time.Time {
+	return m.date
 }

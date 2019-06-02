@@ -33,8 +33,9 @@ import (
 
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/save"
+	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
@@ -147,7 +148,7 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 		mainarea := new(scenario.Area)
 		// Areas.
 		for _, areaData := range scenData.Areas {
-			area := scenario.NewArea(areaData.ID)		 
+			area := scenario.NewArea(areaData.ID)
 			// Characters.
 			for _, charData := range areaData.Chars {
 				charsData = append(charsData, charData) // save data to restore effects later
@@ -162,14 +163,20 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 				if charData.SavedData.PC {
 					pcs = append(pcs, char)
 				}
+				// Char to area.
 				area.AddCharacter(char)
 			}
 			// Objects.
 			for _, obData := range areaData.Objects {
 				objectsData = append(objectsData, &obData) // save data to restore effects later
+				// Retrieve name from lang.
+				name := lang.TextDir(mod.Conf().LangPath(), obData.BasicData.ID)
+				obData.BasicData.Name = name
+				// Build object.
 				ob := buildObject(mod, &obData)
 				// Restore position.
 				ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
+				// Object to area.
 				area.AddObject(ob)
 			}
 			if areaData.Mainarea {
@@ -213,7 +220,7 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 	char := mod.Character(data.BasicData.ID + "_" + data.BasicData.Serial)
 	if char == nil {
 		return fmt.Errorf("char_not_found")
-	}	
+	}
 	for _, eData := range data.Effects {
 		effect, err := Effect(mod, eData.ID)
 		if err != nil {
@@ -227,7 +234,7 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 		source := mod.Target(eData.SourceID, eData.SourceSerial)
 		if source == nil {
 			log.Err.Printf("data:char:%s:restore_effects:fail_to_find_source:%s",
-				char.ID(), eData.SourceID + "_" + eData.SourceSerial)
+				char.ID(), eData.SourceID+"_"+eData.SourceSerial)
 		}
 		effect.SetSource(source)
 		char.AddEffect(effect)

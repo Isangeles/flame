@@ -32,12 +32,13 @@ import (
 )
 
 var (
-	messages []message
+	messages []Message
+	counter  int64
 	debuging = false
 )
 
 // Messages returns all messages from log.
-func Messages() []message {
+func Messages() []Message {
 	return messages
 }
 
@@ -48,7 +49,13 @@ func SetDebug(dbg bool) {
 
 // Info registers specified text as info message.
 func logInfo(msg string) {
-	m := message{time.Now(), msg, INF}
+	m := Message{
+		date:  time.Now(),
+		text:  msg,
+		mType: INF,
+	}
+	m.id = fmt.Sprintf("%d", counter)
+	counter += 1
 	messages = append(messages, m)
 	if debuging {	
 		fmt.Print(msg)
@@ -57,7 +64,13 @@ func logInfo(msg string) {
 
 // Error registers specified text as error message.
 func logError(msg string) {
-	m := message{time.Now(), msg, ERR}
+	m := Message{
+		date:  time.Now(),
+		text:  msg,
+		mType: ERR,
+	}
+	m.id = fmt.Sprintf("%d", counter)
+	counter += 1
 	messages = append(messages, m)
 	fmt.Print(msg)
 }
@@ -67,7 +80,13 @@ func logDebug(msg string) {
 	if !debuging {
 		return
 	}
-	m := message{time.Now(), msg, ERR}
+	m := Message{
+		date:  time.Now(),
+		text:  msg,
+		mType: DBG,
+	}
+	m.id = fmt.Sprintf("%d", counter)
+	counter += 1
 	messages = append(messages, m)
 	fmt.Print(msg)
 }
