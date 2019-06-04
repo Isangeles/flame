@@ -6,6 +6,7 @@ talk_answers_select:Select answer
 target_near_targets:Near targets
 target_select_target:Select target
 quests_list:Quests
+quests_q_completed:Completed
 use_skill_skills:Skills
 use_skill_select:Select skill
 talk_no_answer_id_err:Enter valid answer ID

@@ -56,6 +56,7 @@ type GenderReqXML struct {
 type FlagReqXML struct {
 	XMLName xml.Name `xml:"flag-req"`
 	ID      string   `xml:"id,attr"`
+	Off     bool     `xml:"off,attr"`
 }
 
 // Struct for item requirement XML node.
@@ -98,7 +99,10 @@ func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
 	}
 	// Flag reqs.
 	for _, xmlReq := range xmlReqs.FlagReqs {
-		req := res.FlagReqData{xmlReq.ID}
+		req := res.FlagReqData{
+			ID:  xmlReq.ID,
+			Off: xmlReq.Off,
+		}
 		reqs = append(reqs, req)
 	}
 	// Item reqs.

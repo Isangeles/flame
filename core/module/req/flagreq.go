@@ -29,20 +29,28 @@ import (
 
 // Struct for flag requirement.
 type FlagReq struct {
-	flagID string
-	meet   bool
+	flagID  string
+	flagOff bool
+	meet    bool
 }
 
 // NewFlagReq creates new flag requirement.
 func NewFlagReq(data res.FlagReqData) *FlagReq {
 	fr := new(FlagReq)
 	fr.flagID = data.ID
+	fr.flagOff = data.Off
 	return fr
 }
 
 // FlagID returns ID of required flag.
 func (fr *FlagReq) FlagID() string {
 	return fr.flagID
+}
+
+// FlagOff checks if flag should be present
+// or not.
+func (fr *FlagReq) FlagOff() bool {
+	return fr.flagOff
 }
 
 // Meet checks wheter requirement is set as meet.

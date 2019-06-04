@@ -37,6 +37,9 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 		return int(char.Gender()) == r.Type()
 	case *req.FlagReq:
 		f := char.flags[r.FlagID()]
+		if r.FlagOff() {
+			return len(f.ID()) == 0
+		}
 		return len(f.ID()) > 0
 	case *req.ItemReq:
 		count := 0

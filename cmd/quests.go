@@ -44,6 +44,11 @@ func questsDialog() error {
 		if len(questInfo) > 1 {
 			fmt.Printf("\t%s\n", questInfo[1])
 		}
+		if q.Completed() {
+			completeInfo := lang.TextDir(flameconf.LangPath(), "quests_q_completed")
+			fmt.Printf("\t%s\n", completeInfo)
+			continue
+		}
 		if q.ActiveStage() == nil {
 			continue
 		}

@@ -38,7 +38,8 @@ type GenderReqData struct {
 
 // Struct for flag requirement data.
 type FlagReqData struct {
-	ID string
+	ID  string
+	Off bool
 }
 
 // ItemReqData return item

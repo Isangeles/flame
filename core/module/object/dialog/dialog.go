@@ -25,19 +25,19 @@ package dialog
 
 import (
 	"fmt"
-	
+
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for dialog.
 type Dialog struct {
-	id          string
-	finished    bool
-	activeTexts []*Text
-	texts       []*Text
-	reqs        []req.Requirement
-	owner       Talker
+	id           string
+	finished     bool
+	activePhases []*Phase
+	phases       []*Phase
+	reqs         []req.Requirement
+	owner        Talker
 }
 
 // Interface for objects with dialogs.
@@ -58,17 +58,17 @@ func New(data res.DialogData) (*Dialog, error) {
 	d.id = data.ID
 	d.reqs = req.NewRequirements(data.Reqs...)
 	for _, sd := range data.Stages {
-		t := NewText(sd)
-		d.texts = append(d.texts, t)
-		if t.start {
-			d.activeTexts = append(d.activeTexts, t)
+		p := NewPhase(sd)
+		d.phases = append(d.phases, p)
+		if p.start {
+			d.activePhases = append(d.activePhases, p)
 		}
 	}
-	if len(d.texts) < 1 {
-		return nil, fmt.Errorf("no texts")
+	if len(d.phases) < 1 {
+		return nil, fmt.Errorf("no phases")
 	}
-	if len(d.activeTexts) < 1 {
-		d.activeTexts = append(d.activeTexts, d.texts[0])
+	if len(d.activePhases) < 1 {
+		d.activePhases = append(d.activePhases, d.phases[0])
 	}
 	return d, nil
 }
@@ -78,24 +78,24 @@ func (d *Dialog) ID() string {
 	return d.id
 }
 
-// Restart moves dialog to starting text.
+// Restart moves dialog to starting phase.
 func (d *Dialog) Restart() {
-	d.activeTexts = make([]*Text, 0)
-	for _, t := range d.texts {
-		if t.start {
-			d.activeTexts = append(d.activeTexts, t)
+	d.activePhases = make([]*Phase, 0)
+	for _, p := range d.phases {
+		if p.start {
+			d.activePhases = append(d.activePhases, p)
 		}
 	}
-	if len(d.activeTexts) < 1 {
-		d.activeTexts = append(d.activeTexts, d.texts[0])
+	if len(d.activePhases) < 1 {
+		d.activePhases = append(d.activePhases, d.phases[0])
 	}
 	d.finished = false
 }
 
-// Texts returns all dialog texts for
-// current dialog phase.
-func (d *Dialog) Texts() []*Text {
-	return d.activeTexts
+// Phases returns all active phases
+// of dialog.
+func (d *Dialog) Phases() []*Phase {
+	return d.activePhases
 }
 
 // Next moves dialog forward for specified
@@ -106,10 +106,10 @@ func (d *Dialog) Next(a *Answer) {
 		d.finished = true
 		return
 	}
-	d.activeTexts = make([]*Text, 0)
-	for _, t := range d.texts {
-		if t.ordinalID == a.to {
-			d.activeTexts = append(d.activeTexts, t)
+	d.activePhases = make([]*Phase, 0)
+	for _, p := range d.phases {
+		if p.ordinalID == a.to {
+			d.activePhases = append(d.activePhases, p)
 		}
 	}
 }

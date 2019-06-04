@@ -65,7 +65,7 @@ func talkDialog() error {
 	for !d.Finished() {
 		fmt.Printf("%s:\n", lang.TextDir(flameconf.LangPath(), "talk_dialog"))
 		// Dialog phase.
-		phase := dialogPhase(d.Texts(), activePC)
+		phase := dialogPhase(d.Phases(), activePC)
 		if phase == nil {
 			return fmt.Errorf("%s\n", lang.TextDir(flameconf.LangPath(), "talk_no_phase_err"))
 		}
@@ -117,7 +117,7 @@ func talkDialog() error {
 					"talk_no_answer_id_err"))
 				continue
 			}
-			ans = phase.Answers()[id]
+			ans = answers[id]
 			ansText = lang.AllText(dialogsLangPath, ans.ID())[0]
 			// Answer modifiers.
 			for _, mod := range phase.OwnerModifiers() {
@@ -138,11 +138,12 @@ func talkDialog() error {
 	return nil
 }
 
-// dialogPhase selects dialog phase with requirements met by specified character.
-func dialogPhase(texts []*dialog.Text, char *character.Character) *dialog.Text {
-	for _, t := range texts {
-		if char.MeetReqs(t.Requirements()...) {
-			return t
+// dialogPhase selects dialog phase with requirements
+// met by specified character.
+func dialogPhase(phases []*dialog.Phase, char *character.Character) *dialog.Phase {
+	for _, p := range phases {
+		if char.MeetReqs(p.Requirements()...) {
+			return p
 		}
 	}
 	return nil

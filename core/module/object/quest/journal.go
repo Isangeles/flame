@@ -94,6 +94,10 @@ func (j *Journal) checkQuest(q *Quest) {
 				flager.AddFlag(f)
 			}
 		}
+		if q.ActiveStage().Last() {
+			q.SetComplete(true)
+			return
+		}
 		var nextStage *Stage
 		for _, s := range q.Stages() {
 			if s.ID() == q.ActiveStage().NextStageID() {

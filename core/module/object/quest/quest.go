@@ -73,6 +73,11 @@ func (q *Quest) Completed() bool {
 	return q.completed
 }
 
+// SetComplete sets quest as completed/uncompleted.
+func (q *Quest) SetComplete(complete bool) {
+	q.completed = complete
+}
+
 // Stages returns all stages of the quest.
 func (q *Quest) Stages() []*Stage {
 	return q.stages

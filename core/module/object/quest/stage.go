@@ -79,6 +79,12 @@ func (s *Stage) NextStageID() string {
 	return s.next
 }
 
+// Last checks whether stage is
+// last stage.
+func (s *Stage) Last() bool {
+	return s.next == "end"
+}
+
 // Objectives returns all objectives of quest
 // stage.
 func (s *Stage) Objectives() []*Objective {

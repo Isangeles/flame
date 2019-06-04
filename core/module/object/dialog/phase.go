@@ -1,5 +1,5 @@
 /*
- * text.go
+ * phase.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -29,8 +29,8 @@ import (
 	"github.com/isangeles/flame/core/module/req"
 )
 
-// Structoo for dialog text.
-type Text struct {
+// Struct for dialog phase.
+type Phase struct {
 	id         string
 	ordinalID  string
 	start      bool
@@ -40,43 +40,43 @@ type Text struct {
 	answers    []*Answer
 }
 
-// NewText creates new dialog text.
-func NewText(data *res.DialogStageData) *Text {
-	t := new(Text)
-	t.id = data.ID
-	t.ordinalID = data.OrdinalID
-	t.start = data.Start
-	t.reqs = req.NewRequirements(data.Reqs...)
-	t.talkerMods = effect.NewModifiers(data.TalkerMods...)
-	t.ownerMods = effect.NewModifiers(data.OwnerMods...)
+// NewPhase creates new dialog phase.
+func NewPhase(data *res.DialogStageData) *Phase {
+	p := new(Phase)
+	p.id = data.ID
+	p.ordinalID = data.OrdinalID
+	p.start = data.Start
+	p.reqs = req.NewRequirements(data.Reqs...)
+	p.talkerMods = effect.NewModifiers(data.TalkerMods...)
+	p.ownerMods = effect.NewModifiers(data.OwnerMods...)
 	for _, ad := range data.Answers {
 		a := NewAnswer(ad)
-		t.answers = append(t.answers, a)
+		p.answers = append(p.answers, a)
 	}
-	return t
+	return p
 }
 
-// ID returns dialog text ID.
-func (t *Text) ID() string {
-	return t.id
+// ID returns dialog phase ID.
+func (p *Phase) ID() string {
+	return p.id
 }
 
-// Answers returns all dialog text answers.
-func (t *Text) Answers() []*Answer {
-	return t.answers
+// Answers returns all dialog phase answers.
+func (p *Phase) Answers() []*Answer {
+	return p.answers
 }
 
-// Requirements requrements for dialog text.
-func (t *Text) Requirements() []req.Requirement {
-	return t.reqs
+// Requirements returns requrements for dialog phase.
+func (p *Phase) Requirements() []req.Requirement {
+	return p.reqs
 }
 
 // TalkerModifiers retruns modifiers for talker.
-func (t *Text) TalkerModifiers() []effect.Modifier {
-	return t.talkerMods
+func (p *Phase) TalkerModifiers() []effect.Modifier {
+	return p.talkerMods
 }
 
 // OnwerModifiers returns modifiers for dialog owner.
-func (t *Text) OwnerModifiers() []effect.Modifier {
-	return t.ownerMods
+func (p *Phase) OwnerModifiers() []effect.Modifier {
+	return p.ownerMods
 }
