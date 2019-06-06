@@ -217,7 +217,7 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 
 // restoreEffects resores effects for module character.
 func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
-	char := mod.Character(data.BasicData.ID + "_" + data.BasicData.Serial)
+	char := mod.Chapter().Character(data.BasicData.ID, data.BasicData.Serial)
 	if char == nil {
 		return fmt.Errorf("char_not_found")
 	}
@@ -244,7 +244,7 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 
 // restoreCharMemory restores attitude memory for module character.
 func restoreCharMemory(mod *module.Module, data *res.CharacterData) error {
-	char := mod.Character(data.BasicData.ID + "_" + data.BasicData.Serial)
+	char := mod.Chapter().Character(data.BasicData.ID, data.BasicData.Serial)
 	if char == nil {
 		return fmt.Errorf("char_not_found")
 	}

@@ -26,7 +26,6 @@ package burn
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
@@ -78,8 +77,9 @@ func setCharOption(cmd Command) (int, string) {
 			cmd.OptionArgs()[0])
 	}
 	chars := make([]*character.Character, 0)
-	for _, charID := range cmd.TargetArgs() {
-		char := flame.Game().Module().Character(charID)
+	for _, arg := range cmd.TargetArgs() {
+		id, serial := argSerialID(arg)
+		char := flame.Game().Module().Chapter().Character(id, serial)
 		if char == nil {
 			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
 				cmd.TargetArgs()[1])
@@ -159,9 +159,7 @@ func setCharOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
 				CHAR_MAN, cmd.OptionArgs()[1])
 		}
-		serialid := strings.Split(cmd.Args()[1], "_")
-		id := serialid[0]
-		serial := serialid[len(serialid)-1]
+		id, serial := argSerialID(cmd.Args()[1])
 		tar := flame.Game().Module().Target(id, serial)
 		if tar == nil {
 			return 8, fmt.Sprintf("%s:object_not_found:%s",
@@ -188,11 +186,12 @@ func showCharOption(cmd Command) (int, string) {
 			cmd.OptionArgs()[0])
 	}
 	chars := make([]*character.Character, 0)
-	for _, id := range cmd.TargetArgs() {
-		char := flame.Game().Module().Character(id)
+	for _, arg := range cmd.TargetArgs() {
+		id, serial := argSerialID(arg)
+		char := flame.Game().Module().Chapter().Character(id, serial)
 		if char == nil {
-			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-				id)
+			return 5, fmt.Sprintf("%s:character_not_found:%s_%s", CHAR_MAN,
+				id, serial)
 		}
 		chars = append(chars, char)
 	}
@@ -307,7 +306,8 @@ func showCharOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
 				CHAR_MAN, cmd.Args()[0])
 		}
-		tar := flame.Game().Module().Character(cmd.Args()[1])
+		id, serial := argSerialID(cmd.Args()[1])
+		tar := flame.Game().Module().Chapter().Character(id, serial)
 		if tar == nil {
 			return 8, fmt.Sprintf("%s:object_not_found:%s",
 				CHAR_MAN, cmd.Args()[1])
@@ -358,11 +358,12 @@ func addCharOption(cmd Command) (int, string) {
 			CHAR_MAN, cmd.OptionArgs()[0])
 	}
 	chars := make([]*character.Character, 0)
-	for _, id := range cmd.TargetArgs() {
-		char := flame.Game().Module().Character(id)
+	for _, arg := range cmd.TargetArgs() {
+		id, serial := argSerialID(arg)
+		char := flame.Game().Module().Chapter().Character(id, serial)
 		if char == nil {
-			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-				id)
+			return 5, fmt.Sprintf("%s:character_not_found:%s_%s", CHAR_MAN,
+				id, serial)
 		}
 		chars = append(chars, char)
 	}
@@ -460,11 +461,12 @@ func removeCharOption(cmd Command) (int, string) {
 			CHAR_MAN, cmd.OptionArgs()[0])
 	}
 	chars := make([]*character.Character, 0)
-	for _, id := range cmd.TargetArgs() {
-		char := flame.Game().Module().Character(id)
+	for _, arg := range cmd.TargetArgs() {
+		id, serial := argSerialID(arg)
+		char := flame.Game().Module().Chapter().Character(id, serial)
 		if char == nil {
-			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-				id)
+			return 5, fmt.Sprintf("%s:character_not_found:%s_%s", CHAR_MAN,
+				id, serial)
 		}
 		chars = append(chars, char)
 	}
@@ -474,9 +476,7 @@ func removeCharOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
 				CHAR_MAN, cmd.Args()[0])
 		}
-		serialid := strings.Split(cmd.Args()[1], "_")
-		id := serialid[0]
-		serial := serialid[len(serialid)-1]
+		id, serial := argSerialID(cmd.Args()[1])
 		for _, char := range chars {
 			for _, i := range char.Inventory().Items() {
 				if i.ID() == id && i.Serial() == serial {
@@ -556,30 +556,28 @@ func equipCharOption(cmd Command) (int, string) {
 			CHAR_MAN, cmd.OptionArgs()[0])
 	}
 	chars := make([]*character.Character, 0)
-	for _, id := range cmd.TargetArgs() {
-		char := flame.Game().Module().Character(id)
+	for _, arg := range cmd.TargetArgs() {
+		id, serial := argSerialID(arg)
+		char := flame.Game().Module().Chapter().Character(id, serial)
 		if char == nil {
-			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-				id)
+			return 5, fmt.Sprintf("%s:character_not_found:%s_%s", CHAR_MAN,
+				id, serial)
 		}
 		chars = append(chars, char)
 	}
-
 	switch cmd.Args()[0] {
 	case "hand-right":
 		for _, char := range chars {
-			serialid := strings.Split(cmd.Args()[1], "_")
-			id := serialid[0]
-			serial := serialid[len(serialid)-1]
+			id, serial := argSerialID(cmd.Args()[1])
 			it := char.Inventory().Item(id, serial)
 			if it == nil {
-				return 8, fmt.Sprintf("%s:%s:fail_to_retrieve_item_from_inventory:%s",
-					CHAR_MAN, char.SerialID(), serialid)
+				return 8, fmt.Sprintf("%s:%s:fail_to_retrieve_item_from_inventory:%s_%s",
+					CHAR_MAN, char.SerialID(), id, serial)
 			}
 			eit, ok := it.(item.Equiper)
 			if !ok {
-				return 8, fmt.Sprintf("%s:%s_%s:item_not_equipable:%s",
-					CHAR_MAN, char.ID(), char.Serial(), serialid)
+				return 8, fmt.Sprintf("%s:%s_%s:item_not_equipable:%s_%s",
+					CHAR_MAN, char.ID(), char.Serial(), id, serial)
 			}
 			err := char.Equipment().EquipHandRight(eit)
 			if err != nil {
@@ -605,15 +603,15 @@ func castCharOption(cmd Command) (int, string) {
 			CHAR_MAN, cmd.OptionArgs()[0])
 	}
 	chars := make([]*character.Character, 0)
-	for _, id := range cmd.TargetArgs() {
-		char := flame.Game().Module().Character(id)
+	for _, arg := range cmd.TargetArgs() {
+		id, serial := argSerialID(arg)
+		char := flame.Game().Module().Chapter().Character(id, serial)
 		if char == nil {
-			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-				id)
+			return 5, fmt.Sprintf("%s:character_not_found:%s_%s", CHAR_MAN,
+				id, serial)
 		}
 		chars = append(chars, char)
 	}
-
 	switch cmd.Args()[0] {
 	case "skill":
 		for _, char := range chars {

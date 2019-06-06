@@ -45,11 +45,9 @@ func NewSTDCommand(text string) (*STDCommand, error) {
 	c := new(STDCommand)
 	c.text = text
 	c.commandParts = strings.Split(c.text, " ")
-
 	if len(c.commandParts) < 1 {
 		return c, fmt.Errorf("command_to_short:'%s'", text)
 	}
-
 	c.tool = c.commandParts[0]
 	for i := 1; i < len(c.commandParts); i++ {
 		cPart := strings.TrimSpace(c.commandParts[i])
@@ -82,7 +80,6 @@ func NewSTDCommand(text string) (*STDCommand, error) {
 			continue
 		}
 	}
-
 	return c, nil
 }
 

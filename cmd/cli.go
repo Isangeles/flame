@@ -31,6 +31,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -42,6 +43,7 @@ import (
 	"github.com/isangeles/flame/core/module/object/character"
 
 	"github.com/isangeles/flame/cmd/burn"
+	"github.com/isangeles/flame/cmd/burn/ash"
 	"github.com/isangeles/flame/cmd/burn/syntax"
 	"github.com/isangeles/flame/cmd/config"
 	"github.com/isangeles/flame/cmd/log"
@@ -49,6 +51,7 @@ import (
 
 const (
 	COMMAND_PREFIX   = "$"
+	SCRIPT_PREFIX    = "#"
 	CLOSE_CMD        = "close"
 	NEW_CHAR_CMD     = "newchar"
 	NEW_GAME_CMD     = "newgame"
@@ -101,6 +104,9 @@ func main() {
 			cmd := strings.TrimPrefix(input, COMMAND_PREFIX)
 			execute(cmd)
 			lastCommand = cmd
+		} else if strings.HasPrefix(input, SCRIPT_PREFIX) {
+			scrFile := strings.TrimPrefix(input, SCRIPT_PREFIX)
+			executeFile(scrFile)
 		} else if activePC != nil {
 			activePC.SendChat(input)
 		} else {
@@ -217,6 +223,33 @@ func execute(input string) {
 		}
 		res, out := burn.HandleExpression(exp)
 		log.Inf.Printf("burn[%d]:%s\n", res, out)
+	}
+}
+
+// executeFile executes script from
+// data/scripts dir.
+func executeFile(filename string) {
+	path := fmt.Sprintf("%s/%s%s", config.ScriptsPath(),
+		filename, ash.SCRIPT_FILE_EXT)
+	file, err := os.Open(path)
+	if err != nil {
+		log.Err.Printf("fail_to_open_file:%v", err)
+		return
+	}
+	text, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Err.Printf("fail_to_read_file:%v", err)
+		return
+	}
+	scr, err := ash.NewScript(fmt.Sprintf("%s", text))
+	if err != nil {
+		log.Err.Printf("fail_to_parse_script:%v", err)
+		return 
+	}
+	err = ash.Run(scr)
+	if err != nil {
+		log.Err.Printf("script_run_fail:%v", err)
+		return 
 	}
 }
 

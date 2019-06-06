@@ -51,11 +51,11 @@ type STDExpression struct {
 // specified text.
 func NewSTDExpression(text string) (*STDExpression, error) {
 	exp := new(STDExpression)
-	exp.text = text
+	exp.text = strings.TrimSpace(text)
 	switch {	
-	case strings.Contains(text, STD_TAR_ARG_PIPE):
+	case strings.Contains(exp.text, STD_TAR_ARG_PIPE):
 		exp.etype = burn.PIPE_TAR_ARG_EXP
-		cmdsText := strings.Split(text, STD_TAR_ARG_PIPE)
+		cmdsText := strings.Split(exp.text, STD_TAR_ARG_PIPE)
 		for _, cmdText := range cmdsText {
 			cmd, err := NewSTDCommand(strings.TrimSpace(cmdText))
 			if err != nil {
@@ -67,10 +67,10 @@ func NewSTDExpression(text string) (*STDExpression, error) {
 		return exp, nil
 	default:
 		exp.etype = burn.NO_EXP
-		cmd, err := NewSTDCommand(strings.TrimSpace(text))
+		cmd, err := NewSTDCommand(exp.text)
 		if err != nil {
 			return exp, fmt.Errorf("command:%s:fail_to_buil_expression_command:%v",
-				text, err)
+				exp.text, err)
 		}
 		exp.commands = append(exp.commands, cmd)
 		return exp, nil

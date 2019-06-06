@@ -53,11 +53,14 @@ type Expression interface {
 type ExpressionType int
 
 const (
+	// CI tools names.
 	ENGINE_MAN = "engineman"
 	MODULE_MAN = "moduleman"
 	CHAR_MAN   = "charman"
 	OBJECT_MAN = "objectman"
-	
+
+	ID_SERIAL_SEP = "#"
+	// Expr types.
 	PIPE_ARG_EXP ExpressionType = iota
 	PIPE_TAR_ARG_EXP
 	SEQ_EXP
@@ -91,8 +94,8 @@ func HandleCommand(cmd Command) (int, string) {
 			return handleFunc(cmd)
 		}
 	}
-	return 2, fmt.Sprintf("cmd:%s:ERROR_no_such_ci_tool_found:'%s'",
-		cmd, cmd.Tool())
+	return 2, fmt.Sprintf("no_such_ci_tool_found:'%s'",
+		cmd.Tool())
 }
 
 // HandleExpression handles specified expression,
@@ -106,8 +109,7 @@ func HandleExpression(exp Expression) (int, string) {
 	case NO_EXP:
 		return HandleCommand(exp.Commands()[0])
 	default:
-		return 2, fmt.Sprintf("exp:%s:error:unknow_expression_type",
-			exp)
+		return 2, fmt.Sprintf("unknow expression type")
 	}
 }
 
@@ -155,4 +157,16 @@ func pipeTargetArgs(cmd Command, out string) (int, string) {
 	args := strings.Split(strings.TrimSpace(out), " ")
 	cmd.AddTargetArgs(args...)
 	return HandleCommand(cmd)
+}
+
+// argSerialID parses specified command arg to
+// game object ID and serial value.
+// Argument format: [id]ID_SERIAL_SEP[serial].
+// In case of error returns empty serial.
+func argSerialID(arg string) (string, string) {
+	serialid := strings.Split(arg, ID_SERIAL_SEP)
+	if len(serialid) < 2 {
+		return arg, ""
+	}
+	return serialid[0], serialid[1]
 }

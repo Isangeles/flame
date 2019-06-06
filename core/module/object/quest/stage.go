@@ -33,6 +33,7 @@ type Stage struct {
 	id            string
 	ordinal       int
 	start         bool
+	last          bool
 	next          string
 	objectives    []*Objective
 	completeFlags []flag.Flag
@@ -44,6 +45,7 @@ func NewStage(data res.QuestStageData) *Stage {
 	s.id = data.ID
 	s.ordinal = data.Ordinal
 	s.start = s.ordinal == 0
+	s.last = data.Next == "end" 
 	s.next = data.Next
 	for _, od := range data.Objectives {
 		o := NewObjective(od)
@@ -82,7 +84,7 @@ func (s *Stage) NextStageID() string {
 // Last checks whether stage is
 // last stage.
 func (s *Stage) Last() bool {
-	return s.next == "end"
+	return s.last
 }
 
 // Objectives returns all objectives of quest

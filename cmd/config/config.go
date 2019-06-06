@@ -42,6 +42,7 @@ var (
 	newCharAttrsPts = 10
 	newCharSkills   []string
 	newCharItems    []string
+	scriptsDir      = "data/scripts"
 )
 
 // LoadConfig Loads CLI config file.
@@ -121,4 +122,10 @@ func NewCharItems() (ids []string) {
 		ids = append(ids, id)
 	}
 	return
+}
+
+// ScriptsPath returns path to
+// scripts directory.
+func ScriptsPath() string {
+	return scriptsDir
 }

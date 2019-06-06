@@ -25,7 +25,7 @@ package module
 
 import (
 	"fmt"
-
+	
 	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
@@ -140,11 +140,11 @@ func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {
 
 // Character returns existing game character with specified
 // serial ID or nil if no character with specified ID exists.
-func (c *Chapter) Character(serialID string) *character.Character {
+func (c *Chapter) Character(id, serial string) *character.Character {
 	for _, s := range c.loadedScens {
 		for _, a := range s.Areas() {
 			for _, c := range a.Characters() {
-				if c.SerialID() == serialID {
+				if c.ID() == id && c.Serial() == serial {
 					return c
 				}
 			}

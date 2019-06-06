@@ -192,7 +192,8 @@ func startEngineOption(cmd Command) (int, string) {
 		if flame.Mod() == nil {
 			return 7, fmt.Sprintf("no_module_loaded")
 		}
-		pc := flame.Mod().Character(cmd.Args()[0])
+		id, serial := argSerialID(cmd.Args()[0])
+		pc := flame.Mod().Chapter().Character(id, serial)
 		if pc == nil {
 			return 7, fmt.Sprintf("not_found_character_with_id:'%s'",
 				cmd.Args()[0])
