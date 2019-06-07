@@ -34,24 +34,43 @@ import (
 // Struct for Ash script.
 type Script struct {
 	name        string
+	args        []string
 	text        string
 	mainCase    string
 	expressions []burn.Expression
 }
 
+const (
+	COMMENT_PREFIX = "#"
+)
+
 // NewScript creates new Ash script from specified
 // text, returns error in case of syntax error.
-func NewScript(text string) (*Script, error) {
+func NewScript(text string, args ...string) (*Script, error) {
 	s := new(Script)
-	s.text = text
+	s.args = args
+	// Remove comment lines.
+	for _, l := range strings.Split(text, "\n") {
+		if strings.HasPrefix(l, COMMENT_PREFIX) {
+			continue
+		}
+		s.text += l
+	}
+	// Insert args.
+	if len(args) > 1 {
+		s.text = strings.ReplaceAll(s.text, "@1", args[1])
+	}
+	// TODO: all args.
 	if !strings.Contains(s.text, "{") {
 		return nil, fmt.Errorf("no_script_body")
 	}
+	// Main case.
 	startBrace := strings.Index(s.text, "{")
 	endBrace := strings.Index(s.text, "}")
 	mainCase := s.text[:startBrace]
 	mainCase = strings.ReplaceAll(mainCase, "{", "")
-	s.mainCase = mainCase
+	s.mainCase = strings.TrimSpace(mainCase)
+	// Body.
 	body := s.text[startBrace:endBrace]
 	body = strings.ReplaceAll(body, "{", "")
 	body = strings.ReplaceAll(body, "}", "")

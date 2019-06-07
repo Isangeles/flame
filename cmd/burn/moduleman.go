@@ -90,7 +90,7 @@ func showModuleOption(cmd Command) (int, string) {
 		}
 		out := ""
 		for _, c := range area.Characters() {
-			out = fmt.Sprintf("%s %s_%s", out, c.ID(), c.Serial())
+			out = fmt.Sprintf("%s %s%s%s", out, c.ID(), ID_SERIAL_SEP, c.Serial())
 		}
 		return 0, out
 	case "area-objects":

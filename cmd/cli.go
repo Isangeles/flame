@@ -105,8 +105,9 @@ func main() {
 			execute(cmd)
 			lastCommand = cmd
 		} else if strings.HasPrefix(input, SCRIPT_PREFIX) {
-			scrFile := strings.TrimPrefix(input, SCRIPT_PREFIX)
-			executeFile(scrFile)
+			input := strings.TrimPrefix(input, SCRIPT_PREFIX)
+			scrArgs := strings.Split(input, " ")
+			executeFile(scrArgs[0], scrArgs...)
 		} else if activePC != nil {
 			activePC.SendChat(input)
 		} else {
@@ -228,7 +229,7 @@ func execute(input string) {
 
 // executeFile executes script from
 // data/scripts dir.
-func executeFile(filename string) {
+func executeFile(filename string, args ...string) {
 	path := fmt.Sprintf("%s/%s%s", config.ScriptsPath(),
 		filename, ash.SCRIPT_FILE_EXT)
 	file, err := os.Open(path)
@@ -241,7 +242,7 @@ func executeFile(filename string) {
 		log.Err.Printf("fail_to_read_file:%v", err)
 		return
 	}
-	scr, err := ash.NewScript(fmt.Sprintf("%s", text))
+	scr, err := ash.NewScript(fmt.Sprintf("%s", text), args...)
 	if err != nil {
 		log.Err.Printf("fail_to_parse_script:%v", err)
 		return 

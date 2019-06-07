@@ -34,11 +34,13 @@ const (
 	SCRIPT_FILE_EXT = ".ash"
 	// Keywords.
 	NEAR_KEYWORD = "near"
+	TRUE_KEYWORD = "true"
 )
 
 // Run runs specified script.
 func Run(scr *Script) error {
 	if !executable(scr) {
+		fmt.Printf("no_exec\n")
 		return nil
 	}
 	for _, e := range scr.Expressions() {
@@ -47,6 +49,9 @@ func Run(scr *Script) error {
 			return fmt.Errorf("fail_to_run_expr:'%s':[%d]%s",
 				e.String(), r, o)
 		}
+		if len(o) > 0 {
+			fmt.Printf("%s\n", o)
+		}
 	}
 	return nil
 }
@@ -54,6 +59,9 @@ func Run(scr *Script) error {
 // executable checks if specified should be executed
 // for specified game.
 func executable(scr *Script) bool {
+	if len(scr.mainCase) < 1 {
+		return true
+	}
 	return checkCase(scr.mainCase)
 }
 
@@ -67,6 +75,8 @@ func checkCase(c string) bool {
 			return false
 		}
 		// TODO: check range.
+		return true
+	case c == TRUE_KEYWORD:
 		return true
 	default:
 		return false
