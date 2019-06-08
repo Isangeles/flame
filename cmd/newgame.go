@@ -79,7 +79,7 @@ func newGameDialog() (*core.Game, error) {
 	}
 	var pcs []*character.Character
 	pcs = append(pcs, pc)
-	g, err := flame.StartGame(pcs)
+	g, err := flame.StartGame(pcs...)
 	if err != nil {
 		return nil, fmt.Errorf("%s:%v", lang.Text("ui", "cli_newgame_start_err"), err)
 	}

@@ -41,4 +41,48 @@ Set target:
 ```
   $charman -o set -t [ID]_[serial] -a target [ID]_[serial]
 ```
-Description: sets object with specified serial ID(-a) as target of character with specified serial ID(-t). 
+Description: sets object with specified serial ID(-a) as target of character with specified serial ID(-t).
+
+Export game character:
+```
+  $charman -o export -t [character ID]
+```
+Description: exports game character with specified ID to XML file in
+data/modules/[module]/characters directory.
+
+Load module:
+```
+  $engineman -o load -t module -a [module name] [module path](optional)
+```
+Description: loads module with the specified name(module directory name) and with a specified path,
+if no path provided, the engine will search default modules directory(data/modules).
+
+Save game:
+```
+  $engineman -o save -t game -a [save file name]
+```
+Description: saves current game to 'savegames/[module]' directory.
+
+Add item:
+```
+  $charman -o add -t [character serial ID] -a item [item ID]
+```
+Description: adds item with specified ID to inventory of game character with specified serial ID.
+
+Equip item:
+```
+  $charman -o equip -t [character serial ID] -a [slot ID] [item serial ID]
+```
+Description: equips item with specified ID for game character with specified serial ID.
+
+Add effect:
+```
+  $charman -o add -t [character serial ID] -a effect [effect ID]
+```
+Description: puts effect with specified ID on game character with specified serial ID
+
+Spawn NPC:
+```
+  $moduleman -o add -t character -a [character ID] [scenario ID] [areaID] [posX](optional) [posY](optional)
+```
+Description: spawns new chapter NPC with specified ID in specified scenario area at given position(0, 0 if not specified).

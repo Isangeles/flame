@@ -19,6 +19,9 @@
   Description: simple demo game that presents engine and [Mural GUI](https://github.com/isangeles/mural) features.
   
   Download: [Linux](https://drive.google.com/open?id=1CAUiHdGq8sxrrNWkRwF1QSaNSVWLKDVg), [Windows](https://drive.google.com/open?id=1rR_k_39o-hqTywUZO628ggA3iN7ZBZTJ)
+
+## Usage
+  You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/exmaple) package.
   
 ## Build & Run
   Get sources from git:
@@ -55,106 +58,6 @@ Description: enables engine debug mode(shows debug messages in engine log), 'tru
 
 ## Burn Shell
 Flame comes with [Burn Shell](https://github.com/Isangeles/flame/tree/master/cmd), a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
-
-### Commands:
-Create module:
-```
-  $newmod
-```
-Description: Starts new module creation dialog. New module will be created in 'data/modules' directory. New module contains one chapter and start area.
-
-Load module:
-```
-  $engineman -o load -t module -a [module name] [module path](optional)
-```
-Description: loads module with the specified name(module directory name) and with a specified path,
-if no path provided, the engine will search default modules directory(data/modules).
-
-Create new character:
-```
-  $newchar
-```
-Description: starts new character creation dialog.
-
-Start new game:
-```
-  $newgame
-```
-Description: starts new game dialog.
-
-Load game:
-```
-  $loadgame
-```
-Description: starts load game dialog.
-
-Export game character:
-```
-  $charman -o export -t [character ID]
-```
-Description: exports game character with specified ID to XML file in
-data/modules/[module]/characters directory.
-
-Import exported characters:
-```
-  $importchars
-```
-Description: imports all characters from XML files in
-data/modules/[module]/characters directory.
-
-Set target:
-```
-  $target
-```
-Description: searches current area for nearby targets to set for active PC.
-
-Target information:
-```
-  $tarinfo
-```
-Description: prints informations about active PC target.
-
-Loot target:
-```
-  $loot
-```
-Description: transfers all items from current dead target to active PC.
-
-Talk with with target:
-```
-  $talk
-```
-Description: starts dialog with current PC target.
-
-Save game:
-```
-  $engineman -o save -t game -a [save file name]
-```
-Description: saves current game to 'savegames/[module]' directory.
-
-Add item:
-```
-  $charman -o add -t [character serial ID] -a item [item ID]
-```
-Description: adds item with specified ID to inventory of game character with specified serial ID.
-
-Equip item:
-```
-  $charman -o equip -t [character serial ID] -a [slot ID] [item serial ID]
-```
-Description: equips item with specified ID for game character with specified serial ID.
-
-Add effect:
-```
-  $charman -o add -t [character serial ID] -a effect [effect ID]
-```
-Description: puts effect with specified ID on game character with specified serial ID.
-
-Spawn NPC:
-```
-  $moduleman -o add -t character -a [character ID] [scenario ID] [areaID] [posX](optional) [posY](optional)
-```
-Description: spawns new chapter NPC with specified ID in specified scenario area at given position(0, 0 if not specified).
 
 ## Contact
 * Isangeles <<dev@isangeles.pl>>

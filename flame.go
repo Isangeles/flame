@@ -69,7 +69,7 @@ func SetGame(g *core.Game) {
 
 // StartGame starts new game for loaded module with specified
 // characters as PCs.
-func StartGame(pcs []*character.Character) (*core.Game, error) {
+func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	if Mod() == nil {
 		return nil, fmt.Errorf("no module loaded")
 	}
@@ -92,6 +92,12 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
 	}
+	// Create new game.
+	game, err = core.NewGame(mod)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_create_game:%v", err)
+	}
+	SetGame(game)
 	// All players to main area of start scenario.
 	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
 	if err != nil {
@@ -102,12 +108,7 @@ func StartGame(pcs []*character.Character) (*core.Game, error) {
 		serial.AssignSerial(pc)
 		startArea.AddCharacter(pc)
 	}
-	// Create new game.
-	game, err = core.NewGame(mod)
-	if err != nil {
-		return nil, fmt.Errorf("fail_to_create_game:%v", err)
-	}
-	SetGame(game)
+	// Add players to game.
 	for _, pc := range pcs {
 		game.AddPlayer(pc)
 	}

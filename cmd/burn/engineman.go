@@ -30,7 +30,6 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/module/object/character"
 )
 
 // Handles specified engine command,
@@ -198,9 +197,7 @@ func startEngineOption(cmd Command) (int, string) {
 			return 7, fmt.Sprintf("not_found_character_with_id:'%s'",
 				cmd.Args()[0])
 		}
-		var pcs []*character.Character
-		pcs = append(pcs, pc)
-		_, err := flame.StartGame(pcs)
+		_, err := flame.StartGame(pc)
 		if err != nil {
 			return 8, fmt.Sprintf("%s:new_game_start_fail:%s",
 				ENGINE_MAN, err)

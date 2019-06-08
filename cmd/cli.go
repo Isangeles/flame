@@ -227,8 +227,7 @@ func execute(input string) {
 	}
 }
 
-// executeFile executes script from
-// data/scripts dir.
+// executeFile executes script from data/scripts dir.
 func executeFile(filename string, args ...string) {
 	path := fmt.Sprintf("%s/%s%s", config.ScriptsPath(),
 		filename, ash.SCRIPT_FILE_EXT)
