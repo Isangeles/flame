@@ -26,22 +26,26 @@ package ash
 import (
 	"fmt"
 	"strings"
-	
-	"github.com/isangeles/flame/cmd/burn"
+
 	"github.com/isangeles/flame/cmd/burn/syntax"
 )
 
 // Struct for Ash script.
 type Script struct {
-	name        string
-	args        []string
-	text        string
-	mainCase    string
-	expressions []burn.Expression
+	name      string
+	args      []string
+	text      string
+	mainCase  string
+	exprs     []*ScriptExpression
 }
 
 const (
 	COMMENT_PREFIX = "#"
+	BODY_EXPR_SEP  = ";"
+	// Keywords.
+	NEAR_KEYWORD = "near"
+	TRUE_KEYWORD = "true"
+	ECHO_KEYWORD = "echo"
 )
 
 // NewScript creates new Ash script from specified
@@ -57,42 +61,62 @@ func NewScript(text string, args ...string) (*Script, error) {
 		s.text += l
 	}
 	// Insert args.
-	if len(args) > 1 {
-		s.text = strings.ReplaceAll(s.text, "@1", args[1])
+	for i := 1; i < len(s.args); i ++ {
+		macro := fmt.Sprintf("@%d", i)
+		s.text = strings.ReplaceAll(s.text, macro, s.args[i])
 	}
-	// TODO: all args.
 	if !strings.Contains(s.text, "{") {
 		return nil, fmt.Errorf("no_script_body")
 	}
 	// Main case.
 	startBrace := strings.Index(s.text, "{")
-	endBrace := strings.Index(s.text, "}")
 	mainCase := s.text[:startBrace]
 	mainCase = strings.ReplaceAll(mainCase, "{", "")
 	s.mainCase = strings.TrimSpace(mainCase)
 	// Body.
-	body := s.text[startBrace:endBrace]
-	body = strings.ReplaceAll(body, "{", "")
-	body = strings.ReplaceAll(body, "}", "")
-	for _, l := range strings.Split(body, "\n") {
+	body := textBetween(s.text, "{", "}")
+	for _, l := range strings.Split(body, BODY_EXPR_SEP) {
+		l = strings.TrimSpace(l)
 		if len(l) < 1 {
 			continue
+		}
+		echo := false
+		if strings.HasPrefix(l, ECHO_KEYWORD) {
+			l = textBetween(l, "(", ")")
+			echo = true
 		}
 		expr, err := syntax.NewSTDExpression(l)
 		if err != nil {
 			return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
 		}
-		s.expressions = append(s.expressions, expr)
+		sExpr := NewExpression(expr, echo)
+		s.exprs = append(s.exprs, sExpr)
 	}
 	return s, nil
 }
 
 // Expressions returns all script expressions.
-func (s *Script) Expressions() []burn.Expression {
-	return s.expressions
+func (s *Script) Expressions() []*ScriptExpression {
+	return s.exprs
 }
 
 // String returns script text body.
 func (s *Script) String() string {
 	return s.text
+}
+
+// textBetween returns slice from specified text
+// between specified start and end sequence or
+// the same specified text if start or end sequence
+// was not found.
+func textBetween(text, start, end string) string {
+	startID := strings.Index(text, start)
+	if startID < 0 {
+		return text
+	}
+	endID := strings.Index(text, end)
+	if endID < 0 {
+		return text
+	}
+	return text[startID+1:endID]
 }

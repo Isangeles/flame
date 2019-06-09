@@ -25,7 +25,6 @@
 // Uses Burn CI to handle user input and communicate with Flame Engine.
 // All commands to be handled by CI must starts with dollar sign($),
 // otherwise input is directly send to out(like 'echo').
-// Type '$close' to close CLI.
 package main
 
 import (
@@ -51,7 +50,7 @@ import (
 
 const (
 	COMMAND_PREFIX   = "$"
-	SCRIPT_PREFIX    = "#"
+	SCRIPT_PREFIX    = "%"
 	CLOSE_CMD        = "close"
 	NEW_CHAR_CMD     = "newchar"
 	NEW_GAME_CMD     = "newgame"

@@ -32,9 +32,6 @@ import (
 
 const (
 	SCRIPT_FILE_EXT = ".ash"
-	// Keywords.
-	NEAR_KEYWORD = "near"
-	TRUE_KEYWORD = "true"
 )
 
 // Run runs specified script.
@@ -49,7 +46,7 @@ func Run(scr *Script) error {
 			return fmt.Errorf("fail_to_run_expr:'%s':[%d]%s",
 				e.String(), r, o)
 		}
-		if len(o) > 0 {
+		if e.Echo() {
 			fmt.Printf("%s\n", o)
 		}
 	}
