@@ -26,6 +26,7 @@ package ash
 import (
 	"fmt"
 	"strings"
+	"strconv"
 
 	"github.com/isangeles/flame/cmd/burn/syntax"
 )
@@ -37,6 +38,7 @@ type Script struct {
 	text      string
 	mainCase  string
 	exprs     []*ScriptExpression
+	pos       int
 }
 
 const (
@@ -46,6 +48,7 @@ const (
 	NEAR_KEYWORD = "near"
 	TRUE_KEYWORD = "true"
 	ECHO_KEYWORD = "echo"
+	WAIT_KEYWORD = "wait"
 )
 
 // NewScript creates new Ash script from specified
@@ -80,17 +83,29 @@ func NewScript(text string, args ...string) (*Script, error) {
 		if len(l) < 1 {
 			continue
 		}
-		echo := false
-		if strings.HasPrefix(l, ECHO_KEYWORD) {
+		switch {
+		case strings.HasPrefix(l, ECHO_KEYWORD):
 			l = textBetween(l, "(", ")")
-			echo = true
+			expr, err := syntax.NewSTDExpression(l)
+			if err != nil {
+				return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
+			}
+			s.exprs = append(s.exprs, NewEchoMacro("", expr))
+		case strings.HasPrefix(l, WAIT_KEYWORD):
+			secText := textBetween(l, "(", ")")
+			sec, err := strconv.ParseInt(secText, 32, 64)
+			if err != nil {
+				return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
+			}
+			s.exprs = append(s.exprs, NewWaitMacro(sec * 1000))
+		default:
+			expr, err := syntax.NewSTDExpression(l)
+			if err != nil {
+				return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
+			}
+			sExpr := NewExpression(expr)
+			s.exprs = append(s.exprs, sExpr)
 		}
-		expr, err := syntax.NewSTDExpression(l)
-		if err != nil {
-			return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
-		}
-		sExpr := NewExpression(expr, echo)
-		s.exprs = append(s.exprs, sExpr)
 	}
 	return s, nil
 }
@@ -103,6 +118,23 @@ func (s *Script) Expressions() []*ScriptExpression {
 // String returns script text body.
 func (s *Script) String() string {
 	return s.text
+}
+
+// Position returns position of currently
+// executed script expression.
+func (s *Script) Position() int {
+	return s.pos
+}
+
+// SetPosition sets position of currently
+// executed script expression.
+func (s *Script) SetPosition(p int) {
+	s.pos = p
+}
+
+// Finished checks if script is finished.
+func (s *Script) Finished() bool {
+	return s.Position() >= len(s.Expressions())
 }
 
 // textBetween returns slice from specified text

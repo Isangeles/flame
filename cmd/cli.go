@@ -243,20 +243,23 @@ func executeFile(filename string, args ...string) {
 	scr, err := ash.NewScript(fmt.Sprintf("%s", text), args...)
 	if err != nil {
 		log.Err.Printf("fail_to_parse_script:%v", err)
-		return 
+		return
 	}
 	err = ash.Run(scr)
 	if err != nil {
 		log.Err.Printf("script_run_fail:%v", err)
-		return 
+		return
 	}
 }
 
 // gameLoop handles game updating.
 func gameLoop(g *core.Game) {
+	// Delta.
 	dtNano := time.Since(lastUpdate).Nanoseconds()
 	delta := dtNano / int64(time.Millisecond) // delta to milliseconds
+	// Game.
 	g.Update(delta)
+	// Update time.
 	lastUpdate = time.Now()
 }
 

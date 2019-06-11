@@ -29,21 +29,62 @@ import (
 
 // Struct for script expressions.
 type ScriptExpression struct {
-	burn.Expression
-	echo bool
+	burnExpr burn.Expression
+	exprType ExpressionType
+	echoText string
+	waitTime int64
 }
+
+type ExpressionType int
+
+const (
+	Expr ExpressionType = iota
+	Echo_macro
+	Wait_macro
+)
 
 // NewExpression returns new script expression for specified
 // burn expression.
-func NewExpression(expr burn.Expression, echo bool) *ScriptExpression {
+func NewExpression(expr burn.Expression) *ScriptExpression {
 	se := new(ScriptExpression)
-	se.Expression = expr
-	se.echo = echo
+	se.exprType = Expr
+	se.burnExpr = expr
 	return se
 }
 
-// Echo checks if expression result should
-// be printed on output.
-func (se *ScriptExpression) Echo() bool {
-	return se.echo
+// NewEchoMacro returns new script expression for
+// echo macro.
+func NewEchoMacro(text string, expr burn.Expression) *ScriptExpression{
+	se := new(ScriptExpression)
+	se.exprType = Echo_macro
+	se.burnExpr = expr
+	se.echoText = text
+	return se
+}
+
+// NewWaitMacro returns new script expression for wait
+// macro.
+func NewWaitMacro(millis int64) *ScriptExpression {
+	se := new(ScriptExpression)
+	se.exprType = Wait_macro
+	se.waitTime = millis
+	return se
+}
+
+// Type returns expression type.
+func (se *ScriptExpression) Type() ExpressionType {
+	return se.exprType
+}
+
+// WaitMillis returns number of milliseconds to wait
+// before expression execution.
+func (se *ScriptExpression) WaitTime() int64 {
+	return se.waitTime
+}
+
+// BurnExpr returns burn expression or empty struct
+// if there is no burn expression in this script
+// expression.
+func (se *ScriptExpression) BurnExpr() burn.Expression {
+	return se.burnExpr
 }

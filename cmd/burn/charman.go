@@ -81,8 +81,7 @@ func setCharOption(cmd Command) (int, string) {
 		id, serial := argSerialID(arg)
 		char := flame.Game().Module().Chapter().Character(id, serial)
 		if char == nil {
-			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN,
-				cmd.TargetArgs()[1])
+			return 5, fmt.Sprintf("%s:character_not_found:%s", CHAR_MAN, arg)
 		}
 		chars = append(chars, char)
 	}
