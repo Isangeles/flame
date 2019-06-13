@@ -578,10 +578,11 @@ func equipCharOption(cmd Command) (int, string) {
 				return 8, fmt.Sprintf("%s:%s_%s:item_not_equipable:%s_%s",
 					CHAR_MAN, char.ID(), char.Serial(), id, serial)
 			}
-			err := char.Equipment().EquipHandRight(eit)
-			if err != nil {
-				return 8, fmt.Sprintf("%s:%s_%s:fail_to_equip_item:%v",
-					CHAR_MAN, char.ID(), char.Serial(), err)
+			for _, s := range char.Equipment().Slots() {
+				if s.Type() == character.Hand_right {
+					break
+				}
+				s.SetItem(eit)
 			}
 		}
 		return 0, ""

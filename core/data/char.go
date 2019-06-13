@@ -211,6 +211,19 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 				char.ID(), it.ID())
 			continue
 		}
+		// Equip.
+
+		if !char.MeetReqs(eqItem.EquipReqs()...) {
+			continue
+		}
+		st := character.EquipmentSlotType(eqItData.Slot)
+		for _, s := range char.Equipment().Slots() {
+			if s.Type() != st {
+				continue
+			}
+			s.SetItem(eqItem)
+		}
+		/*
 		switch character.EquipmentSlotType(eqItData.Slot) {
 		case character.Hand_right:
 			err := char.Equipment().EquipHandRight(eqItem)
@@ -222,6 +235,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 			log.Err.Printf("data:character:%s:unknown_equipment_slot:%s",
 				char.ID(), eqItData.Slot)
 		}
+		*/
 	}
 	// Skills.
 	for _, skillData := range data.Skills {

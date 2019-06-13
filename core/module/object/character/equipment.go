@@ -31,16 +31,8 @@ import (
 
 // Struct for character equipment.
 type Equipment struct {
-	char        *Character
-	head        *EquipmentSlot
-	neck        *EquipmentSlot
-	chest       *EquipmentSlot
-	handRight   *EquipmentSlot
-	handLeft    *EquipmentSlot
-	fingerRight *EquipmentSlot
-	fingerLeft  *EquipmentSlot
-	legs        *EquipmentSlot
-	feet        *EquipmentSlot
+	char  *Character
+	slots []*EquipmentSlot
 }
 
 // Struct for equipment slots.
@@ -69,15 +61,15 @@ const (
 func newEquipment(char *Character) *Equipment {
 	eq := new(Equipment)
 	eq.char = char
-	eq.head = newEquipmentSlot(Head)
-	eq.neck = newEquipmentSlot(Neck)
-	eq.chest = newEquipmentSlot(Chest)
-	eq.handRight = newEquipmentSlot(Hand_right)
-	eq.handLeft = newEquipmentSlot(Hand_left)
-	eq.fingerRight = newEquipmentSlot(Finger_right)
-	eq.fingerLeft = newEquipmentSlot(Finger_left)
-	eq.legs = newEquipmentSlot(Legs)
-	eq.feet = newEquipmentSlot(Feet)
+  eq.slots = append(eq.slots, newEquipmentSlot(Head))
+  eq.slots = append(eq.slots, newEquipmentSlot(Neck))
+  eq.slots = append(eq.slots, newEquipmentSlot(Chest))
+  eq.slots = append(eq.slots, newEquipmentSlot(Hand_right))
+  eq.slots = append(eq.slots, newEquipmentSlot(Hand_left))
+  eq.slots = append(eq.slots, newEquipmentSlot(Finger_right))
+  eq.slots = append(eq.slots, newEquipmentSlot(Finger_left))
+  eq.slots = append(eq.slots, newEquipmentSlot(Legs))
+  eq.slots = append(eq.slots, newEquipmentSlot(Feet))
 	return eq
 }
 
@@ -89,7 +81,7 @@ func newEquipmentSlot(sType EquipmentSlotType) *EquipmentSlot {
 	return s
 }
 
-// Equip add specified equipable item to all 
+// Equip add specified equipable item to all
 // compatible slots.
 func (eq *Equipment) Equip(it item.Equiper) error {
 	if !eq.char.MeetReqs(it.EquipReqs()...) {
@@ -98,59 +90,41 @@ func (eq *Equipment) Equip(it item.Equiper) error {
 	for _, s := range it.Slots() {
 		switch s {
 		case item.Hand:
-			if eq.handRight.item != nil {
-				eq.handLeft.item = it
-				break
+			for _, s := range eq.Slots() {
+				if s.Type() == Hand_right {
+					s.SetItem(it)
+				}
 			}
-			eq.handRight.item = it
 		}
 	}
 	return nil
 }
 
-// Unequip removes specified item from all compatible
-// slots.
-func (eq *Equipment) Unequip(it item.Equiper) error {
-    if !eq.Equiped(it) {
-        return fmt.Errorf("item_not_equiped")
-    }
-    for _, s := range it.Slots() {
-        switch s {
-        case item.Hand:
-            if eq.handLeft.item == it {
-                eq.handLeft.item = nil
-            }    
-            if eq.handRight.item == it {
-                eq.handRight.item = nil
-            }
-        }
-    }
-    return nil
-}
-
-// equiphandright assigns specified 'equipable' item to right hand slot,
-// returns error if equip fail(e.q. equip reqs aren't meet).
-func (eq *Equipment) EquipHandRight(it item.Equiper) error {
-	if !eq.char.MeetReqs(it.EquipReqs()...) {
-		return fmt.Errorf("reqs_not_meet")
-	}
-	if len(it.Slots()) != 1 || it.Slots()[0] != item.Hand {
-		return fmt.Errorf("slot_not_match")
-	}
-	eq.handRight.item = it
-	return nil
+// Unequip removes specified item from all
+// compatible slots.
+func (eq *Equipment) Unequip(it item.Equiper) {
+		for _, s := range eq.Slots() {
+			if s.Item() != it {
+				continue
+			}
+			s.SetItem(nil)
+		}
 }
 
 // Items returns slice with all equiped items.
-func (eq *Equipment) Items() []item.Equiper {
-	its := make([]item.Equiper, 0)
-	if eq.handRight.item != nil {
-		its = append(its, eq.handRight.item)
+func (eq *Equipment) Items() (items []item.Equiper) {
+	uniqueItems := make(map[string]item.Equiper)
+  for _, s := range eq.Slots() {
+		it := s.Item()
+    if it == nil {
+      continue
+    }
+		uniqueItems[it.ID()+it.Serial()] = it
+  }
+	for _, it := range uniqueItems {
+		items = append(items, it)
 	}
-	if eq.handLeft.item != nil {
-		its = append(its, eq.handLeft.item)
-	}
-	return its
+  return
 }
 
 // Equiped checks whether specified item is
@@ -164,9 +138,9 @@ func (eq *Equipment) Equiped(item item.Equiper) bool {
 	return false
 }
 
-// HandRight returns item from right hand slot.
-func (eq *Equipment) HandRight() *EquipmentSlot {
-	return eq.handRight
+// Slots retuns all equipment slots.
+func (eq *Equipment) Slots() []*EquipmentSlot {
+  return eq.slots
 }
 
 // Type returns slot type.
@@ -177,6 +151,11 @@ func (eqSlot *EquipmentSlot) Type() EquipmentSlotType {
 // Item returns slot item or nil if slot is empty.
 func (eqSlot *EquipmentSlot) Item() item.Equiper {
 	return eqSlot.item
+}
+
+// SetItem sets inserts specified item to slot.
+func (eqSlot *EquipmentSlot) SetItem(it item.Equiper) {
+	eqSlot.item = it
 }
 
 // ID returns slot ID.

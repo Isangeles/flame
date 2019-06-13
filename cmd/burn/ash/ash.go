@@ -38,7 +38,6 @@ const (
 // Run runs specified script.
 func Run(scr *Script) error {
 	if !executable(scr) {
-		fmt.Printf("no_exec\n")
 		return nil
 	}
 	for i := scr.Position(); i < len(scr.Expressions()); i ++ {

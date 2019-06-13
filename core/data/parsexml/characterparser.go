@@ -199,16 +199,17 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 // XML equipment node.
 func xmlEquipment(eq *character.Equipment) *EquipmentXML {
 	xmlEq := new(EquipmentXML)
-	handRightItem := eq.HandRight().Item()
-	if handRightItem != nil {
+	for _, s := range eq.Slots() {
+		if s.Item() == nil {
+			continue
+		}
 		xmlEqItem := EquipmentItemXML{
-			ID:     handRightItem.ID(),
-			Serial: handRightItem.Serial(),
-			Slot:   MarshalEqSlot(eq.HandRight()),
+			ID:     s.Item().ID(),
+			Serial: s.Item().Serial(),
+			Slot:   MarshalEqSlot(s),
 		}
 		xmlEq.Items = append(xmlEq.Items, xmlEqItem)
 	}
-	// TODO: parse all equipment slots.
 	return xmlEq
 }
 

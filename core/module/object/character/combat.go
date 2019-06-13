@@ -40,8 +40,16 @@ import (
 // including weapons, active effects, etc.
 func (c *Character) Damage() (int, int) {
 	min, max := c.Attributes().Damage()
-	if it := c.Equipment().HandRight().Item(); it != nil {
-		if w, ok := it.(*item.Weapon); ok {
+	var rightHandItem item.Equiper
+	for _, s := range c.Equipment().Slots() {
+		if s.Type() != Hand_right {
+			continue
+		}
+		rightHandItem = s.Item()
+		break
+	}
+	if rightHandItem != nil {
+		if w, ok := rightHandItem.(*item.Weapon); ok {
 			dmgMin, dmgMax := w.Damage()
 			min += dmgMin
 			max += dmgMax
@@ -53,7 +61,14 @@ func (c *Character) Damage() (int, int) {
 // DamgaeType returns type of damage caused by
 // character.
 func (c *Character) DamageType() object.Element {
-	rightHandItem := c.Equipment().HandRight().Item()
+	var rightHandItem item.Equiper
+	for _, s := range c.Equipment().Slots() {
+		if s.Type() != Hand_right {
+			continue
+		}
+		rightHandItem = s.Item()
+		break
+	}
 	if rightHandItem != nil {
 		if w, ok := rightHandItem.(*item.Weapon); ok {
 			w.DamageType()
@@ -65,7 +80,14 @@ func (c *Character) DamageType() object.Element {
 // DamageEffects returns character damage effects.
 func (c *Character) DamageEffects() []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
-	rightHandItem := c.Equipment().HandRight().Item()
+	var rightHandItem item.Equiper
+	for _, s := range c.Equipment().Slots() {
+		if s.Type() != Hand_right {
+			continue
+		}
+		rightHandItem = s.Item()
+		break
+	}
 	if rightHandItem != nil {
 		if w, ok := rightHandItem.(*item.Weapon); ok {
 			dmgEffects := c.buildEffects(w.DamageEffects()...)
