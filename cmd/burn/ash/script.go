@@ -28,6 +28,7 @@ import (
 	"strings"
 	"strconv"
 
+	"github.com/isangeles/flame/cmd/burn"
 	"github.com/isangeles/flame/cmd/burn/syntax"
 )
 
@@ -36,19 +37,19 @@ type Script struct {
 	name      string
 	args      []string
 	text      string
-	mainCase  string
+	mainCase  *ScriptCase
 	exprs     []*ScriptExpression
 	pos       int
 }
 
 const (
-	COMMENT_PREFIX = "#"
-	BODY_EXPR_SEP  = ";"
+	Comment_prefix = "#"
+	Body_expr_sep  = ";"
 	// Keywords.
-	NEAR_KEYWORD = "near"
-	TRUE_KEYWORD = "true"
-	ECHO_KEYWORD = "echo"
-	WAIT_KEYWORD = "wait"
+	True_keyword   = "true"
+	Echo_keyword   = "echo"
+	Wait_keyword   = "wait"
+	Rawdis_keyword = "rawdis"
 )
 
 // NewScript creates new Ash script from specified
@@ -58,7 +59,7 @@ func NewScript(text string, args ...string) (*Script, error) {
 	s.args = args
 	// Remove comment lines.
 	for _, l := range strings.Split(text, "\n") {
-		if strings.HasPrefix(l, COMMENT_PREFIX) {
+		if strings.HasPrefix(l, Comment_prefix) {
 			continue
 		}
 		s.text += l
@@ -73,40 +74,20 @@ func NewScript(text string, args ...string) (*Script, error) {
 	}
 	// Main case.
 	startBrace := strings.Index(s.text, "{")
-	mainCase := s.text[:startBrace]
-	mainCase = strings.ReplaceAll(mainCase, "{", "")
-	s.mainCase = strings.TrimSpace(mainCase)
+	mainCaseText := s.text[:startBrace]
+	mainCaseText = strings.ReplaceAll(mainCaseText, "{", "")
+	mainCase, err := parseCase(strings.TrimSpace(mainCaseText))
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_main_case:%v", err)
+	}
+	s.mainCase = mainCase
 	// Body.
 	body := textBetween(s.text, "{", "}")
-	for _, l := range strings.Split(body, BODY_EXPR_SEP) {
-		l = strings.TrimSpace(l)
-		if len(l) < 1 {
-			continue
-		}
-		switch {
-		case strings.HasPrefix(l, ECHO_KEYWORD):
-			l = textBetween(l, "(", ")")
-			expr, err := syntax.NewSTDExpression(l)
-			if err != nil {
-				return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
-			}
-			s.exprs = append(s.exprs, NewEchoMacro("", expr))
-		case strings.HasPrefix(l, WAIT_KEYWORD):
-			secText := textBetween(l, "(", ")")
-			sec, err := strconv.ParseInt(secText, 32, 64)
-			if err != nil {
-				return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
-			}
-			s.exprs = append(s.exprs, NewWaitMacro(sec * 1000))
-		default:
-			expr, err := syntax.NewSTDExpression(l)
-			if err != nil {
-				return nil, fmt.Errorf("fail_to_parse_script_body:%v", err)
-			}
-			sExpr := NewExpression(expr)
-			s.exprs = append(s.exprs, sExpr)
-		}
+	exprs, err := parseBody(body)
+	if err != nil {
+		return nil, fmt.Errorf("fail_to_parse_body:%v", err)
 	}
+	s.exprs = exprs
 	return s, nil
 }
 
@@ -135,6 +116,93 @@ func (s *Script) SetPosition(p int) {
 // Finished checks if script is finished.
 func (s *Script) Finished() bool {
 	return s.Position() >= len(s.Expressions())
+}
+
+// MainCase returns script main case.
+func (s *Script) MainCase() *ScriptCase {
+	return s.mainCase
+}
+
+// parseBody creates script expression from script body text.
+func parseBody(text string) ([]*ScriptExpression, error) {
+	exprs := make([]*ScriptExpression, 0)
+	for _, l := range strings.Split(text, Body_expr_sep) {
+		l = strings.TrimSpace(l)
+		if len(l) < 1 {
+			continue
+		}
+		switch {
+		case strings.HasPrefix(l, Echo_keyword):
+			l = textBetween(l, "(", ")")
+			expr, err := syntax.NewSTDExpression(l)
+			if err != nil {
+				return nil, fmt.Errorf("fail_to_parse_echo_function:%v", err)
+			}
+			exprs = append(exprs, NewEchoMacro("", expr))
+		case strings.HasPrefix(l, Wait_keyword):
+			secText := textBetween(l, "(", ")")
+			sec, err := strconv.ParseInt(secText, 32, 64)
+			if err != nil {
+				return nil, fmt.Errorf("fail_to_parse_wait_function:%v", err)
+			}
+			exprs = append(exprs, NewWaitMacro(sec * 1000))
+		default:
+			expr, err := syntax.NewSTDExpression(l)
+			if err != nil {
+				return nil, fmt.Errorf("fail_to_parse_expr:%v", err)
+			}
+			sExpr := NewExpression(expr)
+			exprs = append(exprs, sExpr)
+		}
+	}
+	return exprs, nil
+}
+
+// parseCase creates script case from specified text.
+func parseCase(text string) (*ScriptCase, error) {
+	if len(text) < 1 || strings.HasPrefix(text, True_keyword) {
+		c := NewCase(new(syntax.STDExpression), "", True)
+		return c, nil
+	}
+	var compType ComparisonType
+	switch {
+	case strings.Contains(text, "<"):
+		compType = Less
+		exprs := strings.Split(text, "<")
+		expr, err := parseCaseExpr(exprs[0])
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_parse_case_expression:%v", err)
+		}
+		res := strings.TrimSpace(exprs[1])
+		c := NewCase(expr, res, compType)
+		return c, nil
+	default:
+		return nil, fmt.Errorf("unknown case expression:%s", text)
+	}
+}
+
+// parseCaseExpr creates case expression from specified text.
+func parseCaseExpr(text string) (burn.Expression, error) {
+	switch {
+	case strings.HasPrefix(text, Rawdis_keyword):
+		args := strings.Split(textBetween(text, "(", ")"), ",")
+		if len(args) < 2 {
+			return nil, fmt.Errorf("not enaught args for rawdis")
+		}
+		exprText := fmt.Sprintf("charman -o show -t %s -a range %s",
+			strings.TrimSpace(args[0]), strings.TrimSpace(args[1]))
+		expr, err := syntax.NewSTDExpression(exprText)
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_create_rawdis_exression:%v", err)
+		}
+		return expr, nil
+	default:
+		expr, err := syntax.NewSTDExpression(text)
+		if err != nil {
+			return nil, fmt.Errorf("fail_to_create_std_expression:%v", err)
+		}
+		return expr, nil
+	}
 }
 
 // textBetween returns slice from specified text

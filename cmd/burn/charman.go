@@ -26,6 +26,7 @@ package burn
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/core/data"
@@ -166,6 +167,15 @@ func setCharOption(cmd Command) (int, string) {
 		}
 		for _, char := range chars {
 			char.SetTarget(tar)
+		}
+		return 0, ""
+	case "chat":
+		if len(cmd.Args()) < 2 {
+			return 7, fmt.Sprintf("%s:no_enought_args_for:%s",
+				CHAR_MAN, cmd.OptionArgs()[1])
+		}
+		for _, char := range chars {
+			char.SendChat(cmd.Args()[1])
 		}
 		return 0, ""
 	default:
@@ -315,7 +325,7 @@ func showCharOption(cmd Command) (int, string) {
 		for _, char := range chars {
 			out += fmt.Sprintf("%f ", object.Range(char, tar))
 		}
-		return 0, out
+		return 0, strings.TrimSpace(out)
 	default:
 		return 6, fmt.Sprintf("%s:no_vaild_target_for_%s:'%s'", CHAR_MAN,
 			cmd.OptionArgs()[0], cmd.Args()[0])

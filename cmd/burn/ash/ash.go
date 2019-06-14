@@ -25,7 +25,6 @@ package ash
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/isangeles/flame/cmd/burn"
@@ -38,6 +37,7 @@ const (
 // Run runs specified script.
 func Run(scr *Script) error {
 	if !executable(scr) {
+		fmt.Printf("scr_no_exe\n")
 		return nil
 	}
 	for i := scr.Position(); i < len(scr.Expressions()); i ++ {
@@ -61,27 +61,8 @@ func Run(scr *Script) error {
 
 // executable checks if specified should be executed
 // for specified game.
-func executable(scr *Script) bool {
-	if len(scr.mainCase) < 1 {
-		return true
-	}
-	return checkCase(scr.mainCase)
-}
-
-// checkCase checks specified case for specified
-// game.
-func checkCase(c string) bool {
-	switch {
-	case strings.Contains(c, NEAR_KEYWORD):
-		ids := strings.Split(c, NEAR_KEYWORD)
-		if len(ids) < 2 {
-			return false
-		}
-		// TODO: check range.
-		return true
-	case c == TRUE_KEYWORD:
-		return true
-	default:
-		return false
-	}
+func executable(s *Script) bool {
+	expr := s.MainCase().Expression()
+	_, o := burn.HandleExpression(expr)
+	return s.MainCase().CorrectRes(o)
 }
