@@ -24,7 +24,6 @@
 package ash
 
 import (
-	"fmt"
 	"strconv"
 	
 	"github.com/isangeles/flame/cmd/burn"
@@ -76,15 +75,12 @@ func (c *ScriptCase) CorrectRes(r string) bool {
 		}
 		return n > exp
 	case Less:
-		fmt.Printf("r:%s,er:%s\n", r, c.expRes)
 		n, err := strconv.ParseFloat(r, 64)
 		if err != nil {
-			fmt.Printf("pars_res_err\n")
 			return false
 		}
 		exp, err := strconv.ParseFloat(c.expRes, 64)
 		if err != nil {
-			fmt.Printf("pars_exp_res_err\n")
 			return false
 		}
 		return n < exp

@@ -36,24 +36,22 @@ const (
 
 // Run runs specified script.
 func Run(scr *Script) error {
-	if !executable(scr) {
-		fmt.Printf("scr_no_exe\n")
-		return nil
-	}
-	for i := scr.Position(); i < len(scr.Expressions()); i ++ {
-		defer scr.SetPosition(scr.Position()+1)
-		e := scr.Expressions()[i]
-		if e.Type() == Wait_macro {
-			time.Sleep(time.Duration(e.WaitTime()) * time.Millisecond)
-			continue
-		}
-		r, o := burn.HandleExpression(e.BurnExpr())
-		if r != 0 {
-			return fmt.Errorf("fail_to_run_expr:'%s':[%d]%s",
-				e.BurnExpr().String(), r, o)
-		}
-		if e.Type() == Echo_macro {
-			fmt.Printf("%s\n", o)
+	for executable(scr) {
+		for i := scr.Position(); i < len(scr.Expressions()); i ++ {
+			defer scr.SetPosition(scr.Position()+1)
+			e := scr.Expressions()[i]
+			if e.Type() == Wait_macro {
+				time.Sleep(time.Duration(e.WaitTime()) * time.Millisecond)
+				continue
+			}
+			r, o := burn.HandleExpression(e.BurnExpr())
+			if r != 0 {
+				return fmt.Errorf("fail_to_run_expr:'%s':[%d]%s",
+					e.BurnExpr().String(), r, o)
+			}
+			if e.Type() == Echo_macro {
+				fmt.Printf("%s\n", o)
+			}
 		}
 	}
 	return nil

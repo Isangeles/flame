@@ -51,6 +51,7 @@ import (
 const (
 	COMMAND_PREFIX   = "$"
 	SCRIPT_PREFIX    = "%"
+	RUN_BG_SUFFIX    = "&"
 	CLOSE_CMD        = "close"
 	NEW_CHAR_CMD     = "newchar"
 	NEW_GAME_CMD     = "newgame"
@@ -106,7 +107,12 @@ func main() {
 		} else if strings.HasPrefix(input, SCRIPT_PREFIX) {
 			input := strings.TrimPrefix(input, SCRIPT_PREFIX)
 			scrArgs := strings.Split(input, " ")
-			executeFile(scrArgs[0], scrArgs...)
+			bgrun := false
+			if strings.HasSuffix(scrArgs[0], RUN_BG_SUFFIX) {
+				bgrun = true
+				scrArgs[0] = strings.TrimSuffix(scrArgs[0], RUN_BG_SUFFIX)
+			}
+			executeFile(bgrun, scrArgs[0], scrArgs...)
 		} else if activePC != nil {
 			activePC.SendChat(input)
 		} else {
@@ -227,7 +233,7 @@ func execute(input string) {
 }
 
 // executeFile executes script from data/scripts dir.
-func executeFile(filename string, args ...string) {
+func executeFile(bgrun bool, filename string, args ...string) {
 	path := fmt.Sprintf("%s/%s%s", config.ScriptsPath(),
 		filename, ash.SCRIPT_FILE_EXT)
 	file, err := os.Open(path)
@@ -245,7 +251,16 @@ func executeFile(filename string, args ...string) {
 		log.Err.Printf("fail_to_parse_script:%v", err)
 		return
 	}
-	err = ash.Run(scr)
+	if bgrun {
+		go runScript(scr)
+		return
+	}
+	runScript(scr)
+}
+
+// runScript runs sprecified Ash script.
+func runScript(s *ash.Script) {
+	err := ash.Run(s)
 	if err != nil {
 		log.Err.Printf("script_run_fail:%v", err)
 		return

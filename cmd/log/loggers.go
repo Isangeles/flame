@@ -1,7 +1,7 @@
 /*
  * loggers.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import (
 )
 
 var (
-	Inf *log.Logger = log.New(enginelog.InfLog, "flame-cli:", 0)
-	Err *log.Logger = log.New(enginelog.ErrLog, "flame-cli-err:", 0)
-	Dbg *log.Logger = log.New(enginelog.DbgLog, "flame-cli-debug:", 0)
+	Inf *log.Logger = log.New(enginelog.InfLog, "bsh:", 0)
+	Err *log.Logger = log.New(enginelog.ErrLog, "bsh-err:", 0)
+	Dbg *log.Logger = log.New(enginelog.DbgLog, "bsh-debug:", 0)
 )

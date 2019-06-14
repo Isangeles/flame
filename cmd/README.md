@@ -4,8 +4,16 @@
   CLI uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) to handle user input and communicate with engine.
   
   All commands must be prefixed with '$' character.
+
+## Usage
   
 ## Commands
+To run Burn or bsh command use '$' character as prefix.
+Without prefix, command will be treated as text and printed to out or sent to active player
+chat channel if game was started
+
+### Burn Shell build-in commands:
+
 Create module:
 ```
   $newmod
@@ -78,3 +86,7 @@ Exit program:
   $close
 ```
 Description: terminates program.
+
+## Scripts
+To run Ash script use '%' prefix, scripts are executed from 'data/scripts' directory.
+Use '&' suffix to run script in background.
