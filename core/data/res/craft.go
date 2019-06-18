@@ -1,5 +1,5 @@
 /*
- * req.go
+ * craft.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -23,29 +23,9 @@
 
 package res
 
-// Interface for requirement data.
-type ReqData interface{}
-
-// Struct for level requirement data.
-type LevelReqData struct {
-	Min, Max int
-}
-
-// Struct for gender requirement data.
-type GenderReqData struct {
-	Type int
-}
-
-// Struct for flag requirement data.
-type FlagReqData struct {
-	ID  string
-	Off bool
-}
-
-// ItemReqData return item
-// requirement data.
-type ItemReqData struct {
-	ID     string
-	Amount int
-	Charge bool
+// Struct for recipe data.
+type RecipeData struct {
+  ID     string
+  Result string
+  Reqs   []ReqData
 }

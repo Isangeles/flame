@@ -30,6 +30,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/object/craft"
 	"github.com/isangeles/flame/core/module/object/dialog"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
@@ -68,6 +69,7 @@ type Character struct {
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
+	recipes          map[string]*craft.Recipe
 	flags            map[string]flag.Flag
 	chatlog          chan string
 	combatlog        chan string

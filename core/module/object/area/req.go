@@ -28,6 +28,12 @@ import (
 )
 
 // MeetReqs check if object meet specified requirements.
-func (ob *Object) MeetReqs(reqs ...req.Requirement) bool {
+func (o *Object) MeetReqs(reqs ...req.Requirement) bool {
 	return true
+}
+
+// ChargeReqs takes from object all things that makes
+// this object to meet specified requirements.
+func (o *Object) ChargeReqs(reqs ...req.Requirement) {
+	// TODO: charge reqs.
 }

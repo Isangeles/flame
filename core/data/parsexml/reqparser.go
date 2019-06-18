@@ -42,8 +42,9 @@ type ReqsXML struct {
 
 // Struct for level requirement XML node.
 type LevelReqXML struct {
-	XMLName  xml.Name `xml:"level-req"`
-	MinLevel int      `xml:"min,value"`
+	XMLName xml.Name `xml:"level-req"`
+	Min     int      `xml:"min,value"`
+	Max     int      `xml:"max,value"`
 }
 
 // Struct for gender requirement XML node.
@@ -64,13 +65,14 @@ type ItemReqXML struct {
 	XMLName xml.Name `xml:"item-req"`
 	ID      string   `xml:"id,attr"`
 	Amount  int      `xml:"amount,attr"`
+	Charge  bool     `xml:"charge,attr"`
 }
 
 // xmlLevelReq parses specified level requirement to
 // XML level req node.
 func xmlLevelReq(req *req.LevelReq) *LevelReqXML {
 	xmlReq := new(LevelReqXML)
-	xmlReq.MinLevel = req.MinLevel()
+	xmlReq.Min = req.MinLevel()
 	return xmlReq
 }
 
@@ -81,8 +83,8 @@ func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
 	// Level reqs.
 	for _, xmlReq := range xmlReqs.LevelReqs {
 		req := res.LevelReqData{
-			Min: xmlReq.MinLevel,
-			Max: -1, // TODO: support max value
+			Min: xmlReq.Min,
+			Max: xmlReq.Max,
 		}
 		reqs = append(reqs, req)
 	}
@@ -107,7 +109,11 @@ func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
 	}
 	// Item reqs.
 	for _, xmlReq := range xmlReqs.ItemReqs {
-		req := res.ItemReqData{xmlReq.ID, xmlReq.Amount}
+		req := res.ItemReqData{
+			ID:     xmlReq.ID,
+			Amount: xmlReq.Amount,
+			Charge: xmlReq.Charge,
+		}
 		reqs = append(reqs, req)
 	}
 	return reqs

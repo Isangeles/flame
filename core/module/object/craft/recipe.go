@@ -1,5 +1,5 @@
 /*
- * req.go
+ * recipe.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,31 +21,40 @@
  *
  */
 
-package res
+// Package for crafting structs.
+package craft
 
-// Interface for requirement data.
-type ReqData interface{}
+import (
+  "github.com/isangeles/flame/core/data/res"
+  "github.com/isangeles/flame/core/module/req"
+)
 
-// Struct for level requirement data.
-type LevelReqData struct {
-	Min, Max int
+// Struct for recipes.
+type Recipe struct {
+  id    string
+  resID string
+  reqs  []req.Requirement
 }
 
-// Struct for gender requirement data.
-type GenderReqData struct {
-	Type int
+// NewRecipe creates new crafting recipe.
+func NewRecipe(data res.RecipeData) *Recipe {
+  r := new(Recipe)
+  r.id = data.ID
+  r.reqs = req.NewRequirements(data.Reqs...)
+  return r
 }
 
-// Struct for flag requirement data.
-type FlagReqData struct {
-	ID  string
-	Off bool
+// ID returns recipe ID.
+func (r *Recipe) ID() string {
+  return r.id
 }
 
-// ItemReqData return item
-// requirement data.
-type ItemReqData struct {
-	ID     string
-	Amount int
-	Charge bool
+// Reqs returns recipe requirements
+func (r *Recipe) Reqs() []req.Requirement {
+  return r.reqs
+}
+
+// ResultID returns ID of recipe result.
+func (r *Recipe) ResultID() string {
+  return r.resID
 }

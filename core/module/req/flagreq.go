@@ -55,7 +55,7 @@ func (fr *FlagReq) FlagOff() bool {
 
 // Meet checks wheter requirement is set as meet.
 func (fr *FlagReq) Meet() bool {
-	return fr.meet 
+	return fr.meet
 }
 
 // SetMeet sets requirement as meet/not meet.
