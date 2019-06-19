@@ -4,7 +4,7 @@
   The main goal is to create simple, flexible, extensible and completely modular game engine.
   Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
 
-  Easiest way to use Flame is to download some kind graphical or textual interface, like [Mural](https://github.com/isangeles/mural)(GUI) or [Burn Shell](https://github.com/isangeles/tree/master/cmd)(CLI).
+  Easiest way to use Flame is to download some kind graphical or textual interface, like [Mural](https://github.com/isangeles/mural)(GUI) or [Burn Shell](https://github.com/isangeles/burnsh)(CLI).
 
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
@@ -22,20 +22,6 @@
 
 ## Usage
   You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/exmaple) package.
-
-## Build & Run
-  Get sources from git:
-```
-  $ go get -u github.com/isangeles/flame
-```
-  Build CLI:
-```
-  $ go build github.com/isangeles/flame/cmd
-```
-  Run CLI:
-```
-  $ ./cmd
-```
 
 ## Configuration
 Configuration values are loaded from '.flame' file in Flame executable directory.
@@ -55,9 +41,6 @@ Description: specifies module to load at start, module ID is ID specified in 'mo
   debug:[true/false];
 ```
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
-
-## Burn Shell
-Flame comes with [Burn Shell](https://github.com/Isangeles/flame/tree/master/cmd), a simple textual interface that uses [Burn](https://github.com/Isangeles/flame/tree/master/cmd/burn) commands interpreter to execute commands.
 
 ## Contact
 * Isangeles <<dev@isangeles.pl>>
