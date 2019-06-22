@@ -25,7 +25,14 @@ package res
 
 // Struct for recipe data.
 type RecipeData struct {
-  ID     string
-  Result string
-  Reqs   []ReqData
+	ID       string
+	Category string
+	Results  []RecipeResultData
+	Reqs     []ReqData
+}
+
+// Struct for recipe result data.
+type RecipeResultData struct {
+	ID     string
+	Amount int
 }

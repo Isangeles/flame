@@ -33,7 +33,7 @@ import (
 	"github.com/isangeles/flame/log"
 )
 
-// Struct for dialogs XML base node.x
+// Struct for dialogs XML base node.
 type DialogsBaseXML struct {
 	XMLName xml.Name    `xml:"base"`
 	Dialogs []DialogXML `xml:"dialog"`
@@ -41,13 +41,13 @@ type DialogsBaseXML struct {
 
 // Struct for dialog XML node.
 type DialogXML struct {
-	XMLName xml.Name  `xml:"dialog"`
-	ID      string    `xml:"id,attr"`
-	Stages  []TextXML `xml:"stage"`
+	XMLName xml.Name         `xml:"dialog"`
+	ID      string           `xml:"id,attr"`
+	Stages  []DialogStageXML `xml:"stage"`
 }
 
-// Struct for dialog text XML node.
-type TextXML struct {
+// Struct for dialog stage XML node.
+type DialogStageXML struct {
 	XMLName    xml.Name     `xml:"stage"`
 	ID         string       `xml:"id,attr"`
 	Ordinal    string       `xml:"ordinal,attr"`
@@ -88,7 +88,7 @@ func UnmarshalDialogsBase(data io.Reader) ([]*res.DialogData, error) {
 	return dialogs, nil
 }
 
-// buildDialogData creates new dialog data from specified xml data.
+// buildDialogData creates new dialog data from specified XML data.
 func buildDialogData(xmlDialog DialogXML) (*res.DialogData, error) {
 	dd := new(res.DialogData)
 	dd.ID = xmlDialog.ID

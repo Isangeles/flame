@@ -80,6 +80,12 @@ func LoadModuleData(mod *module.Module) error {
 		}
 	}
 	res.SetMiscItemsData(miscItemsData)
+	// Recipes.
+	recipesData, err := ImportRecipesDir(mod.Conf().RecipesPath())
+	if err != nil {
+		return fmt.Errorf("fail_to_load_recipes:%v", err)
+	}
+	res.SetRecipesData(recipesData)
 	// Area objects.
 	objectsData, err := ImportObjectsDir(mod.Conf().ObjectsPath())
 	if err != nil {

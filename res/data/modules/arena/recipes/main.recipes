@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<base>
+  <recipe id="rAloeTea1" category="cooking">
+    <results>
+      <result id="imAloeTea1" amount="1"/>
+    </results>
+    <reqs>
+      <item-req id="imAloeLeaves1" amount="2"/>
+    </reqs>
+  </recipe>
+</base>

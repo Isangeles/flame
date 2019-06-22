@@ -25,36 +25,39 @@
 package craft
 
 import (
-  "github.com/isangeles/flame/core/data/res"
-  "github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for recipes.
 type Recipe struct {
-  id    string
-  resID string
-  reqs  []req.Requirement
+	id    string
+	catID string
+	res   []res.RecipeResultData
+	reqs  []req.Requirement
 }
 
 // NewRecipe creates new crafting recipe.
 func NewRecipe(data res.RecipeData) *Recipe {
-  r := new(Recipe)
-  r.id = data.ID
-  r.reqs = req.NewRequirements(data.Reqs...)
-  return r
+	r := new(Recipe)
+	r.id = data.ID
+	r.catID = data.Category
+	r.res = data.Results
+	r.reqs = req.NewRequirements(data.Reqs...)
+	return r
 }
 
 // ID returns recipe ID.
 func (r *Recipe) ID() string {
-  return r.id
+	return r.id
+}
+
+// CategoryID returns ID of recipe category.
+func (r *Recipe) CategoryID() string {
+	return r.catID
 }
 
 // Reqs returns recipe requirements
 func (r *Recipe) Reqs() []req.Requirement {
-  return r.reqs
-}
-
-// ResultID returns ID of recipe result.
-func (r *Recipe) ResultID() string {
-  return r.resID
+	return r.reqs
 }
