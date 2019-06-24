@@ -67,6 +67,7 @@ func LoadChapter(mod *module.Module, id string) error {
 			chapPath, err)
 	}
 	chapConf.ID = id
+	chapConf.ModulePath = mod.Conf().Path
 	// Create chapter & set as current module chapter.
 	startChap := module.NewChapter(mod, chapConf)
 	err = mod.SetChapter(startChap) // move to start chapter
