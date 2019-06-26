@@ -81,12 +81,28 @@ func buildRecipeData(xmlRecipe RecipeXML) (*res.RecipeData, error) {
 	rd.ID = xmlRecipe.ID
 	rd.Category = xmlRecipe.Category
 	for _, r := range xmlRecipe.Results {
+		itd := itemRes(r.ID)
 		rrd := res.RecipeResultData{
 			ID:     r.ID,
 			Amount: r.Amount,
+			Item:   itd,
 		}
 		rd.Results = append(rd.Results, rrd)
 	}
 	rd.Reqs = buildReqs(&xmlRecipe.Reqs)
 	return rd, nil
+}
+
+// itemRes returns resources for item with
+// specified ID, or nil if no data found.
+func itemRes(id string) res.ItemData {
+	m := res.MiscItem(id)
+	if m != nil {
+		return m
+	}
+	w := res.Weapon(id)
+	if w != nil {
+		return w
+	}
+	return nil
 }

@@ -35,4 +35,5 @@ type RecipeData struct {
 type RecipeResultData struct {
 	ID     string
 	Amount int
+	Item   ItemData
 }

@@ -105,6 +105,7 @@ func New(data res.CharacterBasicData) *Character {
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.flags = make(map[string]flag.Flag)
+	c.recipes = make(map[string]*craft.Recipe)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	c.privlog = make(chan string, 3)
@@ -577,6 +578,19 @@ func (c *Character) RemoveFlag(f flag.Flag) {
 // Journal returns quest journal.
 func (c *Character) Journal() *quest.Journal {
 	return c.journal
+}
+
+// Recipes returns character recipes.
+func (c *Character) Recipes() (recipes []*craft.Recipe) {
+	for _, r := range c.recipes {
+		recipes = append(recipes, r)
+	}
+	return
+}
+
+// AddRecipe adds specified recipe to character.
+func (c *Character) AddRecipe(r *craft.Recipe) {
+	c.recipes[r.ID()] = r
 }
 
 // levelup promotes character to next level.

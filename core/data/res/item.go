@@ -23,6 +23,10 @@
 
 package res
 
+// Empty interface for item data
+// structs.
+type ItemData interface{}
+
 // Strunt for weapon resource data.
 type WeaponData struct {
 	ID         string
