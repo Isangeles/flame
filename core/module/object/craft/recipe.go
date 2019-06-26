@@ -27,6 +27,8 @@ package craft
 import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Struct for recipes.
@@ -45,6 +47,25 @@ func NewRecipe(data res.RecipeData) *Recipe {
 	r.res = data.Results
 	r.reqs = req.NewRequirements(data.Reqs...)
 	return r
+}
+
+// Make creates, assigns serials and
+// returns items from recipe.
+func (r *Recipe) Make() []item.Item {
+	items := make([]item.Item, 0)
+	for _, resData := range r.res {
+		switch d := resData.Item.(type) {
+		case res.WeaponData:
+			it := item.NewWeapon(d)
+			serial.AssignSerial(it)
+			items = append(items, it)
+		case res.MiscItemData:
+			it := item.NewMisc(d)
+			serial.AssignSerial(it)
+			items = append(items, it)
+		}
+	}
+	return items
 }
 
 // ID returns recipe ID.
