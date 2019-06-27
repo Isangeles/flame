@@ -31,6 +31,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/area"
+	"github.com/isangeles/flame/core/module/object/craft"
 	"github.com/isangeles/flame/core/module/object/dialog"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/skill"
@@ -100,6 +101,12 @@ type ObjectDialogsXML struct {
 // Struct for object dialog XML node.
 type ObjectDialogXML struct {
 	XMLName xml.Name `xml:"dialog"`
+	ID      string   `xml:"id,attr"`
+}
+
+// Struct for object recipe XML node.
+type ObjectRecipeXML struct {
+	XMLName xml.Name `xml:"recipe"`
 	ID      string   `xml:"id,attr"`
 }
 
@@ -188,6 +195,18 @@ func xmlObjectDialogs(dialogs ...*dialog.Dialog) *ObjectDialogsXML {
 		xmlDialogs.Nodes = append(xmlDialogs.Nodes, xmlDialog)
 	}
 	return xmlDialogs
+}
+
+// xmlObjectRecipes parses specified recipes to XML nodes.
+func xmlObjectRecipes(recipes ...*craft.Recipe) []ObjectRecipeXML {
+	xmlRecipes := make([]ObjectRecipeXML, 0)
+	for _, r := range recipes {
+		xmlRecipe := ObjectRecipeXML{
+			ID: r.ID(),
+		}
+		xmlRecipes = append(xmlRecipes, xmlRecipe)
+	}
+	return xmlRecipes
 }
 
 // buildObjectData creates object data from specified XML

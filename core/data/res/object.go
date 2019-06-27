@@ -23,12 +23,12 @@
 
 package res
 
-// Struct for object data. 
+// Struct for object data.
 type ObjectData struct {
 	BasicData ObjectBasicData
 	SavedData ObjectSavedData
 	Items     []InventoryItemData
-	Effects   []ObjectEffectData	
+	Effects   []ObjectEffectData
 }
 
 // Struct for basic object data.
@@ -67,5 +67,10 @@ type ObjectDialogData struct {
 
 // Struct for flag data.
 type FlagData struct {
-	ID string 
+	ID string
+}
+
+// Struct for object recipe data.
+type ObjectRecipeData struct {
+	ID string
 }
