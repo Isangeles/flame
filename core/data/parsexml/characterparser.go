@@ -69,6 +69,7 @@ type CharacterXML struct {
 	Dialogs     ObjectDialogsXML    `xml:"dialogs"`
 	Quests      []CharacterQuestXML `xml:"quests>quest"`
 	Flags       []FlagXML           `xml:"flags>flag"`
+	Crafting    []ObjectRecipeXML   `xml:"crafting>recipe"`
 }
 
 // Struct for equipment XML node.
@@ -192,6 +193,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Dialogs = *xmlObjectDialogs(char.Dialogs()...)
 	xmlChar.Quests = xmlQuests(char.Journal().Quests())
 	xmlChar.Flags = xmlFlags(char.Flags())
+	xmlChar.Crafting = xmlObjectRecipes(char.Recipes()...)
 	return xmlChar
 }
 
@@ -391,6 +393,13 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 			Stage: xmlQuest.Stage,
 		}
 		data.Quests = append(data.Quests, questData)
+	}
+	// Recipes.
+	for _, xmlRecipe := range xmlChar.Crafting {
+		recipeData := res.ObjectRecipeData{
+			ID: xmlRecipe.ID,
+		}
+		data.Recipes = append(data.Recipes, recipeData)
 	}
 	return &data, nil
 }

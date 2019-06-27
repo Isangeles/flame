@@ -212,7 +212,6 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 			continue
 		}
 		// Equip.
-
 		if !char.MeetReqs(eqItem.EquipReqs()...) {
 			continue
 		}
@@ -223,19 +222,6 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 			}
 			s.SetItem(eqItem)
 		}
-		/*
-		switch character.EquipmentSlotType(eqItData.Slot) {
-		case character.Hand_right:
-			err := char.Equipment().EquipHandRight(eqItem)
-			if err != nil {
-				log.Err.Printf("data_build_character:%s:eq:fail_to_equip_item:%v",
-					char.ID(), err)
-			}
-		default:
-			log.Err.Printf("data:character:%s:unknown_equipment_slot:%s",
-				char.ID(), eqItData.Slot)
-		}
-		*/
 	}
 	// Skills.
 	for _, skillData := range data.Skills {
@@ -279,6 +265,16 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 				err)
 		}
 		char.Journal().AddQuest(quest)
+	}
+	// Recipes.
+	for _, recipeData := range data.Recipes {
+		recipe, err := Recipe(recipeData.ID)
+		if err != nil {
+			log.Err.Printf("data:build_character:%s:fail_to_retrieve_recipe:%v",
+				char.ID(), err)
+			continue
+		}
+		char.AddRecipe(recipe)
 	}
 	return char
 }
