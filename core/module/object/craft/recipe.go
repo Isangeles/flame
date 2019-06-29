@@ -82,3 +82,8 @@ func (r *Recipe) CategoryID() string {
 func (r *Recipe) Reqs() []req.Requirement {
 	return r.reqs
 }
+
+// Result returns recipe result data.
+func (r *Recipe) Result() []res.RecipeResultData {
+	return r.res
+}

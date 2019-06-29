@@ -6,6 +6,7 @@
     </results>
     <reqs>
       <item-req id="imAloeLeaves1" amount="2"/>
+      <item-req id="imWater1" amount="1"/>
     </reqs>
   </recipe>
 </base>

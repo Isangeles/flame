@@ -82,6 +82,9 @@ func buildRecipeData(xmlRecipe RecipeXML) (*res.RecipeData, error) {
 	rd.Category = xmlRecipe.Category
 	for _, r := range xmlRecipe.Results {
 		itd := itemRes(r.ID)
+		if itd == nil {
+			return nil, fmt.Errorf("result item data not found")
+		}
 		rrd := res.RecipeResultData{
 			ID:     r.ID,
 			Amount: r.Amount,
@@ -98,11 +101,11 @@ func buildRecipeData(xmlRecipe RecipeXML) (*res.RecipeData, error) {
 func itemRes(id string) res.ItemData {
 	m := res.MiscItem(id)
 	if m != nil {
-		return m
+		return *m
 	}
 	w := res.Weapon(id)
 	if w != nil {
-		return w
+		return *w
 	}
 	return nil
 }
