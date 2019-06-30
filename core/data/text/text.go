@@ -50,7 +50,7 @@ func ReadDisplayText(filePath string, ids ...string) map[string]string {
 	texts := make(map[string]string)
 	file, err := os.Open(filePath)
 	if err != nil {
-		texts["err"] = fmt.Sprintf("CANT_OPEN:%s", filePath)
+		texts["err"] = fmt.Sprintf("cant_open:%s", filePath)
 		return texts
 	}
 	defer file.Close()
@@ -63,16 +63,20 @@ func ReadDisplayText(filePath string, ids ...string) map[string]string {
 			if strings.HasPrefix(line, COMMENT_PREFIX) {
 				continue
 			}
-			lineParts := strings.Split(line, ID_TEXT_SEP)
-			if lineParts[0] == id {
-				t := lineParts[1]
+			sepID := strings.Index(line, ID_TEXT_SEP)
+			if sepID > -1 {
+				lineID := line[:sepID]
+				if lineID != id {
+					continue
+				}
+				t := line[sepID+1:]
 				texts[id] = strings.TrimSuffix(t, LINE_TERMINATOR)
 				found = true
 				break
 			}
 		}
 		if !found {
-			texts[id] = fmt.Sprintf("TEXT_NOT_FONUD:%v", id)
+			texts[id] = fmt.Sprintf("text_not_found:%v", id)
 		}
 	}
 	return texts
@@ -86,7 +90,7 @@ func ReadDisplayText(filePath string, ids ...string) map[string]string {
 func ReadAllValues(filePath string, ids ...string) (map[string][]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("CANT_OPEN:%s", filePath)
+		return nil, fmt.Errorf("cant_open:%s", filePath)
 	}
 	defer file.Close()
 	texts := make(map[string][]string)
@@ -99,9 +103,14 @@ func ReadAllValues(filePath string, ids ...string) (map[string][]string, error) 
 			if strings.HasPrefix(line, COMMENT_PREFIX) {
 				continue
 			}
-			lineParts := strings.Split(line, ID_TEXT_SEP)
-			if lineParts[0] == id {
-				values = append(values, strings.Split(lineParts[1], ";")...)
+			sepID := strings.Index(line, ID_TEXT_SEP)
+			if sepID > -1 {
+				lineID := line[:sepID]
+				if lineID != id {
+					continue
+				}
+				t := line[sepID+1:]
+				values = append(values, strings.Split(t, ";")...)
 				texts[id] = values
 			}
 		}
@@ -116,7 +125,7 @@ func ReadAllValues(filePath string, ids ...string) (map[string][]string, error) 
 func ReadValue(filePath string, ids ...string) (map[string]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("CANT_OPEN:%s", filePath)
+		return nil, fmt.Errorf("cant_open:%s", filePath)
 	}
 	defer file.Close()
 	scan := bufio.NewScanner(file)
@@ -129,16 +138,20 @@ func ReadValue(filePath string, ids ...string) (map[string]string, error) {
 			if strings.HasPrefix(line, COMMENT_PREFIX) {
 				continue
 			}
-			lineParts := strings.Split(line, ID_TEXT_SEP)
-			if lineParts[0] == id {
-				t := lineParts[1]
+			sepID := strings.Index(line, ID_TEXT_SEP)
+			if sepID > -1 {
+				lineID := line[:sepID]
+				if lineID != id {
+					continue
+				}
+				t := line[sepID+1:]
 				texts[id] = strings.TrimSuffix(t, LINE_TERMINATOR)
 				found = true
 				break
 			}
 		}
 		if !found {
-			return nil, fmt.Errorf("TEXT_NOT_FONUD:%v", id)
+			return nil, fmt.Errorf("text_not_found:%v", id)
 		}
 	}
 	return texts, nil

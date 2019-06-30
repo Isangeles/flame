@@ -42,6 +42,13 @@ Description: specifies module to load at start, module ID is ID specified in 'mo
 ```
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
 
+## Contributing
+You are welcome to contribute to project development.
+
+If you looking for things to do, then check TODO file.
+
+When you finish, open pull request to merge your changes with main branch.
+
 ## Contact
 * Isangeles <<dev@isangeles.pl>>
 

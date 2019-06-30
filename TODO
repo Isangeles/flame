@@ -1,15 +1,17 @@
 MAJOR:
-* Combat system
-* Scripts processor
 * Armor items
 * Switching chapters
+* Changing areas
 MINOR:
 * Tutorials
+* Improve combat system(include resilience, stats bonuses, etc.)
+* Improve NPC AI(selecting skills proper to situation)
+* Cast for crafting recipes
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
 * Game characters inventory and equipment
-* Weapons & misc  items
+* Weapons & misc items
 * Effects & modifiers
 * Skills
 * Game objects
@@ -19,3 +21,5 @@ DONE:
 * Dialogs system
 * Flags for objects
 * Quests system
+* Module, chapters, scenarios
+* Crafting system
