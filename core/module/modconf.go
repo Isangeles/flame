@@ -93,5 +93,5 @@ func (c ModConf) ChatLangPath() string {
 
 // RecipesLangPath returns path to recipes lang file.
 func (c ModConf) RecipesLangPath() string {
-	return filepath.FromSlash(c.LangPath() + "recipes")
+	return filepath.FromSlash(c.LangPath() + "/recipes")
 }
