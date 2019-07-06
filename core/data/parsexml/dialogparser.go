@@ -101,6 +101,9 @@ func buildDialogData(xmlDialog DialogXML) (*res.DialogData, error) {
 			dad := new(res.DialogAnswerData)
 			dad.ID = xmlAnswer.ID
 			dad.To = xmlAnswer.To
+			dad.End = xmlAnswer.To == "end"
+			dad.Trade = xmlAnswer.To == "trade"
+			dad.Training = xmlAnswer.To == "training"
 			dad.Reqs = buildReqs(&xmlAnswer.Reqs)
 			dad.TalkerMods = buildModifiers(&xmlAnswer.TalkerMods)
 			dad.OwnerMods = buildModifiers(&xmlAnswer.OwnerMods)

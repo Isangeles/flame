@@ -35,6 +35,11 @@ type Inventory struct {
 	cap   int
 }
 
+// Interface for objects with inventory.
+type Container interface {
+	Inventory() *Inventory
+}
+
 // NewInventory creates new inventory with
 // specified maximal capacity.
 func NewInventory(cap int) *Inventory {

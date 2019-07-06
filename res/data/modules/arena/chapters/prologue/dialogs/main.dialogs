@@ -12,6 +12,7 @@
 	  <flag-req id="qAloeSearch1_s1_f1"/>
 	</reqs>
       </answer>
+      <answer id="trade1" to="trade"/>
       <answer id="bye1" to="end"/>
       <reqs>
 	<flag-req id="fAloeSearch_start"/>

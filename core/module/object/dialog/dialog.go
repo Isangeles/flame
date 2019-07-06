@@ -34,6 +34,8 @@ import (
 type Dialog struct {
 	id           string
 	finished     bool
+	trading      bool
+	training     bool
 	activePhases []*Phase
 	phases       []*Phase
 	reqs         []req.Requirement
@@ -47,10 +49,6 @@ type Talker interface {
 	SendChat(t string)
 	Dialogs() []*Dialog
 }
-
-const (
-	END_DIALOG_ID = "end"
-)
 
 // New creates new dialog.
 func New(data res.DialogData) (*Dialog, error) {
@@ -102,7 +100,9 @@ func (d *Dialog) Phases() []*Phase {
 // answer. Returns error if there is no text
 // for specified answer in dialog.
 func (d *Dialog) Next(a *Answer) {
-	if a.to == END_DIALOG_ID {
+	d.trading = a.StartsTrade()
+	d.training = a.StartsTraining()
+	if a.EndsDialog() {
 		d.finished = true
 		return
 	}
@@ -117,6 +117,18 @@ func (d *Dialog) Next(a *Answer) {
 // Finished checks if dialog is finished.
 func (d *Dialog) Finished() bool {
 	return d.finished
+}
+
+// Trading checks if trade between dialog
+// participants should be started.
+func (d *Dialog) Trading() bool {
+	return d.trading
+}
+
+// Training checks if training between dialog
+// participants should be started.
+func (d *Dialog) Training() bool {
+	return d.training
 }
 
 // Requirements returns all dialog requirements.

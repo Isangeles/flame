@@ -45,6 +45,9 @@ type DialogStageData struct {
 type DialogAnswerData struct {
 	ID         string
 	To         string
+	End        bool
+	Trade      bool
+	Training   bool
 	Reqs       []ReqData
 	TalkerMods []ModifierData
 	OwnerMods  []ModifierData
