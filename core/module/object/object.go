@@ -44,6 +44,7 @@ type UseObject interface {
 // Interface for all object with
 // position on game world map.
 type Positioner interface {
+	SetPosition(x, y float64)
 	Position() (x, y float64)
 }
 
@@ -53,7 +54,7 @@ type Element int
 
 const (
 	Element_none Element = iota
-	Element_fire 
+	Element_fire
 	Element_frost
 	Element_nature
 )

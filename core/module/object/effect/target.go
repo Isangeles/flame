@@ -42,6 +42,7 @@ type Target interface {
 	Live() bool
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)
+	SetPosition(x, y float64)
 	Position() (x, y float64)
 	Inventory() *item.Inventory
 	SendCombat(msg string)

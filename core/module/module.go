@@ -27,6 +27,7 @@
 package module
 
 import (
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/effect"
 )
 
@@ -63,6 +64,17 @@ func (m *Module) Conf() ModConf {
 // Target returns 'targetable' game object with specified
 // serial ID or nil if on object with such ID was found.
 func (m *Module) Target(id, serial string) effect.Target {
+	char := m.Chapter().Character(id, serial)
+	if char != nil {
+		return char
+	}
+	ob := m.Chapter().AreaObject(id, serial)
+	return ob
+}
+
+// Object returns game object with specified ID and serial
+// or nil if no such object was found.
+func (m *Module) Object(id, serial string) object.Object {
 	char := m.Chapter().Character(id, serial)
 	if char != nil {
 		return char
