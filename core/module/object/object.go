@@ -48,6 +48,21 @@ type Positioner interface {
 	Position() (x, y float64)
 }
 
+// Interface for objects with
+// health points.
+type Killable interface {
+	SetHealth(v int)
+	Health() int
+}
+
+// Interfece for objects with
+// experience points.
+type Experiencer interface {
+	SetExperience(v int)
+	Experience() int
+	Level() int
+}
+
 // Struct for object effect
 // types.
 type Element int
