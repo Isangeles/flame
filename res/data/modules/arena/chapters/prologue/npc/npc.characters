@@ -1,11 +1,27 @@
+<?xml version="1.0"?>
 <base>
-	<char id="testchar" gender="male" race="human" attitude="neutral" alignment="chaotic_good" guild="" level="1">
-      	      <stats>4;4;3;1;0;</stats>
-	      <dialogs>
-		<dialog id="dAloeSearch1"/>
-	      </dialogs>
-	      <skills>
-		<skill id="melee1"/>
-	      </skills>
-	</char>
+  <char id="testchar"
+	gender="male"
+	race="human"
+	attitude="neutral"
+	alignment="chaotic_good"
+	guild=""
+	level="1">
+    <stats>4;4;3;1;0;</stats>
+    <dialogs>
+      <dialog id="dAloeSearch1"/>
+    </dialogs>
+    <skills>
+      <skill id="melee1"/>
+    </skills>
+    <inventory>
+      <item id="imWater1"
+	    trade="true"
+	    trade-value="5"/>
+      <item id="iwIronSword"/>
+    </inventory>
+    <training>
+      <attr-train attr="str" value="10"/>
+    </training>
+  </char>
 </base>

@@ -38,9 +38,11 @@ type InventoryXML struct {
 
 // Struct for inventory item XML node.
 type InventoryItemXML struct {
-	XMLName xml.Name `xml:"item"`
-	ID      string   `xml:"id,attr"`
-	Serial  string   `xml:"serial,attr"`
+	XMLName    xml.Name `xml:"item"`
+	ID         string   `xml:"id,attr"`
+	Serial     string   `xml:"serial,attr"`
+	Trade      bool     `xml:"trade,attr"`
+	TradeValue int      `xml:"trade-value,attr"`
 }
 
 // xmlInventory parses specified inventory to XML
@@ -48,7 +50,27 @@ type InventoryItemXML struct {
 func xmlInventory(inv *item.Inventory) *InventoryXML {
 	xmlInv := new(InventoryXML)
 	xmlInv.Capacity = inv.Capacity()
+	for _, i := range inv.TradeItems() {
+		xmlInvItem := InventoryItemXML{
+			ID:         i.ID(),
+			Serial:     i.Serial(),
+			Trade:      true,
+			TradeValue: i.Price,
+		}
+		xmlInv.Items = append(xmlInv.Items, xmlInvItem)
+	}
 	for _, i := range inv.Items() {
+		// Prevent duplicates from trade.
+		prs := false
+		for _, xmlIt := range xmlInv.Items {
+			if xmlIt.ID == i.ID() && xmlIt.Serial == i.Serial() {
+				prs = true
+				break
+			}
+		}
+		if prs {
+			continue
+		}
 		xmlInvItem := InventoryItemXML{
 			ID:     i.ID(),
 			Serial: i.Serial(),

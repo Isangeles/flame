@@ -44,6 +44,15 @@ type ObjectSavedData struct {
 	PosX, PosY float64
 }
 
+// Struct for inventory item data
+// resource.
+type InventoryItemData struct {
+	ID         string
+	Serial     string
+	Trade      bool
+	TradeValue int
+}
+
 // Struct for object effects data.
 type ObjectEffectData struct {
 	ID           string

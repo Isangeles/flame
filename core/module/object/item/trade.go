@@ -1,5 +1,5 @@
 /*
- * item.go
+ * trade.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,34 +21,10 @@
  *
  */
 
-package res
+package item
 
-// Empty interface for item data
-// structs.
-type ItemData interface{}
-
-// Strunt for weapon resource data.
-type WeaponData struct {
-	ID         string
-	Name       string
-	Info       string
-	Value      int
-	Level      int
-	DMGMin     int
-	DMGMax     int
-	DMGType    int
-	DMGEffects []EffectData
-	EQReqs     []ReqData
-	Slots      []int
-	Loot       bool
-}
-
-// Struct for miscellaneous items.
-type MiscItemData struct {
-	ID     string
-	Name   string
-	Info   string
-	Value  int
-	Level  int
-	Loot   bool
+// Struct for 'tradable' items.
+type TradeItem struct {
+	Item
+	Price int
 }

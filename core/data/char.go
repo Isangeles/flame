@@ -194,8 +194,17 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 				char.ID(), err)
 			continue
 		}
-		it.SetSerial(invItData.Serial)
+		if len(invItData.Serial) < 1 {
+			it.SetSerial(invItData.Serial)
+		}
 		char.Inventory().AddItem(it)
+		if invItData.Trade {
+			ti := item.TradeItem{
+				Item:  it,
+				Price: invItData.TradeValue,
+			}
+			char.Inventory().AddTradeItem(&ti)
+		}
 	}
 	// Equipment.
 	for _, eqItData := range data.EqItems {

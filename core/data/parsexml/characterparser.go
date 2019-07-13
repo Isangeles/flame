@@ -325,8 +325,10 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	// Items.
 	for _, xmlIt := range xmlChar.Inventory.Items {
 		itData := res.InventoryItemData{
-			ID:     xmlIt.ID,
-			Serial: xmlIt.Serial,
+			ID:         xmlIt.ID,
+			Serial:     xmlIt.Serial,
+			Trade:      xmlIt.Trade,
+			TradeValue: xmlIt.TradeValue,
 		}
 		data.Items = append(data.Items, itData)
 	}
@@ -405,7 +407,7 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 }
 
 // buildFlagData builds flag data from specified XML data.
-func buildFlagData(xmlFlag FlagXML) (res.FlagData) {
+func buildFlagData(xmlFlag FlagXML) res.FlagData {
 	flagData := res.FlagData{ID: xmlFlag.ID}
 	return flagData
 }

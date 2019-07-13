@@ -25,14 +25,13 @@ package item
 
 import (
 	"fmt"
-
-	"github.com/isangeles/flame/core/module/object"
 )
 
 // Struct for container with items.
 type Inventory struct {
-	items []Item
-	cap   int
+	items      map[string]Item
+	tradeItems []*TradeItem
+	cap        int
 }
 
 // Interface for objects with inventory.
@@ -44,44 +43,57 @@ type Container interface {
 // specified maximal capacity.
 func NewInventory(cap int) *Inventory {
 	inv := new(Inventory)
+	inv.items = make(map[string]Item)
 	inv.cap = cap
 	return inv
 }
 
 // Items returns all items in inventory.
-func (inv *Inventory) Items() []Item {
-	return inv.items
+func (inv *Inventory) Items() (items []Item) {
+	for _, i := range inv.items {
+		items = append(items, i)
+	}
+	return
 }
 
 // Item returns item with specified serial ID
 // from inventory or nil if no item with such serial
 // ID was found in inventory.
 func (inv *Inventory) Item(id, serial string) Item {
-	for _, i := range inv.Items() {
-		if i.ID()+i.Serial() == id+serial  {	
-			return i
-		}
-	}
-	return nil
+	return inv.items[id+serial]
 }
 
 // AddItems add specified item to inventory.
 func (inv *Inventory) AddItem(i Item) error {
+	if inv.items[i.ID()+i.Serial()] != nil {
+		return nil
+	}
 	if len(inv.items) >= inv.Capacity() {
 		return fmt.Errorf("no_inv_space")
 	}
-	inv.items = append(inv.items, i)
+	inv.items[i.ID()+i.Serial()] = i
 	return nil
 }
 
 // RemoveItem removes specified item from inventory.
 func (inv *Inventory) RemoveItem(i Item) {
-	for id, it := range inv.items {
-		if !object.Equals(it, i) {
-			continue
-		}
-		inv.items = append(inv.items[:id], inv.items[id+1:]...)
+	delete(inv.items, i.ID()+i.Serial())
+}
+
+// TradeItems returns all items for trade
+// from inventory.
+func (inv *Inventory) TradeItems() []*TradeItem {
+	return inv.tradeItems
+}
+
+// AddTradeItems adds specified trade item to inventory.
+func (inv *Inventory) AddTradeItem(i *TradeItem) error {
+	err := inv.AddItem(i)
+	if err != nil {
+		return err
 	}
+	inv.tradeItems = append(inv.tradeItems, i)
+	return nil
 }
 
 // Size returns current amount of items

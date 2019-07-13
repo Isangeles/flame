@@ -70,6 +70,7 @@ type Character struct {
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
 	recipes          map[string]*craft.Recipe
+	tradeItems       []*item.TradeItem
 	flags            map[string]flag.Flag
 	chatlog          chan string
 	combatlog        chan string
@@ -106,6 +107,7 @@ func New(data res.CharacterBasicData) *Character {
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.flags = make(map[string]flag.Flag)
 	c.recipes = make(map[string]*craft.Recipe)
+	c.tradeItems = make([]*item.TradeItem, 0)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	c.privlog = make(chan string, 3)
@@ -591,6 +593,16 @@ func (c *Character) Recipes() (recipes []*craft.Recipe) {
 // AddRecipe adds specified recipe to character.
 func (c *Character) AddRecipe(r *craft.Recipe) {
 	c.recipes[r.ID()] = r
+}
+
+// TradeItems returns all items for trade.
+func (c *Character) TradeItems() []*item.TradeItem {
+	return c.tradeItems
+}
+
+// AddTradeItems add specified item to trade items list.
+func (c *Character) AddTradeItem(ti *item.TradeItem) {
+	c.tradeItems = append(c.tradeItems, ti)
 }
 
 // levelup promotes character to next level.
