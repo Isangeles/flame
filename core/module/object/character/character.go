@@ -29,15 +29,16 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/craft"
 	"github.com/isangeles/flame/core/module/object/dialog"
 	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/object/item"
-	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/core/module/object/quest"
-	"github.com/isangeles/flame/core/module/flag"
+	"github.com/isangeles/flame/core/module/object/skill"
 	"github.com/isangeles/flame/core/module/serial"
+	"github.com/isangeles/flame/core/module/train"
 	"github.com/isangeles/flame/log"
 )
 
@@ -70,8 +71,8 @@ type Character struct {
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
 	recipes          map[string]*craft.Recipe
-	tradeItems       []*item.TradeItem
 	flags            map[string]flag.Flag
+	trainings        []train.Training
 	chatlog          chan string
 	combatlog        chan string
 	privlog          chan string
@@ -105,9 +106,9 @@ func New(data res.CharacterBasicData) *Character {
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
-	c.flags = make(map[string]flag.Flag)
 	c.recipes = make(map[string]*craft.Recipe)
-	c.tradeItems = make([]*item.TradeItem, 0)
+	c.flags = make(map[string]flag.Flag)
+	c.trainings = train.NewTrainings(data.Trainings...)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	c.privlog = make(chan string, 3)
@@ -278,7 +279,7 @@ func (c *Character) Attitude() Attitude {
 
 // AttitudeFor returns attitude for specified target.
 func (c *Character) AttitudeFor(tar effect.Target) Attitude {
-	mem := c.memory[tar.ID() + tar.Serial()]
+	mem := c.memory[tar.ID()+tar.Serial()]
 	if mem != nil {
 		return mem.Attitude
 	}
@@ -568,13 +569,13 @@ func (c *Character) Flags() (flags []flag.Flag) {
 // AddFlag adds specified flag.
 func (c *Character) AddFlag(f flag.Flag) {
 	c.flags[f.ID()] = f
-	log.Dbg.Printf("char:%s_%s:add_flag:%s", c.ID(), c.Serial(), f)
+	log.Dbg.Printf("char:%s#%s:add_flag:%s", c.ID(), c.Serial(), f)
 }
 
 // RemoveFlag removes specified flag.
 func (c *Character) RemoveFlag(f flag.Flag) {
 	delete(c.flags, f.ID())
-	log.Dbg.Printf("char:%s_%s:remove_flag:%s", c.ID(), c.Serial(), f)
+	log.Dbg.Printf("char:%s#%s:remove_flag:%s", c.ID(), c.Serial(), f)
 }
 
 // Journal returns quest journal.
@@ -595,14 +596,15 @@ func (c *Character) AddRecipe(r *craft.Recipe) {
 	c.recipes[r.ID()] = r
 }
 
-// TradeItems returns all items for trade.
-func (c *Character) TradeItems() []*item.TradeItem {
-	return c.tradeItems
+// Trainings returns all trainings.
+func (c *Character) Trainings() []train.Training {
+	return c.trainings
 }
 
-// AddTradeItems add specified item to trade items list.
-func (c *Character) AddTradeItem(ti *item.TradeItem) {
-	c.tradeItems = append(c.tradeItems, ti)
+// AddTrainings adds specified training to
+// character trainings list.
+func (c *Character) AddTraining(t train.Training) {
+	c.trainings = append(c.trainings, t)
 }
 
 // levelup promotes character to next level.

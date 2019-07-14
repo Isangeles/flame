@@ -41,11 +41,12 @@ type MiscsBaseXML struct {
 
 // Struct for misc XML node.
 type MiscXML struct {
-	XMLName xml.Name `xml:"item"`
-	ID      string   `xml:"id,attr"`
-	Value   int      `xml:"value,attr"`
-	Level   int      `xml:"level,attr"`
-	Loot    bool     `xml:"loot,attr"`
+	XMLName  xml.Name `xml:"item"`
+	ID       string   `xml:"id,attr"`
+	Value    int      `xml:"value,attr"`
+	Level    int      `xml:"level,attr"`
+	Loot     bool     `xml:"loot,attr"`
+	Currency bool     `xml:"currency,attr"`
 }
 
 // UnmarshalMiscItemsBase retrieves misc items data from specified XML data.
@@ -71,10 +72,11 @@ func UnmarshalMiscItemsBase(data io.Reader) ([]*res.MiscItemData, error) {
 // buildMiscData creates new misc data from specified XML data.
 func buildMiscData(xmlMisc MiscXML) (*res.MiscItemData, error) {
 	m := res.MiscItemData{
-		ID:    xmlMisc.ID,
-		Value: xmlMisc.Value,
-		Level: xmlMisc.Level,
-		Loot:  xmlMisc.Loot,
+		ID:       xmlMisc.ID,
+		Value:    xmlMisc.Value,
+		Level:    xmlMisc.Level,
+		Loot:     xmlMisc.Loot,
+		Currency: xmlMisc.Currency,
 	}
 	return &m, nil
 }

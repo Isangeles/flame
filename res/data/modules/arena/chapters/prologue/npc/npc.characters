@@ -20,8 +20,10 @@
 	    trade-value="5"/>
       <item id="iwIronSword"/>
     </inventory>
-    <training>
-      <attr-train attr="str" value="10"/>
-    </training>
+    <trainings>
+      <attrs-train str="1">
+	<reqs></reqs>
+      </attrs-train>
+    </trainings>
   </char>
 </base>

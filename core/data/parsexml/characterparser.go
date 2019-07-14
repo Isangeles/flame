@@ -70,6 +70,7 @@ type CharacterXML struct {
 	Quests      []CharacterQuestXML `xml:"quests>quest"`
 	Flags       []FlagXML           `xml:"flags>flag"`
 	Crafting    []ObjectRecipeXML   `xml:"crafting>recipe"`
+	Trainings   TrainingsXML        `xml:"trainings"`
 }
 
 // Struct for equipment XML node.
@@ -194,6 +195,7 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 	xmlChar.Quests = xmlQuests(char.Journal().Quests())
 	xmlChar.Flags = xmlFlags(char.Flags())
 	xmlChar.Crafting = xmlObjectRecipes(char.Recipes()...)
+	xmlChar.Trainings = *xmlTrainings(char.Trainings()...)
 	return xmlChar
 }
 
@@ -301,6 +303,8 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 		flagData := buildFlagData(xmlFlag)
 		data.BasicData.Flags = append(data.BasicData.Flags, flagData)
 	}
+	// Trainings.
+	data.BasicData.Trainings = buildTrainings(&xmlChar.Trainings)
 	// Save.
 	data.SavedData.PC = xmlChar.PC
 	// HP, mana, exp.

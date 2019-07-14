@@ -1,5 +1,5 @@
 /*
- * item.go
+ * train.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,35 +21,27 @@
  *
  */
 
-package res
+package character
 
-// Empty interface for item data
-// structs.
-type ItemData interface{}
+import (
+	"fmt"
+	
+	"github.com/isangeles/flame/core/module/train"
+)
 
-// Strunt for weapon resource data.
-type WeaponData struct {
-	ID         string
-	Name       string
-	Info       string
-	Value      int
-	Level      int
-	DMGMin     int
-	DMGMax     int
-	DMGType    int
-	DMGEffects []EffectData
-	EQReqs     []ReqData
-	Slots      []int
-	Loot       bool
-}
-
-// Struct for miscellaneous items.
-type MiscItemData struct {
-	ID       string
-	Name     string
-	Info     string
-	Value    int
-	Level    int
-	Loot     bool
-	Currency bool
+// Train trains character with specified training.
+func (char *Character) Train(t train.Training) error {
+	if !char.MeetReqs(t.Reqs()...) {
+		return fmt.Errorf("reqs-not-meet")
+	}
+	char.ChargeReqs(t.Reqs()...)
+	switch t := t.(type) {
+	case *train.AttrsTraining:
+		char.attributes.Str += t.Strenght()
+		char.attributes.Con += t.Constitution()
+		char.attributes.Dex += t.Dexterity()
+		char.attributes.Wis += t.Wisdom()
+		char.attributes.Int += t.Intelligence()
+	}
+	return nil
 }

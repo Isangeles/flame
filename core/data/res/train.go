@@ -28,5 +28,10 @@ import (
 )
 
 // Interface for training data.
-type TrainData interface{}
+type TrainingData interface{}
 
+// Struct for attributes training data.
+type AttrsTrainingData struct {
+	Str, Con, Dex, Wis, Int int
+	Reqs                    []ReqData
+}

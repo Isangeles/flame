@@ -29,23 +29,25 @@ import (
 
 // Struct for miscellaneous items.
 type Misc struct {
-	id     string
-	serial string
-	name   string
-	info   string
-	value  int
-	level  int
-	loot   bool
+	id       string
+	serial   string
+	name     string
+	info     string
+	value    int
+	level    int
+	loot     bool
+	currency bool
 }
 
 // NewMisc creates new misc item.
 func NewMisc(data res.MiscItemData) *Misc {
 	m := Misc{
-		id:     data.ID,
-		name:   data.Name,
-		info:   data.Info,
-		value:  data.Value,
-		loot:   data.Loot,
+		id:       data.ID,
+		name:     data.Name,
+		info:     data.Info,
+		value:    data.Value,
+		loot:     data.Loot,
+		currency: data.Currency,
 	}
 	return &m
 }
@@ -93,4 +95,10 @@ func (m *Misc) Level() int {
 // Loot checks if item is 'lootable'.
 func (m *Misc) Loot() bool {
 	return m.loot
+}
+
+// Currency check if item can be
+// used as currency.
+func (m *Misc) Currency() bool {
+	return m.currency
 }

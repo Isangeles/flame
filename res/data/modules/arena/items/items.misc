@@ -12,4 +12,9 @@
 	value="10"
 	level="1"
 	loot="true"/>
+  <item id="imBronzeCoin1"
+	value="1"
+	level="1"
+	loot="true"
+	currency="true"/>
 </base>

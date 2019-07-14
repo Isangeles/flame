@@ -54,6 +54,7 @@ type CharacterBasicData struct {
 	Int       int
 	Wis       int
 	Flags     []FlagData
+	Trainings []TrainingData
 }
 
 // Struct for saved character data.

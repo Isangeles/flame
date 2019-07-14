@@ -21,9 +21,27 @@
  *
  */
 
+// Package with training structs.
 package train
 
 import (
-
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/req"
 )
 
+// Interface for trainings.
+type Training interface {
+	Reqs() []req.Requirement
+}
+
+// NewTrainings creates new trainings from specified data.
+func NewTrainings(data ...res.TrainingData) (trainings []Training) {
+	for _, d := range data {
+		switch d := d.(type) {
+		case res.AttrsTrainingData:
+			atTrain := NewAttrsTraining(d)
+			trainings = append(trainings, atTrain)
+		}
+	}
+	return
+}
