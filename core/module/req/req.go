@@ -58,6 +58,9 @@ func NewRequirements(data ...res.ReqData) (reqs []Requirement) {
 		case res.ItemReqData:
 			ireq := NewItemReq(d)
 			reqs = append(reqs, ireq)
+		case res.CurrencyReqData:
+			creq := NewCurrencyReq(d)
+			reqs = append(reqs, creq)
 		}
 	}
 	return

@@ -34,6 +34,8 @@ com_no:No
 game_pause_info:Game paused
 skill_not_known:Skill not known
 cant_do_right_now:Can't do right now
+req_item:Item
+req_currency:Cost
 cli_newchar_name:Character name
 cli_newchar_race:Character race
 cli_newchar_gender:Character gender

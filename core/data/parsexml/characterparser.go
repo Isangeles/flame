@@ -307,7 +307,6 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	data.BasicData.Trainings = buildTrainings(&xmlChar.Trainings)
 	// Save.
 	data.SavedData.PC = xmlChar.PC
-	// HP, mana, exp.
 	data.SavedData.HP = xmlChar.HP
 	data.SavedData.Mana = xmlChar.Mana
 	data.SavedData.Exp = xmlChar.Exp

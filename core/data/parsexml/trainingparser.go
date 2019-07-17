@@ -70,6 +70,7 @@ func xmlAttrsTraining(at *train.AttrsTraining) *AttrsTrainingXML {
 	xmlTrain.Dex = at.Dexterity()
 	xmlTrain.Wis = at.Wisdom()
 	xmlTrain.Int = at.Intelligence()
+	xmlTrain.Reqs = *xmlReqs(at.Reqs()...)
 	return xmlTrain
 }
 

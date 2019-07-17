@@ -42,10 +42,15 @@ type FlagReqData struct {
 	Off bool
 }
 
-// ItemReqData return item
-// requirement data.
+// Struct for item requirement data.
 type ItemReqData struct {
 	ID     string
+	Amount int
+	Charge bool
+}
+
+// Struct for currency requirement data.
+type CurrencyReqData struct {
 	Amount int
 	Charge bool
 }

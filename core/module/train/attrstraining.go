@@ -80,4 +80,3 @@ func (at *AttrsTraining) Intelligence() int {
 func (at *AttrsTraining) Reqs() []req.Requirement {
 	return at.reqs
 }
-		

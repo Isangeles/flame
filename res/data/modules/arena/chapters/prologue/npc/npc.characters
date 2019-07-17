@@ -22,7 +22,10 @@
     </inventory>
     <trainings>
       <attrs-train str="1">
-	<reqs></reqs>
+	<reqs>
+	  <currency-req amount="100"
+			charge="true"/>
+	</reqs>
       </attrs-train>
     </trainings>
   </char>

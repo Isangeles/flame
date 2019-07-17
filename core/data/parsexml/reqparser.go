@@ -33,11 +33,12 @@ import (
 
 // Struct for requirements XML node.
 type ReqsXML struct {
-	XMLName    xml.Name       `xml:"reqs"`
-	LevelReqs  []LevelReqXML  `xml:"level-req"`
-	GenderReqs []GenderReqXML `xml:"gender-req"`
-	FlagReqs   []FlagReqXML   `xml:"flag-req"`
-	ItemReqs   []ItemReqXML   `xml:"item-req"`
+	XMLName      xml.Name         `xml:"reqs"`
+	LevelReqs    []LevelReqXML    `xml:"level-req"`
+	GenderReqs   []GenderReqXML   `xml:"gender-req"`
+	FlagReqs     []FlagReqXML     `xml:"flag-req"`
+	ItemReqs     []ItemReqXML     `xml:"item-req"`
+	CurrencyReqs []CurrencyReqXML `xml:"currency-req"`
 }
 
 // Struct for level requirement XML node.
@@ -68,11 +69,44 @@ type ItemReqXML struct {
 	Charge  bool     `xml:"charge,attr"`
 }
 
+// Struct for currency requirement XML node.
+type CurrencyReqXML struct {
+	XMLName xml.Name `xml:"currency-req"`
+	Amount  int      `xml:"amount,attr"`
+	Charge  bool     `xml:"charge,attr"`
+}
+
+// xmlReqs parses specified requirements to XML
+// reqs node.
+func xmlReqs(reqs ...req.Requirement) *ReqsXML {
+	xmlReqs := new(ReqsXML)
+	for _, r := range reqs {
+		switch r := r.(type) {
+		case *req.LevelReq:
+			xmlReq := xmlLevelReq(r)
+			xmlReqs.LevelReqs = append(xmlReqs.LevelReqs, *xmlReq)
+		case *req.CurrencyReq:
+			xmlReq := xmlCurrencyReq(r)
+			xmlReqs.CurrencyReqs = append(xmlReqs.CurrencyReqs, *xmlReq)
+		}
+	}
+	return xmlReqs
+}
+
 // xmlLevelReq parses specified level requirement to
 // XML level req node.
 func xmlLevelReq(req *req.LevelReq) *LevelReqXML {
 	xmlReq := new(LevelReqXML)
 	xmlReq.Min = req.MinLevel()
+	return xmlReq
+}
+
+// xmlCurrencyReq parses specified currency requirement
+// to XML currenct req node.
+func xmlCurrencyReq(r *req.CurrencyReq) *CurrencyReqXML {
+	xmlReq := new(CurrencyReqXML)
+	xmlReq.Amount = r.Amount()
+	xmlReq.Charge = r.Charge()
 	return xmlReq
 }
 
@@ -111,6 +145,14 @@ func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
 	for _, xmlReq := range xmlReqs.ItemReqs {
 		req := res.ItemReqData{
 			ID:     xmlReq.ID,
+			Amount: xmlReq.Amount,
+			Charge: xmlReq.Charge,
+		}
+		reqs = append(reqs, req)
+	}
+	// Currency reqs.
+	for _, xmlReq := range xmlReqs.CurrencyReqs {
+		req := res.CurrencyReqData{
 			Amount: xmlReq.Amount,
 			Charge: xmlReq.Charge,
 		}

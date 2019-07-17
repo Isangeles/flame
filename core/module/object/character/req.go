@@ -25,6 +25,7 @@ package character
 
 import (
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/module/object/item"
 )
 
 // ReqsMeet checks whether all specified requirements
@@ -68,6 +69,20 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 			}
 		}
 		return count >= r.ItemAmount()
+	case *req.CurrencyReq:
+		// TODO: currency check.
+		val := 0
+		for _, it := range char.Inventory().Items() {
+			misc, ok := it.(*item.Misc)
+			if ! ok {
+				continue
+			}
+			if !misc.Currency() {
+				continue
+			}
+			val += misc.Value()
+		}
+		return val >= r.Amount()
 	default:
 		return true
 	}
@@ -91,5 +106,7 @@ func (c *Character) ChargeReq(r req.Requirement) {
 				c.Inventory().RemoveItem(i)
 			}
 		}
+	case *req.CurrencyReq:
+		// TODO: charge currency items.
 	}
 }
