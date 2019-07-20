@@ -34,6 +34,12 @@ type Training interface {
 	Reqs() []req.Requirement
 }
 
+// Interface for object with trainings.
+type Trainer interface {
+	AddTraining(t Training)
+	Trainings() []Training
+}
+
 // NewTrainings creates new trainings from specified data.
 func NewTrainings(data ...res.TrainingData) (trainings []Training) {
 	for _, d := range data {
