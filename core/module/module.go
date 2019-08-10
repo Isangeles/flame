@@ -69,7 +69,10 @@ func (m *Module) Target(id, serial string) effect.Target {
 		return char
 	}
 	ob := m.Chapter().AreaObject(id, serial)
-	return ob
+	if ob != nil {
+		return ob
+	}
+	return nil
 }
 
 // Object returns game object with specified ID and serial
@@ -80,5 +83,8 @@ func (m *Module) Object(id, serial string) object.Object {
 		return char
 	}
 	ob := m.Chapter().AreaObject(id, serial)
-	return ob
+	if ob != nil {
+		return ob
+	}
+	return nil
 }
