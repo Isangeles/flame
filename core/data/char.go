@@ -52,23 +52,6 @@ func Character(mod *module.Module, charID string) (*character.Character, error) 
 	}
 	// Full build character(with skills, itmes, etc.).
 	char := buildCharacter(mod, data)
-	// Add skills & items from mod config.
-	for _, sid := range mod.Conf().CharSkills {
-		s, err := Skill(sid)
-		if err != nil {
-			log.Err.Printf("fail_to_retireve_conf_char_skill:%v", err)
-			continue
-		}
-		char.AddSkill(s)
-	}
-	for _, iid := range mod.Conf().CharItems {
-		i, err := Item(iid)
-		if err != nil {
-			log.Err.Printf("fail_to_retireve_conf_char_item:%v", err)
-			continue
-		}
-		char.Inventory().AddItem(i)
-	}
 	return char, nil
 }
 

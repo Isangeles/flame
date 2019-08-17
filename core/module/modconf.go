@@ -31,8 +31,6 @@ import (
 type ModConf struct {
 	ID, Path, Lang  string
 	StartChapter    string
-	CharSkills      []string
-	CharItems       []string
 }
 
 // ChaptersPath returns path to module chapters.

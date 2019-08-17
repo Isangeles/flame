@@ -27,7 +27,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
@@ -161,28 +160,13 @@ func modConf(path, lang string) (module.ModConf, error) {
 	}
 	modConfPath := filepath.FromSlash(path + "/mod.conf")
 	// Read conf.
-	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter",
-		"char-skills", "char-items")
+	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter")
 	if err != nil {
 		return conf, fmt.Errorf("fail_to_retrieve_values:%s", err)
 	}
-	charSkills := strings.Split(confValues["char-skills"], ";")
-	charItems := strings.Split(confValues["char-items"], ";")
 	// Set conf values.
 	conf.ID = confValues["id"]
 	conf.StartChapter = confValues["start-chapter"]
-	for _, sid := range charSkills {
-		if len(sid) < 1 {
-			continue
-		}
-		conf.CharSkills = append(conf.CharSkills, sid)
-	}
-	for _, iid := range charItems {
-		if len(iid) < 1 {
-			continue
-		}
-		conf.CharItems = append(conf.CharItems, iid)
-	}
 	return conf, nil
 }
 
