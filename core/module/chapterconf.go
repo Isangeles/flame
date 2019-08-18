@@ -47,7 +47,7 @@ func (cc ChapterConf) FullPath() string {
 // scenarios directory.
 func (cc ChapterConf) ScenariosPath() string {
 	return filepath.FromSlash(cc.FullPath() +
-		"/area/scenarios")
+		"/areas/scenarios")
 }
 
 // LangPath returns path to chapter

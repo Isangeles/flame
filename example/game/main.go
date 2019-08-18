@@ -22,6 +22,9 @@
  */
 
 // Example of loading module and creating game.
+// Before start, path to valid flame module
+// must be specified in .flame file placed
+// in executable directory.
 package main
 
 import (
@@ -56,17 +59,17 @@ func main() {
 	// Load flame config.
 	err := config.LoadConfig()
 	if err != nil {
-		fmt.Printf("fail to load config:%v", err)
+		fmt.Printf("fail to load config: %v", err)
 	}
-	// Get module.
+	// Load module from config.
 	mod, err := data.Module(config.ModulePath(), config.LangID())
 	if err != nil {
-		panic(fmt.Sprintf("fail to retrieve module:%v", err))
+		panic(fmt.Sprintf("fail to retrieve module: %v", err))
 	}
 	// Load module data.
 	err = data.LoadModuleData(mod)
 	if err != nil {
-		panic(fmt.Sprintf("fail to load module data:%v", err))
+		panic(fmt.Sprintf("fail to load module data: %v", err))
 	}
 	// Set module.
 	flame.SetModule(mod)
@@ -75,7 +78,7 @@ func main() {
 	// Start game.
 	g, err := flame.StartGame(pc)
 	if err != nil {
-		panic(fmt.Sprintf("fail to start game:%v", err))
+		panic(fmt.Sprintf("fail to start game: %v", err))
 	}
 	// Print game info.
 	fmt.Printf("game started\n")

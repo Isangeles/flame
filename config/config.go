@@ -37,7 +37,7 @@ import (
 )
 
 const (
-	CONFIG_FILE_NAME = ".flame"
+	ConfigFileName = ".flame"
 )
 
 var (
@@ -52,10 +52,10 @@ var (
 // LoadConfig loads engine configuration file.
 func LoadConfig() error {
 	// Retrieve values from conf file.
-	values, err := text.ReadValue(CONFIG_FILE_NAME, "module", "lang", "debug")
+	values, err := text.ReadValue(ConfigFileName, "module", "lang", "debug")
 	if err != nil {
 		SaveConfig() // replace 'corrupted' config with default config
-		return fmt.Errorf("fail_to_load_conf_values:%v", err)
+		return fmt.Errorf("fail to load conf values: %v", err)
 	}
 	// Set values.
 	langID = values["lang"]
@@ -78,9 +78,9 @@ func LoadConfig() error {
 // SaveConfig saves engine configuration in file.
 func SaveConfig() error {
 	// Create file.
-	f, err := os.Create(CONFIG_FILE_NAME)
+	f, err := os.Create(ConfigFileName)
 	if err != nil {
-		return fmt.Errorf("fail_to_create_conf_file:%v", err)
+		return fmt.Errorf("fail to create conf file: %v", err)
 	}
 	defer f.Close()
 	// Write values.

@@ -36,7 +36,7 @@ import (
 )
 
 const (
-	NAME, VERSION = "Flame Engine", "0.0.0"
+	Name, Version = "Flame Engine", "0.0.0"
 )
 
 var (	
@@ -76,32 +76,30 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	// Load start chapter for module.
 	err := data.LoadChapter(Mod(), Mod().Conf().StartChapter)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_start_chapter:%v",
-			err)
+		return nil, fmt.Errorf("fail to load start chapter: %v", err)
 	}
 	// Load chapter data(to build quests, characters, erc.).
 	err = data.LoadChapterData(Mod().Chapter())
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_data:%v",
-			err)
+		return nil, fmt.Errorf("fail to load module data: %v", err)
 	}
 	// Load start scenario for module.
 	chapter := Mod().Chapter()
 	// Load chapter scenario.
 	err = data.LoadScenario(Mod(), chapter.Conf().StartScenID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_start_scenario:%v", err)
+		return nil, fmt.Errorf("fail to load start scenario: %v", err)
 	}
 	// Create new game.
 	game, err = core.NewGame(mod)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_create_game:%v", err)
+		return nil, fmt.Errorf("fail to create game: %v", err)
 	}
 	SetGame(game)
 	// All players to main area of start scenario.
 	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_retrieve_start_scenario:%v", err)
+		return nil, fmt.Errorf("fail to retrieve start scenario: %v", err)
 	}
 	startArea := startScen.Mainarea()
 	for _, pc := range pcs {
@@ -125,12 +123,12 @@ func LoadGame(saveName string) (*core.Game, error) {
 	savesPath := config.ModuleSavegamesPath()
 	sav, err := data.ImportSavedGame(Mod(), savesPath, saveName)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_game:%v", err)
+		return nil, fmt.Errorf("fail to load game: %v", err)
 	}
 	mod = sav.Mod
 	game, err := core.NewGame(mod)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_create_game:%v", err)
+		return nil, fmt.Errorf("fail to create game: %v", err)
 	}
 	SetGame(game)
 	for _, pc := range sav.Players {
