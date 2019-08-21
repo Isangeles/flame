@@ -26,17 +26,21 @@ package craft
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Struct for recipes.
 type Recipe struct {
-	id    string
-	catID string
-	res   []res.RecipeResultData
-	reqs  []req.Requirement
+	id          string
+	catID       string
+	res         []res.RecipeResultData
+	reqs        []req.Requirement
+	castTime    int64
+	castTimeMax int64
+	casting     bool
+	casted      bool
 }
 
 // NewRecipe creates new crafting recipe.
@@ -46,12 +50,25 @@ func NewRecipe(data res.RecipeData) *Recipe {
 	r.catID = data.Category
 	r.res = data.Results
 	r.reqs = req.NewRequirements(data.Reqs...)
+	r.castTimeMax = data.Cast
 	return r
+}
+
+// Update updates recipe.
+func (r *Recipe) Update(delta int64) {
+	if r.casting {
+		r.castTime += delta
+		if r.castTime >= r.castTimeMax {
+			r.casting = false
+			r.casted = true
+		}
+	}
 }
 
 // Make creates, assigns serials and
 // returns items from recipe.
 func (r *Recipe) Make() []item.Item {
+	r.casted = false
 	items := make([]item.Item, 0)
 	for _, resData := range r.res {
 		switch d := resData.Item.(type) {
@@ -66,6 +83,13 @@ func (r *Recipe) Make() []item.Item {
 		}
 	}
 	return items
+}
+
+// Cast starts casting make
+// recipe action.
+func (r *Recipe) Cast() {
+	r.castTime = 0
+	r.casting = true
 }
 
 // ID returns recipe ID.
@@ -86,4 +110,28 @@ func (r *Recipe) Reqs() []req.Requirement {
 // Result returns recipe result data.
 func (r *Recipe) Result() []res.RecipeResultData {
 	return r.res
+}
+
+// CastTime returns current casting
+// time in millisecond.
+func (r *Recipe) CastTime() int64 {
+	return r.castTime
+}
+
+// CastTimeMax returns maximal casting
+// time in milliseconds.
+func (r *Recipe) CastTimeMax() int64 {
+	return r.castTimeMax
+}
+
+// Casting checks if recipe make action
+// is active.
+func (r *Recipe) Casting() bool {
+	return r.casting
+}
+
+// Casted checks if recipe make action
+// was finished.
+func (r *Recipe) Casted() bool {
+	return r.casted
 }

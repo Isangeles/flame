@@ -59,13 +59,13 @@ func UnmarshalSkillsBase(data io.Reader) ([]*res.SkillData, error) {
 	xmlBase := new(SkillsBaseXML)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	skills := make([]*res.SkillData, 0)
 	for _, xmlSkill := range xmlBase.Skills {
 		skill, err := buildSkillData(xmlSkill)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_character:build_data_fail:%v", err)
+			log.Err.Printf("xml: unmarshal character: build data fail: %v", err)
 			continue
 		}
 		skills = append(skills, skill)
@@ -80,7 +80,7 @@ func buildSkillData(xmlSkill SkillXML) (*res.SkillData, error) {
 	for _, xmlEffect := range xmlSkill.Effects.Nodes {
 		eff := res.Effect(xmlEffect.ID)
 		if eff == nil {
-			log.Err.Printf("xml:build_skill_data:effect_data_not_found:%s",
+			log.Err.Printf("xml: build skill data: effect data not found: %s",
 				xmlEffect.ID)
 			continue
 		}
@@ -88,7 +88,7 @@ func buildSkillData(xmlSkill SkillXML) (*res.SkillData, error) {
 	}
 	skillRange, err := UnmarshalSkillRange(xmlSkill.Range)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_range:%v", err)
+		return nil, fmt.Errorf("fail to parse range: %v", err)
 	}
 	data := res.SkillData{
 		ID:       xmlSkill.ID,

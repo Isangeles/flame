@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <base>
-  <recipe id="rAloeTea1" category="cooking">
+  <recipe id="rAloeTea1" category="cooking" cast="2">
     <results>
       <result id="imAloeTea1" amount="1"/>
     </results>

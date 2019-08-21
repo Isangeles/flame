@@ -21,20 +21,25 @@
  *
  */
 
-package res
+package character
 
-// Struct for recipe data.
-type RecipeData struct {
-	ID       string
-	Category string
-	Results  []RecipeResultData
-	Reqs     []ReqData
-	Cast     int64
-}
+import (
+	"fmt"
 
-// Struct for recipe result data.
-type RecipeResultData struct {
-	ID     string
-	Amount int
-	Item   ItemData
+	"github.com/isangeles/flame/config"
+	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/module/object/craft"
+)
+
+// Craft attemps to make specified recipe.
+func (c *Character) Craft(r *craft.Recipe) {
+	langPath := config.LangPath()
+	if !c.MeetReqs(r.Reqs()...) {
+		msg := fmt.Sprintf("%s:%s:%s", c.Name(), r.ID(),
+			lang.TextDir(langPath, "reqs_not_meet"))
+		c.SendPrivate(msg)
+		return
+	}
+	r.Cast()
+	return
 }

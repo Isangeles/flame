@@ -44,6 +44,7 @@ type RecipeXML struct {
 	XMLName  xml.Name          `xml:"recipe"`
 	ID       string            `xml:"id,attr"`
 	Category string            `xml:"category,attr"`
+	CastSec  int               `xml:"cast,attr"`
 	Results  []RecipeResultXML `xml:"results>result"`
 	Reqs     ReqsXML           `xml:"reqs"`
 }
@@ -62,13 +63,13 @@ func UnmarshalRecipesBase(data io.Reader) ([]*res.RecipeData, error) {
 	xmlBase := new(RecipesBaseXML)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	recipes := make([]*res.RecipeData, 0)
 	for _, xmlRecipe := range xmlBase.Recipes {
 		recipe, err := buildRecipeData(xmlRecipe)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_recipe:build_data_fail:%v", err)
+			log.Err.Printf("xml: unmarshal recipe: build data fail: %v", err)
 		}
 		recipes = append(recipes, recipe)
 	}
@@ -80,6 +81,7 @@ func buildRecipeData(xmlRecipe RecipeXML) (*res.RecipeData, error) {
 	rd := new(res.RecipeData)
 	rd.ID = xmlRecipe.ID
 	rd.Category = xmlRecipe.Category
+	rd.Cast = int64(xmlRecipe.CastSec * 1000)
 	for _, r := range xmlRecipe.Results {
 		itd := itemRes(r.ID)
 		if itd == nil {

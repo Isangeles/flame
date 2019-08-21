@@ -179,12 +179,25 @@ func (c *Character) Update(delta int64) {
 	// Skills.
 	for _, s := range c.Skills() {
 		s.Update(delta)
-		if s.Casted() {
-			s.Activate()
-			if c.onSkillActivated != nil {
-				c.onSkillActivated(s)
-			}
-			c.cooldown = global_cd
+		if !s.Casted() {
+			continue
+		}
+		s.Activate()
+		if c.onSkillActivated != nil {
+			c.onSkillActivated(s)
+		}
+		c.cooldown = global_cd
+	}
+	// Recipes.
+	for _, r := range c.Recipes() {
+		r.Update(delta)
+		if !r.Casted() {
+			continue
+		}
+		c.ChargeReqs(r.Reqs()...)
+		res := r.Make()
+		for _, i := range res {
+			c.Inventory().AddItem(i)
 		}
 	}
 }
