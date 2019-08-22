@@ -460,11 +460,16 @@ func (c *Character) Moving() bool {
 	}
 }
 
-// Casting checks whether any of character
-// skills is casted.
+// Casting checks whether character casts
+// something.
 func (c *Character) Casting() bool {
 	for _, s := range c.Skills() {
 		if s.Casting() {
+			return true
+		}
+	}
+	for _, r := range c.Recipes() {
+		if r.Casting() {
 			return true
 		}
 	}
