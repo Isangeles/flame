@@ -290,17 +290,17 @@ func (c *Character) Attitude() Attitude {
 	return c.attitude
 }
 
-// AttitudeFor returns attitude for specified target.
-func (c *Character) AttitudeFor(tar effect.Target) Attitude {
-	mem := c.memory[tar.ID()+tar.Serial()]
+// AttitudeFor returns attitude for specified object.
+func (c *Character) AttitudeFor(o object.Object) Attitude {
+	mem := c.memory[o.ID()+o.Serial()]
 	if mem != nil {
 		return mem.Attitude
 	}
-	char, ok := tar.(*Character)
+	a, ok := o.(Attituder)
 	if !ok {
 		return Neutral
 	}
-	if char.Attitude() == Hostile {
+	if a.Attitude() == Hostile {
 		return Hostile
 	}
 	return c.Attitude()
