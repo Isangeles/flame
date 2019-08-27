@@ -38,8 +38,8 @@ import (
 )
 
 const (
-	WEAPONS_FILE_EXT    = ".weapons"
-	MISC_ITEMS_FILE_EXT = ".misc"
+	WeaponsFileExt   = ".weapons"
+	MiscItemsFileExt = ".misc"
 )
 
 // Item creates new instance of item with specified ID
@@ -59,7 +59,7 @@ func Item(id string) (item.Item, error) {
 		m := item.NewMisc(*miscData)
 		i = m
 	default:
-		return nil, fmt.Errorf("item_data_not_found:%s", id)
+		return nil, fmt.Errorf("item data not found: %s", id)
 	}
 	// Assign serial.
 	serial.AssignSerial(i)
@@ -71,12 +71,12 @@ func Item(id string) (item.Item, error) {
 func ImportWeapons(basePath string) ([]*res.WeaponData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
 	weapons, err := parsexml.UnmarshalWeaponsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	return weapons, nil
 }
@@ -86,17 +86,17 @@ func ImportWeapons(basePath string) ([]*res.WeaponData, error) {
 func ImportWeaponsDir(dirPath string) ([]*res.WeaponData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	weapons := make([]*res.WeaponData, 0)
 	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), WEAPONS_FILE_EXT) {
+		if !strings.HasSuffix(fInfo.Name(), WeaponsFileExt) {
 			continue
 		}
 		baseFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
 		impWeapons, err := ImportWeapons(baseFilePath)
 		if err != nil {
-			log.Err.Printf("data_weapons_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data weapons import: %s: fail to import base: %v",
 				baseFilePath, err)
 			continue
 		}
@@ -110,12 +110,12 @@ func ImportWeaponsDir(dirPath string) ([]*res.WeaponData, error) {
 func ImportMiscItems(basePath string) ([]*res.MiscItemData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
 	miscs, err := parsexml.UnmarshalMiscItemsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	return miscs, nil
 }
@@ -125,17 +125,17 @@ func ImportMiscItems(basePath string) ([]*res.MiscItemData, error) {
 func ImportMiscItemsDir(dirPath string) ([]*res.MiscItemData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	miscs := make([]*res.MiscItemData, 0)
 	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), MISC_ITEMS_FILE_EXT) {
+		if !strings.HasSuffix(fInfo.Name(), MiscItemsFileExt) {
 			continue
 		}
 		baseFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
 		impMiscs, err := ImportMiscItems(baseFilePath)
 		if err != nil {
-			log.Err.Printf("data_misc_items_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data misc items import: %s: fail to import base: %v",
 				baseFilePath, err)
 			continue
 		}

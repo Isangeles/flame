@@ -38,7 +38,7 @@ import (
 )
 
 const (
-	SCENARIO_FILE_EXT = ".scenario"
+	ScenarioFileExt = ".scenario"
 )
 
 // Module creates new module from specified path.
@@ -46,7 +46,7 @@ func Module(path, langID string) (*module.Module, error) {
 	// Load module config file.
 	mc, err := modConf(path, langID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_module_config:%v",
+		return nil, fmt.Errorf("fail to load module config: %v",
 			err)
 	}
 	// Create module.
@@ -62,7 +62,7 @@ func LoadChapter(mod *module.Module, id string) error {
 		"/" + mod.Conf().StartChapter)
 	chapConf, err := chapterConf(chapPath)
 	if err != nil {
-		return fmt.Errorf("fail_to_read_chapter_conf:%s:%v",
+		return fmt.Errorf("fail to read chapter conf: %s: %v",
 			chapPath, err)
 	}
 	chapConf.ID = id
@@ -71,7 +71,7 @@ func LoadChapter(mod *module.Module, id string) error {
 	startChap := module.NewChapter(mod, chapConf)
 	err = mod.SetChapter(startChap) // move to start chapter
 	if err != nil {
-		return fmt.Errorf("fail_to_set_mod_chapter:%v", err)
+		return fmt.Errorf("fail to set mod chapter: %v", err)
 	}
 	return nil
 }
@@ -89,13 +89,13 @@ func LoadScenario(mod *module.Module, id string) error {
 		"/" + id)
 	docScen, err := os.Open(scenPath)
 	if err != nil {
-		return fmt.Errorf("fail_to_open_scenario_file:%v", err)
+		return fmt.Errorf("fail to open scenario file: %v", err)
 	}
 	defer docScen.Close()
 	// Unmarshal scenario file.
 	scenData, err := parsexml.UnmarshalScenario(docScen)
 	if err != nil {
-		return fmt.Errorf("fail_to_parse_scenario_file:%v", err)
+		return fmt.Errorf("fail to parse scenario file: %v", err)
 	}
 	// Build mainarea.
 	var mainarea *scenario.Area
@@ -107,7 +107,7 @@ func LoadScenario(mod *module.Module, id string) error {
 			// Retireve char data.
 			charData := res.Character(areaChar.ID)
 			if charData == nil {
-				log.Err.Printf("data:unmarshal_scenario:%s:area:%s:npc_data_not_found:%s",
+				log.Err.Printf("data: unmarshal scenario: %s: area: %s: npc data not found: %s",
 					scenData.ID, areaData.ID, areaChar.ID)
 				continue
 			}
@@ -124,7 +124,7 @@ func LoadScenario(mod *module.Module, id string) error {
 			// Retrieve object data.
 			object, err := Object(mod, areaObject.ID)
 			if err != nil {
-				log.Err.Printf("data:unmarshal_scenario:area:%s:%s:%v",
+				log.Err.Printf("data: unmarshal scenario: area: %s: %s: %v",
 					scenData.ID, areaData.ID, err)
 				continue
 			}
@@ -144,7 +144,7 @@ func LoadScenario(mod *module.Module, id string) error {
 	// Add scenario to active module chapter.
 	err = chap.AddScenario(scen)
 	if err != nil {
-		return fmt.Errorf("fail_to_add_scenario_to_chapter:%v",
+		return fmt.Errorf("fail to add scenario to chapter: %v",
 			err)
 	}
 	return nil
@@ -156,13 +156,13 @@ func modConf(path, lang string) (module.ModConf, error) {
 	conf := module.ModConf{Path: path, Lang: lang}
 	// Check if mod dir exists.
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return conf, fmt.Errorf("module_not_found:'%s':%v", path, err)
+		return conf, fmt.Errorf("module not found: '%s': %v", path, err)
 	}
 	modConfPath := filepath.FromSlash(path + "/mod.conf")
 	// Read conf.
 	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter")
 	if err != nil {
-		return conf, fmt.Errorf("fail_to_retrieve_values:%s", err)
+		return conf, fmt.Errorf("fail to retrieve values: %s", err)
 	}
 	// Set conf values.
 	conf.ID = confValues["id"]
@@ -176,7 +176,7 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
 	confValues, err := text.ReadValue(confPath, "start-scenario")
 	if err != nil {
-		return module.ChapterConf{}, fmt.Errorf("fail_to_read_conf_values:%v",
+		return module.ChapterConf{}, fmt.Errorf("fail to read conf values: %v",
 			err)
 	}
 	conf := module.ChapterConf{

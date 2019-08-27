@@ -39,7 +39,7 @@ func LoadModuleData(mod *module.Module) error {
 	// Effects.
 	effectsData, err := ImportEffectsDir(mod.Conf().EffectsPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_load_effects:%v", err)
+		return fmt.Errorf("fail to load effects: %v", err)
 	}
 	for _, ed := range effectsData {
 		ed.Name = lang.TextDir(mod.Conf().LangPath(), ed.ID)
@@ -48,7 +48,7 @@ func LoadModuleData(mod *module.Module) error {
 	// Skills.
 	skillsData, err := ImportSkillsDir(mod.Conf().SkillsPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_load_skills:%v", err)
+		return fmt.Errorf("fail to load skills: %v", err)
 	}
 	for _, sd := range skillsData {
 		sd.Name = lang.TextDir(mod.Conf().LangPath(), sd.ID)
@@ -57,7 +57,7 @@ func LoadModuleData(mod *module.Module) error {
 	// Weapons.
 	weaponsData, err := ImportWeaponsDir(mod.Conf().ItemsPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_load_weapons:%v", err)
+		return fmt.Errorf("fail to load weapons: %v", err)
 	}
 	for _, wd := range weaponsData {
 		nameInfo := lang.AllText(mod.Conf().ItemsLangPath(), wd.ID)
@@ -70,7 +70,7 @@ func LoadModuleData(mod *module.Module) error {
 	// Misc items.
 	miscItemsData, err := ImportMiscItemsDir(mod.Conf().ItemsPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_load_misc_items:%v", err)
+		return fmt.Errorf("fail to load misc items: %v", err)
 	}
 	for _, md := range miscItemsData {
 		nameInfo := lang.AllText(mod.Conf().ItemsLangPath(), md.ID)
@@ -83,13 +83,13 @@ func LoadModuleData(mod *module.Module) error {
 	// Recipes.
 	recipesData, err := ImportRecipesDir(mod.Conf().RecipesPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_load_recipes:%v", err)
+		return fmt.Errorf("fail to load recipes: %v", err)
 	}
 	res.SetRecipesData(recipesData)
 	// Area objects.
 	objectsData, err := ImportObjectsDir(mod.Conf().ObjectsPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_load_area_objects:%v", err)
+		return fmt.Errorf("fail to load area objects: %v", err)
 	}
 	for _, od := range objectsData {
 		od.BasicData.Name = lang.TextDir(mod.Conf().LangPath(), od.BasicData.ID)
@@ -104,7 +104,7 @@ func LoadChapterData(chapter *module.Chapter) error {
 	// NPC.
 	npcData, err := ImportCharactersDataDir(chapter.Conf().NPCPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_import_npc:%v", err)
+		return fmt.Errorf("fail to import npc: %v", err)
 	}
 	for _, npcd := range npcData {
 		npcd.BasicData.Name = lang.TextDir(chapter.Conf().LangPath(), npcd.BasicData.ID)
@@ -113,13 +113,13 @@ func LoadChapterData(chapter *module.Chapter) error {
 	// Dialogs.
 	dialogsData, err := ImportDialogsDir(chapter.Conf().DialogsPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_import_dialogs:%v", err)
+		return fmt.Errorf("fail to import dialogs: %v", err)
 	}
 	res.SetDialogsData(dialogsData)
 	// Quests.
 	questsData, err := ImportQuestsDir(chapter.Conf().QuestsPath())
 	if err != nil {
-		return fmt.Errorf("fail_to_import_quests:%v", err)
+		return fmt.Errorf("fail to import quests: %v", err)
 	}
 	res.SetQuestsData(questsData)
 	return nil

@@ -34,13 +34,13 @@ import (
 func DirFilesNames(path, pattern string) ([]string, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	names := make([]string, 0)
 	for _, info := range files {
 		match, err := regexp.MatchString(pattern, info.Name())
 		if err != nil {
-			return nil, fmt.Errorf("fail_to_execute_pattern:%v", err)
+			return nil, fmt.Errorf("fail to execute pattern: %v", err)
 		}
 		if match {
 			names = append(names, info.Name())

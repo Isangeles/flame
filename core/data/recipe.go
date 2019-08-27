@@ -37,7 +37,7 @@ import (
 )
 
 const (
-	RECIPES_FILE_EXT = ".recipes"
+	RecipesFileExt = ".recipes"
 )
 
 // Recipe returns new recipe with specified ID or
@@ -45,7 +45,7 @@ const (
 func Recipe(id string) (*craft.Recipe, error) {
 	data := res.Recipe(id)
 	if data == nil {
-		return nil, fmt.Errorf("recipe_data_not_found:%s", id)
+		return nil, fmt.Errorf("recipe data not found: %s", id)
 	}
 	r := craft.NewRecipe(*data)
 	return r, nil
@@ -56,12 +56,12 @@ func Recipe(id string) (*craft.Recipe, error) {
 func ImportRecipes(path string) ([]*res.RecipeData, error) {
 	doc, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
 	recipes, err := parsexml.UnmarshalRecipesBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_recipes_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal recipes base: %v", err)
 	}
 	return recipes, nil
 }
@@ -71,17 +71,17 @@ func ImportRecipes(path string) ([]*res.RecipeData, error) {
 func ImportRecipesDir(path string) ([]*res.RecipeData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	recipes := make([]*res.RecipeData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), RECIPES_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), RecipesFileExt) {
 			continue
 		}
 		basePath := filepath.FromSlash(path + "/" + finfo.Name())
 		rd, err := ImportRecipes(basePath)
 		if err != nil {
-			log.Err.Printf("data_recipes_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data recipes import: %s: fail to import base: %v",
 				basePath, err)
 		}
 		for _, r := range rd {

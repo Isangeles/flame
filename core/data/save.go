@@ -43,7 +43,7 @@ import (
 )
 
 var (
-	SAVEGAME_FILE_EXT = ".savegame"
+	SavegameFileExt = ".savegame"
 )
 
 // SaveGame saves specified game to savegame file.
@@ -55,25 +55,25 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 	save.Players = game.Players()
 	xml, err := parsexml.MarshalSaveGame(save)
 	if err != nil {
-		return fmt.Errorf("fail_to_marshal_game:%v", err)
+		return fmt.Errorf("fail to marshal game: %v", err)
 	}
 	// Create savegame file.
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
-		return fmt.Errorf("fail_to_create_savegames_dir:%v", err)
+		return fmt.Errorf("fail to create savegames dir: %v", err)
 	}
 	filePath := filepath.FromSlash(dirPath + "/" + saveName +
-		SAVEGAME_FILE_EXT)
+		SavegameFileExt)
 	f, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("fail_to_write_savegame_file:%v", err)
+		return fmt.Errorf("fail to write savegame file: %v", err)
 	}
 	defer f.Close()
 	// Write data to file.
 	w := bufio.NewWriter(f)
 	w.WriteString(xml)
 	w.Flush()
-	log.Dbg.Printf("game_saved_in:%s", filePath)
+	log.Dbg.Printf("game saved in: %s", filePath)
 	return nil
 }
 
@@ -81,33 +81,31 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 // specified dir.
 func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGame, error) {
 	filePath := filepath.FromSlash(dirPath + "/" + fileName)
-	if !strings.HasSuffix(filePath, SAVEGAME_FILE_EXT) {
-		filePath = filePath + SAVEGAME_FILE_EXT
+	if !strings.HasSuffix(filePath, SavegameFileExt) {
+		filePath = filePath + SavegameFileExt
 	}
 	doc, err := os.Open(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_savegame_file:%v", err)
+		return nil, fmt.Errorf("fail to open savegame file: %v", err)
 	}
 	gameData, err := parsexml.UnmarshalGame(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_savegame_data:%v",
-			err)
+		return nil, fmt.Errorf("fail to unmarshal savegame data: %v", err)
 	}
 	// Load chapter with ID from save.
 	err = LoadChapter(mod, gameData.Chapter.ID)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_chapter:%v", err)
+		return nil, fmt.Errorf("fail to load chapter: %v", err)
 	}
 	// Load chapter data(to build quests, characters, erc.).
 	err = LoadChapterData(mod.Chapter())
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_load_chapter_data:%v", err)
+		return nil, fmt.Errorf("fail to load chapter data: %v", err)
 	}
 	mod.Chapter().ClearScenarios() // to remove start scenario
 	save, err := buildSavedGame(mod, gameData)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_build_game_from_saved_data:%v",
-			err)
+		return nil, fmt.Errorf("fail to build game from saved data: %v", err)
 	}
 	return save, nil
 }
@@ -117,18 +115,16 @@ func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGa
 func ImportSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		log.Err.Printf("fail_to_read_dir:%v",
-			err)
+		log.Err.Printf("fail to read dir: %v", err)
 	}
 	saves := make([]*save.SaveGame, 0)
 	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), SAVEGAME_FILE_EXT) {
+		if !strings.HasSuffix(fInfo.Name(), SavegameFileExt) {
 			continue
 		}
 		sav, err := ImportSavedGame(mod, dirPath, fInfo.Name())
 		if err != nil {
-			log.Err.Printf("data_savegame_load:fail_to_import_save:%v",
-				err)
+			log.Err.Printf("data savegame load: fail to import save: %v", err)
 			continue
 		}
 		saves = append(saves, sav)
@@ -189,7 +185,7 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 		scen := scenario.NewScenario(scenData.ID, mainarea, subareas)
 		err := mod.Chapter().AddScenario(scen)
 		if err != nil {
-			log.Err.Printf("data_build_saved_game:add_chapter_scenario:%s:fail:%v",
+			log.Err.Printf("data build saved game: add chapter scenario: %s: fail: %v",
 				scenData.ID, err)
 			continue
 		}
@@ -198,12 +194,12 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 	for _, cd := range charsData {
 		err := restoreCharEffects(mod, &cd)
 		if err != nil {
-			log.Err.Printf("data:build_saved_game:restore_effects:char%s:%v",
+			log.Err.Printf("data: build saved game: restore effects: char: %s: %v",
 				cd.BasicData.ID, err)
 		}
 		err = restoreCharMemory(mod, &cd)
 		if err != nil {
-			log.Err.Printf("data:build_saved_game:restore_memory:char%s:%v",
+			log.Err.Printf("data: build saved game: restore memory: char: %s: %v",
 				cd.BasicData.ID, err)
 		}
 	}
@@ -219,12 +215,12 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 	char := mod.Chapter().Character(data.BasicData.ID, data.BasicData.Serial)
 	if char == nil {
-		return fmt.Errorf("char_not_found")
+		return fmt.Errorf("char not found")
 	}
 	for _, eData := range data.Effects {
 		effect, err := Effect(mod, eData.ID)
 		if err != nil {
-			log.Err.Printf("data:char:%s:restore_effects:fail_to_create_effect:%v",
+			log.Err.Printf("data: char: %s: restore effects: fail to create effect: %v",
 				char.ID(), err)
 			continue
 		}
@@ -233,7 +229,7 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 		// Restore effect source.
 		source := mod.Target(eData.SourceID, eData.SourceSerial)
 		if source == nil {
-			log.Err.Printf("data:char:%s:restore_effects:fail_to_find_source:%s",
+			log.Err.Printf("data: char: %s: restore effects: fail to find source: %s",
 				char.ID(), eData.SourceID+"_"+eData.SourceSerial)
 		}
 		effect.SetSource(source)
@@ -246,12 +242,12 @@ func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
 func restoreCharMemory(mod *module.Module, data *res.CharacterData) error {
 	char := mod.Chapter().Character(data.BasicData.ID, data.BasicData.Serial)
 	if char == nil {
-		return fmt.Errorf("char_not_found")
+		return fmt.Errorf("char not found")
 	}
 	for _, memData := range data.Memory {
 		tar := mod.Target(memData.ObjectID, memData.ObjectSerial)
 		if tar == nil {
-			log.Err.Printf("data:char:%s:restore_memory:att_target_not_found:%s_%s",
+			log.Err.Printf("data: char: %s: restore memory: att target not found: %s#%s",
 				char.ID(), memData.ObjectID, memData.ObjectSerial)
 			continue
 		}

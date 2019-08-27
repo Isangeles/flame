@@ -33,8 +33,8 @@ import (
 
 var (
 	// Random actions frequences(in millis).
-	move_freq int64 = 3000
-	chat_freq int64 = 5000
+	moveFreq int64 = 3000
+	chatFreq int64 = 5000
 )
 
 // Struct for controlling non-player characters.
@@ -60,7 +60,7 @@ func (ai *AI) Update(delta int64) {
 	// NPCs.
 	for _, npc := range ai.npcs {
 		// Move around.
-		if ai.moveTimer >= move_freq {
+		if ai.moveTimer >= moveFreq {
 			if npc.Casting() || npc.Moving() || npc.Fighting() || npc.Agony() {
 				continue
 			}
@@ -73,7 +73,7 @@ func (ai *AI) Update(delta int64) {
 			ai.moveAround(npc)
 		}
 		// Random chat.
-		if ai.chatTimer >= chat_freq {
+		if ai.chatTimer >= chatFreq {
 			if npc.Casting() || npc.Moving() || npc.Fighting() || npc.Agony() {
 				continue
 			}
@@ -111,10 +111,10 @@ func (ai *AI) Update(delta int64) {
 		break
 	}
 	// Reset timers.
-	if ai.moveTimer >= move_freq {
+	if ai.moveTimer >= moveFreq {
 		ai.moveTimer = 0
 	}
-	if ai.chatTimer >= chat_freq {
+	if ai.chatTimer >= chatFreq {
 		ai.chatTimer = 0
 	}
 }

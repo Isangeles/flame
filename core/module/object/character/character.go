@@ -296,11 +296,11 @@ func (c *Character) AttitudeFor(o object.Object) Attitude {
 	if mem != nil {
 		return mem.Attitude
 	}
-	a, ok := o.(Attituder)
+	obChar, ok := o.(*Character)
 	if !ok {
 		return Neutral
 	}
-	if a.Attitude() == Hostile {
+	if obChar.Attitude() == Hostile {
 		return Hostile
 	}
 	return c.Attitude()

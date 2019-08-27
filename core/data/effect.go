@@ -39,7 +39,7 @@ import (
 )
 
 const (
-	EFFECTS_FILE_EXT = ".effects"
+	EffectsFileExt = ".effects"
 )
 
 // Effect creates new instance of effect with specified ID
@@ -49,7 +49,7 @@ const (
 func Effect(mod *module.Module, id string) (*effect.Effect, error) {
 	data := res.Effect(id)
 	if data.ID == "" {
-		return nil, fmt.Errorf("effect_not_found:%s", id)
+		return nil, fmt.Errorf("effect not found: %s", id)
 	}
 	e := effect.New(*data)
 	serial.AssignSerial(e)
@@ -61,12 +61,12 @@ func Effect(mod *module.Module, id string) (*effect.Effect, error) {
 func ImportEffects(basePath string) ([]*res.EffectData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_effects_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open effects base file: %v", err)
 	}
 	defer doc.Close()
 	effects, err := parsexml.UnmarshalEffectsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_effects_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal effects base: %v", err)
 	}
 	return effects, nil
 }
@@ -76,17 +76,17 @@ func ImportEffects(basePath string) ([]*res.EffectData, error) {
 func ImportEffectsDir(dirPath string) ([]*res.EffectData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	effects := make([]*res.EffectData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), EFFECTS_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), EffectsFileExt) {
 			continue
 		}
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		effs, err := ImportEffects(basePath)
 		if err != nil {
-			log.Err.Printf("data:effects_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data: effects import: %s: fail to import base: %v",
 				basePath, err)
 			continue
 		}

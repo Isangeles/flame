@@ -37,7 +37,7 @@ import (
 )
 
 const (
-	DIALOGS_FILE_EXT = ".dialogs"
+	DialogsFileExt = ".dialogs"
 )
 
 // Dialog returns new dialog with specified ID or
@@ -46,11 +46,11 @@ const (
 func Dialog(id string) (*dialog.Dialog, error) {
 	data := res.Dialog(id)
 	if data == nil {
-		return nil, fmt.Errorf("dialog_not_found:%s", id)
+		return nil, fmt.Errorf("dialog not found: %s", id)
 	}
 	d, err := dialog.New(*data)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_create_dialog:%v", err)
+		return nil, fmt.Errorf("fail to create dialog: %v", err)
 	}
 	return d, nil
 }
@@ -60,12 +60,12 @@ func Dialog(id string) (*dialog.Dialog, error) {
 func ImportDialogs(basePath string) ([]*res.DialogData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
 	dialogs, err := parsexml.UnmarshalDialogsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_dialogs_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal dialogs base: %v", err)
 	}
 	return dialogs, nil
 }
@@ -75,17 +75,17 @@ func ImportDialogs(basePath string) ([]*res.DialogData, error) {
 func ImportDialogsDir(dirPath string) ([]*res.DialogData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	dialogs := make([]*res.DialogData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), DIALOGS_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), DialogsFileExt) {
 			continue
 		}
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		dd, err := ImportDialogs(basePath)
 		if err != nil {
-			log.Err.Printf("data_dialogs_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data dialogs import: %s: fail to import base: %v",
 				basePath, err)
 		}
 		for _, d := range dd {

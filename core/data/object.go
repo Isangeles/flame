@@ -38,14 +38,14 @@ import (
 )
 
 const (
-	OBJECTS_FILE_EXT = ".objects"
+	ObjectsFileExt = ".objects"
 )
 
 // Object creates module area object with specified ID.
 func Object(mod *module.Module, obID string) (*area.Object, error) {
 	data := res.Object(obID)
 	if data == nil {
-		return nil, fmt.Errorf("object_data_not_found:%s", obID)
+		return nil, fmt.Errorf("object data not found: %s", obID)
 	}
 	data.BasicData.HP = data.BasicData.MaxHP
 	ob := buildObject(mod, data)
@@ -57,12 +57,12 @@ func Object(mod *module.Module, obID string) (*area.Object, error) {
 func ImportObjects(path string) ([]*res.ObjectData, error) {
 	baseFile, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer baseFile.Close()
 	objects, err := parsexml.UnmarshalObjectsBase(baseFile)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml base: %v", err)
 	}
 	return objects, nil
 }
@@ -72,17 +72,17 @@ func ImportObjects(path string) ([]*res.ObjectData, error) {
 func ImportObjectsDir(path string) ([]*res.ObjectData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	objects := make([]*res.ObjectData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), OBJECTS_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), ObjectsFileExt) {
 			continue
 		}
 		basePath := filepath.FromSlash(path + "/" + finfo.Name())
 		impObjects, err := ImportObjects(basePath)
 		if err != nil {
-			log.Err.Printf("data:import_objects_dir:%s:fail_to_import_objects_file:%v",
+			log.Err.Printf("data: import objects dir: %s: fail to import objects file: %v",
 				basePath, err)
 			continue
 		}
@@ -98,7 +98,7 @@ func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
 	for _, data := range data.Items {
 		it, err := Item(data.ID)
 		if err != nil {
-			log.Err.Printf("data:build_object:%s:fail_to_retrieve_inv_item:%s",
+			log.Err.Printf("data: build object: %s: fail to retrieve inv item: %s",
 				ob.ID(), data.ID)
 			continue
 		}
@@ -111,7 +111,7 @@ func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
 	for _, data := range data.Effects {
 		eff, err := Effect(mod, data.ID)
 		if err != nil {
-			log.Err.Printf("data:build_object:%s:fail_to_retrieve_effect:%s",
+			log.Err.Printf("data: build object: %s: fail to retrieve effect: %s",
 				ob.ID(), data.ID)
 			continue
 		}

@@ -50,7 +50,7 @@ func NewGame(mod *module.Module) (*Game, error) {
 	g.pcs = make(map[string]*character.Character)
 	g.ai = NewAI(g)
 	if g.mod.Chapter() == nil {
-		return nil, fmt.Errorf("no_active_module_chapter")
+		return nil, fmt.Errorf("no active module chapter")
 	}
 	// Chapter NPCs under AI control.
 	for _, c := range g.mod.Chapter().Characters() {
@@ -121,7 +121,7 @@ func (g *Game) AI() *AI {
 
 // listenWorld listens players and near objects
 // messages channels and prints messages to
-// engine log.
+// engine log.0
 func (g *Game) listenWorld() {
 	// Players.
 	for _, pc := range g.pcs {
@@ -143,7 +143,7 @@ func (g *Game) listenWorld() {
 				log.Cht.Printf(fmt.Sprintf("%s:%s", tar.Name(), msg))
 			case msg := <-tar.PrivateLog():
 				if tar == pc {
-					log.Inf.Printf(msg)
+					log.Cht.Printf(msg)
 				}
 			default:
 			}

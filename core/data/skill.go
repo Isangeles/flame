@@ -38,7 +38,7 @@ import (
 )
 
 const (
-	SKILLS_FILE_EXT = ".skills"
+	SkillsFileExt = ".skills"
 )
 
 // Skill creates new instance of skill with specified ID
@@ -48,7 +48,7 @@ const (
 func Skill(id string) (*skill.Skill, error) {
 	data := res.Skill(id)
 	if data == nil {
-		return nil, fmt.Errorf("skill_not_found:%s", id)
+		return nil, fmt.Errorf("skill not found: %s", id)
 	}
 	s := skill.New(*data)
 	serial.AssignSerial(s)
@@ -60,12 +60,12 @@ func Skill(id string) (*skill.Skill, error) {
 func ImportSkills(basePath string) ([]*res.SkillData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_skills_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open skills base file: %v", err)
 	}
 	defer doc.Close()
 	skills, err := parsexml.UnmarshalSkillsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_skills_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal skills base: %v", err)
 	}
 	return skills, nil
 }
@@ -75,17 +75,17 @@ func ImportSkills(basePath string) ([]*res.SkillData, error) {
 func ImportSkillsDir(dirPath string) ([]*res.SkillData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	skills := make([]*res.SkillData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), SKILLS_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), SkillsFileExt) {
 			continue
 		}
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		impSkills, err := ImportSkills(basePath)
 		if err != nil {
-			log.Err.Printf("data:skills_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data: skills import: %s: fail to import base: %v",
 				basePath, err)
 			continue
 		}

@@ -37,7 +37,7 @@ import (
 )
 
 const (
-	QUESTS_FILE_EXT = ".quests"
+	QuestsFileExt = ".quests"
 )
 
 // Quest returns new quest with specified ID or
@@ -46,7 +46,7 @@ const (
 func Quest(id string) (*quest.Quest, error) {
 	data := res.Quest(id)
 	if data == nil {
-		return nil, fmt.Errorf("res_not_found:%s", id)
+		return nil, fmt.Errorf("res not found: %s", id)
 	}
 	q := quest.New(*data)
 	return q, nil
@@ -57,12 +57,12 @@ func Quest(id string) (*quest.Quest, error) {
 func ImportQuests(basePath string) ([]*res.QuestData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
 	quests, err := parsexml.UnmarshalQuestsBase(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_quests_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal quests base: %v", err)
 	}
 	return quests, nil
 }
@@ -72,17 +72,17 @@ func ImportQuests(basePath string) ([]*res.QuestData, error) {
 func ImportQuestsDir(dirPath string) ([]*res.QuestData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	quests := make([]*res.QuestData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), QUESTS_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), QuestsFileExt) {
 			continue
 		}
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		impQuests, err := ImportQuests(basePath)
 		if err != nil {
-			log.Err.Printf("data_quests_import:%s:fail_to_import_base:%v",
+			log.Err.Printf("data quests import: %s: fail to import base: %v",
 				basePath, err)
 		}
 		for _, q := range impQuests {

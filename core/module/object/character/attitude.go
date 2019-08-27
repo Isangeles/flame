@@ -23,16 +23,6 @@
  
 package character
 
-import (
-	"github.com/isangeles/flame/core/module/object"
-)
-
-// Interface for object with attitude.
-type Attituder interface {
-	Attitude() Attitude
-	AttitudeFor(o object.Object) Attitude
-}
-
 // Type for character attitude.
 type Attitude int
 

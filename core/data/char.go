@@ -40,7 +40,7 @@ import (
 )
 
 const (
-	CHARS_FILE_EXT = ".characters"
+	CharsFileExt = ".characters"
 )
 
 // Character creates module character with specified ID.
@@ -48,7 +48,7 @@ func Character(mod *module.Module, charID string) (*character.Character, error) 
 	// Get data.
 	data := res.Character(charID)
 	if data == nil {
-		return nil, fmt.Errorf("character_data_not_found:%s", charID)
+		return nil, fmt.Errorf("character data not found: %s", charID)
 	}
 	// Full build character(with skills, itmes, etc.).
 	char := buildCharacter(mod, data)
@@ -60,12 +60,12 @@ func Character(mod *module.Module, charID string) (*character.Character, error) 
 func ImportCharactersData(path string) ([]*res.CharacterData, error) {
 	baseFile, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open char base file: %v", err)
 	}
 	defer baseFile.Close()
 	chars, err := parsexml.UnmarshalCharactersBase(baseFile)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_chars_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal chars base: %v", err)
 	}
 	return chars, nil
 }
@@ -75,17 +75,17 @@ func ImportCharactersData(path string) ([]*res.CharacterData, error) {
 func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_read_dir:%v", err)
+		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
 	chars := make([]*res.CharacterData, 0)
 	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), CHARS_FILE_EXT) {
+		if !strings.HasSuffix(finfo.Name(), CharsFileExt) {
 			continue
 		}
 		basePath := filepath.FromSlash(path + "/" + finfo.Name())
 		impChars, err := ImportCharactersData(basePath)
 		if err != nil {
-			log.Err.Printf("data:import_chars_dir:%s:fail_to_parse_char_file:%v",
+			log.Err.Printf("data: import chars dir: %s: fail to parse char file: %v",
 				basePath, err)
 			continue
 		}
@@ -99,12 +99,12 @@ func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
 func ImportCharacters(mod *module.Module, path string) ([]*character.Character, error) {
 	charFile, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_open_char_base_file:%v", err)
+		return nil, fmt.Errorf("fail to open char base file: %v", err)
 	}
 	defer charFile.Close()
 	charsData, err := parsexml.UnmarshalCharactersBase(charFile)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_chars_base:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal chars base: %v", err)
 	}
 	chars := make([]*character.Character, 0)
 	for _, charData := range charsData {
@@ -120,16 +120,16 @@ func ImportCharactersDir(mod *module.Module, dirPath string) ([]*character.Chara
 	chars := make([]*character.Character, 0)
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return chars, fmt.Errorf("fail_to_read_dir:%v", err)
+		return chars, fmt.Errorf("fail to read dir: %v", err)
 	}
 	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), CHARS_FILE_EXT) {
+		if !strings.HasSuffix(fInfo.Name(), CharsFileExt) {
 			continue
 		}
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
 		impChars, err := ImportCharacters(mod, charFilePath)
 		if err != nil {
-			log.Err.Printf("data_char_import:%s:fail_to_parse_char_file:%v",
+			log.Err.Printf("data char import: %s: fail to parse char file: %v",
 				charFilePath, err)
 			continue
 		}
@@ -146,17 +146,17 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	// Parse character data.
 	xml, err := parsexml.MarshalCharacter(char)
 	if err != nil {
-		return fmt.Errorf("fail_to_export_char:%v", err)
+		return fmt.Errorf("fail to export char: %v", err)
 	}
 	// Create character file.
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
-		return fmt.Errorf("fail_to_create_chrs_dir:%v", err)
+		return fmt.Errorf("fail to create chrs dir: %v", err)
 	}
 	f, err := os.Create(filepath.FromSlash(dirPath+"/"+
-		strings.ToLower(char.Name())) + CHARS_FILE_EXT)
+		strings.ToLower(char.Name())) + CharsFileExt)
 	if err != nil {
-		return fmt.Errorf("fail_to_create_char_file:%v", err)
+		return fmt.Errorf("fail to create char file: %v", err)
 	}
 	defer f.Close()
 	// Write data to file.
@@ -173,7 +173,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	for _, invItData := range data.Items {
 		it, err := Item(invItData.ID)
 		if err != nil {
-			log.Err.Printf("data:character:%s:fail_to_retrieve_inv_item:%v",
+			log.Err.Printf("data: character: %s: fail to retrieve inv item: %v",
 				char.ID(), err)
 			continue
 		}
@@ -193,13 +193,13 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	for _, eqItData := range data.EqItems {
 		it := char.Inventory().Item(eqItData.ID, eqItData.Serial)
 		if it == nil {
-			log.Err.Printf("data:character:%s:eq:fail_to_retrieve_eq_item_from_inv:%s",
+			log.Err.Printf("data: character: %s: fail to retrieve eq item from inv: %s",
 				char.ID(), eqItData.ID)
 			continue
 		}
 		eqItem, ok := it.(item.Equiper)
 		if !ok {
-			log.Err.Printf("data:character:%s:eq:not_eqipable_item:%s",
+			log.Err.Printf("data: character: %s: not eqipable item: %s",
 				char.ID(), it.ID())
 			continue
 		}
@@ -219,7 +219,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	for _, skillData := range data.Skills {
 		skill, err := Skill(skillData.ID)
 		if err != nil {
-			log.Err.Printf("data:build_character:%s:fail_to_retrieve_skill:%v",
+			log.Err.Printf("data: build character: %s: fail to retrieve skill: %v",
 				char.ID(), err)
 			continue
 		}
@@ -233,7 +233,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	for _, dialogData := range data.Dialogs {
 		dialog, err := Dialog(dialogData.ID)
 		if err != nil {
-			log.Err.Printf("data:build_character:%s:fail_to_retrieve_dialog:%v",
+			log.Err.Printf("data: build character: %s: fail to retrieve dialog: %v",
 				char.ID(), err)
 			continue
 		}
@@ -243,7 +243,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	for _, questData := range data.Quests {
 		quest, err := Quest(questData.ID)
 		if err != nil {
-			log.Err.Printf("data:build_character:%s:fail_to_retrieve_quest:%v",
+			log.Err.Printf("data: build character: %s: fail to retrieve quest: %v",
 				char.ID(), err)
 			continue
 		}
@@ -253,7 +253,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 			}
 		}
 		if quest.ActiveStage() == nil {
-			log.Err.Printf("data:build_character:%s:quest:%s:fail_to_set_active_stage:%v",
+			log.Err.Printf("data: build character: %s: quest: %s: fail to set active stage: %v",
 				err)
 		}
 		char.Journal().AddQuest(quest)
@@ -262,7 +262,7 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	for _, recipeData := range data.Recipes {
 		recipe, err := Recipe(recipeData.ID)
 		if err != nil {
-			log.Err.Printf("data:build_character:%s:fail_to_retrieve_recipe:%v",
+			log.Err.Printf("data: build character: %s: fail to retrieve recipe: %v",
 				char.ID(), err)
 			continue
 		}
