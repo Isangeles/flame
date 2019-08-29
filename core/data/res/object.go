@@ -51,6 +51,7 @@ type InventoryItemData struct {
 	Serial     string
 	Trade      bool
 	TradeValue int
+	Random     float64
 }
 
 // Struct for object effects data.

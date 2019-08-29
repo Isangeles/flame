@@ -26,6 +26,7 @@ package parsexml
 import (
 	"encoding/xml"
 
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/item"
 )
 
@@ -43,6 +44,7 @@ type InventoryItemXML struct {
 	Serial     string   `xml:"serial,attr"`
 	Trade      bool     `xml:"trade,attr"`
 	TradeValue int      `xml:"trade-value,attr"`
+	Random     float64  `xml:"random,attr"`
 }
 
 // xmlInventory parses specified inventory to XML
@@ -78,4 +80,20 @@ func xmlInventory(inv *item.Inventory) *InventoryXML {
 		xmlInv.Items = append(xmlInv.Items, xmlInvItem)
 	}
 	return xmlInv
+}
+
+// buildInventory creates items data from inventory items
+// nodes in specifie inventory.
+func buildInventoryItems(xmlInvItems []InventoryItemXML) (itemsData []res.InventoryItemData) {
+	for _, xmlIt := range xmlInvItems {
+		itData := res.InventoryItemData{
+			ID:         xmlIt.ID,
+			Serial:     xmlIt.Serial,
+			Trade:      xmlIt.Trade,
+			TradeValue: xmlIt.TradeValue,
+			Random:     xmlIt.Random,
+		}
+		itemsData = append(itemsData, itData)
+	}
+	return
 }

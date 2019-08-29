@@ -61,3 +61,10 @@ func RollInt(min, max int) int {
 	}
 	return roll
 }
+
+// RollChance generates random number from 0-100 range
+// and checks if specified value is smaller.
+func RollChance(p float64) bool {
+	roll := rng.Intn(100)
+	return int(p) <= roll
+}

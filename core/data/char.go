@@ -171,22 +171,21 @@ func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Char
 	char := character.New(data.BasicData)
 	// Inventory.
 	for _, invItData := range data.Items {
-		it, err := Item(invItData.ID)
-		if err != nil {
-			log.Err.Printf("data: character: %s: fail to retrieve inv item: %v",
-				char.ID(), err)
-			continue
-		}
-		if len(invItData.Serial) < 1 {
-			it.SetSerial(invItData.Serial)
-		}
-		char.Inventory().AddItem(it)
-		if invItData.Trade {
-			ti := item.TradeItem{
-				Item:  it,
-				Price: invItData.TradeValue,
+		items := buildObjectItems(invItData)
+		for _, it := range items {
+			err := char.Inventory().AddItem(it)
+			if err != nil {
+				log.Err.Printf("data: character: %s: fail to add item: %v",
+					char.ID(), err)
+				break
 			}
-			char.Inventory().AddTradeItem(&ti)
+			if invItData.Trade {
+				ti := item.TradeItem{
+					Item:  it,
+					Price: invItData.TradeValue,
+				}
+				char.Inventory().AddTradeItem(&ti)
+			}
 		}
 	}
 	// Equipment.
