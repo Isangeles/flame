@@ -2,6 +2,7 @@ MAJOR:
 * Armor items
 * Switching chapters
 * Changing areas
+* Item materials
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)

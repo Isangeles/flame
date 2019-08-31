@@ -27,7 +27,19 @@ package res
 // structs.
 type ItemData interface{}
 
-// Strunt for weapon resource data.
+// Struct for armor resource data.
+type ArmorData struct {
+	ID        string
+	Value     int
+	Level     int
+	Armor     int
+	EQEffects []EffectData
+	EQReqs    []ReqData
+	Slots     []int
+	Loot      bool
+}
+
+// Struct for weapon resource data.
 type WeaponData struct {
 	ID         string
 	Name       string

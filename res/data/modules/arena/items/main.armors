@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<armors>
+  <armor id="iaLeatherArmor1"
+	 value="100"
+	 level="2"
+	 armor="10"
+	 slots="slot_chest"
+	 loot="true">
+    <equip>
+      <reqs></reqs>
+      <effects></effects>
+    </equip>
+  </armor>
+</armors>
