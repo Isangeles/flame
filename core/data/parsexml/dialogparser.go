@@ -34,53 +34,53 @@ import (
 )
 
 // Struct for dialogs XML base node.
-type DialogsBaseXML struct {
-	XMLName xml.Name    `xml:"base"`
-	Dialogs []DialogXML `xml:"dialog"`
+type Dialogs struct {
+	XMLName xml.Name `xml:"dialogs"`
+	Dialogs []Dialog `xml:"dialog"`
 }
 
 // Struct for dialog XML node.
-type DialogXML struct {
-	XMLName xml.Name         `xml:"dialog"`
-	ID      string           `xml:"id,attr"`
-	Stages  []DialogStageXML `xml:"stage"`
+type Dialog struct {
+	XMLName xml.Name      `xml:"dialog"`
+	ID      string        `xml:"id,attr"`
+	Stages  []DialogStage `xml:"stage"`
 }
 
 // Struct for dialog stage XML node.
-type DialogStageXML struct {
-	XMLName    xml.Name     `xml:"stage"`
-	ID         string       `xml:"id,attr"`
-	Ordinal    string       `xml:"ordinal,attr"`
-	Start      bool         `xml:"start,attr"`
-	Answers    []AnswerXML  `xml:"answer"`
-	Reqs       ReqsXML      `xml:"reqs"`
-	TalkerMods ModifiersXML `xml:"talker>modifiers"`
-	OwnerMods  ModifiersXML `xml:"owner>modifiers"`
+type DialogStage struct {
+	XMLName    xml.Name  `xml:"stage"`
+	ID         string    `xml:"id,attr"`
+	Ordinal    string    `xml:"ordinal,attr"`
+	Start      bool      `xml:"start,attr"`
+	Answers    []Answer  `xml:"answer"`
+	Reqs       Reqs      `xml:"reqs"`
+	TalkerMods Modifiers `xml:"talker>modifiers"`
+	OwnerMods  Modifiers `xml:"owner>modifiers"`
 }
 
 // Struct for dialog answer XML node.
-type AnswerXML struct {
-	XMLName    xml.Name     `xml:"answer"`
-	ID         string       `xml:"id,attr"`
-	To         string       `xml:"to,attr"`
-	Reqs       ReqsXML      `xml:"reqs"`
-	TalkerMods ModifiersXML `xml:"talker>modifiers"`
-	OwnerMods  ModifiersXML `xml:"owner>modifiers"`
+type Answer struct {
+	XMLName    xml.Name  `xml:"answer"`
+	ID         string    `xml:"id,attr"`
+	To         string    `xml:"to,attr"`
+	Reqs       Reqs      `xml:"reqs"`
+	TalkerMods Modifiers `xml:"talker>modifiers"`
+	OwnerMods  Modifiers `xml:"owner>modifiers"`
 }
 
-// UnmarshalDialogsBase retrieves dialogs data from specified XML data.
-func UnmarshalDialogsBase(data io.Reader) ([]*res.DialogData, error) {
+// UnmarshalDialogs retrieves dialogs data from specified XML data.
+func UnmarshalDialogs(data io.Reader) ([]*res.DialogData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(DialogsBaseXML)
+	xmlBase := new(Dialogs)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	dialogs := make([]*res.DialogData, 0)
 	for _, xmlDialog := range xmlBase.Dialogs {
 		dialog, err := buildDialogData(xmlDialog)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_dialog:build_data_fail:%v", err)
+			log.Err.Printf("xml: unmarshal dialog: build data fail: %v", err)
 			continue
 		}
 		dialogs = append(dialogs, dialog)
@@ -89,7 +89,7 @@ func UnmarshalDialogsBase(data io.Reader) ([]*res.DialogData, error) {
 }
 
 // buildDialogData creates new dialog data from specified XML data.
-func buildDialogData(xmlDialog DialogXML) (*res.DialogData, error) {
+func buildDialogData(xmlDialog Dialog) (*res.DialogData, error) {
 	dd := new(res.DialogData)
 	dd.ID = xmlDialog.ID
 	for _, xmlStage := range xmlDialog.Stages {

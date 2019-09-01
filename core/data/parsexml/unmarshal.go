@@ -35,25 +35,23 @@ import (
 )
 
 var (
-	POSITION_SEP = "x"
+	PositionSep = "x"
 )
 
 // UnmarshalPosition parses specified position
 // attribute(X[sep]Y) to XY position.
 func UnmarshalPosition(attr string) (float64, float64, error) {
-	posValues := strings.Split(attr, POSITION_SEP)
+	posValues := strings.Split(attr, PositionSep)
 	if len(posValues) < 2 {
 		return 0, 0, fmt.Errorf("invalid position attribute format")
 	}
 	x, err := strconv.ParseFloat(posValues[0], 64)
 	if err != nil {
-		return 0, 0, fmt.Errorf("fail_to_parse_x_position:%v",
-			err)
+		return 0, 0, fmt.Errorf("fail to parse x position: %v", err)
 	}
 	y, err := strconv.ParseFloat(posValues[1], 64)
 	if err != nil {
-		return 0, 0,fmt.Errorf("fail_to_parse_y_position:%v",
-			err)
+		return 0, 0,fmt.Errorf("fail to parse y position: %v", err)
 	}
 	return x, y, nil
 }
@@ -66,7 +64,7 @@ func UnmarshalGender(genderAttr string) (character.Gender, error) {
 	case "female":
 		return character.Female, nil
 	default:
-		return -1, fmt.Errorf("unsupported_gender_value:%s", genderAttr)
+		return -1, fmt.Errorf("unsupported gender value: %s", genderAttr)
 	}
 }
 
@@ -86,7 +84,7 @@ func UnmarshalRace(raceAttr string) (character.Race, error) {
 	case "goblin":
 		return character.Goblin, nil
 	default:
-		return -1, fmt.Errorf("unsupported_race_value:%s", raceAttr)
+		return -1, fmt.Errorf("unsupported race value: %s", raceAttr)
 	}
 }
 
@@ -100,7 +98,7 @@ func UnmarshalAttitude(attitudeAttr string) (character.Attitude, error) {
 	case "hostile":
 		return character.Hostile, nil
 	default:
-		return -1, fmt.Errorf("unsupported_attitude_value:%s", attitudeAttr)
+		return -1, fmt.Errorf("unsupported attitude value: %s", attitudeAttr)
 	}
 }
 
@@ -126,7 +124,7 @@ func UnmarshalAlignment(aliAttr string) (character.Alignment, error) {
 	case "chaotic_evil":
 		return character.Chaotic_evil, nil
 	default:
-		return -1, fmt.Errorf("unsupported_alignment_value:%s", aliAttr)
+		return -1, fmt.Errorf("unsupported alignment value: %s", aliAttr)
 	}
 }
 
@@ -135,32 +133,32 @@ func UnmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 	stats := strings.Split(attributesAttr, ";")
 	if len(stats) < 5 {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse attributes text:%s", attributesAttr)
+		fmt.Errorf("fail to parse attributes text: %s", attributesAttr)
 	}
 	str, err := strconv.Atoi(stats[0])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse str attribute:%s", stats[0])
+		fmt.Errorf("fail to parse str attribute: %s", stats[0])
 	}
 	con, err := strconv.Atoi(stats[1])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse con attribute:%s", stats[1])
+		fmt.Errorf("fail to parse con attribute: %s", stats[1])
 	}
 	dex, err := strconv.Atoi(stats[2])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse dex attribute:%s", stats[2])
+		fmt.Errorf("fail to parse dex attribute: %s", stats[2])
 	}
 	inte, err := strconv.Atoi(stats[3])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse int attribute:%s", stats[3])
+		fmt.Errorf("fail to parse int attribute: %s", stats[3])
 	}
 	wis, err := strconv.Atoi(stats[4])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse wis attribute:%s", stats[4])
+		fmt.Errorf("fail to parse wis attribute: %s", stats[4])
 	}
 	return character.Attributes{str, con, dex, inte, wis}, nil
 }
@@ -175,7 +173,7 @@ func UnmarshalItemSlots(slotsAttr string) ([]item.Slot, error) {
 		case item.Hand.ID():
 			slots = append(slots, item.Hand)
 		default: // all slots IDs must be 'parsable'
-			return nil, fmt.Errorf("fail_to_parse_slot_type:%s", slotsAttr)
+			return nil, fmt.Errorf("fail to parse slot type: %s", slotsAttr)
 		}
 	}
 	return slots, nil
@@ -188,8 +186,7 @@ func UnmarshalEqSlot(slot string) (character.EquipmentSlotType, error) {
 	case "right_hand":
 		return character.Hand_right, nil
 	default:
-		return -1, fmt.Errorf("unsupported_eq_slot_type_value:%s",
-			slot)
+		return -1, fmt.Errorf("unsupported eq slot type value: %s", slot)
 	}
 }
 
@@ -206,8 +203,7 @@ func UnmarshalSkillRange(rg string) (skill.Range, error) {
 	case "huge":
 		return skill.Range_huge, nil
 	default:
-		return -1, fmt.Errorf("unsupported_skill_range_type_value:%s",
-			rg)
+		return -1, fmt.Errorf("unsupported skill range type value: s", rg)
 	}
 }
 
@@ -223,6 +219,6 @@ func UnmarshalElementType(s string) (object.Element, error) {
 	case "nature":
 		return object.Element_nature, nil
 	default:
-		return -1, fmt.Errorf("unsupported_hit_type_value:%s", s)
+		return -1, fmt.Errorf("unsupported hit type value: %s", s)
 	}
 }

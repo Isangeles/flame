@@ -34,41 +34,35 @@ import (
 )
 
 // Struct for XML scenario node.
-type ScenarioXML struct {
-	XMLName  xml.Name  `xml:"scenario"`
-	ID       string    `xml:"id,attr"`
-	Mainarea AreaXML   `xml:"mainarea"`
-	Subareas []AreaXML `xml:"area"`
+type Scenario struct {
+	XMLName  xml.Name `xml:"scenario"`
+	ID       string   `xml:"id,attr"`
+	Mainarea Area     `xml:"mainarea"`
+	Subareas []Area   `xml:"area"`
 }
 
 // Struct for XML area node.
-type AreaXML struct {
-	ID      string     `xml:"id,attr"`
-	NPCs    NpcsXML    `xml:"npcs"`
-	Objects ObjectsXML `xml:"objects"`
+type Area struct {
+	ID      string       `xml:"id,attr"`
+	NPCs    Npcs         `xml:"npcs"`
+	Objects []AreaObject `xml:"objects>object"`
 }
 
 // Struct for XML npcs node.
-type NpcsXML struct {
-	XMLName    xml.Name      `xml:"npcs"`
-	Characters []AreaCharXML `xml:"char"`
-}
-
-// Struct for XML objects node.
-type ObjectsXML struct {
-	XMLName xml.Name        `xml:"objects"`
-	Nodes   []AreaObjectXML `xml:"object"`
+type Npcs struct {
+	XMLName    xml.Name   `xml:"npcs"`
+	Characters []AreaChar `xml:"char"`
 }
 
 // Struct for XML object node.
-type AreaObjectXML struct {
+type AreaObject struct {
 	XMLName  xml.Name `xml:"object"`
 	ID       string   `xml:"id,attr"`
 	Position string   `xml:"position,attr"`
 }
 
 // Struct for XML area character node.
-type AreaCharXML struct {
+type AreaChar struct {
 	XMLName  xml.Name `xml:"char"`
 	ID       string   `xml:"id,attr"`
 	Position string   `xml:"position,attr"`
@@ -77,10 +71,10 @@ type AreaCharXML struct {
 // UnmarshalScenario parses scenario from XML data.
 func UnmarshalScenario(data io.Reader) (*res.ModuleScenarioData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlScen := new(ScenarioXML)
+	xmlScen := new(Scenario)
 	err := xml.Unmarshal(doc, xmlScen)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml: %v", err)
 	}
 	scenData := buildScenarioData(xmlScen)
 	return scenData, nil
@@ -91,31 +85,31 @@ func MarshalScenario(scenData *res.ModuleScenarioData) (string, error) {
 	xmlScen := xmlScenario(scenData)
 	out, err := xml.Marshal(xmlScen)
 	if err != nil {
-		return "", fmt.Errorf("fail_to_marshal_char:%v", err)
+		return "", fmt.Errorf("fail to marshal char: %v", err)
 	}
 	return string(out[:]), nil
 }
 
 // xmlScenario creates XML struct from specified module
 // scenario data.
-func xmlScenario(scen *res.ModuleScenarioData) *ScenarioXML {
-	xmlScen := new(ScenarioXML)
+func xmlScenario(scen *res.ModuleScenarioData) *Scenario {
+	xmlScen := new(Scenario)
 	xmlScen.ID = scen.ID
 	for _, ad := range scen.Areas {
-		xmlArea := new(AreaXML)
+		xmlArea := new(Area)
 		xmlArea.ID = ad.ID
 		// Characters.
 		xmlChars := xmlArea.NPCs.Characters
 		for _, npc := range ad.NPCS {
-			xmlNPC := new(AreaCharXML)
+			xmlNPC := new(AreaChar)
 			xmlNPC.ID = npc.ID
 			xmlNPC.Position = MarshalPosition(npc.PosX, npc.PosY)
 			xmlChars = append(xmlChars, *xmlNPC)
 		}
 		// Objects.
-		xmlObjects := xmlArea.Objects.Nodes
+		xmlObjects := xmlArea.Objects
 		for _, ob := range ad.Objects {
-			xmlOb := new(AreaObjectXML)
+			xmlOb := new(AreaObject)
 			xmlOb.ID = ob.ID
 			xmlOb.Position = MarshalPosition(ob.PosX, ob.PosY)
 			xmlObjects = append(xmlObjects, *xmlOb)
@@ -131,7 +125,7 @@ func xmlScenario(scen *res.ModuleScenarioData) *ScenarioXML {
 
 // buildScenarioData creates scenario data from specified
 // XML data.
-func buildScenarioData(xmlScen *ScenarioXML) *res.ModuleScenarioData {
+func buildScenarioData(xmlScen *Scenario) *res.ModuleScenarioData {
 	// Areas.
 	areas := make([]res.ModuleAreaData, 0)
 	// Mainarea.
@@ -151,33 +145,33 @@ func buildScenarioData(xmlScen *ScenarioXML) *res.ModuleScenarioData {
 }
 
 // buildAreaData creates area data from specified XML data.
-func buildAreaData(xmlArea *AreaXML) *res.ModuleAreaData {
+func buildAreaData(xmlArea *Area) *res.ModuleAreaData {
 	area := res.ModuleAreaData{ID: xmlArea.ID}
 	// Characters.
 	for _, xmlChar := range xmlArea.NPCs.Characters {
 		x, y, err := UnmarshalPosition(xmlChar.Position)
 		if err != nil {
-			log.Err.Printf("xml:build_area:%s:build_char:%s:fail_to_parse_position:%v",
+			log.Err.Printf("xml: build area: %s: build char: %s: fail to parse position: %v",
 				xmlArea.ID, xmlChar.ID, err)
 			continue
 		}
 		char := res.AreaCharData{
-			ID: xmlChar.ID,
+			ID:   xmlChar.ID,
 			PosX: x,
 			PosY: y,
 		}
 		area.NPCS = append(area.NPCS, char)
 	}
 	// Objects.
-	for _, xmlOb := range xmlArea.Objects.Nodes {
+	for _, xmlOb := range xmlArea.Objects {
 		x, y, err := UnmarshalPosition(xmlOb.Position)
 		if err != nil {
-			log.Err.Printf("xml:build_area:%s:build_object:%s:fail_to_parse_position:%v",
+			log.Err.Printf("xml: build area: %s: build object: %s: fail to parse position: %v",
 				xmlArea.ID, xmlOb.ID, err)
 			continue
 		}
 		ob := res.AreaObjectData{
-			ID: xmlOb.ID,
+			ID:   xmlOb.ID,
 			PosX: x,
 			PosY: y,
 		}

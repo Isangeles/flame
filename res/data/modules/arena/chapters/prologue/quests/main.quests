@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<base>
+<quests>
   <quest id="qAloeSearch1">
     <stage id="qAloeSearch1_s1" ordinal="0" next="qAloeSearch1_s2">
       <objectives>
@@ -25,4 +25,4 @@
       </objectives>
     </stage>
   </quest>
-</base>
+</quests>

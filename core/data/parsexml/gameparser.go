@@ -29,63 +29,44 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/log"
 )
 
 // Struct for saved game XML node.
-type SavedGameXML struct {
-	XMLName xml.Name        `xml:"game"`
-	Name    string          `xml:"name,attr"`
-	Chapter SavedChapterXML `xml:"chapter"`
+type SavedGame struct {
+	XMLName xml.Name     `xml:"game"`
+	Name    string       `xml:"name,attr"`
+	Chapter SavedChapter `xml:"chapter"`
 }
 
 // Struct for saved chapter XML node.
-type SavedChapterXML struct {
-	XMLName   xml.Name           `xml:"chapter"`
-	ID        string             `xml:"id,attr"`
-	Scenarios []SavedScenarioXML `xml:"scenario"`
+type SavedChapter struct {
+	XMLName   xml.Name        `xml:"chapter"`
+	ID        string          `xml:"id,attr"`
+	Scenarios []SavedScenario `xml:"scenario"`
 }
 
 // Struct for saved scenario XML node.
-type SavedScenarioXML struct {
-	XMLName   xml.Name      `xml:"scenario"`
-	ID        string        `xml:"id,attr"`
-	AreasNode SavedAreasXML `xml:"areas"`
-}
-
-// Struct for saved areas XML node.
-type SavedAreasXML struct {
-	XMLName xml.Name       `xml:"areas"`
-	Areas   []SavedAreaXML `xml:"area"`
+type SavedScenario struct {
+	XMLName xml.Name    `xml:"scenario"`
+	ID      string      `xml:"id,attr"`
+	Areas   []SavedArea `xml:"areas>area"`
 }
 
 // Struct for saved scenario area XML node.
-type SavedAreaXML struct {
-	XMLName     xml.Name           `xml:"area"`
-	ID          string             `xml:"id,attr"`
-	Mainarea    bool               `xml:"mainarea,attr"`
-	CharsNode   SavedCharactersXML `xml:"characters"`
-	ObjectsNode SavedObjectsXML    `xml:"objects"`
+type SavedArea struct {
+	XMLName    xml.Name    `xml:"area"`
+	ID         string      `xml:"id,attr"`
+	Mainarea   bool        `xml:"mainarea,attr"`
+	Characters []Character `xml:"characters>char"`
+	Objects    []Object    `xml:"objects>object"`
 }
 
-// Struct for saved characters XML node.
-type SavedCharactersXML struct {
-	XMLName    xml.Name       `xml:"characters"`
-	Characters []CharacterXML `xml:"char"`
-}
-
-// Struct for saved objects XML node.
-type SavedObjectsXML struct {
-	XMLName xml.Name    `xml:"objects"`
-	Nodes   []ObjectXML `xml:"object"`
-}
-
-// MarshalGame parses specified game to XML
-// savegame data.
+// MarshalGame parses specified game to XML savegame data.
 func MarshalSaveGame(game *save.SaveGame) (string, error) {
-	xmlGame := new(SavedGameXML)
+	xmlGame := new(SavedGame)
 	xmlGame.Name = game.Name
 	// Chapter.
 	chapter := game.Mod.Chapter()
@@ -96,43 +77,38 @@ func MarshalSaveGame(game *save.SaveGame) (string, error) {
 	xmlChapter.ID = chapter.Conf().ID
 	// Scenarios.
 	for _, s := range chapter.Scenarios() {
-		xmlScenario := SavedScenarioXML{}
+		xmlScenario := SavedScenario{}
 		xmlScenario.ID = s.ID()
 		// Areas.
-		xmlAreas := &xmlScenario.AreasNode
 		for _, a := range s.Areas() {
-			xmlArea := SavedAreaXML{}
+			xmlArea := SavedArea{}
 			xmlArea.ID = a.ID()
 			if a.ID() == s.Mainarea().ID() {
 				xmlArea.Mainarea = true
 			}
 			// Characters.
-			xmlChars := &xmlArea.CharsNode
 			for _, c := range a.Characters() {
 				xmlChar := xmlCharacter(c)
 				serialID := xmlChar.ID + "_" + xmlChar.Serial
-				for _, pc := range game.Players {	
+				for _, pc := range game.Players {
 					if pc.SerialID() == serialID {
 						xmlChar.PC = true
 					}
 				}
-				xmlChars.Characters = append(xmlChars.Characters,
-					*xmlChar)
+				xmlArea.Characters = append(xmlArea.Characters, *xmlChar)
 			}
 			// Objects.
-			xmlObjects := &xmlArea.ObjectsNode
 			for _, o := range a.Objects() {
 				xmlObject := xmlObject(o)
-				xmlObjects.Nodes = append(xmlObjects.Nodes, *xmlObject)
-			}			
-			xmlAreas.Areas = append(xmlAreas.Areas, xmlArea)
+				xmlArea.Objects = append(xmlArea.Objects, *xmlObject)
+			}
+			xmlScenario.Areas = append(xmlScenario.Areas, xmlArea)
 		}
-		xmlChapter.Scenarios = append(xmlChapter.Scenarios,
-			xmlScenario)
+		xmlChapter.Scenarios = append(xmlChapter.Scenarios, xmlScenario)
 	}
 	out, err := xml.Marshal(xmlGame)
 	if err != nil {
-		return "", fmt.Errorf("fail_to_marshal_game")
+		return "", fmt.Errorf("fail to marshal game")
 	}
 	return string(out[:]), nil
 }
@@ -141,10 +117,10 @@ func MarshalSaveGame(game *save.SaveGame) (string, error) {
 // resource.
 func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlGame := new(SavedGameXML)
+	xmlGame := new(SavedGame)
 	err := xml.Unmarshal(doc, xmlGame)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	game := new(res.GameData)
 	game.Name = xmlGame.Name
@@ -154,23 +130,23 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 	for _, xmlScen := range xmlGame.Chapter.Scenarios {
 		scen := res.ScenarioData{ID: xmlScen.ID}
 		// Areas.
-		for _, xmlArea := range xmlScen.AreasNode.Areas {	
+		for _, xmlArea := range xmlScen.Areas {
 			area := res.AreaData{ID: xmlArea.ID}
 			// Characters.
-			for _, xmlChar := range xmlArea.CharsNode.Characters {
+			for _, xmlChar := range xmlArea.Characters {
 				charData, err := buildCharacterData(&xmlChar)
 				if err != nil {
-					log.Err.Printf("xml:build_game:area:%s:character:%s:%v",
+					log.Err.Printf("xml: build game: area: %s: character: %s: %v",
 						xmlArea.ID, xmlChar.ID, err)
 					continue
 				}
 				area.Chars = append(area.Chars, *charData)
 			}
 			// Objects.
-			for _, xmlOb := range xmlArea.ObjectsNode.Nodes {
+			for _, xmlOb := range xmlArea.Objects {
 				obData, err := buildObjectData(&xmlOb)
 				if err != nil {
-					log.Err.Printf("xml:build_game:area:%s:object:%s:%v",
+					log.Err.Printf("xml: build game: area: %s: object: %s: %v",
 						xmlArea.ID, xmlOb.ID, err)
 					continue
 				}

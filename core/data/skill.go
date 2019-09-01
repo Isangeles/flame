@@ -63,7 +63,7 @@ func ImportSkills(basePath string) ([]*res.SkillData, error) {
 		return nil, fmt.Errorf("fail to open skills base file: %v", err)
 	}
 	defer doc.Close()
-	skills, err := parsexml.UnmarshalSkillsBase(doc)
+	skills, err := parsexml.UnmarshalSkills(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal skills base: %v", err)
 	}

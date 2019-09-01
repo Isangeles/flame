@@ -28,35 +28,34 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	
+
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/log"
 )
 
 // Struct for skills XML base.
-type SkillsBaseXML struct {
-	XMLName xml.Name   `xml:"base"`
-	Skills  []SkillXML `xml:"skill"`
+type Skills struct {
+	XMLName xml.Name `xml:"skills"`
+	Skills  []Skill  `xml:"skill"`
 }
 
 // Struct for skill XML node.
-type SkillXML struct {
-	XMLName     xml.Name         `xml:"skill"`
-	ID          string           `xml:"id,attr"`
-	CastSec     int              `xml:"cast,attr"`
-	CooldownSec int              `xml:"cooldown,attr"`
-	Range       string           `xml:"range,attr"`
-	Melee       bool             `xml:"melee,attr"`
-	Spell       bool             `xml:"spell,attr"`
-	Effects     ObjectEffectsXML `xml:"effects"`
-	Reqs        ReqsXML          `xml:"reqs"`
+type Skill struct {
+	XMLName     xml.Name      `xml:"skill"`
+	ID          string        `xml:"id,attr"`
+	CastSec     int           `xml:"cast,attr"`
+	CooldownSec int           `xml:"cooldown,attr"`
+	Range       string        `xml:"range,attr"`
+	Melee       bool          `xml:"melee,attr"`
+	Spell       bool          `xml:"spell,attr"`
+	Effects     ObjectEffects `xml:"effects"`
+	Reqs        Reqs          `xml:"reqs"`
 }
 
-// UnmarshalSkillsBase retrieves skills data from specified
-// XML data.
-func UnmarshalSkillsBase(data io.Reader) ([]*res.SkillData, error) {
+// UnmarshalSkills retrieves skills data from specified XML data.
+func UnmarshalSkills(data io.Reader) ([]*res.SkillData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(SkillsBaseXML)
+	xmlBase := new(Skills)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
@@ -74,7 +73,7 @@ func UnmarshalSkillsBase(data io.Reader) ([]*res.SkillData, error) {
 }
 
 // buildSkillData builds skill from XML data.
-func buildSkillData(xmlSkill SkillXML) (*res.SkillData, error) {
+func buildSkillData(xmlSkill Skill) (*res.SkillData, error) {
 	reqs := buildReqs(&xmlSkill.Reqs)
 	effects := make([]res.EffectData, 0)
 	for _, xmlEffect := range xmlSkill.Effects.Nodes {

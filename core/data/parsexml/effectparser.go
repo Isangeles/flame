@@ -33,34 +33,33 @@ import (
 )
 
 // Struct for effects XML base.
-type EffectsBaseXML struct {
-	XMLName xml.Name    `xml:"base"`
-	Nodes   []EffectXML `xml:"effect"`
+type Effects struct {
+	XMLName xml.Name `xml:"effects"`
+	Nodes   []Effect `xml:"effect"`
 }
 
 // Struct for effect XML node.
-type EffectXML struct {
-	XMLName       xml.Name     `xml:"effect"`
-	ID            string       `xml:"id,attr"`
-	Duration      int64        `xml:"duration,attr"`
-	ModifiersNode ModifiersXML `xml:"modifiers"`
+type Effect struct {
+	XMLName       xml.Name  `xml:"effect"`
+	ID            string    `xml:"id,attr"`
+	Duration      int64     `xml:"duration,attr"`
+	ModifiersNode Modifiers `xml:"modifiers"`
 }
 
 // Struct for node with subeffects.
-type SubeffectsXML struct {
+type Subeffects struct {
 	XMLName xml.Name `xml:"subeffects"`
 	Effects []string `xml:"effect,value"`
 }
 
-// UnmarshalEffectsBase retrieves all effects data from
+// UnmarshalEffects retrieves all effects data from
 // specified XML data.
-func UnmarshalEffectsBase(data io.Reader) ([]*res.EffectData, error) {
+func UnmarshalEffects(data io.Reader) ([]*res.EffectData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(EffectsBaseXML)
+	xmlBase := new(Effects)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
-			err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	effects := make([]*res.EffectData, 0)
 	for _, xmlEffect := range xmlBase.Nodes {
@@ -71,7 +70,7 @@ func UnmarshalEffectsBase(data io.Reader) ([]*res.EffectData, error) {
 }
 
 // buildEffectData builds effect from XML data.
-func buildEffectData(xmlEffect EffectXML) *res.EffectData {
+func buildEffectData(xmlEffect Effect) *res.EffectData {
 	mods := buildModifiers(&xmlEffect.ModifiersNode)
 	data := res.EffectData{
 		ID:        xmlEffect.ID,

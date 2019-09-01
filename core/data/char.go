@@ -63,7 +63,7 @@ func ImportCharactersData(path string) ([]*res.CharacterData, error) {
 		return nil, fmt.Errorf("fail to open char base file: %v", err)
 	}
 	defer baseFile.Close()
-	chars, err := parsexml.UnmarshalCharactersBase(baseFile)
+	chars, err := parsexml.UnmarshalCharacters(baseFile)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal chars base: %v", err)
 	}
@@ -102,7 +102,7 @@ func ImportCharacters(mod *module.Module, path string) ([]*character.Character, 
 		return nil, fmt.Errorf("fail to open char base file: %v", err)
 	}
 	defer charFile.Close()
-	charsData, err := parsexml.UnmarshalCharactersBase(charFile)
+	charsData, err := parsexml.UnmarshalCharacters(charFile)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal chars base: %v", err)
 	}

@@ -74,7 +74,7 @@ func ImportWeapons(basePath string) ([]*res.WeaponData, error) {
 		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
-	weapons, err := parsexml.UnmarshalWeaponsBase(doc)
+	weapons, err := parsexml.UnmarshalWeapons(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
@@ -113,7 +113,7 @@ func ImportMiscItems(basePath string) ([]*res.MiscItemData, error) {
 		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
-	miscs, err := parsexml.UnmarshalMiscItemsBase(doc)
+	miscs, err := parsexml.UnmarshalMiscItems(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}

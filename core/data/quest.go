@@ -60,7 +60,7 @@ func ImportQuests(basePath string) ([]*res.QuestData, error) {
 		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
-	quests, err := parsexml.UnmarshalQuestsBase(doc)
+	quests, err := parsexml.UnmarshalQuests(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal quests base: %v", err)
 	}

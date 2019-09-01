@@ -64,7 +64,7 @@ func ImportEffects(basePath string) ([]*res.EffectData, error) {
 		return nil, fmt.Errorf("fail to open effects base file: %v", err)
 	}
 	defer doc.Close()
-	effects, err := parsexml.UnmarshalEffectsBase(doc)
+	effects, err := parsexml.UnmarshalEffects(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal effects base: %v", err)
 	}

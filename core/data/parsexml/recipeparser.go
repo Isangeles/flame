@@ -34,33 +34,33 @@ import (
 )
 
 // Struct for recipes XML node.
-type RecipesBaseXML struct {
-	XMLName xml.Name    `xml:"base"`
-	Recipes []RecipeXML `xml:"recipe"`
+type Recipes struct {
+	XMLName xml.Name `xml:"recipes"`
+	Recipes []Recipe `xml:"recipe"`
 }
 
 // Struct for recipe XML node.
-type RecipeXML struct {
-	XMLName  xml.Name          `xml:"recipe"`
-	ID       string            `xml:"id,attr"`
-	Category string            `xml:"category,attr"`
-	CastSec  int               `xml:"cast,attr"`
-	Results  []RecipeResultXML `xml:"results>result"`
-	Reqs     ReqsXML           `xml:"reqs"`
+type Recipe struct {
+	XMLName  xml.Name       `xml:"recipe"`
+	ID       string         `xml:"id,attr"`
+	Category string         `xml:"category,attr"`
+	CastSec  int            `xml:"cast,attr"`
+	Results  []RecipeResult `xml:"results>result"`
+	Reqs     Reqs           `xml:"reqs"`
 }
 
 // Struct for recipe result XML node.
-type RecipeResultXML struct {
+type RecipeResult struct {
 	XMLName xml.Name `xml:"result"`
 	ID      string   `xml:"id,attr"`
 	Amount  int      `xml:"amount,attr"`
 }
 
-// UnmarshalRecipesBase retieves all recipes data from specified
+// UnmarshalRecipes retieves all recipes data from specified
 // XML data.
-func UnmarshalRecipesBase(data io.Reader) ([]*res.RecipeData, error) {
+func UnmarshalRecipes(data io.Reader) ([]*res.RecipeData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(RecipesBaseXML)
+	xmlBase := new(Recipes)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
@@ -77,7 +77,7 @@ func UnmarshalRecipesBase(data io.Reader) ([]*res.RecipeData, error) {
 }
 
 // buildRecipeData creates new recipe data from specified XML data.
-func buildRecipeData(xmlRecipe RecipeXML) (*res.RecipeData, error) {
+func buildRecipeData(xmlRecipe Recipe) (*res.RecipeData, error) {
 	rd := new(res.RecipeData)
 	rd.ID = xmlRecipe.ID
 	rd.Category = xmlRecipe.Category

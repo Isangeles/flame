@@ -39,53 +39,53 @@ import (
 )
 
 // Struct for XML objects base node.
-type ObjectsBaseXML struct {
-	XMLName xml.Name    `xml:"base"`
-	Nodes   []ObjectXML `xml:"object"`
+type Objects struct {
+	XMLName xml.Name `xml:"base"`
+	Nodes   []Object `xml:"object"`
 }
 
 // Struct for XML object node.
-type ObjectXML struct {
-	XMLName   xml.Name         `xml:"object"`
-	ID        string           `xml:"id,attr"`
-	Serial    string           `xml:"serial,attr"`
-	HP        int              `xml:"hp,attr"`
-	MaxHP     int              `xml:"max-hp,attr"`
-	Position  string           `xml:"position,value"`
-	Inventory InventoryXML     `xml:"inventory"`
-	Effects   ObjectEffectsXML `xml:"effects"`
+type Object struct {
+	XMLName   xml.Name      `xml:"object"`
+	ID        string        `xml:"id,attr"`
+	Serial    string        `xml:"serial,attr"`
+	HP        int           `xml:"hp,attr"`
+	MaxHP     int           `xml:"max-hp,attr"`
+	Position  string        `xml:"position,value"`
+	Inventory Inventory     `xml:"inventory"`
+	Effects   ObjectEffects `xml:"effects"`
 }
 
 // Struct for XML node with object effects.
-type ObjectEffectsXML struct {
-	XMLName xml.Name          `xml:"effects"`
-	Nodes   []ObjectEffectXML `xml:"effect"`
+type ObjectEffects struct {
+	XMLName xml.Name       `xml:"effects"`
+	Nodes   []ObjectEffect `xml:"effect"`
 }
 
 // Strcut for object effects XML node.
-type ObjectEffectXML struct {
-	XMLName xml.Name              `xml:"effect"`
-	ID      string                `xml:"id,attr"`
-	Serial  string                `xml:"serial,attr"`
-	Time    int64                 `xml:"time,attr"`
-	Source  ObjectEffectSourceXML `xml:"source"`
+type ObjectEffect struct {
+	XMLName xml.Name           `xml:"effect"`
+	ID      string             `xml:"id,attr"`
+	Serial  string             `xml:"serial,attr"`
+	Time    int64              `xml:"time,attr"`
+	Source  ObjectEffectSource `xml:"source"`
 }
 
 // Struct for object effect source XML node.
-type ObjectEffectSourceXML struct {
+type ObjectEffectSource struct {
 	XMLName xml.Name `xml:"source"`
 	ID      string   `xml:"id,attr"`
 	Serial  string   `xml:"serial,attr"`
 }
 
 // Struct for object skills XML node.
-type ObjectSkillsXML struct {
-	XMLName xml.Name         `xml:"skills"`
-	Nodes   []ObjectSkillXML `xml:"skill"`
+type ObjectSkills struct {
+	XMLName xml.Name      `xml:"skills"`
+	Nodes   []ObjectSkill `xml:"skill"`
 }
 
 // Struct for object skill XML node.
-type ObjectSkillXML struct {
+type ObjectSkill struct {
 	XMLName  xml.Name `xml:"skill"`
 	ID       string   `xml:"id,attr"`
 	Serial   string   `xml:"serial,attr"`
@@ -93,19 +93,19 @@ type ObjectSkillXML struct {
 }
 
 // Struct for object dialogs XML node.
-type ObjectDialogsXML struct {
-	XMLName xml.Name          `xml:"dialogs"`
-	Nodes   []ObjectDialogXML `xml:"dialog"`
+type ObjectDialogs struct {
+	XMLName xml.Name       `xml:"dialogs"`
+	Nodes   []ObjectDialog `xml:"dialog"`
 }
 
 // Struct for object dialog XML node.
-type ObjectDialogXML struct {
+type ObjectDialog struct {
 	XMLName xml.Name `xml:"dialog"`
 	ID      string   `xml:"id,attr"`
 }
 
 // Struct for object recipe XML node.
-type ObjectRecipeXML struct {
+type ObjectRecipe struct {
 	XMLName xml.Name `xml:"recipe"`
 	ID      string   `xml:"id,attr"`
 }
@@ -114,17 +114,16 @@ type ObjectRecipeXML struct {
 // object nodes.
 func UnmarshalObjectsBase(data io.Reader) ([]*res.ObjectData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(ObjectsBaseXML)
+	xmlBase := new(Objects)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
-			err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	objects := make([]*res.ObjectData, 0)
 	for _, xmlObject := range xmlBase.Nodes {
 		object, err := buildObjectData(&xmlObject)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_object:%s:build_data_fail:%v",
+			log.Err.Printf("xml: unmarshal object: %s: build data fail: %v",
 				xmlObject.ID, err)
 			continue
 		}
@@ -135,8 +134,8 @@ func UnmarshalObjectsBase(data io.Reader) ([]*res.ObjectData, error) {
 
 // xmlObject parses specified area object to XML
 // object struct.
-func xmlObject(ob *area.Object) *ObjectXML {
-	xmlOb := new(ObjectXML)
+func xmlObject(ob *area.Object) *Object {
+	xmlOb := new(Object)
 	xmlOb.ID = ob.ID()
 	xmlOb.Serial = ob.Serial()
 	xmlOb.HP = ob.Health()
@@ -150,15 +149,15 @@ func xmlObject(ob *area.Object) *ObjectXML {
 
 // xmlObjectEffects parses specified effects to XML
 // object effects struct.
-func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffectsXML {
-	xmlEffs := new(ObjectEffectsXML)
+func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffects {
+	xmlEffs := new(ObjectEffects)
 	for _, e := range effs {
-		xmlEffSource := ObjectEffectSourceXML{}
+		xmlEffSource := ObjectEffectSource{}
 		if e.Source() != nil {
 			xmlEffSource.ID = e.Source().ID()
 			xmlEffSource.Serial = e.Source().Serial()
 		}
-		xmlEff := ObjectEffectXML{
+		xmlEff := ObjectEffect{
 			ID:     e.ID(),
 			Serial: e.Serial(),
 			Time:   e.Time(),
@@ -171,10 +170,10 @@ func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffectsXML {
 
 // xmlObjectSkills parses specified skills to XML
 // object skills struct.
-func xmlObjectSkills(skills ...*skill.Skill) *ObjectSkillsXML {
-	xmlSkills := new(ObjectSkillsXML)
+func xmlObjectSkills(skills ...*skill.Skill) *ObjectSkills {
+	xmlSkills := new(ObjectSkills)
 	for _, s := range skills {
-		xmlSkill := ObjectSkillXML{
+		xmlSkill := ObjectSkill{
 			ID:       s.ID(),
 			Serial:   s.Serial(),
 			Cooldown: s.Cooldown(),
@@ -186,10 +185,10 @@ func xmlObjectSkills(skills ...*skill.Skill) *ObjectSkillsXML {
 
 // xmlObjectDialogs parses specified dialogs to XML
 // object dialogs struct.
-func xmlObjectDialogs(dialogs ...*dialog.Dialog) *ObjectDialogsXML {
-	xmlDialogs := new(ObjectDialogsXML)
+func xmlObjectDialogs(dialogs ...*dialog.Dialog) *ObjectDialogs {
+	xmlDialogs := new(ObjectDialogs)
 	for _, d := range dialogs {
-		xmlDialog := ObjectDialogXML{
+		xmlDialog := ObjectDialog{
 			ID: d.ID(),
 		}
 		xmlDialogs.Nodes = append(xmlDialogs.Nodes, xmlDialog)
@@ -198,10 +197,10 @@ func xmlObjectDialogs(dialogs ...*dialog.Dialog) *ObjectDialogsXML {
 }
 
 // xmlObjectRecipes parses specified recipes to XML nodes.
-func xmlObjectRecipes(recipes ...*craft.Recipe) []ObjectRecipeXML {
-	xmlRecipes := make([]ObjectRecipeXML, 0)
+func xmlObjectRecipes(recipes ...*craft.Recipe) []ObjectRecipe {
+	xmlRecipes := make([]ObjectRecipe, 0)
 	for _, r := range recipes {
-		xmlRecipe := ObjectRecipeXML{
+		xmlRecipe := ObjectRecipe{
 			ID: r.ID(),
 		}
 		xmlRecipes = append(xmlRecipes, xmlRecipe)
@@ -211,7 +210,7 @@ func xmlObjectRecipes(recipes ...*craft.Recipe) []ObjectRecipeXML {
 
 // buildObjectData creates object data from specified XML
 // data.
-func buildObjectData(xmlOb *ObjectXML) (*res.ObjectData, error) {
+func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
 	// Basic data.
 	baseData := res.ObjectBasicData{
 		ID:     xmlOb.ID,
@@ -224,7 +223,7 @@ func buildObjectData(xmlOb *ObjectXML) (*res.ObjectData, error) {
 	if xmlOb.Position != "" {
 		posX, posY, err := UnmarshalPosition(xmlOb.Position)
 		if err != nil {
-			return nil, fmt.Errorf("fail_to_parse_position:%v", err)
+			return nil, fmt.Errorf("fail to parse position: %v", err)
 		}
 		data.SavedData.PosX, data.SavedData.PosY = posX, posY
 	}

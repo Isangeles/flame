@@ -34,37 +34,37 @@ import (
 )
 
 // Struct for weapons base XML node.
-type WeaponsBaseXML struct {
-	XMLName xml.Name    `xml:"base"`
-	Items   []WeaponXML `xml:"item"`
+type Weapons struct {
+	XMLName xml.Name `xml:"weapons"`
+	Items   []Weapon `xml:"weapon"`
 }
 
 // Struct for weapon XML node.
-type WeaponXML struct {
-	XMLName xml.Name  `xml:"item"`
-	ID      string    `xml:"id,attr"`
-	Serial  string    `xml:"serial,attr"`
-	Value   int       `xml:"value,attr"`
-	Level   int       `xml:"level,attr"`
-	Loot    bool      `xml:"loot,attr"`
-	Damage  DamageXML `xml:"damage"`
-	Reqs    ReqsXML   `xml:"reqs"`
-	Slots   string    `xml:"slots,attr"`
+type Weapon struct {
+	XMLName xml.Name `xml:"weapon"`
+	ID      string   `xml:"id,attr"`
+	Serial  string   `xml:"serial,attr"`
+	Value   int      `xml:"value,attr"`
+	Level   int      `xml:"level,attr"`
+	Loot    bool     `xml:"loot,attr"`
+	Damage  Damage   `xml:"damage"`
+	Reqs    Reqs     `xml:"reqs"`
+	Slots   string   `xml:"slots,attr"`
 }
 
 // UnmarshalWeaponsBase retrieves weapons data from specified XML data.
-func UnmarshalWeaponsBase(data io.Reader) ([]*res.WeaponData, error) {
+func UnmarshalWeapons(data io.Reader) ([]*res.WeaponData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(WeaponsBaseXML)
+	xmlBase := new(Weapons)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	weapons := make([]*res.WeaponData, 0)
 	for _, xmlWeapon := range xmlBase.Items {
 		weapon, err := buildWeaponData(xmlWeapon)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_weapon:build_data_fail:%v", err)
+			log.Err.Printf("xml: unmarshal weapon: build data fail: %v", err)
 			continue
 		}
 		weapons = append(weapons, weapon)
@@ -73,11 +73,11 @@ func UnmarshalWeaponsBase(data io.Reader) ([]*res.WeaponData, error) {
 }
 
 // buildXMLWeapon creates new weapon data from specified XML data.
-func buildWeaponData(xmlWeapon WeaponXML) (*res.WeaponData, error) {
+func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 	reqs := buildReqs(&xmlWeapon.Reqs)
 	slots, err := UnmarshalItemSlots(xmlWeapon.Slots)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_slot_types:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal slot types: %v", err)
 	}
 	slotsID := make([]int, 0)
 	for _, s := range slots {
@@ -85,13 +85,13 @@ func buildWeaponData(xmlWeapon WeaponXML) (*res.WeaponData, error) {
 	}
 	dmgType, err := UnmarshalElementType(xmlWeapon.Damage.Type)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_damage_type:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal damage type: %v", err)
 	}
 	hitEffects := make([]res.EffectData, 0)
 	for _, xmlEffect := range xmlWeapon.Damage.Effects.Nodes {
 		eff := res.Effect(xmlEffect.ID)
 		if eff == nil {
-			log.Err.Printf("xml:build_weapon:hit_effect_not_found:%s",
+			log.Err.Printf("xml: build weapon: hit effect not found: %s",
 				xmlEffect.ID)
 			continue
 		}

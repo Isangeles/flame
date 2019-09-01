@@ -41,16 +41,16 @@ type Armors struct {
 
 // Struct for armor node.
 type Armor struct {
-	XMLName   xml.Name         `xml:"armor"`
-	ID        string           `xml:"id,attr"`
-	Serial    string           `xml:"seral,attr"`
-	Value     int              `xml:"value,attr"`
-	Level     int              `xml:"level,attr"`
-	Armor     int              `xml:"armor,attr"`
-	Slots     string           `xml:"slots,attr"`
-	Loot      bool             `xml:"loot,attr"`
-	Reqs      ReqsXML          `xml:"eq>reqs"`
-	EQEffects ObjectEffectsXML `xml:"eq>effects"`
+	XMLName   xml.Name      `xml:"armor"`
+	ID        string        `xml:"id,attr"`
+	Serial    string        `xml:"seral,attr"`
+	Value     int           `xml:"value,attr"`
+	Level     int           `xml:"level,attr"`
+	Armor     int           `xml:"armor,attr"`
+	Slots     string        `xml:"slots,attr"`
+	Loot      bool          `xml:"loot,attr"`
+	Reqs      Reqs          `xml:"eq>reqs"`
+	EQEffects ObjectEffects `xml:"eq>effects"`
 }
 
 // UnmarshalArmors retrieves armor data from specified XML data.
@@ -95,14 +95,14 @@ func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
 		eqEffects = append(eqEffects, *eff)
 	}
 	ad := res.ArmorData{
-		ID:         xmlArmor.ID,
-		Value:      xmlArmor.Value,
-		Level:      xmlArmor.Level,
-		Armor:      xmlArmor.Armor,
-		EQEffects:  eqEffects,
-		EQReqs:     reqs,
-		Slots:      slotsID,
-		Loot:       xmlArmor.Loot,
+		ID:        xmlArmor.ID,
+		Value:     xmlArmor.Value,
+		Level:     xmlArmor.Level,
+		Armor:     xmlArmor.Armor,
+		EQEffects: eqEffects,
+		EQReqs:    reqs,
+		Slots:     slotsID,
+		Loot:      xmlArmor.Loot,
 	}
 	return &ad, nil
 }

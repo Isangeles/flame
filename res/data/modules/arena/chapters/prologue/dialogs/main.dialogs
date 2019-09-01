@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<base>
+<dialogs>
   <dialog id="testDialog1">
     <stage id="testDialog1_1" start="true" ordinal="0">
       <answer id="bye1" to="end"/>
@@ -59,4 +59,4 @@
       </talker>
     </stage>
   </dialog>
-</base>
+</dialogs>

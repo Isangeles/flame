@@ -31,14 +31,14 @@ import (
 )
 
 // Struct for inventory XML node.
-type InventoryXML struct {
-	XMLName  xml.Name           `xml:"inventory"`
-	Capacity int                `xml:"cap,attr"`
-	Items    []InventoryItemXML `xml:"item"`
+type Inventory struct {
+	XMLName  xml.Name        `xml:"inventory"`
+	Capacity int             `xml:"cap,attr"`
+	Items    []InventoryItem `xml:"item"`
 }
 
 // Struct for inventory item XML node.
-type InventoryItemXML struct {
+type InventoryItem struct {
 	XMLName    xml.Name `xml:"item"`
 	ID         string   `xml:"id,attr"`
 	Serial     string   `xml:"serial,attr"`
@@ -49,11 +49,11 @@ type InventoryItemXML struct {
 
 // xmlInventory parses specified inventory to XML
 // inventory node.
-func xmlInventory(inv *item.Inventory) *InventoryXML {
-	xmlInv := new(InventoryXML)
+func xmlInventory(inv *item.Inventory) *Inventory {
+	xmlInv := new(Inventory)
 	xmlInv.Capacity = inv.Capacity()
 	for _, i := range inv.TradeItems() {
-		xmlInvItem := InventoryItemXML{
+		xmlInvItem := InventoryItem{
 			ID:         i.ID(),
 			Serial:     i.Serial(),
 			Trade:      true,
@@ -73,7 +73,7 @@ func xmlInventory(inv *item.Inventory) *InventoryXML {
 		if prs {
 			continue
 		}
-		xmlInvItem := InventoryItemXML{
+		xmlInvItem := InventoryItem{
 			ID:     i.ID(),
 			Serial: i.Serial(),
 		}
@@ -84,7 +84,7 @@ func xmlInventory(inv *item.Inventory) *InventoryXML {
 
 // buildInventory creates items data from inventory items
 // nodes in specifie inventory.
-func buildInventoryItems(xmlInvItems []InventoryItemXML) (itemsData []res.InventoryItemData) {
+func buildInventoryItems(xmlInvItems []InventoryItem) (itemsData []res.InventoryItemData) {
 	for _, xmlIt := range xmlInvItems {
 		itData := res.InventoryItemData{
 			ID:         xmlIt.ID,

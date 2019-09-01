@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<base>
+<characters>
   <char id="testchar"
 	gender="male"
 	race="human"
@@ -29,4 +29,4 @@
       </attrs-train>
     </trainings>
   </char>
-</base>
+</characters>

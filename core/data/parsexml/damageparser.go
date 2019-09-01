@@ -28,10 +28,10 @@ import (
 )
 
 // Struct for damage XML node.
-type DamageXML struct {
-	XMLName xml.Name         `xml:"damage"`
-	Type    string           `xml:"type,attr"`
-	Min     int              `xml:"min,value"`
-	Max     int              `xml:"max,value"`
-	Effects ObjectEffectsXML `xml:"effects"`
+type Damage struct {
+	XMLName xml.Name      `xml:"damage"`
+	Type    string        `xml:"type,attr"`
+	Min     int           `xml:"min,value"`
+	Max     int           `xml:"max,value"`
+	Effects ObjectEffects `xml:"effects"`
 }

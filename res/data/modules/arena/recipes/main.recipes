@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<base>
+<recipes>
   <recipe id="rAloeTea1" category="cooking" cast="2">
     <results>
       <result id="imAloeTea1" amount="1"/>
@@ -9,4 +9,4 @@
       <item-req id="imWater1" amount="1"/>
     </reqs>
   </recipe>
-</base>
+</recipes>

@@ -34,40 +34,40 @@ import (
 )
 
 // Struct for quests base XML node.
-type QuestsBaseXML struct {
-	XMLName xml.Name   `xml:"base"`
-	Quests  []QuestXML `xml:"quest"`
+type QuestsBase struct {
+	XMLName xml.Name `xml:"quests"`
+	Quests  []Quest  `xml:"quest"`
 }
 
 // Struct for quest XML node.
-type QuestXML struct {
-	XMLName xml.Name        `xml:"quest"`
-	ID      string          `xml:"id,attr"`
-	Stages  []QuestStageXML `xml:"stage"`
+type Quest struct {
+	XMLName xml.Name     `xml:"quest"`
+	ID      string       `xml:"id,attr"`
+	Stages  []QuestStage `xml:"stage"`
 }
 
 // Struct for quest stage XML node.
-type QuestStageXML struct {
-	XMLName       xml.Name            `xml:"stage"`
-	ID            string              `xml:"id,attr"`
-	Ordinal       int                 `xml:"ordinal,attr"`
-	Next          string              `xml:"next,attr"`
-	Objectives    []QuestObjectiveXML `xml:"objectives>objective"`
-	CompleteFlags []FlagXML           `xml:"on-complete>flags>flag"`
+type QuestStage struct {
+	XMLName       xml.Name         `xml:"stage"`
+	ID            string           `xml:"id,attr"`
+	Ordinal       int              `xml:"ordinal,attr"`
+	Next          string           `xml:"next,attr"`
+	Objectives    []QuestObjective `xml:"objectives>objective"`
+	CompleteFlags []Flag           `xml:"on-complete>flags>flag"`
 }
 
 // Struct for quest objective XML node.
-type QuestObjectiveXML struct {
+type QuestObjective struct {
 	XMLName  xml.Name `xml:"objective"`
 	ID       string   `xml:"id,attr"`
 	Finisher bool     `xml:"finisher,attr"`
-	Reqs     ReqsXML  `xml:"reqs"`
+	Reqs     Reqs     `xml:"reqs"`
 }
 
-// UnmarashalQuestsBase retrieves quests data from specified XML data.
-func UnmarshalQuestsBase(data io.Reader) ([]*res.QuestData, error) {
+// UnmarashalQuests retrieves quests data from specified XML data.
+func UnmarshalQuests(data io.Reader) ([]*res.QuestData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(QuestsBaseXML)
+	xmlBase := new(QuestsBase)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
@@ -86,7 +86,7 @@ func UnmarshalQuestsBase(data io.Reader) ([]*res.QuestData, error) {
 }
 
 // buildQuestData creates new quest data from specified XML data.
-func buildQuestData(xmlQuest QuestXML) (*res.QuestData, error) {
+func buildQuestData(xmlQuest Quest) (*res.QuestData, error) {
 	qd := new(res.QuestData)
 	qd.ID = xmlQuest.ID
 	for _, xmlStage := range xmlQuest.Stages {

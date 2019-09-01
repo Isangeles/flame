@@ -59,7 +59,7 @@ func ImportRecipes(path string) ([]*res.RecipeData, error) {
 		return nil, fmt.Errorf("fail to open base file: %v", err)
 	}
 	defer doc.Close()
-	recipes, err := parsexml.UnmarshalRecipesBase(doc)
+	recipes, err := parsexml.UnmarshalRecipes(doc)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal recipes base: %v", err)
 	}

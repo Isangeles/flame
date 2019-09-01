@@ -31,26 +31,26 @@ import (
 )
 
 // Struct for training XML node.
-type TrainingsXML struct {
-	XMLName    xml.Name           `xml:"trainings"`
-	AttrsTrain []AttrsTrainingXML `xml:"attrs-train"`
+type Trainings struct {
+	XMLName    xml.Name        `xml:"trainings"`
+	AttrsTrain []AttrsTraining `xml:"attrs-train"`
 }
 
 // Struct for attributes training XML node.
-type AttrsTrainingXML struct {
+type AttrsTraining struct {
 	XMLName xml.Name `xml:"attrs-train"`
 	Str     int      `xml:"str,attr"`
 	Con     int      `xml:"con,attr"`
 	Dex     int      `xml:"dex,attr"`
 	Wis     int      `xml:"wis,attr"`
 	Int     int      `xml:"int,attr"`
-	Reqs    ReqsXML  `xml:"reqs"`
+	Reqs    Reqs     `xml:"reqs"`
 }
 
 // xmlTrainings parses specified trainings to XML
 // trainings node.
-func xmlTrainings(trainings ...train.Training) *TrainingsXML {
-	xmlTrainings := new(TrainingsXML)
+func xmlTrainings(trainings ...train.Training) *Trainings {
+	xmlTrainings := new(Trainings)
 	for _, t := range trainings {
 		switch t := t.(type) {
 		case *train.AttrsTraining:
@@ -63,8 +63,8 @@ func xmlTrainings(trainings ...train.Training) *TrainingsXML {
 
 // xmlAttrsTraining parser specified attributes training to
 // XML attributes training node.
-func xmlAttrsTraining(at *train.AttrsTraining) *AttrsTrainingXML {
-	xmlTrain := new(AttrsTrainingXML)
+func xmlAttrsTraining(at *train.AttrsTraining) *AttrsTraining {
+	xmlTrain := new(AttrsTraining)
 	xmlTrain.Str = at.Strenght()
 	xmlTrain.Con = at.Constitution()
 	xmlTrain.Dex = at.Dexterity()
@@ -75,7 +75,7 @@ func xmlAttrsTraining(at *train.AttrsTraining) *AttrsTrainingXML {
 }
 
 // buildTraining creates training from specified XML data.
-func buildTrainings(xmlTrainings *TrainingsXML) []res.TrainingData {
+func buildTrainings(xmlTrainings *Trainings) []res.TrainingData {
 	train := make([]res.TrainingData, 0)
 	for _, xmlTrain := range xmlTrainings.AttrsTrain {
 		atd := res.AttrsTrainingData{

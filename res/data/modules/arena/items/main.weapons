@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<base>
-  <item id="iwIronSword"
+<weapons>
+  <weapon id="iwIronSword"
 	value="10"
 	level="1"
 	slots="slot_hand"
@@ -12,5 +12,5 @@
 	<effect id="bleed1"/>
       </effects>
     </damage>
-  </item>
-</base>
+  </weapon>
+</weapons>

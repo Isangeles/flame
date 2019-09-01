@@ -34,14 +34,14 @@ import (
 )
 
 // Struct for misc items base XML node.
-type MiscsBaseXML struct {
-	XMLName xml.Name  `xml:"base"`
-	Items   []MiscXML `xml:"item"`
+type Miscs struct {
+	XMLName xml.Name `xml:"miscs"`
+	Items   []Misc   `xml:"misc"`
 }
 
 // Struct for misc XML node.
-type MiscXML struct {
-	XMLName  xml.Name `xml:"item"`
+type Misc struct {
+	XMLName  xml.Name `xml:"misc"`
 	ID       string   `xml:"id,attr"`
 	Value    int      `xml:"value,attr"`
 	Level    int      `xml:"level,attr"`
@@ -49,19 +49,19 @@ type MiscXML struct {
 	Currency bool     `xml:"currency,attr"`
 }
 
-// UnmarshalMiscItemsBase retrieves misc items data from specified XML data.
-func UnmarshalMiscItemsBase(data io.Reader) ([]*res.MiscItemData, error) {
+// UnmarshalMiscItems retrieves misc items data from specified XML data.
+func UnmarshalMiscItems(data io.Reader) ([]*res.MiscItemData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(MiscsBaseXML)
+	xmlBase := new(Miscs)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	miscs := make([]*res.MiscItemData, 0)
 	for _, xmlMisc := range xmlBase.Items {
 		misc, err := buildMiscData(xmlMisc)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_misc_item:build_data_fail:%v", err)
+			log.Err.Printf("xml: unmarshal misc item: build data fail: %v", err)
 			continue
 		}
 		miscs = append(miscs, misc)
@@ -70,7 +70,7 @@ func UnmarshalMiscItemsBase(data io.Reader) ([]*res.MiscItemData, error) {
 }
 
 // buildMiscData creates new misc data from specified XML data.
-func buildMiscData(xmlMisc MiscXML) (*res.MiscItemData, error) {
+func buildMiscData(xmlMisc Misc) (*res.MiscItemData, error) {
 	m := res.MiscItemData{
 		ID:       xmlMisc.ID,
 		Value:    xmlMisc.Value,

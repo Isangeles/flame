@@ -32,37 +32,37 @@ import (
 )
 
 // Struct for requirements XML node.
-type ReqsXML struct {
-	XMLName      xml.Name         `xml:"reqs"`
-	LevelReqs    []LevelReqXML    `xml:"level-req"`
-	GenderReqs   []GenderReqXML   `xml:"gender-req"`
-	FlagReqs     []FlagReqXML     `xml:"flag-req"`
-	ItemReqs     []ItemReqXML     `xml:"item-req"`
-	CurrencyReqs []CurrencyReqXML `xml:"currency-req"`
+type Reqs struct {
+	XMLName      xml.Name      `xml:"reqs"`
+	LevelReqs    []LevelReq    `xml:"level-req"`
+	GenderReqs   []GenderReq   `xml:"gender-req"`
+	FlagReqs     []FlagReq     `xml:"flag-req"`
+	ItemReqs     []ItemReq     `xml:"item-req"`
+	CurrencyReqs []CurrencyReq `xml:"currency-req"`
 }
 
 // Struct for level requirement XML node.
-type LevelReqXML struct {
+type LevelReq struct {
 	XMLName xml.Name `xml:"level-req"`
 	Min     int      `xml:"min,value"`
 	Max     int      `xml:"max,value"`
 }
 
 // Struct for gender requirement XML node.
-type GenderReqXML struct {
+type GenderReq struct {
 	XMLName xml.Name `xml:"gender-req"`
 	Type    string   `xml:"type,attr"`
 }
 
 // Struct for flag requirement XML node.
-type FlagReqXML struct {
+type FlagReq struct {
 	XMLName xml.Name `xml:"flag-req"`
 	ID      string   `xml:"id,attr"`
 	Off     bool     `xml:"off,attr"`
 }
 
 // Struct for item requirement XML node.
-type ItemReqXML struct {
+type ItemReq struct {
 	XMLName xml.Name `xml:"item-req"`
 	ID      string   `xml:"id,attr"`
 	Amount  int      `xml:"amount,attr"`
@@ -70,7 +70,7 @@ type ItemReqXML struct {
 }
 
 // Struct for currency requirement XML node.
-type CurrencyReqXML struct {
+type CurrencyReq struct {
 	XMLName xml.Name `xml:"currency-req"`
 	Amount  int      `xml:"amount,attr"`
 	Charge  bool     `xml:"charge,attr"`
@@ -78,8 +78,8 @@ type CurrencyReqXML struct {
 
 // xmlReqs parses specified requirements to XML
 // reqs node.
-func xmlReqs(reqs ...req.Requirement) *ReqsXML {
-	xmlReqs := new(ReqsXML)
+func xmlReqs(reqs ...req.Requirement) *Reqs {
+	xmlReqs := new(Reqs)
 	for _, r := range reqs {
 		switch r := r.(type) {
 		case *req.LevelReq:
@@ -95,16 +95,16 @@ func xmlReqs(reqs ...req.Requirement) *ReqsXML {
 
 // xmlLevelReq parses specified level requirement to
 // XML level req node.
-func xmlLevelReq(req *req.LevelReq) *LevelReqXML {
-	xmlReq := new(LevelReqXML)
+func xmlLevelReq(req *req.LevelReq) *LevelReq {
+	xmlReq := new(LevelReq)
 	xmlReq.Min = req.MinLevel()
 	return xmlReq
 }
 
 // xmlCurrencyReq parses specified currency requirement
 // to XML currenct req node.
-func xmlCurrencyReq(r *req.CurrencyReq) *CurrencyReqXML {
-	xmlReq := new(CurrencyReqXML)
+func xmlCurrencyReq(r *req.CurrencyReq) *CurrencyReq {
+	xmlReq := new(CurrencyReq)
 	xmlReq.Amount = r.Amount()
 	xmlReq.Charge = r.Charge()
 	return xmlReq
@@ -112,7 +112,7 @@ func xmlCurrencyReq(r *req.CurrencyReq) *CurrencyReqXML {
 
 // buildReqs creates requirements from specified
 // XML data.
-func buildReqs(xmlReqs *ReqsXML) []res.ReqData {
+func buildReqs(xmlReqs *Reqs) []res.ReqData {
 	reqs := make([]res.ReqData, 0)
 	// Level reqs.
 	for _, xmlReq := range xmlReqs.LevelReqs {

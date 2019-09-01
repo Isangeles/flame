@@ -25,46 +25,46 @@ package parsexml
 
 import (
 	"encoding/xml"
-	
+
 	"github.com/isangeles/flame/core/data/res"
 )
 
 // Struct for modifiers XML node.
-type ModifiersXML struct {
-	XMLName    xml.Name       `xml:"modifiers"`
-	HealthMods []HealthModXML `xml:"health-mod"`
-	HitMods    []HitModXML    `xml:"hit-mod"`
-	FlagMods   []FlagModXML   `xml:"flag-mod"`
-	QuestMods  []QuestModXML  `xml:"quest-mod"`
+type Modifiers struct {
+	XMLName    xml.Name    `xml:"modifiers"`
+	HealthMods []HealthMod `xml:"health-mod"`
+	HitMods    []HitMod    `xml:"hit-mod"`
+	FlagMods   []FlagMod   `xml:"flag-mod"`
+	QuestMods  []QuestMod  `xml:"quest-mod"`
 }
 
 // Struct for health modifier XML node.
-type HealthModXML struct {
+type HealthMod struct {
 	XMLName  xml.Name `xml:"health-mod"`
 	MinValue int      `xml:"min,attr"`
 	MaxValue int      `xml:"max,attr"`
 }
 
 // Struct for hit modifier XML node.
-type HitModXML struct {
+type HitMod struct {
 	XMLName xml.Name `xml:"hit-mod"`
 }
 
 // Struct for flag modifier XML node.
-type FlagModXML struct {
+type FlagMod struct {
 	XMLName xml.Name `xml:"flag-mod"`
 	ID      string   `xml:"id,attr"`
 	Disable bool     `xml:"disable,attr"`
 }
 
 // Struct for quest modifier XML node.
-type QuestModXML struct {
+type QuestMod struct {
 	XMLName xml.Name `xml:"quest-mod"`
 	Start   string   `xml:"start,attr"`
 }
 
 // buildModifiers creates modifiers from specified XML data.
-func buildModifiers(xmlModifiers *ModifiersXML) (mods []res.ModifierData) {
+func buildModifiers(xmlModifiers *Modifiers) (mods []res.ModifierData) {
 	// Health modifiers.
 	for _, xmlMod := range xmlModifiers.HealthMods {
 		mod := res.HealthModData{xmlMod.MinValue, xmlMod.MaxValue}

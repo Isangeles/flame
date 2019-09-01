@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
-<base>
-  <item id="imAloeLeaves1"
+<miscs>
+  <misc id="imAloeLeaves1"
 	value="5"
 	level="1"
 	loot="true"/>
-  <item id="imWater1"
+  <misc id="imWater1"
 	value="1"
 	level="1"
 	loot="true"/>
-  <item id="imAloeTea1"
+  <misc id="imAloeTea1"
 	value="10"
 	level="1"
 	loot="true"/>
-  <item id="imBronzeCoin1"
+  <misc id="imBronzeCoin1"
 	value="1"
 	level="1"
 	loot="true"
 	currency="true"/>
-</base>
+</miscs>

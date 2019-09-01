@@ -37,50 +37,50 @@ import (
 )
 
 // Struct for XML characters base.
-type CharactersBaseXML struct {
-	XMLName    xml.Name       `xml:"base"`
-	Characters []CharacterXML `xml:"char"`
+type Characters struct {
+	XMLName    xml.Name    `xml:"characters"`
+	Characters []Character `xml:"char"`
 }
 
 // Struct for XML character node.
-type CharacterXML struct {
-	XMLName     xml.Name            `xml:"char"`
-	ID          string              `xml:"id,attr"`
-	Serial      string              `xml:"serial,attr"`
-	Name        string              `xml:"name,attr"`
-	Gender      string              `xml:"gender,attr"`
-	Race        string              `xml:"race,attr"`
-	Attitude    string              `xml:"attitude,attr"`
-	Alignment   string              `xml:"alignment,attr"`
-	Guild       string              `xml:"guild,attr"`
-	Level       int                 `xml:"level,attr"`
-	Stats       string              `xml:"stats,value"`
-	PC          bool                `xml:"pc,attr"`
-	HP          int                 `xml:"hp,attr"`
-	Mana        int                 `xml:"mana,attr"`
-	Exp         int                 `xml:"exp,attr"`
-	Position    string              `xml:"position,value"`
-	DefPosition string              `xml:"default-position,value"`
-	Inventory   InventoryXML        `xml:"inventory"`
-	Equipment   EquipmentXML        `xml:"equipment"`
-	Effects     ObjectEffectsXML    `xml:"effects"`
-	Skills      ObjectSkillsXML     `xml:"skills"`
-	Memory      MemoryXML           `xml:"memory"`
-	Dialogs     ObjectDialogsXML    `xml:"dialogs"`
-	Quests      []CharacterQuestXML `xml:"quests>quest"`
-	Flags       []FlagXML           `xml:"flags>flag"`
-	Crafting    []ObjectRecipeXML   `xml:"crafting>recipe"`
-	Trainings   TrainingsXML        `xml:"trainings"`
+type Character struct {
+	XMLName     xml.Name         `xml:"char"`
+	ID          string           `xml:"id,attr"`
+	Serial      string           `xml:"serial,attr"`
+	Name        string           `xml:"name,attr"`
+	Gender      string           `xml:"gender,attr"`
+	Race        string           `xml:"race,attr"`
+	Attitude    string           `xml:"attitude,attr"`
+	Alignment   string           `xml:"alignment,attr"`
+	Guild       string           `xml:"guild,attr"`
+	Level       int              `xml:"level,attr"`
+	Stats       string           `xml:"stats,value"`
+	PC          bool             `xml:"pc,attr"`
+	HP          int              `xml:"hp,attr"`
+	Mana        int              `xml:"mana,attr"`
+	Exp         int              `xml:"exp,attr"`
+	Position    string           `xml:"position,value"`
+	DefPosition string           `xml:"default-position,value"`
+	Inventory   Inventory        `xml:"inventory"`
+	Equipment   Equipment        `xml:"equipment"`
+	Effects     ObjectEffects    `xml:"effects"`
+	Skills      ObjectSkills     `xml:"skills"`
+	Memory      Memory           `xml:"memory"`
+	Dialogs     ObjectDialogs    `xml:"dialogs"`
+	Quests      []CharacterQuest `xml:"quests>quest"`
+	Flags       []Flag           `xml:"flags>flag"`
+	Crafting    []ObjectRecipe   `xml:"crafting>recipe"`
+	Trainings   Trainings        `xml:"trainings"`
 }
 
 // Struct for equipment XML node.
-type EquipmentXML struct {
-	XMLName xml.Name           `xml:"equipment"`
-	Items   []EquipmentItemXML `xml:"item"`
+type Equipment struct {
+	XMLName xml.Name        `xml:"equipment"`
+	Items   []EquipmentItem `xml:"item"`
 }
 
 // Struct for equipment item XML node.
-type EquipmentItemXML struct {
+type EquipmentItem struct {
 	XMLName xml.Name `xml:"item"`
 	ID      string   `xml:"id,attr"`
 	Serial  string   `xml:"serial,attr"`
@@ -88,13 +88,13 @@ type EquipmentItemXML struct {
 }
 
 // Struct for character memory XML node.
-type MemoryXML struct {
-	XMLName xml.Name          `xml:"memory"`
-	Nodes   []TargetMemoryXML `xml:"target"`
+type Memory struct {
+	XMLName xml.Name       `xml:"memory"`
+	Nodes   []TargetMemory `xml:"target"`
 }
 
 // Struct for target memory XML node.
-type TargetMemoryXML struct {
+type TargetMemory struct {
 	XMLName  xml.Name `xml:"target"`
 	ID       string   `xml:"id,attr"`
 	Serial   string   `xml:"serial,attr"`
@@ -102,32 +102,32 @@ type TargetMemoryXML struct {
 }
 
 // Struct for flag XML node.
-type FlagXML struct {
+type Flag struct {
 	XMLName xml.Name `xml:"flag"`
 	ID      string   `xml:"id,attr"`
 }
 
 // Struct for character quest XML node.
-type CharacterQuestXML struct {
+type CharacterQuest struct {
 	XMLName xml.Name `xml:"quest"`
 	ID      string   `xml:"id,attr"`
 	Stage   string   `xml:"stage,attr"`
 }
 
-// UnmarshalCharactersBase retrieve all characters data
+// UnmarshalCharacters retrieve all characters data
 // from specified XML data.
-func UnmarshalCharactersBase(data io.Reader) ([]*res.CharacterData, error) {
+func UnmarshalCharacters(data io.Reader) ([]*res.CharacterData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlBase := new(CharactersBaseXML)
+	xmlBase := new(Characters)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v", err)
+		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
 	}
 	chars := make([]*res.CharacterData, 0)
 	for _, xmlChar := range xmlBase.Characters {
 		char, err := buildCharacterData(&xmlChar)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_character:build_data_fail:%v", err)
+			log.Err.Printf("xml: unmarshal character: build data fail: %v", err)
 			continue
 		}
 		chars = append(chars, char)
@@ -135,41 +135,23 @@ func UnmarshalCharactersBase(data io.Reader) ([]*res.CharacterData, error) {
 	return chars, nil
 }
 
-// UnmarshalCharacter parses character with specified ID from
-// XML data.
-func UnmarshalCharacter(data io.Reader, charID string) (CharacterXML, error) {
-	doc, _ := ioutil.ReadAll(data)
-	xmlCharsBase := new(CharactersBaseXML)
-	err := xml.Unmarshal(doc, xmlCharsBase)
-	if err != nil {
-		return CharacterXML{}, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
-			err)
-	}
-	for _, charXML := range xmlCharsBase.Characters {
-		if charXML.ID == charID {
-			return charXML, nil
-		}
-	}
-	return CharacterXML{}, fmt.Errorf("char_not_found_in_xml_data:%s", charID)
-}
-
 // MarshalCharacter parses game character to XML characters
 // base string.
 func MarshalCharacter(char *character.Character) (string, error) {
-	xmlCharBase := new(CharactersBaseXML)
+	xmlCharBase := new(Characters)
 	xmlChar := xmlCharacter(char)
 	xmlCharBase.Characters = append(xmlCharBase.Characters, *xmlChar)
 	out, err := xml.Marshal(xmlCharBase)
 	if err != nil {
-		return "", fmt.Errorf("fail_to_marshal_char:%v", err)
+		return "", fmt.Errorf("fail to marshal char: %v", err)
 	}
 	return string(out[:]), nil
 }
 
 // xmlCharacter parses specified game character to
 // XML character struct.
-func xmlCharacter(char *character.Character) *CharacterXML {
-	xmlChar := new(CharacterXML)
+func xmlCharacter(char *character.Character) *Character {
+	xmlChar := new(Character)
 	xmlChar.ID = char.ID()
 	xmlChar.Serial = char.Serial()
 	xmlChar.Name = char.Name()
@@ -201,13 +183,13 @@ func xmlCharacter(char *character.Character) *CharacterXML {
 
 // xmlEquipment parses specified character equipment to
 // XML equipment node.
-func xmlEquipment(eq *character.Equipment) *EquipmentXML {
-	xmlEq := new(EquipmentXML)
+func xmlEquipment(eq *character.Equipment) *Equipment {
+	xmlEq := new(Equipment)
 	for _, s := range eq.Slots() {
 		if s.Item() == nil {
 			continue
 		}
-		xmlEqItem := EquipmentItemXML{
+		xmlEqItem := EquipmentItem{
 			ID:     s.Item().ID(),
 			Serial: s.Item().Serial(),
 			Slot:   MarshalEqSlot(s),
@@ -219,11 +201,11 @@ func xmlEquipment(eq *character.Equipment) *EquipmentXML {
 
 // xmlMemory parses specified character target memory to
 // XML memory node.
-func xmlMemory(mem []*character.TargetMemory) *MemoryXML {
-	xmlMem := new(MemoryXML)
+func xmlMemory(mem []*character.TargetMemory) *Memory {
+	xmlMem := new(Memory)
 	for _, am := range mem {
 		attAttr := marshalAttitude(am.Attitude)
-		xmlAtt := TargetMemoryXML{
+		xmlAtt := TargetMemory{
 			ID:       am.Target.ID(),
 			Serial:   am.Target.Serial(),
 			Attitude: attAttr,
@@ -234,18 +216,18 @@ func xmlMemory(mem []*character.TargetMemory) *MemoryXML {
 }
 
 // xmlFlags parses specified flags to  XML flags nodes.
-func xmlFlags(flags []flag.Flag) (xmlFlags []FlagXML) {
+func xmlFlags(flags []flag.Flag) (xmlFlags []Flag) {
 	for _, f := range flags {
-		xmlFlag := FlagXML{ID: f.ID()}
+		xmlFlag := Flag{ID: f.ID()}
 		xmlFlags = append(xmlFlags, xmlFlag)
 	}
 	return
 }
 
 // xmlQuests parses specified qiests to XML quests nodes.
-func xmlQuests(quests []*quest.Quest) (xmlQuests []CharacterQuestXML) {
+func xmlQuests(quests []*quest.Quest) (xmlQuests []CharacterQuest) {
 	for _, q := range quests {
-		xmlQuest := CharacterQuestXML{
+		xmlQuest := CharacterQuest{
 			ID: q.ID(),
 		}
 		if s := q.ActiveStage(); s != nil {
@@ -258,7 +240,7 @@ func xmlQuests(quests []*quest.Quest) (xmlQuests []CharacterQuestXML) {
 
 // buildCharacterData creates character resources from specified
 // XML data.
-func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
+func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	// Basic data.
 	baseData := res.CharacterBasicData{
 		ID:     xmlChar.ID,
@@ -270,27 +252,27 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	data := res.CharacterData{BasicData: baseData}
 	sex, err := UnmarshalGender(xmlChar.Gender)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_gender:%v", err)
+		return nil, fmt.Errorf("fail to parse gender: %v", err)
 	}
 	data.BasicData.Sex = int(sex)
 	race, err := UnmarshalRace(xmlChar.Race)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_race:%v", err)
+		return nil, fmt.Errorf("fail to parse race: %v", err)
 	}
 	data.BasicData.Race = int(race)
 	attitude, err := UnmarshalAttitude(xmlChar.Attitude)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_attitude:%v", err)
+		return nil, fmt.Errorf("fail to parse attitude: %v", err)
 	}
 	data.BasicData.Attitude = int(attitude)
 	alignment, err := UnmarshalAlignment(xmlChar.Alignment)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_alignment:%v", err)
+		return nil, fmt.Errorf("fail to parse alignment: %v", err)
 	}
 	data.BasicData.Alignment = int(alignment)
 	attributes, err := UnmarshalAttributes(xmlChar.Stats)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_parse_attributes:%v", err)
+		return nil, fmt.Errorf("fail to parse attributes: %v", err)
 	}
 	// Attributes.
 	data.BasicData.Str = attributes.Str
@@ -314,14 +296,14 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	if xmlChar.Position != "" {
 		posX, posY, err := UnmarshalPosition(xmlChar.Position)
 		if err != nil {
-			return nil, fmt.Errorf("fail_to_parse_position:%v", err)
+			return nil, fmt.Errorf("fail to parse position: %v", err)
 		}
 		data.SavedData.PosX, data.SavedData.PosY = posX, posY
 	}
 	if xmlChar.DefPosition != "" {
 		defX, defY, err := UnmarshalPosition(xmlChar.DefPosition)
 		if err != nil {
-			return nil, fmt.Errorf("fail_to_parse_default_position:%v", err)
+			return nil, fmt.Errorf("fail to parse default position: %v", err)
 		}
 		data.SavedData.DefX, data.SavedData.DefY = defX, defY
 	}
@@ -331,7 +313,7 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	for _, xmlEqIt := range xmlChar.Equipment.Items {
 		slot, err := UnmarshalEqSlot(xmlEqIt.Slot)
 		if err != nil {
-			log.Err.Printf("xml:build_character:%s:parse_eq_item:%s:fail_to_parse_slot:%v",
+			log.Err.Printf("xml: build character: %s: parse eq item: %s: fail to parse lslot: %v",
 				xmlChar.ID, xmlEqIt.ID, err)
 			continue
 		}
@@ -365,7 +347,7 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 	for _, xmlAtt := range xmlChar.Memory.Nodes {
 		att, err := UnmarshalAttitude(xmlAtt.Attitude)
 		if err != nil {
-			log.Err.Printf("xml:build_character:%s:fail_to_parse_att_mem:%s",
+			log.Err.Printf("xml: build character: %s: fail to parse att mem: %s",
 				xmlChar.ID, err)
 			continue
 		}
@@ -402,7 +384,7 @@ func buildCharacterData(xmlChar *CharacterXML) (*res.CharacterData, error) {
 }
 
 // buildFlagData builds flag data from specified XML data.
-func buildFlagData(xmlFlag FlagXML) res.FlagData {
+func buildFlagData(xmlFlag Flag) res.FlagData {
 	flagData := res.FlagData{ID: xmlFlag.ID}
 	return flagData
 }
