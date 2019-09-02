@@ -54,6 +54,12 @@ func LoadModuleData(mod *module.Module) error {
 		sd.Name = lang.TextDir(mod.Conf().LangPath(), sd.ID)
 	}
 	res.SetSkillsData(skillsData)
+	// Armors.
+	armorsData, err := ImportArmorsDir(mod.Conf().ItemsPath())
+	if err != nil {
+		return fmt.Errorf("fail to load armros: %v", err)
+	}
+	res.SetArmorsData(armorsData)
 	// Weapons.
 	weaponsData, err := ImportWeaponsDir(mod.Conf().ItemsPath())
 	if err != nil {

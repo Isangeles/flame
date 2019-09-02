@@ -167,11 +167,13 @@ func UnmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 // to item slot types.
 func UnmarshalItemSlots(slotsAttr string) ([]item.Slot, error) {
 	slots := make([]item.Slot, 0)
-	attrs := strings.Split(slotsAttr, " ")
+	attrs := strings.Fields(slotsAttr)
 	for _, attr := range attrs {
 		switch attr {
 		case item.Hand.ID():
 			slots = append(slots, item.Hand)
+		case item.Chest.ID():
+			slots = append(slots, item.Chest)
 		default: // all slots IDs must be 'parsable'
 			return nil, fmt.Errorf("fail to parse slot type: %s", slotsAttr)
 		}
@@ -185,6 +187,8 @@ func UnmarshalEqSlot(slot string) (character.EquipmentSlotType, error) {
 	switch slot {
 	case "right_hand":
 		return character.Hand_right, nil
+	case "chest":
+		return character.Chest, nil
 	default:
 		return -1, fmt.Errorf("unsupported eq slot type value: %s", slot)
 	}
