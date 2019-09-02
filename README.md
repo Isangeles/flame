@@ -4,7 +4,7 @@
   The main goal is to create simple, flexible, extensible and completely modular game engine.
   Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
 
-  Easiest way to use Flame is to download some kind graphical or textual interface, like [Mural](https://github.com/isangeles/mural)(GUI) or [Burn Shell](https://github.com/isangeles/burnsh)(CLI).
+  Easiest way to use Flame is to download some kind of graphical or textual interface, like [Mural](https://github.com/isangeles/mural)(GUI) or [Burn Shell](https://github.com/isangeles/burnsh)(CLI).
 
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
@@ -41,6 +41,17 @@ Description: specifies module to load at start, module ID is ID specified in 'mo
   debug:[true/false];
 ```
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
+
+## Modules
+Modules are stored by default in 'data/modules' directory, different path to module can be specified in engine configuration file.
+
+Modules contains all game data in form of textual files. Modules are divided into chapters, thats contains chapter-specific data.
+
+Module data are available across all chapters, data files are placed subdirectories('/items', '/objects', etc.) in module directory.
+
+Chapter data are available only when specific chapter is active, data files are placed in subdirectories('/npc', '/dialogs', etc.) in chapter directory(in '[module]/chapters').
+
+Translation files are placed in '/lang' directory both for modules and chapters.
 
 ## Contributing
 You are welcome to contribute to project development.
