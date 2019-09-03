@@ -78,8 +78,8 @@ func (w *Weapon) Serial() string {
 
 // SetSerial sets specified value as serial
 // value of weapon.
-func (w *Weapon) SetSerial(serial string) {
-	w.serial = serial
+func (w *Weapon) SetSerial(s string) {
+	w.serial = s
 }
 
 // Name returns item name.
@@ -129,13 +129,13 @@ func (w *Weapon) EquipReqs() []req.Requirement {
 	return w.equipReqs
 }
 
-// Slots returns type of slots occupated by
-// this weapon.
+// Slots returns type of slots occupated
+// by this weapon after equipping.
 func (w *Weapon) Slots() []Slot {
 	return w.slots
 }
 
-// Loot check whether weapon is 'lootable'.
+// Loot checks whether weapon is 'lootable'.
 func (w *Weapon) Loot() bool {
 	return w.loot
 }

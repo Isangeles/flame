@@ -24,7 +24,6 @@
 package effect
 
 import (
-	"github.com/isangeles/flame/core/module/object/item"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -44,7 +43,6 @@ type Target interface {
 	TakeEffect(e *Effect)
 	SetPosition(x, y float64)
 	Position() (x, y float64)
-	Inventory() *item.Inventory
 	SendCombat(msg string)
 	CombatLog() chan string
 	ChatLog() chan string

@@ -61,15 +61,15 @@ const (
 func newEquipment(char *Character) *Equipment {
 	eq := new(Equipment)
 	eq.char = char
-  eq.slots = append(eq.slots, newEquipmentSlot(Head))
-  eq.slots = append(eq.slots, newEquipmentSlot(Neck))
-  eq.slots = append(eq.slots, newEquipmentSlot(Chest))
-  eq.slots = append(eq.slots, newEquipmentSlot(Hand_right))
-  eq.slots = append(eq.slots, newEquipmentSlot(Hand_left))
-  eq.slots = append(eq.slots, newEquipmentSlot(Finger_right))
-  eq.slots = append(eq.slots, newEquipmentSlot(Finger_left))
-  eq.slots = append(eq.slots, newEquipmentSlot(Legs))
-  eq.slots = append(eq.slots, newEquipmentSlot(Feet))
+	eq.slots = append(eq.slots, newEquipmentSlot(Head))
+	eq.slots = append(eq.slots, newEquipmentSlot(Neck))
+	eq.slots = append(eq.slots, newEquipmentSlot(Chest))
+	eq.slots = append(eq.slots, newEquipmentSlot(Hand_right))
+	eq.slots = append(eq.slots, newEquipmentSlot(Hand_left))
+	eq.slots = append(eq.slots, newEquipmentSlot(Finger_right))
+	eq.slots = append(eq.slots, newEquipmentSlot(Finger_left))
+	eq.slots = append(eq.slots, newEquipmentSlot(Legs))
+	eq.slots = append(eq.slots, newEquipmentSlot(Feet))
 	return eq
 }
 
@@ -103,28 +103,28 @@ func (eq *Equipment) Equip(it item.Equiper) error {
 // Unequip removes specified item from all
 // compatible slots.
 func (eq *Equipment) Unequip(it item.Equiper) {
-		for _, s := range eq.Slots() {
-			if s.Item() != it {
-				continue
-			}
-			s.SetItem(nil)
+	for _, s := range eq.Slots() {
+		if s.Item() != it {
+			continue
 		}
+		s.SetItem(nil)
+	}
 }
 
 // Items returns slice with all equiped items.
 func (eq *Equipment) Items() (items []item.Equiper) {
 	uniqueItems := make(map[string]item.Equiper)
-  for _, s := range eq.Slots() {
+	for _, s := range eq.Slots() {
 		it := s.Item()
-    if it == nil {
-      continue
-    }
+		if it == nil {
+			continue
+		}
 		uniqueItems[it.ID()+it.Serial()] = it
-  }
+	}
 	for _, it := range uniqueItems {
 		items = append(items, it)
 	}
-  return
+	return
 }
 
 // Equiped checks whether specified item is
@@ -140,7 +140,7 @@ func (eq *Equipment) Equiped(item item.Equiper) bool {
 
 // Slots retuns all equipment slots.
 func (eq *Equipment) Slots() []*EquipmentSlot {
-  return eq.slots
+	return eq.slots
 }
 
 // Type returns slot type.
