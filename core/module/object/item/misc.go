@@ -31,8 +31,6 @@ import (
 type Misc struct {
 	id       string
 	serial   string
-	name     string
-	info     string
 	value    int
 	level    int
 	loot     bool
@@ -43,8 +41,6 @@ type Misc struct {
 func NewMisc(data res.MiscItemData) *Misc {
 	m := Misc{
 		id:       data.ID,
-		name:     data.Name,
-		info:     data.Info,
 		value:    data.Value,
 		loot:     data.Loot,
 		currency: data.Currency,
@@ -65,21 +61,6 @@ func (m *Misc) Serial() string {
 // SetSerial sets item serial value.
 func (m *Misc) SetSerial(s string) {
 	m.serial = s
-}
-
-// Name returns item name.
-func (m *Misc) Name() string {
-	return m.name
-}
-
-// Info returns item info.
-func (m *Misc) Info() string {
-	return m.info
-}
-
-// SetName sets item name.
-func (m *Misc) SetName(s string) {
-	m.name = s
 }
 
 // Value return item value.

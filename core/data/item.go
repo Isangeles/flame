@@ -51,6 +51,10 @@ func Item(id string) (item.Item, error) {
 	var i item.Item
 	// Find data resources.
 	switch {
+	case res.Armor(id) != nil:
+		armorData := res.Armor(id)
+		a := item.NewArmor(*armorData)
+		i = a
 	case res.Weapon(id) != nil:
 		weaponData := res.Weapon(id)
 		w := item.NewWeapon(*weaponData)

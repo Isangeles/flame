@@ -65,25 +65,11 @@ func LoadModuleData(mod *module.Module) error {
 	if err != nil {
 		return fmt.Errorf("fail to load weapons: %v", err)
 	}
-	for _, wd := range weaponsData {
-		nameInfo := lang.AllText(mod.Conf().ItemsLangPath(), wd.ID)
-		wd.Name = nameInfo[0]
-		if len(nameInfo) > 1 {
-			wd.Info = nameInfo[1]
-		}
-	}
 	res.SetWeaponsData(weaponsData)
 	// Misc items.
 	miscItemsData, err := ImportMiscItemsDir(mod.Conf().ItemsPath())
 	if err != nil {
 		return fmt.Errorf("fail to load misc items: %v", err)
-	}
-	for _, md := range miscItemsData {
-		nameInfo := lang.AllText(mod.Conf().ItemsLangPath(), md.ID)
-		md.Name = nameInfo[0]
-		if len(nameInfo) > 1 {
-			md.Info = nameInfo[1]
-		}
 	}
 	res.SetMiscItemsData(miscItemsData)
 	// Recipes.

@@ -42,8 +42,6 @@ type ArmorData struct {
 // Struct for weapon resource data.
 type WeaponData struct {
 	ID         string
-	Name       string
-	Info       string
 	Value      int
 	Level      int
 	DMGMin     int
@@ -58,8 +56,6 @@ type WeaponData struct {
 // Struct for miscellaneous items.
 type MiscItemData struct {
 	ID       string
-	Name     string
-	Info     string
 	Value    int
 	Level    int
 	Loot     bool

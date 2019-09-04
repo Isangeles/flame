@@ -33,7 +33,6 @@ import (
 type Weapon struct {
 	id             string
 	serial         string
-	name, info     string
 	value          int
 	level          int
 	loot           bool
@@ -49,8 +48,6 @@ type Weapon struct {
 func NewWeapon(data res.WeaponData) *Weapon {
 	w := Weapon{
 		id:         data.ID,
-		name:       data.Name,
-		info:       data.Info,
 		value:      data.Value,
 		level:      data.Level,
 		loot:       data.Loot,
@@ -80,22 +77,6 @@ func (w *Weapon) Serial() string {
 // value of weapon.
 func (w *Weapon) SetSerial(s string) {
 	w.serial = s
-}
-
-// Name returns item name.
-func (w *Weapon) Name() string {
-	return w.name
-}
-
-// Info returns item info.
-func (w *Weapon) Info() string {
-	return w.info
-}
-
-// SetName sets specified name as
-// item display name.
-func (w *Weapon) SetName(name string) {
-	w.name = name
 }
 
 // Value returns item value.

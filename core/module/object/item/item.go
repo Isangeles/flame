@@ -32,9 +32,6 @@ type Item interface {
 	ID() string
 	Serial() string
 	SetSerial(serial string)
-	Name() string
-	Info() string
-	SetName(n string)
 	Value() int
 	Level() int
 	Loot() bool
