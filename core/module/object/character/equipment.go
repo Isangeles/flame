@@ -95,6 +95,12 @@ func (eq *Equipment) Equip(it item.Equiper) error {
 					s.SetItem(it)
 				}
 			}
+		case item.Chest:
+			for _, s := range eq.Slots() {
+				if s.Type() == Chest {
+					s.SetItem(it)
+				}
+			}
 		}
 	}
 	return nil
