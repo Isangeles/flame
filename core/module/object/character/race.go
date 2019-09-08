@@ -27,15 +27,13 @@ package character
 type Race int
 
 const (
-
 	Human Race = iota
 	Elf
 	Dwarf
 	Gnome
 	Wolf
 	Goblin
-	Race_unknown
-	//...
+	UnknownRace
 )
 
 // ID returns race ID.

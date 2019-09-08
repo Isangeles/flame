@@ -63,6 +63,8 @@ func UnmarshalGender(genderAttr string) (character.Gender, error) {
 		return character.Male, nil
 	case "female":
 		return character.Female, nil
+	case "unknwon", "*":
+		return character.UnknownGender, nil
 	default:
 		return -1, fmt.Errorf("unsupported gender value: %s", genderAttr)
 	}
@@ -83,6 +85,8 @@ func UnmarshalRace(raceAttr string) (character.Race, error) {
 		return character.Wolf, nil
 	case "goblin":
 		return character.Goblin, nil
+	case "unknown", "*":
+		return character.UnknownRace, nil
 	default:
 		return -1, fmt.Errorf("unsupported race value: %s", raceAttr)
 	}
