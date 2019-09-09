@@ -12,7 +12,6 @@
 
   Currently in a very early development stage.
 
-
   ### List of games that use Flame:
   #### Arena ####
 

@@ -1,5 +1,4 @@
 MAJOR:
-* Armor items
 * Switching chapters
 * Changing areas
 * Item materials
@@ -11,7 +10,7 @@ DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
 * Game characters inventory and equipment
-* Weapons & misc items
+* Weapons, armors & misc items
 * Effects & modifiers
 * Skills
 * Game objects
