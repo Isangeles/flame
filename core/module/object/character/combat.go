@@ -115,11 +115,14 @@ func (c *Character) HitEffects() []*effect.Effect {
 	return effects
 }
 
-// UseSkill uses specified skill on current target.
+// UseSkill attempts to use specified skill on current target.
+// If character fail to use skill then proper message is sent
+// on character private chat channel.
 func (c *Character) UseSkill(s *skill.Skill) {
+	langPath := config.LangPath()
 	if c.Casting() || c.Moving() || c.cooldown > 0 {
 		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
-			lang.Text("ui", "cant_do_right_now"))
+			lang.TextDir(langPath, "cant_do_right_now"))
 		c.SendPrivate(msg)
 		return
 	}
@@ -138,7 +141,7 @@ func (c *Character) UseSkill(s *skill.Skill) {
 		return
 	}
 	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
-		lang.Text("ui", "skill_not_known"))
+		lang.TextDir(langPath, "skill_not_known"))
 	c.SendPrivate(msg)
 }
 

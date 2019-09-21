@@ -23,12 +23,8 @@
 
 package skill
 
-import (
-	"github.com/isangeles/flame/core/module/req"
-)
-
 // Struct for skill users.
 type SkillUser interface {
 	Skills() []*Skill
-	MeetReqs(reqs ...req.Requirement) bool
+	UseSkill(s *Skill)
 }
