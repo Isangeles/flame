@@ -39,6 +39,7 @@ type Target interface {
 	Experience() int
 	SetExperience(val int)
 	Live() bool
+	Effects() []*Effect
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)
 	SetPosition(x, y float64)
