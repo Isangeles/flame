@@ -2,6 +2,7 @@ MAJOR:
 * Switching chapters
 * Changing areas
 * Item materials
+* Effect target interface has too many functions, it need to be replaced by few smaller interfaces
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
