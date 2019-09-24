@@ -52,15 +52,28 @@ type Positioner interface {
 // health points.
 type Killable interface {
 	SetHealth(v int)
+	SetMaxHealth(v int)
 	Health() int
+	MaxHealth() int
 }
 
 // Interfece for objects with
 // experience points.
 type Experiencer interface {
 	SetExperience(v int)
+	SetMaxExperience(v int)
 	Experience() int
+	MaxExperience() int
 	Level() int
+}
+
+// Interface for objects with
+// mana points.
+type Magician interface {
+	SetMana(v int)
+	SetMaxMana(v int)
+	Mana() int
+	MaxMana() int
 }
 
 // Struct for object effect
