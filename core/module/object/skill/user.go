@@ -26,5 +26,6 @@ package skill
 // Struct for skill users.
 type SkillUser interface {
 	Skills() []*Skill
+	AddSkill(s *Skill)
 	UseSkill(s *Skill)
 }
