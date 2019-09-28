@@ -189,6 +189,11 @@ func (ob *Object) AddEffect(e *effect.Effect) {
 	ob.effects[e.ID()+e.Serial()] = e
 }
 
+// RemoveEffect removes specified effect from object.
+func (ob *Object) RemoveEffect(e *effect.Effect) {
+	delete(ob.effects, e.ID()+e.Serial())
+}
+
 // Effects returns all obejct effects.
 func (ob *Object) Effects() []*effect.Effect {
 	effects := make([]*effect.Effect, 0)

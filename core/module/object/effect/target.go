@@ -43,6 +43,7 @@ type Target interface {
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)
 	AddEffect(e *Effect)
+	RemoveEffect(e *Effect)
 	SetPosition(x, y float64)
 	Position() (x, y float64)
 	SendCombat(msg string)
