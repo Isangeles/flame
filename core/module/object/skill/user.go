@@ -27,5 +27,6 @@ package skill
 type SkillUser interface {
 	Skills() []*Skill
 	AddSkill(s *Skill)
+	RemoveSkill(s *Skill)
 	UseSkill(s *Skill)
 }
