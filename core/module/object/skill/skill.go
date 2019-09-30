@@ -183,7 +183,8 @@ func (s *Skill) Cast(user effect.Target, target effect.Target) error {
 	}
 	s.user = user
 	s.target = target
-	if !s.user.MeetReqs(s.useReqs...) {
+	if user, ok := s.user.(req.RequirementsTarget); ok &&
+		!user.MeetReqs(s.useReqs...) {
 		return fmt.Errorf(REQS_NOT_MET_ERR)
 	}
 	s.castTime = 0

@@ -23,10 +23,6 @@
 
 package effect
 
-import (
-	"github.com/isangeles/flame/core/module/req"
-)
-
 // Interfece for effects targets.
 type Target interface {
 	ID() string
@@ -50,5 +46,4 @@ type Target interface {
 	CombatLog() chan string
 	ChatLog() chan string
 	PrivateLog() chan string
-	MeetReqs(r ...req.Requirement) bool
 }
