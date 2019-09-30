@@ -42,8 +42,4 @@ type Target interface {
 	RemoveEffect(e *Effect)
 	SetPosition(x, y float64)
 	Position() (x, y float64)
-	SendCombat(msg string)
-	CombatLog() chan string
-	ChatLog() chan string
-	PrivateLog() chan string
 }

@@ -29,6 +29,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/log"
@@ -136,11 +137,15 @@ func (g *Game) listenWorld() {
 			continue
 		}
 		for _, tar := range area.NearTargets(pc, pc.SightRange()) {
+			tar, ok := tar.(object.Logger)
+			if !ok {
+				continue
+			}
 			select {
 			case msg := <-tar.CombatLog():
 				log.Cmb.Printf(msg)
 			case msg := <-tar.ChatLog():
-				log.Cht.Printf(fmt.Sprintf("%s:%s", tar.Name(), msg))
+				log.Cht.Printf(fmt.Sprintf("%s: %s", tar.Name(), msg))
 			case msg := <-tar.PrivateLog():
 				if tar == pc {
 					log.Cht.Printf(msg)

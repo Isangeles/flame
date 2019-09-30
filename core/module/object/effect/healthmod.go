@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/rng"
+	"github.com/isangeles/flame/core/module/object"
 )
 
 // Struct for health modifier.
@@ -47,11 +48,19 @@ func NewHealthMod(data res.HealthModData) *HealthMod {
 // Affect modifies targets health points.
 func (hm *HealthMod) Affect(source Target, targets ...Target) {
 	for _, t := range targets {
+		t, ok := t.(object.Killable)
+		if !ok {
+			continue
+		}
 		val := rng.RollInt(hm.min, hm.max)
 		t.SetHealth(t.Health() + val)
-		cmbMsg := fmt.Sprintf("%s:%s:%d", t.Name(),
+		logger, ok := t.(object.Logger)
+		if !ok {
+			continue
+		}
+		cmbMsg := fmt.Sprintf("%s:%s:%d", logger.Name(),
 			lang.Text("ui", "ob_health"), val)
-		t.SendCombat(cmbMsg)
+		logger.SendCombat(cmbMsg)
 	}
 }
 

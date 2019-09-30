@@ -76,6 +76,16 @@ type Magician interface {
 	MaxMana() int
 }
 
+// Interface for objects with log
+// channels.
+type Logger interface {
+	Name() string
+	CombatLog() chan string
+	ChatLog() chan string
+	PrivateLog() chan string
+	SendCombat(msg string)
+}
+
 // Struct for object effect
 // types.
 type Element int
