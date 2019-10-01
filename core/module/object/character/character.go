@@ -297,7 +297,7 @@ func (c *Character) AttitudeFor(o object.Object) Attitude {
 		return mem.Attitude
 	}
 	obChar, ok := o.(*Character)
-	if !ok {
+	if !ok || !obChar.Live() {
 		return Neutral
 	}
 	if obChar.Attitude() == Hostile {

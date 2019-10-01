@@ -88,7 +88,7 @@ func (ai *AI) Update(delta int64) {
 				continue
 			}
 			for _, t := range area.NearTargets(npc, npc.SightRange()) {
-				if t == npc || !t.Live() {
+				if t == npc {
 					continue
 				}
 				if npc.AttitudeFor(t) == character.Hostile {

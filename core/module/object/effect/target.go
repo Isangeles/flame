@@ -28,13 +28,10 @@ type Target interface {
 	ID() string
 	Serial() string
 	Name() string
-	Health() int
-	SetHealth(val int)
 	Mana() int
 	SetMana(val int)
 	Experience() int
 	SetExperience(val int)
-	Live() bool
 	Effects() []*Effect
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)

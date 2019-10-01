@@ -33,7 +33,7 @@ type Object interface {
 	Serial() string
 }
 
-// Interface for useable gmae
+// Interface for useable game
 // objects.
 type UseObject interface {
 	ID() string
@@ -55,6 +55,7 @@ type Killable interface {
 	SetMaxHealth(v int)
 	Health() int
 	MaxHealth() int
+	Live() bool
 }
 
 // Interfece for objects with
@@ -84,6 +85,8 @@ type Logger interface {
 	ChatLog() chan string
 	PrivateLog() chan string
 	SendCombat(msg string)
+	SendChat(msg string)
+	SendPrivate(msg string)
 }
 
 // Struct for object effect
