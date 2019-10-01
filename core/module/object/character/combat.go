@@ -133,7 +133,9 @@ func (c *Character) UseSkill(s *skill.Skill) {
 		if err != nil {
 			// Move to target if is too far.
 			if fmt.Sprintf("%v", err) == skill.RANGE_ERR {
-				c.SetDestPoint(tar.Position())
+				if tarPos, ok := tar.(object.Positioner); ok {
+					c.SetDestPoint(tarPos.Position())
+				}
 			}
 			msg := fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
 			c.SendPrivate(msg)
@@ -148,7 +150,7 @@ func (c *Character) UseSkill(s *skill.Skill) {
 // takeEffects adds specified effects
 func (c *Character) TakeEffect(e *effect.Effect) {
 	if e.Source() == nil {
-		log.Err.Printf("char_combat:%s_%s:fail_to_take_effect:%s_%s:no source",
+		log.Err.Printf("char combat: %s_%s: fail to take effect: %s_%s: no source",
 			c.ID(), c.Serial(), e.ID(), e.Serial())
 		return
 	}

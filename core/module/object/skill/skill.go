@@ -178,7 +178,7 @@ func (s *Skill) Cast(user effect.Target, target effect.Target) error {
 		user.ID()+user.Serial() != target.ID()+target.Serial() {
 		return fmt.Errorf(SELF_TARGET_ERR)
 	}
-	if object.Range(user, target) > s.castRange.Value() {
+	if targetsRange(user, target) > s.castRange.Value() {
 		return fmt.Errorf(RANGE_ERR)
 	}
 	s.user = user
@@ -274,4 +274,19 @@ func (s *Skill) buildEffects(effectsData []res.EffectData) []*effect.Effect {
 		effects = append(effects, e)
 	}
 	return effects
+}
+
+// targetsRange returns range between two tagets.
+// Returns 0, if at least one of targets does't have
+// position.
+func targetsRange(a, b effect.Target) float64 {
+	posA, ok := a.(object.Positioner)
+	if !ok {
+		return 0.0
+	}
+	posB, ok := b.(object.Positioner)
+	if !ok {
+		return 0.0
+	}
+	return object.Range(posA, posB)
 }

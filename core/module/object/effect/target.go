@@ -23,7 +23,7 @@
 
 package effect
 
-// Interfece for effects targets.
+// Interfece for effect targets.
 type Target interface {
 	ID() string
 	Serial() string
@@ -40,6 +40,4 @@ type Target interface {
 	TakeEffect(e *Effect)
 	AddEffect(e *Effect)
 	RemoveEffect(e *Effect)
-	SetPosition(x, y float64)
-	Position() (x, y float64)
 }

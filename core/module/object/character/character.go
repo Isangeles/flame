@@ -480,7 +480,11 @@ func (c *Character) Casting() bool {
 func (c *Character) Fighting() bool {
 	tar := c.Targets()[0]
 	if tar != nil && c.AttitudeFor(tar) == Hostile {
-		return object.Range(c, tar) <= c.SightRange()
+		tarPos, ok := tar.(object.Positioner)
+		if !ok {
+			return false
+		}
+		return object.Range(c, tarPos) <= c.SightRange()
 	}
 	return false
 }
