@@ -27,7 +27,6 @@ package effect
 type Target interface {
 	ID() string
 	Serial() string
-	Name() string
 	Effects() []*Effect
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)
