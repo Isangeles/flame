@@ -2,12 +2,10 @@ MAJOR:
 * Switching chapters
 * Changing areas
 * Item materials
-* Effect target interface has too many functions, it need to be replaced by few smaller interfaces
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
 * Improve NPC AI(selecting skills proper to situation)
-* Rename skill.SkillUser interface to skill.User
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
