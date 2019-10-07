@@ -20,7 +20,7 @@
   Download: [Linux](https://drive.google.com/open?id=1CAUiHdGq8sxrrNWkRwF1QSaNSVWLKDVg), [Windows](https://drive.google.com/open?id=1rR_k_39o-hqTywUZO628ggA3iN7ZBZTJ)
 
 ## Usage
-  You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/exmaple) package.
+  You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/example) package.
 
 ## Configuration
 Configuration values are loaded from '.flame' file in Flame executable directory.
@@ -42,7 +42,7 @@ Description: specifies module to load at start, module ID is ID specified in 'mo
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
 
 ## Modules
-Modules are stored by default in 'data/modules' directory, different path to module can be specified in engine configuration file('.flame').
+Modules are stored by default in `data/modules` directory, different path to module can be specified in engine configuration file('.flame').
 
 Modules contains all game data in form of textual files. Modules are divided into chapters, thats contains chapter-specific data.
 
@@ -50,7 +50,7 @@ Module data are available across all chapters, data files are placed subdirector
 
 Chapter data are available only when specific chapter is active, data files are placed in subdirectories('/npc', '/dialogs', etc.) in chapter directory(in '[module]/chapters').
 
-Translation files are placed in '/lang' directory both for modules and chapters.
+Translation files are placed in `/lang` directory both for modules and chapters.
 
 ## Contributing
 You are welcome to contribute to project development.
