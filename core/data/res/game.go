@@ -39,15 +39,15 @@ type ChapterData struct {
 // Struct for chapter scenario
 // data.
 type ScenarioData struct {
-	ID    string
-	Areas []AreaData
+	ID   string
+	Area AreaData
 }
 
 // Struct for scenario area
 // data.
 type AreaData struct {
 	ID       string
-	Mainarea bool
 	Chars    []CharacterData
 	Objects  []ObjectData
+	Subareas []AreaData
 }

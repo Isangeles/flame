@@ -98,49 +98,8 @@ func LoadScenario(mod *module.Module, id string) error {
 		return fmt.Errorf("fail to parse scenario file: %v", err)
 	}
 	// Build mainarea.
-	var mainarea *scenario.Area
-	subareas := make([]*scenario.Area, 0)
-	for _, areaData := range scenData.Areas {
-		area := scenario.NewArea(areaData.ID)
-		// NPCs.
-		for _, areaChar := range areaData.NPCS {
-			// Retireve char data.
-			charData := res.Character(areaChar.ID)
-			if charData == nil {
-				log.Err.Printf("data: unmarshal scenario: %s: area: %s: npc data not found: %s",
-					scenData.ID, areaData.ID, areaChar.ID)
-				continue
-			}
-			char := buildCharacter(mod, charData)
-			// Set serial & position.
-			serial.AssignSerial(char)
-			char.SetPosition(areaChar.PosX, areaChar.PosY)
-			char.SetDefaultPosition(areaChar.PosX, areaChar.PosY)
-			// Char to area.
-			area.AddCharacter(char)
-		}
-		// Objects.
-		for _, areaObject := range areaData.Objects {
-			// Retrieve object data.
-			object, err := Object(mod, areaObject.ID)
-			if err != nil {
-				log.Err.Printf("data: unmarshal scenario: area: %s: %s: %v",
-					scenData.ID, areaData.ID, err)
-				continue
-			}
-			// Set serial & position.
-			serial.AssignSerial(object)
-			object.SetPosition(areaObject.PosX, areaObject.PosY)
-			// Object to area.
-			area.AddObject(object)
-		}
-		if areaData.Main {
-			mainarea = area
-			continue
-		}
-		subareas = append(subareas, area)
-	}
-	scen := scenario.NewScenario(scenData.ID, mainarea, subareas)
+	mainarea := buildArea(mod, scenData.Area)
+	scen := scenario.NewScenario(scenData.ID, mainarea)
 	// Add scenario to active module chapter.
 	err = chap.AddScenario(scen)
 	if err != nil {
@@ -184,4 +143,46 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 		StartScenID: confValues["start-scenario"],
 	}
 	return conf, nil
+}
+
+// buildArea creates area from specified data.
+func buildArea(mod *module.Module, data res.ModuleAreaData) *scenario.Area {
+	area := scenario.NewArea(data.ID)
+	// NPCs.
+	for _, areaCharData := range data.NPCS {
+		// Retireve char data.
+		charData := res.Character(areaCharData.ID)
+		if charData == nil {
+			log.Err.Printf("data: build area: %s: npc data not found: %s",
+				data.ID, areaCharData.ID)
+			continue
+		}
+		char := buildCharacter(mod, charData)
+		// Set serial & position.
+		serial.AssignSerial(char)
+		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
+		char.SetDefaultPosition(areaCharData.PosX, areaCharData.PosY)
+		// Char to area.
+		area.AddCharacter(char)
+	}
+	// Objects.
+	for _, areaObData := range data.Objects {
+		// Retrieve object data.
+		object, err := Object(mod, areaObData.ID)
+		if err != nil {
+			log.Err.Printf("data: build area %s: object: %s: %v",
+				data.ID, areaObData.ID, err)
+			continue
+		}
+		// Set serial & position.
+		serial.AssignSerial(object)
+		object.SetPosition(areaObData.PosX, areaObData.PosY)
+		// Object to area.
+		area.AddObject(object)
+	}
+	for _, subareaData := range data.Subareas {
+		subarea := buildArea(mod, subareaData)
+		area.AddSubarea(subarea)
+	}
+	return area
 }

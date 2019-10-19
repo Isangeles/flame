@@ -134,129 +134,145 @@ func ImportSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, 
 
 // buildSavedGame build saved game from specified data.
 func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame, error) {
+	// Create game from saved data.
+	game := new(save.SaveGame)
+	game.Name = gameData.Name
+	game.Mod = mod
 	chapterData := &gameData.Chapter
-	charsData := make([]res.CharacterData, 0)
-	objectsData := make([]*res.ObjectData, 0)
-	pcs := make([]*character.Character, 0)
 	// Scenrios.
 	for _, scenData := range chapterData.Scenarios {
-		subareas := make([]*scenario.Area, 0)
-		mainarea := new(scenario.Area)
-		// Areas.
-		for _, areaData := range scenData.Areas {
-			area := scenario.NewArea(areaData.ID)
-			// Characters.
-			for _, charData := range areaData.Chars {
-				charsData = append(charsData, charData) // save data to restore effects later
-				char := buildCharacter(mod, &charData)
-				// Restore HP, mana & exp.
-				char.SetHealth(charData.SavedData.HP)
-				char.SetMana(charData.SavedData.Mana)
-				char.SetExperience(charData.SavedData.Exp)
-				// Restore current and default position.
-				char.SetPosition(charData.SavedData.PosX, charData.SavedData.PosY)
-				char.SetDefaultPosition(charData.SavedData.DefX, charData.SavedData.DefY)
-				if charData.SavedData.PC {
-					pcs = append(pcs, char)
-				}
-				// Char to area.
-				area.AddCharacter(char)
-			}
-			// Objects.
-			for _, obData := range areaData.Objects {
-				objectsData = append(objectsData, &obData) // save data to restore effects later
-				// Retrieve name from lang.
-				name := lang.TextDir(mod.Conf().LangPath(), obData.BasicData.ID)
-				obData.BasicData.Name = name
-				// Build object.
-				ob := buildObject(mod, &obData)
-				// Restore position.
-				ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
-				// Object to area.
-				area.AddObject(ob)
-			}
-			if areaData.Mainarea {
-				mainarea = area
-			} else {
-				subareas = append(subareas, area)
-			}
-		}
+		mainarea := buildSavedArea(mod, scenData.Area)
 		// Create scenario from saved data.
-		scen := scenario.NewScenario(scenData.ID, mainarea, subareas)
-		err := mod.Chapter().AddScenario(scen)
+		scen := scenario.NewScenario(scenData.ID, mainarea)
+		err := game.Mod.Chapter().AddScenario(scen)
 		if err != nil {
 			log.Err.Printf("data build saved game: add chapter scenario: %s: fail: %v",
 				scenData.ID, err)
 			continue
 		}
 	}
-	// Restore characters effects & memory.
-	for _, cd := range charsData {
-		err := restoreCharEffects(mod, &cd)
-		if err != nil {
-			log.Err.Printf("data: build saved game: restore effects: char: %s: %v",
-				cd.BasicData.ID, err)
-		}
-		err = restoreCharMemory(mod, &cd)
-		if err != nil {
-			log.Err.Printf("data: build saved game: restore memory: char: %s: %v",
-				cd.BasicData.ID, err)
-		}
+	// Restore players, effects and memory.
+	for _, scenData := range chapterData.Scenarios {
+		restoreAreaEffects(mod, scenData.Area)
+		restoreAreaMemory(mod, scenData.Area)
+		pcs := restoreAreaPlayers(mod, scenData.Area)
+		game.Players = append(game.Players, pcs...)
 	}
-	// Create game from saved data.
-	game := new(save.SaveGame)
-	game.Name = gameData.Name
-	game.Mod = mod
-	game.Players = pcs
 	return game, nil
 }
 
-// restoreEffects resores effects for module character.
-func restoreCharEffects(mod *module.Module, data *res.CharacterData) error {
-	char := mod.Chapter().Character(data.BasicData.ID, data.BasicData.Serial)
-	if char == nil {
-		return fmt.Errorf("char not found")
+// buildSavedArea creates area from saved data.
+func buildSavedArea(mod *module.Module, data res.AreaData) *scenario.Area {
+	area := scenario.NewArea(data.ID)
+	// Characters.
+	for _, charData := range data.Chars {
+		char := buildCharacter(mod, &charData)
+		// Restore HP, mana & exp.
+		char.SetHealth(charData.SavedData.HP)
+		char.SetMana(charData.SavedData.Mana)
+		char.SetExperience(charData.SavedData.Exp)
+		// Restore current and default position.
+		char.SetPosition(charData.SavedData.PosX, charData.SavedData.PosY)
+		char.SetDefaultPosition(charData.SavedData.DefX, charData.SavedData.DefY)
+		// Char to area.
+		area.AddCharacter(char)
 	}
-	for _, eData := range data.Effects {
-		effect, err := Effect(mod, eData.ID)
-		if err != nil {
-			log.Err.Printf("data: char: %s: restore effects: fail to create effect: %v",
-				char.ID(), err)
-			continue
-		}
-		effect.SetSerial(eData.Serial)
-		effect.SetTime(eData.Time)
-		// Restore effect source.
-		source := mod.Target(eData.SourceID, eData.SourceSerial)
-		if source == nil {
-			log.Err.Printf("data: char: %s: restore effects: fail to find source: %s",
-				char.ID(), eData.SourceID+"_"+eData.SourceSerial)
-		}
-		effect.SetSource(source)
-		char.AddEffect(effect)
+	// Objects.
+	for _, obData := range data.Objects {
+		// Retrieve name from lang.
+		name := lang.TextDir(mod.Conf().LangPath(), obData.BasicData.ID)
+		obData.BasicData.Name = name
+		// Build object.
+		ob := buildObject(mod, &obData)
+		// Restore position.
+		ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
+		// Object to area.
+		area.AddObject(ob)
 	}
-	return nil
+	// Subareas.
+	for _, subareaData := range data.Subareas {
+		subarea := buildSavedArea(mod, subareaData)
+		area.AddSubarea(subarea)
+	}
+	return area
 }
 
-// restoreCharMemory restores attitude memory for module character.
-func restoreCharMemory(mod *module.Module, data *res.CharacterData) error {
-	char := mod.Chapter().Character(data.BasicData.ID, data.BasicData.Serial)
-	if char == nil {
-		return fmt.Errorf("char not found")
-	}
-	for _, memData := range data.Memory {
-		tar := mod.Target(memData.ObjectID, memData.ObjectSerial)
-		if tar == nil {
-			log.Err.Printf("data: char: %s: restore memory: att target not found: %s#%s",
-				char.ID(), memData.ObjectID, memData.ObjectSerial)
+// restorePlayers returns list with PCs.
+func restoreAreaPlayers(mod *module.Module, data res.AreaData) (pcs []*character.Character) {
+	for _, charData := range data.Chars {
+		if !charData.SavedData.PC {
 			continue
 		}
-		att := character.Attitude(memData.Attitude)
-		mem := character.TargetMemory{
-			Target:   tar,
-			Attitude: att,
+		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
+		if char == nil {
+			log.Err.Printf("data: save: restore players: pc not found: %s")
+			continue
 		}
-		char.MemorizeTarget(&mem)
+		pcs = append(pcs, char)
 	}
-	return nil
+	for _, subareaData := range data.Subareas {
+		subPlayers := restoreAreaPlayers(mod, subareaData)
+		pcs = append(pcs, subPlayers...)
+	}
+	return
+}
+
+// restoreAreaEffects restores saved effects for characters and objects.
+func restoreAreaEffects(mod *module.Module, data res.AreaData) {
+	for _, charData := range data.Chars {
+		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
+		if char == nil {
+			log.Err.Printf("data: save: restore effects: module char not found: %s")
+			continue
+		}
+		for _, eData := range charData.Effects {
+			effect, err := Effect(mod, eData.ID)
+			if err != nil {
+				log.Err.Printf("data: char: %s: restore effects: fail to create effect: %v",
+					char.ID(), err)
+				continue
+			}
+			effect.SetSerial(eData.Serial)
+			effect.SetTime(eData.Time)
+			// Restore effect source.
+			source := mod.Target(eData.SourceID, eData.SourceSerial)
+			if source == nil {
+				log.Err.Printf("data: char: %s: restore effects: fail to find source: %s",
+					char.ID(), eData.SourceID+"_"+eData.SourceSerial)
+			}
+			effect.SetSource(source)
+			char.AddEffect(effect)
+		}
+	}
+	for _, subareaData := range data.Subareas {
+		restoreAreaEffects(mod, subareaData)
+	}
+}
+
+// restoreAreaMemory restores saved memory for characters.
+func restoreAreaMemory(mod *module.Module, data res.AreaData) {
+	for _, charData := range data.Chars {
+		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
+		if char == nil {
+			log.Err.Printf("data: save: restore effects: module char not found: %s")
+			continue
+		}
+		for _, memData := range charData.Memory {
+			tar := mod.Target(memData.ObjectID, memData.ObjectSerial)
+			if tar == nil {
+				log.Err.Printf("data: char: %s: restore memory: att target not found: %s#%s",
+					char.ID(), memData.ObjectID, memData.ObjectSerial)
+				continue
+			}
+			att := character.Attitude(memData.Attitude)
+			mem := character.TargetMemory{
+				Target:   tar,
+				Attitude: att,
+			}
+			char.MemorizeTarget(&mem)
+		}
+	}
+	for _, subareaData := range data.Subareas {
+		restoreAreaMemory(mod, subareaData)
+	}
 }

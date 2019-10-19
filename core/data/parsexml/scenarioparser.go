@@ -35,23 +35,17 @@ import (
 
 // Struct for XML scenario node.
 type Scenario struct {
-	XMLName  xml.Name `xml:"scenario"`
-	ID       string   `xml:"id,attr"`
-	Mainarea Area     `xml:"mainarea"`
-	Subareas []Area   `xml:"area"`
+	XMLName xml.Name `xml:"scenario"`
+	ID      string   `xml:"id,attr"`
+	Area    Area     `xml:"area"`
 }
 
 // Struct for XML area node.
 type Area struct {
-	ID      string       `xml:"id,attr"`
-	NPCs    Npcs         `xml:"npcs"`
-	Objects []AreaObject `xml:"objects>object"`
-}
-
-// Struct for XML npcs node.
-type Npcs struct {
-	XMLName    xml.Name   `xml:"npcs"`
-	Characters []AreaChar `xml:"char"`
+	ID       string       `xml:"id,attr"`
+	NPCs     []AreaChar   `xml:"npcs>char"`
+	Objects  []AreaObject `xml:"objects>object"`
+	Subareas []Area       `xml:"subareas>area"`
 }
 
 // Struct for XML object node.
@@ -95,11 +89,12 @@ func MarshalScenario(scenData *res.ModuleScenarioData) (string, error) {
 func xmlScenario(scen *res.ModuleScenarioData) *Scenario {
 	xmlScen := new(Scenario)
 	xmlScen.ID = scen.ID
-	for _, ad := range scen.Areas {
+	xmlScen.Area.ID = scen.Area.ID
+	for _, ad := range scen.Area.Subareas {
 		xmlArea := new(Area)
 		xmlArea.ID = ad.ID
 		// Characters.
-		xmlChars := xmlArea.NPCs.Characters
+		xmlChars := xmlArea.NPCs
 		for _, npc := range ad.NPCS {
 			xmlNPC := new(AreaChar)
 			xmlNPC.ID = npc.ID
@@ -114,11 +109,7 @@ func xmlScenario(scen *res.ModuleScenarioData) *Scenario {
 			xmlOb.Position = MarshalPosition(ob.PosX, ob.PosY)
 			xmlObjects = append(xmlObjects, *xmlOb)
 		}
-		if ad.Main {
-			xmlScen.Mainarea = *xmlArea
-			continue
-		}
-		xmlScen.Subareas = append(xmlScen.Subareas, *xmlArea)
+		xmlScen.Area.Subareas = append(xmlScen.Area.Subareas, *xmlArea)
 	}
 	return xmlScen
 }
@@ -126,20 +117,16 @@ func xmlScenario(scen *res.ModuleScenarioData) *Scenario {
 // buildScenarioData creates scenario data from specified
 // XML data.
 func buildScenarioData(xmlScen *Scenario) *res.ModuleScenarioData {
-	// Areas.
-	areas := make([]res.ModuleAreaData, 0)
 	// Mainarea.
-	mainarea := buildAreaData(&xmlScen.Mainarea)
-	mainarea.Main = true
-	areas = append(areas, *mainarea)
+	mainarea := buildAreaData(&xmlScen.Area)
 	// Subareas.
-	for _, xmlArea := range xmlScen.Subareas {
+	for _, xmlArea := range xmlScen.Area.Subareas {
 		area := buildAreaData(&xmlArea)
-		areas = append(areas, *area)
+		mainarea.Subareas = append(mainarea.Subareas, *area)
 	}
 	scen := res.ModuleScenarioData{
-		ID:    xmlScen.ID,
-		Areas: areas,
+		ID:   xmlScen.ID,
+		Area: *mainarea,
 	}
 	return &scen
 }
@@ -148,7 +135,7 @@ func buildScenarioData(xmlScen *Scenario) *res.ModuleScenarioData {
 func buildAreaData(xmlArea *Area) *res.ModuleAreaData {
 	area := res.ModuleAreaData{ID: xmlArea.ID}
 	// Characters.
-	for _, xmlChar := range xmlArea.NPCs.Characters {
+	for _, xmlChar := range xmlArea.NPCs {
 		x, y, err := UnmarshalPosition(xmlChar.Position)
 		if err != nil {
 			log.Err.Printf("xml: build area: %s: build char: %s: fail to parse position: %v",

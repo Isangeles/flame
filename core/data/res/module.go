@@ -25,16 +25,16 @@ package res
 
 // Struct for scenario data.
 type ModuleScenarioData struct {
-	ID    string
-	Areas []ModuleAreaData
+	ID   string
+	Area ModuleAreaData
 }
 
 // Struct for area data.
 type ModuleAreaData struct {
-	ID      string
-	Main    bool
-	NPCS    []AreaCharData
-	Objects []AreaObjectData
+	ID       string
+	NPCS     []AreaCharData
+	Objects  []AreaObjectData
+	Subareas []ModuleAreaData
 }
 
 // Struct for area character data.

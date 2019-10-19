@@ -33,16 +33,13 @@ import (
 type Scenario struct {
 	id       string
 	mainarea *Area
-	areas    []*Area
 }
 
 // NewScenario returns new instance of scenario.
-func NewScenario(id string, mainarea *Area, subareas []*Area) (*Scenario) {
+func NewScenario(id string, mainarea *Area) (*Scenario) {
 	s := new(Scenario)
 	s.id = id
 	s.mainarea = mainarea
-	s.areas = append(s.areas, s.Mainarea())
-	s.areas = append(s.areas, subareas...)
 	return s
 }
 
@@ -59,15 +56,17 @@ func (s *Scenario) Mainarea() *Area {
 
 // Area returns current scenario area.
 func (s *Scenario) Area(id string) (*Area, error) {
-	for _, a := range s.areas {
+	for _, a := range s.mainarea.Subareas() {
 		if a.ID() == id {
 			return a, nil
 		}
 	}
-	return nil, fmt.Errorf("area_not_found:%s", id)
+	return nil, fmt.Errorf("area not found: %s", id)
 }
 
 // Areas returns all scenario areas.
 func (s *Scenario) Areas() []*Area {
-	return s.areas
+	areas := s.mainarea.Subareas()
+	areas = append(areas, s.mainarea)
+	return areas
 }

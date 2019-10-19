@@ -34,9 +34,10 @@ import (
 
 // Area struct represents game world area.
 type Area struct {
-	id      string
-	chars   []*character.Character
-	objects []*area.Object
+	id       string
+	chars    []*character.Character
+	objects  []*area.Object
+	subareas []*Area
 }
 
 // NewArea returns new instace of area.
@@ -61,6 +62,11 @@ func (a *Area) AddObject(o *area.Object) {
 	a.objects = append(a.objects, o)
 }
 
+// AddSubareas adds specified area to subareas.
+func (a *Area) AddSubarea(sa *Area) {
+	a.subareas = append(a.subareas, sa)
+}
+
 // Chracters returns list with characters in area.
 func (a *Area) Characters() []*character.Character {
 	return a.chars
@@ -69,6 +75,11 @@ func (a *Area) Characters() []*character.Character {
 // Objects returns list with all object in area.
 func (a *Area) Objects() []*area.Object {
 	return a.objects
+}
+
+// Subareas returns all subareas.
+func (a *Area) Subareas() []*Area {
+	return a.subareas
 }
 
 // ContainsCharacter checks whether area
