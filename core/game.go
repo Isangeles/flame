@@ -158,12 +158,10 @@ func (g *Game) listenWorld() {
 
 // Triggered after adding new scneario to module chapter.
 func (g *Game) onModScenarioAdded(s *scenario.Scenario) {
-	for _, a := range s.Areas() {
-		for _, c := range a.Characters() {
-			if g.pcs[c.ID()+c.Serial()] != nil {
-				continue
-			}
-			g.ai.AddCharacter(c)
+	for _, c := range s.Mainarea().AllCharacters() {
+		if g.pcs[c.ID()+c.Serial()] != nil {
+			continue
 		}
+		g.ai.AddCharacter(c)
 	}
 }

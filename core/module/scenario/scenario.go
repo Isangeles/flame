@@ -25,10 +25,6 @@
 // game world areas.
 package scenario
 
-import (
-	"fmt"
-)
-
 // Scenario struct represents area scenario
 type Scenario struct {
 	id       string
@@ -54,19 +50,9 @@ func (s *Scenario) Mainarea() *Area {
 	return s.mainarea
 }
 
-// Area returns current scenario area.
-func (s *Scenario) Area(id string) (*Area, error) {
-	for _, a := range s.mainarea.Subareas() {
-		if a.ID() == id {
-			return a, nil
-		}
-	}
-	return nil, fmt.Errorf("area not found: %s", id)
-}
-
 // Areas returns all scenario areas.
 func (s *Scenario) Areas() []*Area {
-	areas := s.mainarea.Subareas()
+	areas := s.mainarea.AllSubareas()
 	areas = append(areas, s.mainarea)
 	return areas
 }

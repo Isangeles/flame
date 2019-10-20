@@ -101,10 +101,8 @@ func (c *Chapter) Conf() ChapterConf {
 // characters in chapter.
 func (c *Chapter) Characters() (chars []*character.Character) {
 	for _, s := range c.loadedScens {
-		for _, a := range s.Areas() {
-			for _, c := range a.Characters() {
-				chars = append(chars, c)
-			}
+		for _, c := range s.Mainarea().AllCharacters() {
+			chars = append(chars, c)
 		}
 	}
 	return
@@ -114,10 +112,8 @@ func (c *Chapter) Characters() (chars []*character.Character) {
 // loaded scenarios.
 func (c *Chapter) AreaObjects() (objects []*area.Object) {
 	for _, s := range c.loadedScens {
-		for _, a := range s.Areas() {
-			for _, o := range a.Objects() {
-				objects = append(objects, o)
-			}
+		for _, o := range s.Mainarea().AllObjects() {
+			objects = append(objects, o)
 		}
 	}
 	return
@@ -127,11 +123,9 @@ func (c *Chapter) AreaObjects() (objects []*area.Object) {
 // specified ID.
 func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {
 	for _, s := range c.loadedScens {
-		for _, a := range s.Areas() {
-			for _, c := range a.Characters() {
-				if c.ID() == id {
-					chars = append(chars, c)
-				}
+		for _, c := range s.Mainarea().AllCharacters() {
+			if c.ID() == id {
+				chars = append(chars, c)
 			}
 		}
 	}
@@ -142,11 +136,9 @@ func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {
 // serial ID or nil if no character with specified ID exists.
 func (c *Chapter) Character(id, serial string) *character.Character {
 	for _, s := range c.loadedScens {
-		for _, a := range s.Areas() {
-			for _, c := range a.Characters() {
-				if c.ID() == id && c.Serial() == serial {
-					return c
-				}
+		for _, c := range s.Mainarea().AllCharacters() {
+			if c.ID() == id && c.Serial() == serial {
+				return c
 			}
 		}
 	}
@@ -157,11 +149,9 @@ func (c *Chapter) Character(id, serial string) *character.Character {
 // or nil if no object was found.
 func (c *Chapter) AreaObject(id, serial string) *area.Object {
 	for _, s := range c.loadedScens {
-		for _, a := range s.Areas() {
-			for _, o := range a.Objects() {
-				if o.ID() == id && o.Serial() == serial {
-					return o
-				}
+		for _, o := range s.Mainarea().AllObjects() {
+			if o.ID() == id && o.Serial() == serial {
+				return o
 			}
 		}
 	}
@@ -172,13 +162,17 @@ func (c *Chapter) AreaObject(id, serial string) *area.Object {
 // is present, or nil if no such area was found.
 func (c *Chapter) CharacterArea(char *character.Character) *scenario.Area {
 	for _, s := range c.loadedScens {
-		for _, a := range s.Areas() {
-			for _, c := range a.Characters() {
+		for _, c := range s.Mainarea().Characters() {
+			if c.SerialID() == char.SerialID() {
+				return s.Mainarea()
+			}
+			for _, a := range s.Mainarea().AllSubareas() {
 				if c.SerialID() == char.SerialID() {
 					return a
 				}
 			}
 		}
+		
 	}
 	return nil
 }

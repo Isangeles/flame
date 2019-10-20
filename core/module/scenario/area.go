@@ -67,19 +67,51 @@ func (a *Area) AddSubarea(sa *Area) {
 	a.subareas = append(a.subareas, sa)
 }
 
-// Chracters returns list with characters in area.
+// Chracters returns list with characters in
+// area(excluding subareas).
 func (a *Area) Characters() []*character.Character {
 	return a.chars
 }
 
-// Objects returns list with all object in area.
+// AllCharacters returns list with all characters in
+// area and subareas.
+func (a *Area) AllCharacters() (chars []*character.Character) {
+	chars = a.chars
+	for _, sa := range a.Subareas() {
+		chars = append(chars, sa.AllCharacters()...)
+	}
+	return
+}
+
+// Objects returns list with all objects in
+// area(excluding subareas).
 func (a *Area) Objects() []*area.Object {
 	return a.objects
+}
+
+// AllObjects retuns list with all objects in
+// area and subareas.
+func (a *Area) AllObjects() (objects []*area.Object) {
+	objects = a.objects
+	for _, sa := range a.Subareas() {
+		objects = append(objects, sa.AllObjects()...)
+	}
+	return
 }
 
 // Subareas returns all subareas.
 func (a *Area) Subareas() []*Area {
 	return a.subareas
+}
+
+// AllSubareas returns all subareas, including
+// subareas of subareas
+func (a *Area) AllSubareas() (subareas []*Area) {
+	subareas = a.subareas
+	for _, sa := range a.Subareas() {
+		subareas = append(subareas, sa.AllSubareas()...)
+	}
+	return
 }
 
 // ContainsCharacter checks whether area
