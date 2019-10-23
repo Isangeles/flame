@@ -35,15 +35,18 @@ import (
 // Area struct represents game world area.
 type Area struct {
 	id       string
-	chars    []*character.Character
-	objects  []*area.Object
-	subareas []*Area
+	chars    map[string]*character.Character
+	objects  map[string]*area.Object
+	subareas map[string]*Area
 }
 
 // NewArea returns new instace of area.
 func NewArea(id string) (*Area) {
 	a := new(Area)
 	a.id = id
+	a.chars = make(map[string]*character.Character)
+	a.objects = make(map[string]*area.Object)
+	a.subareas = make(map[string]*Area)
 	return a
 }
 
@@ -54,29 +57,46 @@ func (a *Area) ID() string {
 
 // AddCharacter adds specified character to area.
 func (a *Area) AddCharacter(c *character.Character) {
-	a.chars = append(a.chars, c)
+	a.chars[c.ID()+c.Serial()] = c
+}
+
+// RemoveCharacter removes specified character from area.
+func (a *Area) RemoveCharacter(c *character.Character) {
+	delete(a.chars, c.ID()+c.Serial())
 }
 
 // AddObjects adds specified object to area.
 func (a *Area) AddObject(o *area.Object) {
-	a.objects = append(a.objects, o)
+	a.objects[o.ID()+o.Serial()] = o
+}
+
+func (a *Area) RemoveObject(o *area.Object) {
+	delete(a.objects, o.ID()+o.Serial())
 }
 
 // AddSubareas adds specified area to subareas.
 func (a *Area) AddSubarea(sa *Area) {
-	a.subareas = append(a.subareas, sa)
+	a.subareas[sa.ID()] = sa
+}
+
+// RemoveSubareas removes specified subarea.
+func (a *Area) RemoveSubarea(sa *Area) {
+	delete(a.subareas, sa.ID())
 }
 
 // Chracters returns list with characters in
 // area(excluding subareas).
-func (a *Area) Characters() []*character.Character {
-	return a.chars
+func (a *Area) Characters() (chars []*character.Character) {
+	for _, c := range a.chars {
+		chars = append(chars, c)
+	}
+	return
 }
 
 // AllCharacters returns list with all characters in
 // area and subareas.
 func (a *Area) AllCharacters() (chars []*character.Character) {
-	chars = a.chars
+	chars = a.Characters()
 	for _, sa := range a.Subareas() {
 		chars = append(chars, sa.AllCharacters()...)
 	}
@@ -85,14 +105,17 @@ func (a *Area) AllCharacters() (chars []*character.Character) {
 
 // Objects returns list with all objects in
 // area(excluding subareas).
-func (a *Area) Objects() []*area.Object {
-	return a.objects
+func (a *Area) Objects() (objects []*area.Object) {
+	for _, o := range a.objects {
+		objects = append(objects, o)
+	}
+	return
 }
 
 // AllObjects retuns list with all objects in
 // area and subareas.
 func (a *Area) AllObjects() (objects []*area.Object) {
-	objects = a.objects
+	objects = a.Objects()
 	for _, sa := range a.Subareas() {
 		objects = append(objects, sa.AllObjects()...)
 	}
@@ -100,14 +123,17 @@ func (a *Area) AllObjects() (objects []*area.Object) {
 }
 
 // Subareas returns all subareas.
-func (a *Area) Subareas() []*Area {
-	return a.subareas
+func (a *Area) Subareas() (areas []*Area) {
+	for _, sa := range a.subareas {
+		areas = append(areas, sa)
+	}
+	return
 }
 
 // AllSubareas returns all subareas, including
 // subareas of subareas
 func (a *Area) AllSubareas() (subareas []*Area) {
-	subareas = a.subareas
+	subareas = a.Subareas()
 	for _, sa := range a.Subareas() {
 		subareas = append(subareas, sa.AllSubareas()...)
 	}
@@ -117,12 +143,7 @@ func (a *Area) AllSubareas() (subareas []*Area) {
 // ContainsCharacter checks whether area
 // contains specified character.
 func (a *Area) ContainsCharacter(char *character.Character) bool {
-	for _, c := range a.chars {
-		if char == c {
-			return true
-		}
-	}
-	return false
+	return a.chars[char.ID()+char.Serial()] != nil
 }
 
 // NearTargets returns all targets near specified position.
