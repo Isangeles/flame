@@ -58,7 +58,7 @@ func NewGame(mod *module.Module) (*Game, error) {
 		g.ai.AddCharacter(c)
 	}
 	// Events.
-	g.mod.Chapter().SetOnScenarioAddedFunc(g.onModScenarioAdded)
+	g.mod.Chapter().SetOnAreaAddedFunc(g.onModAreaAdded)
 	return g, nil
 }
 
@@ -122,7 +122,7 @@ func (g *Game) AI() *AI {
 
 // listenWorld listens players and near objects
 // messages channels and prints messages to
-// engine log.0
+// engine log.
 func (g *Game) listenWorld() {
 	// Players.
 	for _, pc := range g.pcs {
@@ -156,9 +156,9 @@ func (g *Game) listenWorld() {
 	}
 }
 
-// Triggered after adding new scneario to module chapter.
-func (g *Game) onModScenarioAdded(s *scenario.Scenario) {
-	for _, c := range s.Mainarea().AllCharacters() {
+// Triggered after adding new area to module chapter.
+func (g *Game) onModAreaAdded(a *scenario.Area) {
+	for _, c := range a.AllCharacters() {
 		if g.pcs[c.ID()+c.Serial()] != nil {
 			continue
 		}

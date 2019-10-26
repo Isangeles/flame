@@ -38,7 +38,7 @@ import (
 )
 
 const (
-	ScenarioFileExt = ".scenario"
+	AreaFileExt     = ".area"
 )
 
 // Module creates new module from specified path.
@@ -76,36 +76,31 @@ func LoadChapter(mod *module.Module, id string) error {
 	return nil
 }
 
-// LoadScenario loads scenario with specified
+// LoadArea loads area with specified
 // ID for current module chapter.
-func LoadScenario(mod *module.Module, id string) error {
+func LoadArea(mod *module.Module, id string) error {
 	// Check whether mod has active chapter.
 	chap := mod.Chapter()
 	if chap == nil {
 		return fmt.Errorf("no module chapter set")
 	}
 	// Load files.
-	scenPath := filepath.FromSlash(chap.Conf().ScenariosPath() +
-		"/" + id)
-	docScen, err := os.Open(scenPath)
+	areaPath := filepath.FromSlash(fmt.Sprintf("%s/%s/main%s",
+		chap.Conf().AreasPath(), id, AreaFileExt))
+	docArea, err := os.Open(areaPath)
 	if err != nil {
-		return fmt.Errorf("fail to open scenario file: %v", err)
+		return fmt.Errorf("fail to open area file: %v", err)
 	}
-	defer docScen.Close()
+	defer docArea.Close()
 	// Unmarshal scenario file.
-	scenData, err := parsexml.UnmarshalScenario(docScen)
+	areaData, err := parsexml.UnmarshalArea(docArea)
 	if err != nil {
-		return fmt.Errorf("fail to parse scenario file: %v", err)
+		return fmt.Errorf("fail to parse area data: %v", err)
 	}
 	// Build mainarea.
-	mainarea := buildArea(mod, scenData.Area)
-	scen := scenario.NewScenario(scenData.ID, mainarea)
-	// Add scenario to active module chapter.
-	err = chap.AddScenario(scen)
-	if err != nil {
-		return fmt.Errorf("fail to add scenario to chapter: %v",
-			err)
-	}
+	mainarea := buildArea(mod, *areaData)
+	// Add area to active module chapter.
+	chap.AddAreas(mainarea)
 	return nil
 }
 
@@ -133,7 +128,7 @@ func modConf(path, lang string) (module.ModConf, error) {
 // returns error if configuration not found or corrupted.
 func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
-	confValues, err := text.ReadValue(confPath, "start-scenario")
+	confValues, err := text.ReadValue(confPath, "start-scenario", "start-area")
 	if err != nil {
 		return module.ChapterConf{}, fmt.Errorf("fail to read conf values: %v",
 			err)
@@ -141,6 +136,7 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	conf := module.ChapterConf{
 		Path:        chapterPath,
 		StartScenID: confValues["start-scenario"],
+		StartAreaID: confValues["start-area"],
 	}
 	return conf, nil
 }

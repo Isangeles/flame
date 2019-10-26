@@ -102,7 +102,6 @@ func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGa
 	if err != nil {
 		return nil, fmt.Errorf("fail to load chapter data: %v", err)
 	}
-	mod.Chapter().ClearScenarios() // to remove start scenario
 	save, err := buildSavedGame(mod, gameData)
 	if err != nil {
 		return nil, fmt.Errorf("fail to build game from saved data: %v", err)
@@ -139,23 +138,17 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 	game.Name = gameData.Name
 	game.Mod = mod
 	chapterData := &gameData.Chapter
-	// Scenrios.
-	for _, scenData := range chapterData.Scenarios {
-		mainarea := buildSavedArea(mod, scenData.Area)
-		// Create scenario from saved data.
-		scen := scenario.NewScenario(scenData.ID, mainarea)
-		err := game.Mod.Chapter().AddScenario(scen)
-		if err != nil {
-			log.Err.Printf("data build saved game: add chapter scenario: %s: fail: %v",
-				scenData.ID, err)
-			continue
-		}
+	// Areas.
+	for _, areaData := range chapterData.Areas {
+		// Create area from saved data.
+		area := buildSavedArea(mod, areaData)
+		game.Mod.Chapter().AddAreas(area)
 	}
 	// Restore players, effects and memory.
-	for _, scenData := range chapterData.Scenarios {
-		restoreAreaEffects(mod, scenData.Area)
-		restoreAreaMemory(mod, scenData.Area)
-		pcs := restoreAreaPlayers(mod, scenData.Area)
+	for _, areaData := range chapterData.Areas {
+		restoreAreaEffects(mod, areaData)
+		restoreAreaMemory(mod, areaData)
+		pcs := restoreAreaPlayers(mod, areaData)
 		game.Players = append(game.Players, pcs...)
 	}
 	return game, nil

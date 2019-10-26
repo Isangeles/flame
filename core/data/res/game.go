@@ -32,15 +32,8 @@ type GameData struct {
 // Struct for game chapter
 // data.
 type ChapterData struct {
-	ID        string
-	Scenarios []ScenarioData
-}
-
-// Struct for chapter scenario
-// data.
-type ScenarioData struct {
-	ID   string
-	Area AreaData
+	ID    string
+	Areas []AreaData
 }
 
 // Struct for scenario area

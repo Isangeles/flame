@@ -23,21 +23,19 @@
 
 package module
 
-import (
-	"fmt"
-	
+import (	
 	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/scenario"
 	"github.com/isangeles/flame/core/module/serial"
 )
 
-// Chapter struct represents module chapter
+// Chapter struct represents module chapter.
 type Chapter struct {
-	conf            ChapterConf
-	mod             *Module
-	loadedScens     []*scenario.Scenario
-	onScenarioAdded func(s *scenario.Scenario)
+	conf        ChapterConf
+	mod         *Module
+	loadedAreas map[string]*scenario.Area
+	onAreaAdded func(s *scenario.Area)
 }
 
 // NewChapters creates new instance of module chapter.
@@ -46,6 +44,7 @@ func NewChapter(mod *Module, conf ChapterConf) *Chapter {
 	c.mod = mod
 	c.conf = conf
 	c.conf.Lang = c.mod.Conf().Lang
+	c.loadedAreas = make(map[string]*scenario.Area)
 	return c
 }
 
@@ -59,37 +58,28 @@ func (c *Chapter) Module() *Module {
 	return c.mod
 }
 
-// Scenario returns active(loaded) scenario with specified ID,
-// or error if no such scenario was found.
-func (c *Chapter) Scenario(scenID string) (*scenario.Scenario, error) {
-	for _, s := range c.loadedScens {
-		return s, nil
+// Area returns active(loaded) area with specified ID,
+// or nil if area with such ID was not found.
+func (c *Chapter) Area(areaID string) *scenario.Area {
+	return c.loadedAreas[areaID]
+}
+
+// Areas returns all active(loaded) areas.
+func (c *Chapter) Areas() (areas []*scenario.Area) {
+	for _, a := range c.loadedAreas {
+		areas = append(areas, a)
 	}
-	return nil, fmt.Errorf("loaded_scenario_not_found:%s", scenID)
+	return
 }
 
-// Scenarios returns all active(loaded) scenarios.
-func (c *Chapter) Scenarios() []*scenario.Scenario {
-	return c.loadedScens
-}
-
-// ClearScenarios removes all loaded scenarios
-// from chapter.
-func (c *Chapter) ClearScenarios() {
-	c.loadedScens = make([]*scenario.Scenario, 0)
-}
-
-// AddScenario add specified scenario to loaded
-// scenarios list.
-func (c *Chapter) AddScenario(scen *scenario.Scenario) error {
-	for _, s := range c.loadedScens { // check if scenario is already added
-		if s.ID() == scen.ID() { // prevent scenrios duplication
-			return fmt.Errorf("scenario_already_added:%s", scen.ID())
+// SetAreas sets specified areas as loaded areas.
+func (c *Chapter) AddAreas(areas ...*scenario.Area) {
+	for _, a := range areas {
+		c.loadedAreas[a.ID()] = a
+		if c.onAreaAdded != nil {
+			c.onAreaAdded(a)
 		}
 	}
-	c.loadedScens = append(c.loadedScens, scen)
-	c.generateSerials() // generate serials for all new objects
-	return nil
 }
 
 // Conf returns chapter configuration.
@@ -100,8 +90,8 @@ func (c *Chapter) Conf() ChapterConf {
 // Characters returns list with all existing(loaded)
 // characters in chapter.
 func (c *Chapter) Characters() (chars []*character.Character) {
-	for _, s := range c.loadedScens {
-		for _, c := range s.Mainarea().AllCharacters() {
+	for _, a := range c.loadedAreas {
+		for _, c := range a.AllCharacters() {
 			chars = append(chars, c)
 		}
 	}
@@ -111,8 +101,8 @@ func (c *Chapter) Characters() (chars []*character.Character) {
 // Objects returns list with all area objects from all
 // loaded scenarios.
 func (c *Chapter) AreaObjects() (objects []*area.Object) {
-	for _, s := range c.loadedScens {
-		for _, o := range s.Mainarea().AllObjects() {
+	for _, a := range c.loadedAreas {
+		for _, o := range a.AllObjects() {
 			objects = append(objects, o)
 		}
 	}
@@ -122,8 +112,8 @@ func (c *Chapter) AreaObjects() (objects []*area.Object) {
 // CharactersWithID returns all existing characters with
 // specified ID.
 func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {
-	for _, s := range c.loadedScens {
-		for _, c := range s.Mainarea().AllCharacters() {
+	for _, a := range c.loadedAreas {
+		for _, c := range a.AllCharacters() {
 			if c.ID() == id {
 				chars = append(chars, c)
 			}
@@ -135,8 +125,8 @@ func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {
 // Character returns existing game character with specified
 // serial ID or nil if no character with specified ID exists.
 func (c *Chapter) Character(id, serial string) *character.Character {
-	for _, s := range c.loadedScens {
-		for _, c := range s.Mainarea().AllCharacters() {
+	for _, a := range c.loadedAreas {
+		for _, c := range a.AllCharacters() {
 			if c.ID() == id && c.Serial() == serial {
 				return c
 			}
@@ -148,8 +138,8 @@ func (c *Chapter) Character(id, serial string) *character.Character {
 // AreaObject retruns area object with specified ID and serial
 // or nil if no object was found.
 func (c *Chapter) AreaObject(id, serial string) *area.Object {
-	for _, s := range c.loadedScens {
-		for _, o := range s.Mainarea().AllObjects() {
+	for _, a := range c.loadedAreas {
+		for _, o := range a.AllObjects() {
 			if o.ID() == id && o.Serial() == serial {
 				return o
 			}
@@ -161,14 +151,16 @@ func (c *Chapter) AreaObject(id, serial string) *area.Object {
 // CharacterArea returns area where specified character
 // is present, or nil if no such area was found.
 func (c *Chapter) CharacterArea(char *character.Character) *scenario.Area {
-	for _, s := range c.loadedScens {
-		for _, c := range s.Mainarea().Characters() {
+	for _, a := range c.loadedAreas {
+		for _, c := range a.Characters() {
 			if c.SerialID() == char.SerialID() {
-				return s.Mainarea()
+				return a
 			}
-			for _, a := range s.Mainarea().AllSubareas() {
-				if c.SerialID() == char.SerialID() {
-					return a
+			for _, a := range a.AllSubareas() {
+				for _, c := range a.Characters() {
+					if c.SerialID() == char.SerialID() {
+						return a
+					}
 				}
 			}
 		}
@@ -177,14 +169,15 @@ func (c *Chapter) CharacterArea(char *character.Character) *scenario.Area {
 	return nil
 }
 
-// SetOnScenarioAddedFunc sets function triggered after adding
-// new scenario to chapter.
-func (c *Chapter) SetOnScenarioAddedFunc(f func(s *scenario.Scenario)) {
-	c.onScenarioAdded = f
+// SetOnAreaAddedFunc sets function triggered after adding
+// new area to chapter.
+func (c *Chapter) SetOnAreaAddedFunc(f func(s *scenario.Area)) {
+	c.onAreaAdded = f
 }
 
 // generateSerials generates unique serial values
 // for all chapter objects without serial value.
+// TODO: remove this(?).
 func (c *Chapter) generateSerials() {
 	// Characters.
 	for _, char := range c.Characters() {

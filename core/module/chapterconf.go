@@ -34,6 +34,7 @@ type ChapterConf struct {
 	ModulePath  string
 	Lang        string
 	StartScenID string
+	StartAreaID string
 	Scenarios   []string
 	NextChapter string
 }
@@ -48,6 +49,12 @@ func (cc ChapterConf) FullPath() string {
 func (cc ChapterConf) ScenariosPath() string {
 	return filepath.FromSlash(cc.FullPath() +
 		"/areas/scenarios")
+}
+
+// AreasPath returns path to chapters areas
+// directory.
+func (cc ChapterConf) AreasPath() string {
+	return filepath.FromSlash(cc.FullPath() + "/areas")
 }
 
 // LangPath returns path to chapter
@@ -71,12 +78,6 @@ func (cc ChapterConf) DialogsPath() string {
 // QuestsPath retruns path to chapter quests directory.
 func (cc ChapterConf) QuestsPath() string {
 	return filepath.FromSlash(cc.FullPath() + "/quests")
-}
-
-// AreasPath returns path to chapter
-// areas directory.
-func (cc ChapterConf) AreasPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/areas")
 }
 
 // DialogsLangPath returns path to dialogs lang file.

@@ -44,16 +44,9 @@ type SavedGame struct {
 
 // Struct for saved chapter XML node.
 type SavedChapter struct {
-	XMLName   xml.Name        `xml:"chapter"`
-	ID        string          `xml:"id,attr"`
-	Scenarios []SavedScenario `xml:"scenario"`
-}
-
-// Struct for saved scenario XML node.
-type SavedScenario struct {
-	XMLName xml.Name  `xml:"scenario"`
-	ID      string    `xml:"id,attr"`
-	Area    SavedArea `xml:"area"`
+	XMLName xml.Name    `xml:"chapter"`
+	ID      string      `xml:"id,attr"`
+	Areas   []SavedArea `xml:"scenario"`
 }
 
 // Struct for saved scenario area XML node.
@@ -77,16 +70,16 @@ func MarshalSaveGame(game *save.SaveGame) (string, error) {
 	}
 	xmlChapter := &xmlGame.Chapter
 	xmlChapter.ID = chapter.Conf().ID
-	// Scenarios.
-	for _, s := range chapter.Scenarios() {
-		xmlScenario := SavedScenario{}
-		xmlScenario.ID = s.ID()
-		xmlScenario.Area = *marshalGameArea(game, s.Mainarea())
-		xmlChapter.Scenarios = append(xmlChapter.Scenarios, xmlScenario)
+	// Areas.
+	for _, a := range chapter.Areas() {
+		xmlArea := SavedArea{}
+		xmlArea.ID = a.ID()
+		xmlArea = *marshalGameArea(game, a)
+		xmlChapter.Areas = append(xmlChapter.Areas, xmlArea)
 	}
 	out, err := xml.Marshal(xmlGame)
 	if err != nil {
-		return "", fmt.Errorf("fail to marshal game")
+		return "", fmt.Errorf("fail to marshal data")
 	}
 	return string(out[:]), nil
 }
@@ -104,11 +97,10 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 	game.Name = xmlGame.Name
 	// Chapter.
 	game.Chapter.ID = xmlGame.Chapter.ID
-	// Scenarios.
-	for _, xmlScen := range xmlGame.Chapter.Scenarios {
-		scen := res.ScenarioData{ID: xmlScen.ID}
-		scen.Area = *unmarshalGameArea(xmlScen.Area)
-		game.Chapter.Scenarios = append(game.Chapter.Scenarios, scen)
+	// Areas.
+	for _, xmlArea := range xmlGame.Chapter.Areas {
+		area := *unmarshalGameArea(xmlArea)
+		game.Chapter.Areas = append(game.Chapter.Areas, area)
 	}
 	return game, nil
 }

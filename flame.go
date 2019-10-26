@@ -83,12 +83,11 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail to load module data: %v", err)
 	}
-	// Load start scenario for module.
+	// Load chapter start area.
 	chapter := Mod().Chapter()
-	// Load chapter scenario.
-	err = data.LoadScenario(Mod(), chapter.Conf().StartScenID)
+	err = data.LoadArea(Mod(), chapter.Conf().StartAreaID)
 	if err != nil {
-		return nil, fmt.Errorf("fail to load start scenario: %v", err)
+		return nil, fmt.Errorf("fail to load start area: %v", err)
 	}
 	// Create new game.
 	game, err = core.NewGame(mod)
@@ -96,12 +95,12 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 		return nil, fmt.Errorf("fail to create game: %v", err)
 	}
 	SetGame(game)
-	// All players to main area of start scenario.
-	startScen, err := chapter.Scenario(chapter.Conf().StartScenID)
-	if err != nil {
-		return nil, fmt.Errorf("fail to retrieve start scenario: %v", err)
+	// All players to start area.
+	startArea := chapter.Area(chapter.Conf().StartAreaID)
+	if startArea == nil {
+		return nil, fmt.Errorf("start area not found: %s: %v",
+			chapter.Conf().StartAreaID)
 	}
-	startArea := startScen.Mainarea()
 	for _, pc := range pcs {
 		serial.AssignSerial(pc)
 		startArea.AddCharacter(pc)

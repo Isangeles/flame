@@ -23,12 +23,6 @@
 
 package res
 
-// Struct for scenario data.
-type ModuleScenarioData struct {
-	ID   string
-	Area ModuleAreaData
-}
-
 // Struct for area data.
 type ModuleAreaData struct {
 	ID       string

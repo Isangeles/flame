@@ -1,5 +1,5 @@
 /*
- * scenarioparser.go
+ * areaparser.go
  *
  * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -33,13 +33,6 @@ import (
 	"github.com/isangeles/flame/log"
 )
 
-// Struct for XML scenario node.
-type Scenario struct {
-	XMLName xml.Name `xml:"scenario"`
-	ID      string   `xml:"id,attr"`
-	Area    Area     `xml:"area"`
-}
-
 // Struct for XML area node.
 type Area struct {
 	ID       string       `xml:"id,attr"`
@@ -62,35 +55,34 @@ type AreaChar struct {
 	Position string   `xml:"position,attr"`
 }
 
-// UnmarshalScenario parses scenario from XML data.
-func UnmarshalScenario(data io.Reader) (*res.ModuleScenarioData, error) {
+// UnmarshalArea parses area from XML data to resource.
+func UnmarshalArea(data io.Reader) (*res.ModuleAreaData, error) {
 	doc, _ := ioutil.ReadAll(data)
-	xmlScen := new(Scenario)
-	err := xml.Unmarshal(doc, xmlScen)
+	xmlArea := new(Area)
+	err := xml.Unmarshal(doc, xmlArea)
 	if err != nil {
 		return nil, fmt.Errorf("fail to unmarshal xml: %v", err)
 	}
-	scenData := buildScenarioData(xmlScen)
-	return scenData, nil
+	areaData := buildAreaData(xmlArea)
+	return areaData, nil
 }
 
-// MarshalScenario parses scenario data to XML string.
-func MarshalScenario(scenData *res.ModuleScenarioData) (string, error) {
-	xmlScen := xmlScenario(scenData)
-	out, err := xml.Marshal(xmlScen)
+// MarshalArea parses scenario data to XML string.
+func MarshalArea(areaData *res.ModuleAreaData) (string, error) {
+	xmlArea := xmlArea(areaData)
+	out, err := xml.Marshal(xmlArea)
 	if err != nil {
-		return "", fmt.Errorf("fail to marshal char: %v", err)
+		return "", fmt.Errorf("fail to marshal data: %v", err)
 	}
 	return string(out[:]), nil
 }
 
-// xmlScenario creates XML struct from specified module
-// scenario data.
-func xmlScenario(scen *res.ModuleScenarioData) *Scenario {
-	xmlScen := new(Scenario)
-	xmlScen.ID = scen.ID
-	xmlScen.Area.ID = scen.Area.ID
-	for _, ad := range scen.Area.Subareas {
+// xmlArea creates XML struct from specified module
+// area data.
+func xmlArea(areaData *res.ModuleAreaData) *Area {
+	xmlArea := new(Area)
+	xmlArea.ID = areaData.ID
+	for _, ad := range areaData.Subareas {
 		xmlArea := new(Area)
 		xmlArea.ID = ad.ID
 		// Characters.
@@ -109,26 +101,9 @@ func xmlScenario(scen *res.ModuleScenarioData) *Scenario {
 			xmlOb.Position = MarshalPosition(ob.PosX, ob.PosY)
 			xmlObjects = append(xmlObjects, *xmlOb)
 		}
-		xmlScen.Area.Subareas = append(xmlScen.Area.Subareas, *xmlArea)
+		xmlArea.Subareas = append(xmlArea.Subareas, *xmlArea)
 	}
-	return xmlScen
-}
-
-// buildScenarioData creates scenario data from specified
-// XML data.
-func buildScenarioData(xmlScen *Scenario) *res.ModuleScenarioData {
-	// Mainarea.
-	mainarea := buildAreaData(&xmlScen.Area)
-	// Subareas.
-	for _, xmlArea := range xmlScen.Area.Subareas {
-		area := buildAreaData(&xmlArea)
-		mainarea.Subareas = append(mainarea.Subareas, *area)
-	}
-	scen := res.ModuleScenarioData{
-		ID:   xmlScen.ID,
-		Area: *mainarea,
-	}
-	return &scen
+	return xmlArea
 }
 
 // buildAreaData creates area data from specified XML data.
