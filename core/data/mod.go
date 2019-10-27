@@ -38,7 +38,7 @@ import (
 )
 
 const (
-	AreaFileExt     = ".area"
+	AreaFileExt = ".area"
 )
 
 // Module creates new module from specified path.
@@ -128,14 +128,13 @@ func modConf(path, lang string) (module.ModConf, error) {
 // returns error if configuration not found or corrupted.
 func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
-	confValues, err := text.ReadValue(confPath, "start-scenario", "start-area")
+	confValues, err := text.ReadValue(confPath, "start-area")
 	if err != nil {
 		return module.ChapterConf{}, fmt.Errorf("fail to read conf values: %v",
 			err)
 	}
 	conf := module.ChapterConf{
 		Path:        chapterPath,
-		StartScenID: confValues["start-scenario"],
 		StartAreaID: confValues["start-area"],
 	}
 	return conf, nil

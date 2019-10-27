@@ -33,7 +33,6 @@ type ChapterConf struct {
 	ID, Path    string
 	ModulePath  string
 	Lang        string
-	StartScenID string
 	StartAreaID string
 	Scenarios   []string
 	NextChapter string
@@ -42,13 +41,6 @@ type ChapterConf struct {
 // FullPath returns path to chapter directory.
 func (cc ChapterConf) FullPath() string {
 	return filepath.FromSlash(cc.Path)
-}
-
-// ScenariosPath returns path to chapter
-// scenarios directory.
-func (cc ChapterConf) ScenariosPath() string {
-	return filepath.FromSlash(cc.FullPath() +
-		"/areas/scenarios")
 }
 
 // AreasPath returns path to chapters areas
