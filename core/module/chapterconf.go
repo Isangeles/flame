@@ -34,7 +34,6 @@ type ChapterConf struct {
 	ModulePath  string
 	Lang        string
 	StartAreaID string
-	Scenarios   []string
 	NextChapter string
 }
 
