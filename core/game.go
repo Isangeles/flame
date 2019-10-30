@@ -31,7 +31,7 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/log"
 )
 
@@ -157,7 +157,7 @@ func (g *Game) listenWorld() {
 }
 
 // Triggered after adding new area to module chapter.
-func (g *Game) onModAreaAdded(a *scenario.Area) {
+func (g *Game) onModAreaAdded(a *area.Area) {
 	for _, c := range a.AllCharacters() {
 		if g.pcs[c.ID()+c.Serial()] != nil {
 			continue

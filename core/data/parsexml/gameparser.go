@@ -32,7 +32,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/log"
-	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/area"
 )
 
 // Struct for saved game XML node.
@@ -46,10 +46,10 @@ type SavedGame struct {
 type SavedChapter struct {
 	XMLName xml.Name    `xml:"chapter"`
 	ID      string      `xml:"id,attr"`
-	Areas   []SavedArea `xml:"scenario"`
+	Areas   []SavedArea `xml:"area"`
 }
 
-// Struct for saved scenario area XML node.
+// Struct for saved area area XML node.
 type SavedArea struct {
 	XMLName    xml.Name    `xml:"area"`
 	ID         string      `xml:"id,attr"`
@@ -106,7 +106,7 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 }
 
 // marshalGameArea parses specified area to saved area node.
-func marshalGameArea(game *save.SaveGame, a *scenario.Area) *SavedArea {
+func marshalGameArea(game *save.SaveGame, a *area.Area) *SavedArea {
 	xmlArea := new(SavedArea)
 	xmlArea.ID = a.ID()
 	// Characters.

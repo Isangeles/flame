@@ -32,7 +32,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
@@ -92,7 +92,7 @@ func LoadArea(mod *module.Module, id string) error {
 		return fmt.Errorf("fail to open area file: %v", err)
 	}
 	defer docArea.Close()
-	// Unmarshal scenario file.
+	// Unmarshal area file.
 	areaData, err := parsexml.UnmarshalArea(docArea)
 	if err != nil {
 		return fmt.Errorf("fail to parse area data: %v", err)
@@ -141,8 +141,8 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 }
 
 // buildArea creates area from specified data.
-func buildArea(mod *module.Module, data res.ModuleAreaData) *scenario.Area {
-	area := scenario.NewArea(data.ID)
+func buildArea(mod *module.Module, data res.ModuleAreaData) *area.Area {
+	area := area.NewArea(data.ID)
 	// NPCs.
 	for _, areaCharData := range data.NPCS {
 		// Retireve char data.

@@ -21,7 +21,7 @@
  * 
  */
 
-package scenario
+package area
 
 import (
 	"math"

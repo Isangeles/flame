@@ -24,9 +24,9 @@
 package module
 
 import (	
-	"github.com/isangeles/flame/core/module/object/area"
+	areaobject "github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/serial"
 )
 
@@ -34,8 +34,8 @@ import (
 type Chapter struct {
 	conf        ChapterConf
 	mod         *Module
-	loadedAreas map[string]*scenario.Area
-	onAreaAdded func(s *scenario.Area)
+	loadedAreas map[string]*area.Area
+	onAreaAdded func(s *area.Area)
 }
 
 // NewChapters creates new instance of module chapter.
@@ -44,7 +44,7 @@ func NewChapter(mod *Module, conf ChapterConf) *Chapter {
 	c.mod = mod
 	c.conf = conf
 	c.conf.Lang = c.mod.Conf().Lang
-	c.loadedAreas = make(map[string]*scenario.Area)
+	c.loadedAreas = make(map[string]*area.Area)
 	return c
 }
 
@@ -60,12 +60,12 @@ func (c *Chapter) Module() *Module {
 
 // Area returns active(loaded) area with specified ID,
 // or nil if area with such ID was not found.
-func (c *Chapter) Area(areaID string) *scenario.Area {
+func (c *Chapter) Area(areaID string) *area.Area {
 	return c.loadedAreas[areaID]
 }
 
 // Areas returns all active(loaded) areas.
-func (c *Chapter) Areas() (areas []*scenario.Area) {
+func (c *Chapter) Areas() (areas []*area.Area) {
 	for _, a := range c.loadedAreas {
 		areas = append(areas, a)
 	}
@@ -73,7 +73,7 @@ func (c *Chapter) Areas() (areas []*scenario.Area) {
 }
 
 // SetAreas sets specified areas as loaded areas.
-func (c *Chapter) AddAreas(areas ...*scenario.Area) {
+func (c *Chapter) AddAreas(areas ...*area.Area) {
 	for _, a := range areas {
 		c.loadedAreas[a.ID()] = a
 		if c.onAreaAdded != nil {
@@ -99,8 +99,8 @@ func (c *Chapter) Characters() (chars []*character.Character) {
 }
 
 // Objects returns list with all area objects from all
-// loaded scenarios.
-func (c *Chapter) AreaObjects() (objects []*area.Object) {
+// loaded areas.
+func (c *Chapter) AreaObjects() (objects []*areaobject.Object) {
 	for _, a := range c.loadedAreas {
 		for _, o := range a.AllObjects() {
 			objects = append(objects, o)
@@ -137,7 +137,7 @@ func (c *Chapter) Character(id, serial string) *character.Character {
 
 // AreaObject retruns area object with specified ID and serial
 // or nil if no object was found.
-func (c *Chapter) AreaObject(id, serial string) *area.Object {
+func (c *Chapter) AreaObject(id, serial string) *areaobject.Object {
 	for _, a := range c.loadedAreas {
 		for _, o := range a.AllObjects() {
 			if o.ID() == id && o.Serial() == serial {
@@ -150,7 +150,7 @@ func (c *Chapter) AreaObject(id, serial string) *area.Object {
 
 // CharacterArea returns area where specified character
 // is present, or nil if no such area was found.
-func (c *Chapter) CharacterArea(char *character.Character) *scenario.Area {
+func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 	for _, a := range c.loadedAreas {
 		for _, c := range a.Characters() {
 			if c.SerialID() == char.SerialID() {
@@ -171,7 +171,7 @@ func (c *Chapter) CharacterArea(char *character.Character) *scenario.Area {
 
 // SetOnAreaAddedFunc sets function triggered after adding
 // new area to chapter.
-func (c *Chapter) SetOnAreaAddedFunc(f func(s *scenario.Area)) {
+func (c *Chapter) SetOnAreaAddedFunc(f func(s *area.Area)) {
 	c.onAreaAdded = f
 }
 

@@ -38,7 +38,7 @@ import (
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/scenario"
+	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/log"
 )
 
@@ -155,8 +155,8 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 }
 
 // buildSavedArea creates area from saved data.
-func buildSavedArea(mod *module.Module, data res.AreaData) *scenario.Area {
-	area := scenario.NewArea(data.ID)
+func buildSavedArea(mod *module.Module, data res.AreaData) *area.Area {
+	area := area.NewArea(data.ID)
 	// Characters.
 	for _, charData := range data.Chars {
 		char := buildCharacter(mod, &charData)
