@@ -26,7 +26,7 @@ package craft
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/serial"
 )

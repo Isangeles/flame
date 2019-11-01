@@ -27,7 +27,7 @@ import (
 	"encoding/xml"
 
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/item"
 )
 
 // Struct for inventory XML node.

@@ -26,10 +26,10 @@ package area
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/flag"
+	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/object"
-	"github.com/isangeles/flame/core/module/object/effect"
-	"github.com/isangeles/flame/core/module/object/item"
 )
 
 // Struct for area objects.
@@ -52,7 +52,7 @@ type Object struct {
 func NewObject(data res.ObjectBasicData) *Object {
 	ob := Object{
 		id:     data.ID,
-		name:   data.Name, 
+		name:   data.Name,
 		serial: data.Serial,
 		hp:     data.HP,
 		maxHP:  data.MaxHP,

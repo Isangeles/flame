@@ -1,37 +1,37 @@
 /*
  * unmarshal.go
- * 
+ *
  * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 package parsexml
 
 import (
 	"fmt"
-	"strings"
 	"strconv"
+	"strings"
 
+	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/object/character"
-	"github.com/isangeles/flame/core/module/object/item"
-	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/skill"
 )
 
 var (
@@ -51,7 +51,7 @@ func UnmarshalPosition(attr string) (float64, float64, error) {
 	}
 	y, err := strconv.ParseFloat(posValues[1], 64)
 	if err != nil {
-		return 0, 0,fmt.Errorf("fail to parse y position: %v", err)
+		return 0, 0, fmt.Errorf("fail to parse y position: %v", err)
 	}
 	return x, y, nil
 }
@@ -137,32 +137,32 @@ func UnmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 	stats := strings.Split(attributesAttr, ";")
 	if len(stats) < 5 {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse attributes text: %s", attributesAttr)
+			fmt.Errorf("fail to parse attributes text: %s", attributesAttr)
 	}
 	str, err := strconv.Atoi(stats[0])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse str attribute: %s", stats[0])
+			fmt.Errorf("fail to parse str attribute: %s", stats[0])
 	}
 	con, err := strconv.Atoi(stats[1])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse con attribute: %s", stats[1])
+			fmt.Errorf("fail to parse con attribute: %s", stats[1])
 	}
 	dex, err := strconv.Atoi(stats[2])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse dex attribute: %s", stats[2])
+			fmt.Errorf("fail to parse dex attribute: %s", stats[2])
 	}
 	inte, err := strconv.Atoi(stats[3])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse int attribute: %s", stats[3])
+			fmt.Errorf("fail to parse int attribute: %s", stats[3])
 	}
 	wis, err := strconv.Atoi(stats[4])
 	if err != nil {
 		return character.Attributes{},
-		fmt.Errorf("fail to parse wis attribute: %s", stats[4])
+			fmt.Errorf("fail to parse wis attribute: %s", stats[4])
 	}
 	return character.Attributes{str, con, dex, inte, wis}, nil
 }

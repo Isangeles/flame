@@ -26,7 +26,7 @@ package character
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/item"
 )
 
 // Struct for character equipment.

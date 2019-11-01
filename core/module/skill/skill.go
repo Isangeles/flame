@@ -28,8 +28,8 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/object"
-	"github.com/isangeles/flame/core/module/object/effect"
 	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/serial"
 )

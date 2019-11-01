@@ -24,7 +24,7 @@
 package character
 
 import (
-	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/effect"
 )
 
 // Struct for saved data about target.

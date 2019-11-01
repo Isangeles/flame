@@ -25,10 +25,10 @@ package area
 
 import (
 	"fmt"
-	
+
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data/text/lang"
-	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/effect"
 )
 
 // HitEffects returns all object hit effects.

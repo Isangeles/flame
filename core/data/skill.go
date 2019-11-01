@@ -32,7 +32,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/skill"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )

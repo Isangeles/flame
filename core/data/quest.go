@@ -32,7 +32,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/quest"
+	"github.com/isangeles/flame/core/module/quest"
 	"github.com/isangeles/flame/log"
 )
 

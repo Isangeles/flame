@@ -28,7 +28,7 @@ package module
 
 import (
 	"github.com/isangeles/flame/core/module/object"
-	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/effect"
 )
 
 // Module struct represents engine module.

@@ -27,12 +27,12 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/config"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/object"
-	"github.com/isangeles/flame/core/module/object/effect"
-	"github.com/isangeles/flame/core/module/object/item"
-	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/skill"
 	"github.com/isangeles/flame/log"
 )
 
@@ -104,9 +104,9 @@ func (c *Character) HitEffects() []*effect.Effect {
 	mods := make([]res.ModifierData, 1)
 	mods[0] = healthMod
 	hitData := res.EffectData{
-		ID: c.ID() + c.Serial() + "_hit",
-		Name: "hit",
-		Duration: 1000,
+		ID:        c.ID() + c.Serial() + "_hit",
+		Name:      "hit",
+		Duration:  1000,
 		Modifiers: mods,
 	}
 	hitEffect := c.buildEffects(hitData)
@@ -159,7 +159,7 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	c.AddEffect(e)
 	// Memorize source as hostile.
 	mem := TargetMemory{
-		Target: e.Source(),
+		Target:   e.Source(),
 		Attitude: Hostile,
 	}
 	c.MemorizeTarget(&mem)

@@ -31,10 +31,10 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object/area"
-	"github.com/isangeles/flame/core/module/object/craft"
-	"github.com/isangeles/flame/core/module/object/dialog"
-	"github.com/isangeles/flame/core/module/object/effect"
-	"github.com/isangeles/flame/core/module/object/skill"
+	"github.com/isangeles/flame/core/module/craft"
+	"github.com/isangeles/flame/core/module/dialog"
+	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/skill"
 	"github.com/isangeles/flame/log"
 )
 

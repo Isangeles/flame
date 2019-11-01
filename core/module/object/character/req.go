@@ -25,7 +25,7 @@ package character
 
 import (
 	"github.com/isangeles/flame/core/module/req"
-	"github.com/isangeles/flame/core/module/object/item"
+	"github.com/isangeles/flame/core/module/item"
 )
 
 // ReqsMeet checks whether all specified requirements

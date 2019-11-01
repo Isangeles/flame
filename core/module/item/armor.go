@@ -25,7 +25,7 @@ package item
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/effect"
+	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/req"
 )
 
