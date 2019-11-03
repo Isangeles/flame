@@ -175,6 +175,7 @@ func buildArea(mod *module.Module, data res.ModuleAreaData) *area.Area {
 		// Object to area.
 		area.AddObject(object)
 	}
+	// Subareas.
 	for _, subareaData := range data.Subareas {
 		subarea := buildArea(mod, subareaData)
 		area.AddSubarea(subarea)

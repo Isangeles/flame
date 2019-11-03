@@ -139,5 +139,10 @@ func buildAreaData(xmlArea *Area) *res.ModuleAreaData {
 		}
 		area.Objects = append(area.Objects, ob)
 	}
+	// Subareas.
+	for _, xmlSubarea := range xmlArea.Subareas {
+		subarea := buildAreaData(&xmlSubarea)
+		area.Subareas = append(area.Subareas, *subarea)
+	}
 	return &area
 }
