@@ -62,6 +62,7 @@ type Character struct {
 	destX, destY     float64
 	defX, defY       float64
 	cooldown         int64 // millis
+	areaID           string
 	inventory        *item.Inventory
 	equipment        *Equipment
 	journal          *quest.Journal
@@ -627,6 +628,17 @@ func (c *Character) Trainings() []train.Training {
 // character trainings list.
 func (c *Character) AddTraining(t train.Training) {
 	c.trainings = append(c.trainings, t)
+}
+
+// AreaID returns ID of character area.
+func (c *Character) AreaID() string {
+	return c.areaID
+}
+
+// SetAreaID sets specifid area ID as
+// character area ID.
+func (c *Character) SetAreaID(areaID string) {
+	c.areaID = areaID
 }
 
 // levelup promotes character to next level.

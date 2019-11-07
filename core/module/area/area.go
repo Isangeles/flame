@@ -58,6 +58,7 @@ func (a *Area) ID() string {
 // AddCharacter adds specified character to area.
 func (a *Area) AddCharacter(c *character.Character) {
 	a.chars[c.ID()+c.Serial()] = c
+	c.SetAreaID(a.ID())
 }
 
 // RemoveCharacter removes specified character from area.

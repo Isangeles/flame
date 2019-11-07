@@ -81,6 +81,8 @@ func (g *Game) Update(delta int64) {
 	}
 	// AI.
 	g.ai.Update(delta)
+	// Objects area.
+	g.updateObjectsArea()
 }
 
 // Pause toggles game update pause.
@@ -153,6 +155,39 @@ func (g *Game) listenWorld() {
 			default:
 			}
 		}
+	}
+}
+
+// updateObjectsArea checks and moves game objects to
+// proper areas, if needed.
+func (g *Game) updateObjectsArea() {
+	chapter := g.Module().Chapter()
+	if chapter == nil {
+		return
+	}
+	for _, c := range chapter.Characters() {
+		currentArea := chapter.CharacterArea(c)
+		if currentArea != nil && currentArea.ID() == c.AreaID() {
+			continue
+		}
+		var newArea *area.Area
+		for _, a := range chapter.Areas() {
+			if a.ID() == c.AreaID() {
+				newArea = a
+				break
+			}
+			for _, sa := range a.AllSubareas() {
+				if sa.ID() == c.AreaID() {
+					newArea = a
+					break
+				}
+			}
+		}
+		if newArea == nil {
+			return
+		}
+		newArea.AddCharacter(c)
+		currentArea.RemoveCharacter(c)
 	}
 }
 

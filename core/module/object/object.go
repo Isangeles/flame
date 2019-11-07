@@ -89,6 +89,12 @@ type Logger interface {
 	SendPrivate(msg string)
 }
 
+// Interface for area objects.
+type AreaObject interface {
+	AreaID() string
+	SetAreaID(s string)
+}
+
 // Struct for object effect
 // types.
 type Element int
