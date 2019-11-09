@@ -25,6 +25,7 @@ package area
 
 import (
 	"math"
+	"sync"
 
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/object"
@@ -35,7 +36,7 @@ import (
 // Area struct represents game world area.
 type Area struct {
 	id       string
-	chars    map[string]*character.Character
+	chars    *sync.Map
 	objects  map[string]*area.Object
 	subareas map[string]*Area
 }
@@ -44,7 +45,7 @@ type Area struct {
 func NewArea(id string) *Area {
 	a := new(Area)
 	a.id = id
-	a.chars = make(map[string]*character.Character)
+	a.chars = new(sync.Map)
 	a.objects = make(map[string]*area.Object)
 	a.subareas = make(map[string]*Area)
 	return a
@@ -57,13 +58,13 @@ func (a *Area) ID() string {
 
 // AddCharacter adds specified character to area.
 func (a *Area) AddCharacter(c *character.Character) {
-	a.chars[c.ID()+c.Serial()] = c
+	a.chars.Store(c.ID()+c.Serial(), c)
 	c.SetAreaID(a.ID())
 }
 
 // RemoveCharacter removes specified character from area.
 func (a *Area) RemoveCharacter(c *character.Character) {
-	delete(a.chars, c.ID()+c.Serial())
+	a.chars.Delete(c.ID()+c.Serial())
 }
 
 // AddObjects adds specified object to area.
@@ -88,9 +89,14 @@ func (a *Area) RemoveSubarea(sa *Area) {
 // Chracters returns list with characters in
 // area(excluding subareas).
 func (a *Area) Characters() (chars []*character.Character) {
-	for _, c := range a.chars {
-		chars = append(chars, c)
+	addChar := func(k, v interface{}) bool {
+		c, ok := v.(*character.Character)
+		if ok {
+			chars = append(chars, c)
+		}
+		return true
 	}
+	a.chars.Range(addChar)
 	return
 }
 
@@ -144,18 +150,22 @@ func (a *Area) AllSubareas() (subareas []*Area) {
 // ContainsCharacter checks whether area
 // contains specified character.
 func (a *Area) ContainsCharacter(char *character.Character) bool {
-	return a.chars[char.ID()+char.Serial()] != nil
+	v, _ := a.chars.Load(char.ID()+char.Serial()) 
+	return v != nil
 }
 
 // NearTargets returns all targets near specified position.
 func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Target {
 	objects := make([]effect.Target, 0)
 	// Characters.
-	for _, char := range a.chars {
-		if object.Range(char, pos) <= maxrange {
-			objects = append(objects, char)
+	addChar := func(k, v interface{}) bool {
+		t, ok := v.(effect.Target)
+		if ok {
+			objects = append(objects, t)
 		}
+		return true
 	}
+	a.chars.Range(addChar)
 	// Objects.
 	for _, ob := range a.objects {
 		if object.Range(ob, pos) <= maxrange {
@@ -170,12 +180,14 @@ func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Tar
 func (a *Area) NearObjects(x, y, maxrange float64) []object.Positioner {
 	objects := make([]object.Positioner, 0)
 	// Characters.
-	for _, char := range a.chars {
-		charX, charY := char.Position()
-		if math.Hypot(charX-x, charY-y) <= maxrange {
-			objects = append(objects, char)
+	addChar := func(k, v interface{}) bool {
+		o, ok := v.(object.Positioner)
+		if ok {
+			objects = append(objects, o)
 		}
+		return true
 	}
+	a.chars.Range(addChar)
 	// Objects.
 	for _, ob := range a.objects {
 		obX, obY := ob.Position()

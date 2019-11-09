@@ -152,7 +152,7 @@ func (c *Chapter) AreaObject(id, serial string) *areaobject.Object {
 // is present, or nil if no such area was found.
 func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 	for _, a := range c.loadedAreas {
-		for _, c := range a.Characters() {
+		for _, c := range a.AllCharacters() {
 			if c.SerialID() == char.SerialID() {
 				return a
 			}
