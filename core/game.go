@@ -178,7 +178,7 @@ func (g *Game) updateObjectsArea() {
 			}
 			for _, sa := range a.AllSubareas() {
 				if sa.ID() == c.AreaID() {
-					newArea = a
+					newArea = sa
 					break
 				}
 			}
