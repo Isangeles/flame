@@ -147,13 +147,6 @@ func (a *Area) AllSubareas() (subareas []*Area) {
 	return
 }
 
-// ContainsCharacter checks whether area
-// contains specified character.
-func (a *Area) ContainsCharacter(char *character.Character) bool {
-	v, _ := a.chars.Load(char.ID()+char.Serial()) 
-	return v != nil
-}
-
 // NearTargets returns all targets near specified position.
 func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Target {
 	objects := make([]effect.Target, 0)
