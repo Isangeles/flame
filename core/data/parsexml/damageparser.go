@@ -29,9 +29,9 @@ import (
 
 // Struct for damage XML node.
 type Damage struct {
-	XMLName xml.Name      `xml:"damage"`
-	Type    string        `xml:"type,attr"`
-	Min     int           `xml:"min,value"`
-	Max     int           `xml:"max,value"`
-	Effects ObjectEffects `xml:"effects"`
+	XMLName xml.Name       `xml:"damage"`
+	Type    string         `xml:"type,attr"`
+	Min     int            `xml:"min,value"`
+	Max     int            `xml:"max,value"`
+	Effects []ObjectEffect `xml:"effects>effect"`
 }

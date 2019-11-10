@@ -40,26 +40,20 @@ import (
 
 // Struct for XML objects base node.
 type Objects struct {
-	XMLName xml.Name `xml:"base"`
+	XMLName xml.Name `xml:"objects"`
 	Nodes   []Object `xml:"object"`
 }
 
 // Struct for XML object node.
 type Object struct {
-	XMLName   xml.Name      `xml:"object"`
-	ID        string        `xml:"id,attr"`
-	Serial    string        `xml:"serial,attr"`
-	HP        int           `xml:"hp,attr"`
-	MaxHP     int           `xml:"max-hp,attr"`
-	Position  string        `xml:"position,value"`
-	Inventory Inventory     `xml:"inventory"`
-	Effects   ObjectEffects `xml:"effects"`
-}
-
-// Struct for XML node with object effects.
-type ObjectEffects struct {
-	XMLName xml.Name       `xml:"effects"`
-	Nodes   []ObjectEffect `xml:"effect"`
+	XMLName   xml.Name       `xml:"object"`
+	ID        string         `xml:"id,attr"`
+	Serial    string         `xml:"serial,attr"`
+	HP        int            `xml:"hp,attr"`
+	MaxHP     int            `xml:"max-hp,attr"`
+	Position  string         `xml:"position,value"`
+	Inventory Inventory      `xml:"inventory"`
+	Effects   []ObjectEffect `xml:"effects>effect"`
 }
 
 // Strcut for object effects XML node.
@@ -143,14 +137,14 @@ func xmlObject(ob *area.Object) *Object {
 	posX, posY := ob.Position()
 	xmlOb.Position = fmt.Sprintf("%fx%f", posX, posY)
 	xmlOb.Inventory = *xmlInventory(ob.Inventory())
-	xmlOb.Effects = *xmlObjectEffects(ob.Effects()...)
+	xmlOb.Effects = xmlObjectEffects(ob.Effects()...)
 	return xmlOb
 }
 
 // xmlObjectEffects parses specified effects to XML
 // object effects struct.
-func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffects {
-	xmlEffs := new(ObjectEffects)
+func xmlObjectEffects(effs ...*effect.Effect) []ObjectEffect {
+	var xmlEffs []ObjectEffect
 	for _, e := range effs {
 		xmlEffSource := ObjectEffectSource{}
 		if e.Source() != nil {
@@ -163,7 +157,7 @@ func xmlObjectEffects(effs ...*effect.Effect) *ObjectEffects {
 			Time:   e.Time(),
 			Source: xmlEffSource,
 		}
-		xmlEffs.Nodes = append(xmlEffs.Nodes, xmlEff)
+		xmlEffs = append(xmlEffs, xmlEff)
 	}
 	return xmlEffs
 }
@@ -236,7 +230,7 @@ func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
 		data.Items = append(data.Items, itData)
 	}
 	// Effects.
-	for _, xmlEffect := range xmlOb.Effects.Nodes {
+	for _, xmlEffect := range xmlOb.Effects {
 		effectData := res.ObjectEffectData{
 			ID:           xmlEffect.ID,
 			Serial:       xmlEffect.Serial,

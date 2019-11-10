@@ -63,7 +63,7 @@ type Character struct {
 	DefPosition string           `xml:"default-position,value"`
 	Inventory   Inventory        `xml:"inventory"`
 	Equipment   Equipment        `xml:"equipment"`
-	Effects     ObjectEffects    `xml:"effects"`
+	Effects     []ObjectEffect   `xml:"effects>effect"`
 	Skills      ObjectSkills     `xml:"skills"`
 	Memory      Memory           `xml:"memory"`
 	Dialogs     ObjectDialogs    `xml:"dialogs"`
@@ -170,7 +170,7 @@ func xmlCharacter(char *character.Character) *Character {
 	xmlChar.DefPosition = fmt.Sprintf("%fx%f", defX, defY)
 	xmlChar.Inventory = *xmlInventory(char.Inventory())
 	xmlChar.Equipment = *xmlEquipment(char.Equipment())
-	xmlChar.Effects = *xmlObjectEffects(char.Effects()...)
+	xmlChar.Effects = xmlObjectEffects(char.Effects()...)
 	xmlChar.Skills = *xmlObjectSkills(char.Skills()...)
 	xmlChar.Memory = *xmlMemory(char.Memory())
 	xmlChar.Dialogs = *xmlObjectDialogs(char.Dialogs()...)
@@ -325,7 +325,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 		data.EqItems = append(data.EqItems, eqItData)
 	}
 	// Effects.
-	for _, xmlEffect := range xmlChar.Effects.Nodes {
+	for _, xmlEffect := range xmlChar.Effects {
 		effectData := res.ObjectEffectData{
 			ID:           xmlEffect.ID,
 			Serial:       xmlEffect.Serial,

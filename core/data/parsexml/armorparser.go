@@ -41,16 +41,16 @@ type Armors struct {
 
 // Struct for armor node.
 type Armor struct {
-	XMLName   xml.Name      `xml:"armor"`
-	ID        string        `xml:"id,attr"`
-	Serial    string        `xml:"seral,attr"`
-	Value     int           `xml:"value,attr"`
-	Level     int           `xml:"level,attr"`
-	Armor     int           `xml:"armor,attr"`
-	Slots     string        `xml:"slots,attr"`
-	Loot      bool          `xml:"loot,attr"`
-	Reqs      Reqs          `xml:"eq>reqs"`
-	EQEffects ObjectEffects `xml:"eq>effects"`
+	XMLName   xml.Name       `xml:"armor"`
+	ID        string         `xml:"id,attr"`
+	Serial    string         `xml:"seral,attr"`
+	Value     int            `xml:"value,attr"`
+	Level     int            `xml:"level,attr"`
+	Armor     int            `xml:"armor,attr"`
+	Slots     string         `xml:"slots,attr"`
+	Loot      bool           `xml:"loot,attr"`
+	Reqs      Reqs           `xml:"eq>reqs"`
+	EQEffects []ObjectEffect `xml:"eq>effects>effect"`
 }
 
 // UnmarshalArmors retrieves armor data from specified XML data.
@@ -85,7 +85,7 @@ func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
 		slotsID = append(slotsID, int(s))
 	}
 	eqEffects := make([]res.EffectData, 0)
-	for _, xmlEffect := range xmlArmor.EQEffects.Nodes {
+	for _, xmlEffect := range xmlArmor.EQEffects {
 		eff := res.Effect(xmlEffect.ID)
 		if eff == nil {
 			log.Err.Printf("xml: build armor: hit effect not found: %s",

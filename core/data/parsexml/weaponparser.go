@@ -88,7 +88,7 @@ func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 		return nil, fmt.Errorf("fail to unmarshal damage type: %v", err)
 	}
 	hitEffects := make([]res.EffectData, 0)
-	for _, xmlEffect := range xmlWeapon.Damage.Effects.Nodes {
+	for _, xmlEffect := range xmlWeapon.Damage.Effects {
 		eff := res.Effect(xmlEffect.ID)
 		if eff == nil {
 			log.Err.Printf("xml: build weapon: hit effect not found: %s",

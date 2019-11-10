@@ -41,15 +41,15 @@ type Skills struct {
 
 // Struct for skill XML node.
 type Skill struct {
-	XMLName     xml.Name      `xml:"skill"`
-	ID          string        `xml:"id,attr"`
-	CastSec     int           `xml:"cast,attr"`
-	CooldownSec int           `xml:"cooldown,attr"`
-	Range       string        `xml:"range,attr"`
-	Melee       bool          `xml:"melee,attr"`
-	Spell       bool          `xml:"spell,attr"`
-	Effects     ObjectEffects `xml:"effects"`
-	Reqs        Reqs          `xml:"reqs"`
+	XMLName     xml.Name       `xml:"skill"`
+	ID          string         `xml:"id,attr"`
+	CastSec     int            `xml:"cast,attr"`
+	CooldownSec int            `xml:"cooldown,attr"`
+	Range       string         `xml:"range,attr"`
+	Melee       bool           `xml:"melee,attr"`
+	Spell       bool           `xml:"spell,attr"`
+	Effects     []ObjectEffect `xml:"effects>effect"`
+	Reqs        Reqs           `xml:"reqs"`
 }
 
 // UnmarshalSkills retrieves skills data from specified XML data.
@@ -76,7 +76,7 @@ func UnmarshalSkills(data io.Reader) ([]*res.SkillData, error) {
 func buildSkillData(xmlSkill Skill) (*res.SkillData, error) {
 	reqs := buildReqs(&xmlSkill.Reqs)
 	effects := make([]res.EffectData, 0)
-	for _, xmlEffect := range xmlSkill.Effects.Nodes {
+	for _, xmlEffect := range xmlSkill.Effects {
 		eff := res.Effect(xmlEffect.ID)
 		if eff == nil {
 			log.Err.Printf("xml: build skill data: effect data not found: %s",
