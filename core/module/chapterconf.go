@@ -61,6 +61,12 @@ func (cc ChapterConf) NPCPath() string {
 	return filepath.FromSlash(cc.FullPath() + "/npc")
 }
 
+// ObjectsPath returns path to chapter objects
+// directory.
+func (cc ChapterConf) ObjectsPath() string {
+	return filepath.FromSlash(cc.FullPath() + "/objects")
+}
+
 // DialogsPath returns path to chapter dialogs directory.
 func (cc ChapterConf) DialogsPath() string {
 	return filepath.FromSlash(cc.FullPath() + "/dialogs")

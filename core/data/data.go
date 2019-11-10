@@ -102,6 +102,12 @@ func LoadChapterData(chapter *module.Chapter) error {
 		npcd.BasicData.Name = lang.TextDir(chapter.Conf().LangPath(), npcd.BasicData.ID)
 	}
 	res.SetCharactersData(npcData)
+	// Area objects.
+	objectsData, err := ImportObjectsDir(chapter.Conf().ObjectsPath())
+	if err != nil {
+		return fmt.Errorf("fail to import object: %v", err)
+	}
+	res.AddObjectData(objectsData...) // adding to global module objects
 	// Dialogs.
 	dialogsData, err := ImportDialogsDir(chapter.Conf().DialogsPath())
 	if err != nil {

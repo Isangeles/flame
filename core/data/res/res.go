@@ -246,6 +246,14 @@ func AddRecipeData(data ...*RecipeData) {
 	}
 }
 
+// AddObjectData adds specified area object
+// data to area objects resources.
+func AddObjectData(data ...*ObjectData) {
+	for _, od := range data {
+		objectsData[od.BasicData.ID] = od
+	}
+}
+
 // SetEffectsData sets specified effects data
 // as effects resources.
 func SetEffectsData(data []*EffectData) {
