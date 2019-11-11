@@ -152,8 +152,8 @@ func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Tar
 	objects := make([]effect.Target, 0)
 	// Characters.
 	addChar := func(k, v interface{}) bool {
-		t, ok := v.(effect.Target)
-		if ok {
+		t, ok := v.(*character.Character)
+		if ok && object.Range(t, pos) <= maxrange {
 			objects = append(objects, t)
 		}
 		return true
@@ -174,9 +174,10 @@ func (a *Area) NearObjects(x, y, maxrange float64) []object.Positioner {
 	objects := make([]object.Positioner, 0)
 	// Characters.
 	addChar := func(k, v interface{}) bool {
-		o, ok := v.(object.Positioner)
-		if ok {
-			objects = append(objects, o)
+		c, ok := v.(*character.Character)
+		charX, charY := c.Position()
+		if ok && math.Hypot(charX-x, charY-y) <= maxrange {
+			objects = append(objects, c)
 		}
 		return true
 	}
