@@ -32,6 +32,11 @@ type AreaMod struct {
 	areaID string
 }
 
+// AreaID returns modifier area ID.
+func (am *AreaMod) AreaID() string {
+	return am.areaID
+}
+
 // Affect moves all targets to area.
 func (am *AreaMod) Affect(source Target, targets ...Target) {
  	for _, t := range targets {

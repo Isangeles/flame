@@ -1,6 +1,5 @@
 MAJOR:
 * Switching chapters
-* Changing areas
 * Item materials
 MINOR:
 * More examples
@@ -28,3 +27,4 @@ DONE:
 * Module, chapters, scenarios
 * Crafting system
 * NPC trainers
+* Changing areas

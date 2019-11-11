@@ -45,6 +45,16 @@ func NewHealthMod(data res.HealthModData) *HealthMod {
 	return hm
 }
 
+// Min returns minimal value of health modifier.
+func (hm *HealthMod) Min() int {
+	return hm.min
+}
+
+// Max returns maximal vallue of healtg modifier.
+func (hm *HealthMod) Max() int {
+	return hm.max
+}
+
 // Affect modifies targets health points.
 func (hm *HealthMod) Affect(source Target, targets ...Target) {
 	for _, t := range targets {

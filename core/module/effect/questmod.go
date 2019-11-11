@@ -41,6 +41,11 @@ func NewQuestMod(data res.QuestModData) *QuestMod {
 	return qm
 }
 
+// QuestID returns modifier quest ID.
+func (qm *QuestMod) QuestID() string {
+	return qm.questID
+}
+
 // Affect modifiers targets quests.
 func (qm *QuestMod) Affect(source Target, targets ...Target) {
 	for _, t := range targets {

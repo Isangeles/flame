@@ -67,7 +67,30 @@ type QuestMod struct {
 // xmlModifiers parses specified modifiers to XML node.
 func xmlModifiers(mods ...effect.Modifier) Modifiers {
 	var xmlMods Modifiers
-	// TODO: parse modifiers.
+	for _, md := range mods {
+		switch md := md.(type) {
+		case *effect.HealthMod:
+			xmlMod := HealthMod{
+				MinValue: md.Min(),
+				MaxValue: md.Max(),
+			}
+			xmlMods.HealthMods = append(xmlMods.HealthMods, xmlMod)
+		case *effect.HitMod:
+			xmlMod := HitMod{}
+			xmlMods.HitMods = append(xmlMods.HitMods, xmlMod)
+		case *effect.FlagMod:
+			xmlMod := FlagMod{
+				ID:      md.ID(),
+				Disable: md.FlagOn(),
+			}
+			xmlMods.FlagMods = append(xmlMods.FlagMods, xmlMod)
+		case *effect.QuestMod:
+			xml := QuestMod{
+				Start: md.QuestID(),
+			}
+			xmlMods.QuestMods = append(xmlMods.QuestMods, xmlMod)
+		}
+	}
 	return xmlMods
 }
 

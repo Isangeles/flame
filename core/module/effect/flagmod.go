@@ -42,6 +42,17 @@ func NewFlagMod(data res.FlagModData) *FlagMod {
 	return fm
 }
 
+// FlagID returns modifier flag ID.
+func (fm *FlagMod) FlagID() string {
+	return fm.flagID
+}
+
+// FlagOn checks if modifier flag should
+// be turned on or off.
+func (fm *FlagMod) FlagOn() bool {
+	return fm.flagOn
+}
+
 // Affect modifies targets flags.
 func (fm *FlagMod) Affect(source Target, targets ...Target) {
 	for _, t := range targets {
