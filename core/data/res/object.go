@@ -37,11 +37,18 @@ type ObjectBasicData struct {
 	Name      string
 	Serial    string
 	HP, MaxHP int
+	Action    ObjectActionData
 }
 
 // Struct for saved object data.
 type ObjectSavedData struct {
 	PosX, PosY float64
+}
+
+// Struct for object action data.
+type ObjectActionData struct {
+	SelfMods []ModifierData
+	UserMods []ModifierData
 }
 
 // Struct for inventory item data

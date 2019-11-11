@@ -10,6 +10,7 @@ MINOR:
 * Remove generateSerials function from chapter struct
 * Refactor chapter's SetOnAreaAddedFunc to AddOnAreaAddedFunc, i.e. adding event functions, not just handling and overriding one function
 * Use sync.Map to store area objects(and subareas?)
+* Exporting area object acction to XML.
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism

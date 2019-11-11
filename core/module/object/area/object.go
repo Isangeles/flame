@@ -39,12 +39,19 @@ type Object struct {
 	hp, maxHP  int
 	resilience object.Resilience
 	posX, posY float64
+	action     ObjectAction
 	inventory  *item.Inventory
 	effects    map[string]*effect.Effect
 	flags      map[string]flag.Flag
 	chatlog    chan string
 	combatlog  chan string
 	privatelog chan string
+}
+
+// Struct for object action.
+type ObjectAction struct {
+	SelfMods []effect.Modifier
+	UserMods []effect.Modifier
 }
 
 // New creates new area object from
@@ -57,6 +64,8 @@ func NewObject(data res.ObjectBasicData) *Object {
 		hp:     data.HP,
 		maxHP:  data.MaxHP,
 	}
+	ob.action.SelfMods = effect.NewModifiers(data.Action.SelfMods...)
+	ob.action.UserMods = effect.NewModifiers(data.Action.UserMods...)
 	ob.inventory = item.NewInventory(10)
 	ob.effects = make(map[string]*effect.Effect)
 	ob.flags = make(map[string]flag.Flag)
@@ -176,6 +185,11 @@ func (ob *Object) Experience() int {
 // not have experience. Function to satisfy
 // effect targer interface.
 func (ob *Object) SetExperience(v int) {
+}
+
+// Action returns object action struct.
+func (ob *Object) Action() ObjectAction {
+	return ob.action
 }
 
 // Inventory returns object inventory.

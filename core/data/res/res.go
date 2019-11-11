@@ -51,15 +51,14 @@ func init() {
 }
 
 // Effect returns resources for effect
-// with specified ID or empty resource
-// struct if data for specified effect ID
-// was not found.
+// with specified ID or nil if data for
+// specified effect ID was not found.
 func Effect(id string) *EffectData {
 	return effectsData[id]
 }
 
 // Skill returns resources for skill
-// with specified iD or empty resource
+// with specified ID or empty resource
 // struct if data for specified skill ID
 // was not found.
 func Skill(id string) *SkillData {

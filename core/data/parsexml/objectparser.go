@@ -52,6 +52,7 @@ type Object struct {
 	HP        int            `xml:"hp,attr"`
 	MaxHP     int            `xml:"max-hp,attr"`
 	Position  string         `xml:"position,value"`
+	Action    ObjectAction   `xml:"action"`
 	Inventory Inventory      `xml:"inventory"`
 	Effects   []ObjectEffect `xml:"effects>effect"`
 }
@@ -104,6 +105,13 @@ type ObjectRecipe struct {
 	ID      string   `xml:"id,attr"`
 }
 
+// Struct for object action XML node.
+type ObjectAction struct {
+	XMLName  xml.Name  `xml:"action"`
+	SelfMods Modifiers `xml:"self>modifiers"`
+	UserMods Modifiers `xml:"user>modifiers"`
+}
+
 // UnmarshalObjectsBaseXML parses specified data to XML
 // object nodes.
 func UnmarshalObjectsBase(data io.Reader) ([]*res.ObjectData, error) {
@@ -136,6 +144,7 @@ func xmlObject(ob *area.Object) *Object {
 	xmlOb.MaxHP = ob.MaxHealth()
 	posX, posY := ob.Position()
 	xmlOb.Position = fmt.Sprintf("%fx%f", posX, posY)
+	xmlOb.Action = xmlObjectAction(ob.Action())
 	xmlOb.Inventory = *xmlInventory(ob.Inventory())
 	xmlOb.Effects = xmlObjectEffects(ob.Effects()...)
 	return xmlOb
@@ -202,6 +211,14 @@ func xmlObjectRecipes(recipes ...*craft.Recipe) []ObjectRecipe {
 	return xmlRecipes
 }
 
+// xmlObjectAction parses specified object action to XML node.
+func xmlObjectAction(action area.ObjectAction) ObjectAction {
+	var xmlAction ObjectAction
+	xmlAction.SelfMods = xmlModifiers(action.SelfMods...)
+	xmlAction.UserMods = xmlModifiers(action.UserMods...)
+	return xmlAction
+}
+
 // buildObjectData creates object data from specified XML
 // data.
 func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
@@ -212,6 +229,9 @@ func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
 		HP:     xmlOb.HP,
 		MaxHP:  xmlOb.MaxHP,
 	}
+	// Action.
+	baseData.Action.SelfMods = buildModifiers(&xmlOb.Action.SelfMods)
+	baseData.Action.UserMods = buildModifiers(&xmlOb.Action.UserMods)
 	data := res.ObjectData{BasicData: baseData}
 	// Position.
 	if xmlOb.Position != "" {

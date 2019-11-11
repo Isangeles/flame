@@ -27,6 +27,7 @@ import (
 	"encoding/xml"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/effect"
 )
 
 // Struct for modifiers XML node.
@@ -61,6 +62,13 @@ type FlagMod struct {
 type QuestMod struct {
 	XMLName xml.Name `xml:"quest-mod"`
 	Start   string   `xml:"start,attr"`
+}
+
+// xmlModifiers parses specified modifiers to XML node.
+func xmlModifiers(mods ...effect.Modifier) Modifiers {
+	var xmlMods Modifiers
+	// TODO: parse modifiers.
+	return xmlMods
 }
 
 // buildModifiers creates modifiers from specified XML data.
