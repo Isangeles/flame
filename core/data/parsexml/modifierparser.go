@@ -80,12 +80,12 @@ func xmlModifiers(mods ...effect.Modifier) Modifiers {
 			xmlMods.HitMods = append(xmlMods.HitMods, xmlMod)
 		case *effect.FlagMod:
 			xmlMod := FlagMod{
-				ID:      md.ID(),
+				ID:      md.FlagID(),
 				Disable: md.FlagOn(),
 			}
 			xmlMods.FlagMods = append(xmlMods.FlagMods, xmlMod)
 		case *effect.QuestMod:
-			xml := QuestMod{
+			xmlMod := QuestMod{
 				Start: md.QuestID(),
 			}
 			xmlMods.QuestMods = append(xmlMods.QuestMods, xmlMod)
