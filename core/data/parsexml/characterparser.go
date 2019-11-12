@@ -30,8 +30,8 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/flag"
+	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/quest"
 	"github.com/isangeles/flame/log"
 )
@@ -54,7 +54,7 @@ type Character struct {
 	Alignment   string           `xml:"alignment,attr"`
 	Guild       string           `xml:"guild,attr"`
 	Level       int              `xml:"level,attr"`
-	Stats       string           `xml:"stats,value"`
+	Attributes  Attributes       `xml:"attributes"`
 	PC          bool             `xml:"pc,attr"`
 	HP          int              `xml:"hp,attr"`
 	Mana        int              `xml:"mana,attr"`
@@ -114,6 +114,16 @@ type CharacterQuest struct {
 	Stage   string   `xml:"stage,attr"`
 }
 
+// Struct for character attributes node.
+type Attributes struct {
+	XMLName      xml.Name `xml:"attributes"`
+	Strenght     int      `xml:"stringht,attr"`
+	Constitution int      `xml:"constitution,attr"`
+	Dexterity    int      `xml:"dexterity,attr"`
+	Intelligence int      `xml:"inteligence,attr"`
+	Wisdom       int      `xml:"wisdom,attr"`
+}
+
 // UnmarshalCharacters retrieve all characters data
 // from specified XML data.
 func UnmarshalCharacters(data io.Reader) ([]*res.CharacterData, error) {
@@ -160,7 +170,7 @@ func xmlCharacter(char *character.Character) *Character {
 	xmlChar.Race = marshalRace(char.Race())
 	xmlChar.Attitude = marshalAttitude(char.Attitude())
 	xmlChar.Alignment = marshalAlignment(char.Alignment())
-	xmlChar.Stats = marshalAttributes(char.Attributes())
+	xmlChar.Attributes = xmlAttributes(char.Attributes())
 	xmlChar.HP = char.Health()
 	xmlChar.Mana = char.Mana()
 	xmlChar.Exp = char.Experience()
@@ -179,6 +189,19 @@ func xmlCharacter(char *character.Character) *Character {
 	xmlChar.Crafting = xmlObjectRecipes(char.Recipes()...)
 	xmlChar.Trainings = *xmlTrainings(char.Trainings()...)
 	return xmlChar
+}
+
+// xmlAttributes parses character attributes to XML
+// attributes nodes.
+func xmlAttributes(attrs character.Attributes) Attributes {
+	xmlAttrs := Attributes{
+		Strenght:     attrs.Str,
+		Constitution: attrs.Con,
+		Dexterity:    attrs.Dex,
+		Intelligence: attrs.Int,
+		Wisdom:       attrs.Wis,
+	}
+	return xmlAttrs
 }
 
 // xmlEquipment parses specified character equipment to
@@ -270,16 +293,13 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 		return nil, fmt.Errorf("fail to parse alignment: %v", err)
 	}
 	data.BasicData.Alignment = int(alignment)
-	attributes, err := UnmarshalAttributes(xmlChar.Stats)
-	if err != nil {
-		return nil, fmt.Errorf("fail to parse attributes: %v", err)
-	}
 	// Attributes.
-	data.BasicData.Str = attributes.Str
-	data.BasicData.Con = attributes.Con
-	data.BasicData.Dex = attributes.Dex
-	data.BasicData.Int = attributes.Int
-	data.BasicData.Wis = attributes.Wis
+	attrs := xmlChar.Attributes
+	data.BasicData.Str = attrs.Strenght
+	data.BasicData.Con = attrs.Constitution
+	data.BasicData.Dex = attrs.Dexterity
+	data.BasicData.Int = attrs.Intelligence
+	data.BasicData.Wis = attrs.Wisdom
 	// Flags.
 	for _, xmlFlag := range xmlChar.Flags {
 		flagData := buildFlagData(xmlFlag)

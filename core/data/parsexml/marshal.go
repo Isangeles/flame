@@ -105,12 +105,6 @@ func marshalAlignment(alignment character.Alignment) string {
 	}
 }
 
-// marshalAttributes parses attributes to XML node value.
-func marshalAttributes(attrs character.Attributes) string {
-	return fmt.Sprintf("%d;%d;%d;%d;%d;", attrs.Str,
-		attrs.Con, attrs.Dex, attrs.Wis, attrs.Int)
-}
-
 // marshalEqSlot parses specified equipment slot to XML
 // attribute value.
 func MarshalEqSlot(eqSlot *character.EquipmentSlot) string {
