@@ -49,6 +49,9 @@ func NewModifiers(data ...res.ModifierData) (mods []Modifier) {
 		case res.QuestModData:
 			questMod := NewQuestMod(md)
 			mods = append(mods, questMod)
+		case res.AreaModData:
+			areaMod := NewAreaMod(md)
+			mods = append(mods, areaMod)
 		}
 	}
 	return

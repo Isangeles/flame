@@ -24,12 +24,20 @@
 package effect
 
 import (
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/object"
 )
 
 // Interface for area modifier.
 type AreaMod struct {
 	areaID string
+}
+
+// NewAreaMod creates new area modifier.
+func NewAreaMod(data res.AreaModData) *AreaMod {
+	am := new(AreaMod)
+	am.areaID = data.ID
+	return am
 }
 
 // AreaID returns modifier area ID.

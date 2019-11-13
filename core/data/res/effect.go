@@ -56,3 +56,9 @@ type FlagModData struct {
 type QuestModData struct {
 	ID string
 }
+
+// Struct for area modifier
+// data.
+type AreaModData struct {
+	ID string
+}

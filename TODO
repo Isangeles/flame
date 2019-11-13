@@ -9,7 +9,6 @@ MINOR:
 * Remove generateSerials function from chapter struct
 * Refactor chapter's SetOnAreaAddedFunc to AddOnAreaAddedFunc, i.e. adding event functions, not just handling and overriding one function
 * Use sync.Map to store area objects(and subareas?)
-* Exporting area object action to XML
 * Exporting character exports also quests, effects, items, etc., its desirable for save game, but other marshaling method should be applied for exporting character to use in different game
 DONE:
 * Generating of unique serial values for game objects

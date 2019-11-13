@@ -37,6 +37,7 @@ type Modifiers struct {
 	HitMods    []HitMod    `xml:"hit-mod"`
 	FlagMods   []FlagMod   `xml:"flag-mod"`
 	QuestMods  []QuestMod  `xml:"quest-mod"`
+	AreaMods   []AreaMod   `xml:"area-mod"`
 }
 
 // Struct for health modifier XML node.
@@ -64,6 +65,12 @@ type QuestMod struct {
 	Start   string   `xml:"start,attr"`
 }
 
+// Struct for area modifier node.
+type AreaMod struct {
+	XMLName xml.Name `xml:"area-mod"`
+	ID      string   `xml:"id,attr"`
+}
+
 // xmlModifiers parses specified modifiers to XML node.
 func xmlModifiers(mods ...effect.Modifier) Modifiers {
 	var xmlMods Modifiers
@@ -89,6 +96,11 @@ func xmlModifiers(mods ...effect.Modifier) Modifiers {
 				Start: md.QuestID(),
 			}
 			xmlMods.QuestMods = append(xmlMods.QuestMods, xmlMod)
+		case *effect.AreaMod:
+			xmlMod := AreaMod{
+				ID: md.AreaID(),
+			}
+			xmlMods.AreaMods = append(xmlMods.AreaMods, xmlMod)
 		}
 	}
 	return xmlMods
@@ -114,6 +126,11 @@ func buildModifiers(xmlModifiers *Modifiers) (mods []res.ModifierData) {
 	// Quest modifiers.
 	for _, xmlMod := range xmlModifiers.QuestMods {
 		mod := res.QuestModData{xmlMod.Start}
+		mods = append(mods, mod)
+	}
+	// Area modifiers.
+	for _, xmlMod := range xmlModifiers.AreaMods {
+		mod := res.AreaModData{xmlMod.ID}
 		mods = append(mods, mod)
 	}
 	return
