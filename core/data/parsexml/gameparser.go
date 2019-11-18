@@ -125,6 +125,11 @@ func marshalGameArea(game *save.SaveGame, a *area.Area) *SavedArea {
 		xmlObject := xmlObject(o)
 		xmlArea.Objects = append(xmlArea.Objects, *xmlObject)
 	}
+	// Subareas.
+	for _, sa := range a.Subareas() {
+		xmlSubarea := marshalGameArea(game, sa)
+		xmlArea.Subareas = append(xmlArea.Subareas, *xmlSubarea)
+	}
 	return xmlArea
 }
 
@@ -151,6 +156,11 @@ func unmarshalGameArea(xmlArea SavedArea) *res.AreaData {
 			continue
 		}
 		area.Objects = append(area.Objects, *obData)
+	}
+	// Subareas.
+	for _, xmlSa := range xmlArea.Subareas {
+		saData := unmarshalGameArea(xmlSa)
+		area.Subareas = append(area.Subareas, *saData)
 	}
 	return area
 }

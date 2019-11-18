@@ -35,10 +35,10 @@ import (
 
 // Struct for XML area node.
 type Area struct {
-	ID       string       `xml:"id,attr"`
-	NPCs     []AreaChar   `xml:"npcs>char"`
-	Objects  []AreaObject `xml:"objects>object"`
-	Subareas []Area       `xml:"subareas>area"`
+	ID         string       `xml:"id,attr"`
+	Characters []AreaChar   `xml:"npcs>char"`
+	Objects    []AreaObject `xml:"objects>object"`
+	Subareas   []Area       `xml:"subareas>area"`
 }
 
 // Struct for XML object node.
@@ -82,12 +82,13 @@ func MarshalArea(areaData *res.ModuleAreaData) (string, error) {
 func xmlArea(areaData *res.ModuleAreaData) *Area {
 	xmlArea := new(Area)
 	xmlArea.ID = areaData.ID
-	for _, ad := range areaData.Subareas {
-		xmlArea := new(Area)
-		xmlArea.ID = ad.ID
+	fmt.Printf("area: %s: subareas: %v\n", areaData.ID, areaData.Subareas)
+	for _, sad := range areaData.Subareas {
+		xmlSubarea := new(Area)
+		xmlArea.ID = sad.ID
 		// Characters.
-		xmlChars := xmlArea.NPCs
-		for _, npc := range ad.NPCS {
+		xmlChars := xmlArea.Characters
+		for _, npc := range sad.NPCS {
 			xmlNPC := new(AreaChar)
 			xmlNPC.ID = npc.ID
 			xmlNPC.Position = MarshalPosition(npc.PosX, npc.PosY)
@@ -95,13 +96,13 @@ func xmlArea(areaData *res.ModuleAreaData) *Area {
 		}
 		// Objects.
 		xmlObjects := xmlArea.Objects
-		for _, ob := range ad.Objects {
+		for _, ob := range sad.Objects {
 			xmlOb := new(AreaObject)
 			xmlOb.ID = ob.ID
 			xmlOb.Position = MarshalPosition(ob.PosX, ob.PosY)
 			xmlObjects = append(xmlObjects, *xmlOb)
 		}
-		xmlArea.Subareas = append(xmlArea.Subareas, *xmlArea)
+		xmlArea.Subareas = append(xmlArea.Subareas, *xmlSubarea)
 	}
 	return xmlArea
 }
@@ -110,7 +111,7 @@ func xmlArea(areaData *res.ModuleAreaData) *Area {
 func buildAreaData(xmlArea *Area) *res.ModuleAreaData {
 	area := res.ModuleAreaData{ID: xmlArea.ID}
 	// Characters.
-	for _, xmlChar := range xmlArea.NPCs {
+	for _, xmlChar := range xmlArea.Characters {
 		x, y, err := UnmarshalPosition(xmlChar.Position)
 		if err != nil {
 			log.Err.Printf("xml: build area: %s: build char: %s: fail to parse position: %v",

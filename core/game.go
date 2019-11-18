@@ -184,6 +184,9 @@ func (g *Game) updateObjectsArea() {
 			}
 		}
 		if newArea == nil {
+			log.Err.Printf("area update: %s#%s: area not found: %s\n",
+				c.ID(), c.Serial(), c.AreaID())
+			c.SetAreaID(currentArea.ID())
 			return
 		}
 		newArea.AddCharacter(c)
