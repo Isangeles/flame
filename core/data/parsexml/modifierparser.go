@@ -67,8 +67,9 @@ type QuestMod struct {
 
 // Struct for area modifier node.
 type AreaMod struct {
-	XMLName xml.Name `xml:"area-mod"`
-	ID      string   `xml:"id,attr"`
+	XMLName  xml.Name `xml:"area-mod"`
+	ID       string   `xml:"id,attr"`
+	EnterPos string   `xml:"enter-position,attr"`
 }
 
 // xmlModifiers parses specified modifiers to XML node.
@@ -98,7 +99,8 @@ func xmlModifiers(mods ...effect.Modifier) Modifiers {
 			xmlMods.QuestMods = append(xmlMods.QuestMods, xmlMod)
 		case *effect.AreaMod:
 			xmlMod := AreaMod{
-				ID: md.AreaID(),
+				ID:       md.AreaID(),
+				EnterPos: MarshalPosition(md.EnterPosition()),
 			}
 			xmlMods.AreaMods = append(xmlMods.AreaMods, xmlMod)
 		}
@@ -130,7 +132,11 @@ func buildModifiers(xmlModifiers *Modifiers) (mods []res.ModifierData) {
 	}
 	// Area modifiers.
 	for _, xmlMod := range xmlModifiers.AreaMods {
-		mod := res.AreaModData{xmlMod.ID}
+		x, y, err := UnmarshalPosition(xmlMod.EnterPos)
+		if err != nil {
+			x, y = 0, 0
+		}
+		mod := res.AreaModData{xmlMod.ID, x, y}
 		mods = append(mods, mod)
 	}
 	return

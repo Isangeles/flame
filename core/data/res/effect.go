@@ -60,5 +60,7 @@ type QuestModData struct {
 // Struct for area modifier
 // data.
 type AreaModData struct {
-	ID string
+	ID     string
+	EnterX float64
+	EnterY float64
 }

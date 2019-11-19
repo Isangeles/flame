@@ -1,6 +1,7 @@
 MAJOR:
 * Switching chapters
 * Item materials
+* Remove Affect/Undo functions from modifiers and move modifier handling to objects(characters/area objects), current implementation produces number of useless interfaces, object itself should decidate how to handle specific modifier(just like effects)
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)

@@ -31,12 +31,16 @@ import (
 // Interface for area modifier.
 type AreaMod struct {
 	areaID string
+	enterX float64
+	enterY float64
 }
 
 // NewAreaMod creates new area modifier.
 func NewAreaMod(data res.AreaModData) *AreaMod {
 	am := new(AreaMod)
 	am.areaID = data.ID
+	am.enterX = data.EnterX
+	am.enterY = data.EnterY
 	return am
 }
 
@@ -45,11 +49,18 @@ func (am *AreaMod) AreaID() string {
 	return am.areaID
 }
 
+// EnterPosition returns position for object after
+// area change.
+func (am *AreaMod) EnterPosition() (float64, float64) {
+	return am.enterX, am.enterY
+}
+
 // Affect moves all targets to area.
 func (am *AreaMod) Affect(source Target, targets ...Target) {
  	for _, t := range targets {
 		if c, ok := t.(object.AreaObject); ok {
 			c.SetAreaID(am.areaID)
+			c.SetPosition(am.enterX, am.enterY)
 		}
 	}
 }
