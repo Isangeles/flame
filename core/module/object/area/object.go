@@ -64,8 +64,10 @@ func NewObject(data res.ObjectBasicData) *Object {
 		hp:     data.HP,
 		maxHP:  data.MaxHP,
 	}
-	ob.action.SelfMods = effect.NewModifiers(data.Action.SelfMods...)
-	ob.action.UserMods = effect.NewModifiers(data.Action.UserMods...)
+	ob.action = ObjectAction{
+		SelfMods: effect.NewModifiers(data.Action.SelfMods...),
+		UserMods: effect.NewModifiers(data.Action.UserMods...),
+	}
 	ob.inventory = item.NewInventory(10)
 	ob.effects = make(map[string]*effect.Effect)
 	ob.flags = make(map[string]flag.Flag)

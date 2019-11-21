@@ -58,9 +58,7 @@ func (e *Effect) Update(delta int64) {
 	}
 	e.sec_timer += delta
 	if  e.time == e.duration || e.sec_timer >= 1000 { // at start and every second after that
-		for _, m := range e.modifiers {
-			m.Affect(e.source, e.target)
-		}
+		e.target.TakeModifiers(e.source, e.modifiers...)
 		e.sec_timer = 0
 	}
 	e.time -= delta

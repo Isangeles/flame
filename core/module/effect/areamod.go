@@ -25,7 +25,6 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object"
 )
 
 // Interface for area modifier.
@@ -53,18 +52,4 @@ func (am *AreaMod) AreaID() string {
 // area change.
 func (am *AreaMod) EnterPosition() (float64, float64) {
 	return am.enterX, am.enterY
-}
-
-// Affect moves all targets to area.
-func (am *AreaMod) Affect(source Target, targets ...Target) {
- 	for _, t := range targets {
-		if c, ok := t.(object.AreaObject); ok {
-			c.SetAreaID(am.areaID)
-			c.SetPosition(am.enterX, am.enterY)
-		}
-	}
-}
-
-// Undo does nothing.
-func (am *AreaMod) Undo(source Target, tagerts ...Target) {
 }

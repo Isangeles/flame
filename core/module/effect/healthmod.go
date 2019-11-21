@@ -24,12 +24,8 @@
 package effect
 
 import (
-	"fmt"
-	
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/rng"
-	"github.com/isangeles/flame/core/module/object"
 )
 
 // Struct for health modifier.
@@ -55,25 +51,8 @@ func (hm *HealthMod) Max() int {
 	return hm.max
 }
 
-// Affect modifies targets health points.
-func (hm *HealthMod) Affect(source Target, targets ...Target) {
-	for _, t := range targets {
-		t, ok := t.(object.Killable)
-		if !ok {
-			continue
-		}
-		val := rng.RollInt(hm.min, hm.max)
-		t.SetHealth(t.Health() + val)
-		logger, ok := t.(object.Logger)
-		if !ok {
-			continue
-		}
-		cmbMsg := fmt.Sprintf("%s:%s:%d", logger.Name(),
-			lang.Text("ui", "ob_health"), val)
-		logger.SendCombat(cmbMsg)
-	}
-}
-
-// Undo undos health modification on specified targets.
-func (hm *HealthMod) Undo(source Target, targets ...Target) {
+// RandomValue returns random number from
+// Min - Max range of modifier.
+func (hm *HealthMod) RandomValue() int {
+	return rng.RollInt(hm.Min(), hm.Max())
 }

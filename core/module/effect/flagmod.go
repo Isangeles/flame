@@ -30,49 +30,25 @@ import (
 
 // Struct for flag modifier.
 type FlagMod struct {
-	flagID string
+	flag   flag.Flag
 	flagOn bool
 }
 
 // NewFlagMod create new flag modifier.
 func NewFlagMod(data res.FlagModData) *FlagMod {
 	fm := new(FlagMod)
-	fm.flagID = data.ID
+	fm.flag = flag.Flag(data.ID)
 	fm.flagOn = data.On
 	return fm
 }
 
-// FlagID returns modifier flag ID.
-func (fm *FlagMod) FlagID() string {
-	return fm.flagID
+// Flag returns modifier flag.
+func (fm *FlagMod) Flag() flag.Flag {
+	return fm.flag
 }
 
 // FlagOn checks if modifier flag should
 // be turned on or off.
 func (fm *FlagMod) FlagOn() bool {
 	return fm.flagOn
-}
-
-// Affect modifies targets flags.
-func (fm *FlagMod) Affect(source Target, targets ...Target) {
-	for _, t := range targets {
-		flagger, ok := t.(flag.Flagger)
-		if !ok {
-			return
-		}
-		f := flag.Flag(fm.flagID)
-		flagger.AddFlag(f)
-	}
-}
-
-// Undo undos flag modifications on specified targets.
-func (fm *FlagMod) Undo(source Target, targets ...Target) {
-	for _, t := range targets {
-		flagger, ok := t.(flag.Flagger)
-		if !ok {
-			return
-		}
-		f := flag.Flag(fm.flagID)
-		flagger.RemoveFlag(f)
-	}
 }

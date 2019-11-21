@@ -25,8 +25,6 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/quest"
-	"github.com/isangeles/flame/log"
 )
 
 // Struct for quest modifier.
@@ -44,25 +42,4 @@ func NewQuestMod(data res.QuestModData) *QuestMod {
 // QuestID returns modifier quest ID.
 func (qm *QuestMod) QuestID() string {
 	return qm.questID
-}
-
-// Affect modifiers targets quests.
-func (qm *QuestMod) Affect(source Target, targets ...Target) {
-	for _, t := range targets {
-		quester, ok := t.(quest.Quester)
-		if !ok {
-			return
-		}
-		qData := res.Quest(qm.questID)
-		if qData == nil {
-			log.Err.Printf("q_mod:quest_data_not_found:%s", qm.questID)
-			return
-		}
-		q := quest.New(*qData)
-		quester.Journal().AddQuest(q)
-	}
-}
-
-// Undo undos modifications on specified target.
-func (qm *QuestMod) Undo(source Target, targets ...Target) {
 }

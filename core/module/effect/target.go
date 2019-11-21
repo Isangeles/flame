@@ -32,4 +32,5 @@ type Target interface {
 	TakeEffect(e *Effect)
 	AddEffect(e *Effect)
 	RemoveEffect(e *Effect)
+	TakeModifiers(s Target, m ...Modifier)
 }

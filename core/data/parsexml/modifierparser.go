@@ -88,7 +88,7 @@ func xmlModifiers(mods ...effect.Modifier) Modifiers {
 			xmlMods.HitMods = append(xmlMods.HitMods, xmlMod)
 		case *effect.FlagMod:
 			xmlMod := FlagMod{
-				ID:      md.FlagID(),
+				ID:      md.Flag().ID(),
 				Disable: md.FlagOn(),
 			}
 			xmlMods.FlagMods = append(xmlMods.FlagMods, xmlMod)
