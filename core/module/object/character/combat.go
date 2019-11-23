@@ -31,7 +31,7 @@ import (
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/item"
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/skill"
 	"github.com/isangeles/flame/log"
 )
@@ -60,7 +60,7 @@ func (c *Character) Damage() (int, int) {
 
 // DamgaeType returns type of damage caused by
 // character.
-func (c *Character) DamageType() object.Element {
+func (c *Character) DamageType() objects.Element {
 	var rightHandItem item.Equiper
 	for _, s := range c.Equipment().Slots() {
 		if s.Type() != Hand_right {
@@ -74,7 +74,7 @@ func (c *Character) DamageType() object.Element {
 			w.DamageType()
 		}
 	}
-	return object.Element_none
+	return objects.Element_none
 }
 
 // DamageEffects returns character damage effects.
@@ -133,7 +133,7 @@ func (c *Character) UseSkill(s *skill.Skill) {
 		if err != nil {
 			// Move to target if is too far.
 			if fmt.Sprintf("%v", err) == skill.RANGE_ERR {
-				if tarPos, ok := tar.(object.Positioner); ok {
+				if tarPos, ok := tar.(objects.Positioner); ok {
 					c.SetDestPoint(tarPos.Position())
 				}
 			}

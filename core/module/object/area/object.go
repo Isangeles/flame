@@ -1,5 +1,5 @@
 /*
- * object.go
+ * objects.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -29,7 +29,7 @@ import (
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/item"
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 )
 
 // Struct for area objects.
@@ -37,7 +37,7 @@ type Object struct {
 	id, serial string
 	name       string
 	hp, maxHP  int
-	resilience object.Resilience
+	resilience objects.Resilience
 	posX, posY float64
 	action     ObjectAction
 	inventory  *item.Inventory
@@ -76,7 +76,7 @@ func NewObject(data res.ObjectBasicData) *Object {
 	return &ob
 }
 
-// Update updates object.
+// Update updates objects.
 func (ob *Object) Update(delta int64) {
 	// Effects.
 	for serial, e := range ob.effects {
@@ -199,13 +199,13 @@ func (ob *Object) Inventory() *item.Inventory {
 	return ob.inventory
 }
 
-// AddEffects adds specified effect to object.
+// AddEffects adds specified effect to objects.
 func (ob *Object) AddEffect(e *effect.Effect) {
 	e.SetTarget(ob)
 	ob.effects[e.ID()+e.Serial()] = e
 }
 
-// RemoveEffect removes specified effect from object.
+// RemoveEffect removes specified effect from objects.
 func (ob *Object) RemoveEffect(e *effect.Effect) {
 	delete(ob.effects, e.ID()+e.Serial())
 }

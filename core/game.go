@@ -29,7 +29,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/log"
@@ -139,7 +139,7 @@ func (g *Game) listenWorld() {
 			continue
 		}
 		for _, tar := range area.NearTargets(pc, pc.SightRange()) {
-			tar, ok := tar.(object.Logger)
+			tar, ok := tar.(objects.Logger)
 			if !ok {
 				continue
 			}

@@ -29,7 +29,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/effect"
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/serial"
 )
@@ -280,13 +280,13 @@ func (s *Skill) buildEffects(effectsData []res.EffectData) []*effect.Effect {
 // Returns 0, if at least one of targets does't have
 // position.
 func userTargetRange(u, t effect.Target) float64 {
-	posA, ok := u.(object.Positioner)
+	posA, ok := u.(objects.Positioner)
 	if !ok {
 		return 0.0
 	}
-	posB, ok := t.(object.Positioner)
+	posB, ok := t.(objects.Positioner)
 	if !ok {
 		return 0.0
 	}
-	return object.Range(posA, posB)
+	return objects.Range(posA, posB)
 }

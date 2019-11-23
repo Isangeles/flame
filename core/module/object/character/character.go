@@ -30,7 +30,7 @@ import (
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/flag"
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/craft"
 	"github.com/isangeles/flame/core/module/dialog"
 	"github.com/isangeles/flame/core/module/effect"
@@ -57,7 +57,7 @@ type Character struct {
 	alignment        Alignment
 	guild            Guild
 	attributes       Attributes
-	resilience       object.Resilience
+	resilience       objects.Resilience
 	posX, posY       float64
 	destX, destY     float64
 	defX, defY       float64
@@ -291,8 +291,8 @@ func (c *Character) Attitude() Attitude {
 	return c.attitude
 }
 
-// AttitudeFor returns attitude for specified object.
-func (c *Character) AttitudeFor(o object.Object) Attitude {
+// AttitudeFor returns attitude for specified objects.
+func (c *Character) AttitudeFor(o objects.Object) Attitude {
 	mem := c.memory[o.ID()+o.Serial()]
 	if mem != nil {
 		return mem.Attitude
@@ -481,11 +481,11 @@ func (c *Character) Casting() bool {
 func (c *Character) Fighting() bool {
 	tar := c.Targets()[0]
 	if tar != nil && c.AttitudeFor(tar) == Hostile {
-		tarPos, ok := tar.(object.Positioner)
+		tarPos, ok := tar.(objects.Positioner)
 		if !ok {
 			return false
 		}
-		return object.Range(c, tarPos) <= c.SightRange()
+		return objects.Range(c, tarPos) <= c.SightRange()
 	}
 	return false
 }

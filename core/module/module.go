@@ -27,7 +27,7 @@
 package module
 
 import (
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/effect"
 )
 
@@ -77,7 +77,7 @@ func (m *Module) Target(id, serial string) effect.Target {
 
 // Object returns game object with specified ID and serial
 // or nil if no such object was found.
-func (m *Module) Object(id, serial string) object.Object {
+func (m *Module) Object(id, serial string) objects.Object {
 	char := m.Chapter().Character(id, serial)
 	if char != nil {
 		return char

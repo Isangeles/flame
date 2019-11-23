@@ -25,7 +25,7 @@ package item
 
 import (
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -37,7 +37,7 @@ type Weapon struct {
 	level          int
 	loot           bool
 	dmgMin, dmgMax int
-	dmgType        object.Element
+	dmgType        objects.Element
 	dmgEffects     []res.EffectData
 	equipReqs      []req.Requirement
 	slots          []Slot
@@ -53,7 +53,7 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		loot:       data.Loot,
 		dmgMin:     data.DMGMin,
 		dmgMax:     data.DMGMax,
-		dmgType:    object.Element(data.DMGType),
+		dmgType:    objects.Element(data.DMGType),
 		dmgEffects: data.DMGEffects,
 	}
 	w.equipReqs = req.NewRequirements(data.EQReqs...)
@@ -96,7 +96,7 @@ func (w *Weapon) Damage() (int, int) {
 }
 
 // DamageType retruns weapon damage type.
-func (w *Weapon) DamageType() object.Element {
+func (w *Weapon) DamageType() objects.Element {
 	return w.dmgType
 }
 

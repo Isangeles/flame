@@ -1,5 +1,5 @@
 /*
- * object.go
+ * objects.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,7 +21,8 @@
  *
  */
 
-package object
+// Package for module objects utils.
+package objects
 
 import (
 	"math"

@@ -21,7 +21,7 @@
  *
  */
 
-package object
+package objects
 
 // Struct for object resiliences.
 type Resilience struct {

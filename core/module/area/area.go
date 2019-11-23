@@ -28,7 +28,7 @@ import (
 	"sync"
 
 	"github.com/isangeles/flame/core/module/effect"
-	"github.com/isangeles/flame/core/module/object"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/object/area"
 	"github.com/isangeles/flame/core/module/object/character"
 )
@@ -148,30 +148,30 @@ func (a *Area) AllSubareas() (subareas []*Area) {
 }
 
 // NearTargets returns all targets near specified position.
-func (a *Area) NearTargets(pos object.Positioner, maxrange float64) []effect.Target {
-	objects := make([]effect.Target, 0)
+func (a *Area) NearTargets(pos objects.Positioner, maxrange float64) []effect.Target {
+	targets := make([]effect.Target, 0)
 	// Characters.
 	addChar := func(k, v interface{}) bool {
 		t, ok := v.(*character.Character)
-		if ok && object.Range(t, pos) <= maxrange {
-			objects = append(objects, t)
+		if ok && objects.Range(t, pos) <= maxrange {
+			targets = append(targets, t)
 		}
 		return true
 	}
 	a.chars.Range(addChar)
 	// Objects.
 	for _, ob := range a.objects {
-		if object.Range(ob, pos) <= maxrange {
-			objects = append(objects, ob)
+		if objects.Range(ob, pos) <= maxrange {
+			targets = append(targets, ob)
 		}
 	}
-	return objects
+	return targets
 }
 
 // NearObjects returns all objects within specified range from specified
 // XY position.
-func (a *Area) NearObjects(x, y, maxrange float64) []object.Positioner {
-	objects := make([]object.Positioner, 0)
+func (a *Area) NearObjects(x, y, maxrange float64) []objects.Positioner {
+	objects := make([]objects.Positioner, 0)
 	// Characters.
 	addChar := func(k, v interface{}) bool {
 		c, ok := v.(*character.Character)
