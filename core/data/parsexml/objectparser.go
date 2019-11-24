@@ -30,7 +30,7 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/area"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/craft"
 	"github.com/isangeles/flame/core/module/dialog"
 	"github.com/isangeles/flame/core/module/effect"
@@ -136,7 +136,7 @@ func UnmarshalObjectsBase(data io.Reader) ([]*res.ObjectData, error) {
 
 // xmlObject parses specified area object to XML
 // object struct.
-func xmlObject(ob *area.Object) *Object {
+func xmlObject(ob *object.Object) *Object {
 	xmlOb := new(Object)
 	xmlOb.ID = ob.ID()
 	xmlOb.Serial = ob.Serial()
@@ -212,7 +212,7 @@ func xmlObjectRecipes(recipes ...*craft.Recipe) []ObjectRecipe {
 }
 
 // xmlObjectAction parses specified object action to XML node.
-func xmlObjectAction(action area.ObjectAction) ObjectAction {
+func xmlObjectAction(action object.ObjectAction) ObjectAction {
 	var xmlAction ObjectAction
 	xmlAction.SelfMods = xmlModifiers(action.SelfMods...)
 	xmlAction.UserMods = xmlModifiers(action.UserMods...)

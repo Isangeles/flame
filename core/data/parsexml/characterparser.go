@@ -30,8 +30,8 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/flag"
-	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/quest"
 	"github.com/isangeles/flame/log"
 )

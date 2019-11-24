@@ -27,26 +27,26 @@ import (
 	"math"
 	"sync"
 
+	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/objects"
-	"github.com/isangeles/flame/core/module/object/area"
-	"github.com/isangeles/flame/core/module/object/character"
 )
 
 // Area struct represents game world area.
 type Area struct {
 	id       string
 	chars    *sync.Map
-	objects  map[string]*area.Object
+	objects  map[string]*object.Object
 	subareas map[string]*Area
 }
 
-// NewArea returns new instace of area.
+// NewArea returns new instace of object.
 func NewArea(id string) *Area {
 	a := new(Area)
 	a.id = id
 	a.chars = new(sync.Map)
-	a.objects = make(map[string]*area.Object)
+	a.objects = make(map[string]*object.Object)
 	a.subareas = make(map[string]*Area)
 	return a
 }
@@ -56,23 +56,23 @@ func (a *Area) ID() string {
 	return a.id
 }
 
-// AddCharacter adds specified character to area.
+// AddCharacter adds specified character to object.
 func (a *Area) AddCharacter(c *character.Character) {
 	a.chars.Store(c.ID()+c.Serial(), c)
 	c.SetAreaID(a.ID())
 }
 
-// RemoveCharacter removes specified character from area.
+// RemoveCharacter removes specified character from object.
 func (a *Area) RemoveCharacter(c *character.Character) {
-	a.chars.Delete(c.ID()+c.Serial())
+	a.chars.Delete(c.ID() + c.Serial())
 }
 
-// AddObjects adds specified object to area.
-func (a *Area) AddObject(o *area.Object) {
+// AddObjects adds specified object to object.
+func (a *Area) AddObject(o *object.Object) {
 	a.objects[o.ID()+o.Serial()] = o
 }
 
-func (a *Area) RemoveObject(o *area.Object) {
+func (a *Area) RemoveObject(o *object.Object) {
 	delete(a.objects, o.ID()+o.Serial())
 }
 
@@ -81,7 +81,7 @@ func (a *Area) AddSubarea(sa *Area) {
 	a.subareas[sa.ID()] = sa
 }
 
-// RemoveSubareas removes specified subarea.
+// RemoveSubareas removes specified subobject.
 func (a *Area) RemoveSubarea(sa *Area) {
 	delete(a.subareas, sa.ID())
 }
@@ -112,7 +112,7 @@ func (a *Area) AllCharacters() (chars []*character.Character) {
 
 // Objects returns list with all objects in
 // area(excluding subareas).
-func (a *Area) Objects() (objects []*area.Object) {
+func (a *Area) Objects() (objects []*object.Object) {
 	for _, o := range a.objects {
 		objects = append(objects, o)
 	}
@@ -121,7 +121,7 @@ func (a *Area) Objects() (objects []*area.Object) {
 
 // AllObjects retuns list with all objects in
 // area and subareas.
-func (a *Area) AllObjects() (objects []*area.Object) {
+func (a *Area) AllObjects() (objects []*object.Object) {
 	objects = a.Objects()
 	for _, sa := range a.Subareas() {
 		objects = append(objects, sa.AllObjects()...)

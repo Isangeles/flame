@@ -34,8 +34,8 @@ import (
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/item"
-	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/log"
 )
 

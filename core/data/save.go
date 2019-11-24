@@ -37,8 +37,8 @@ import (
 	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/object/character"
 	"github.com/isangeles/flame/core/module/area"
+	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/log"
 )
 

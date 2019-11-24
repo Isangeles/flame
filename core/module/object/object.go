@@ -22,7 +22,7 @@
  */
 
 // Package for area objects.
-package area
+package object
 
 import (
 	"github.com/isangeles/flame/core/data/res"

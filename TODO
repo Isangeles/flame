@@ -5,11 +5,11 @@ MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
 * Improve NPC AI(selecting skills proper to situation)
-* Rename object/area package(conflicting with module/area)
 * Remove generateSerials function from chapter struct
 * Refactor chapter's SetOnAreaAddedFunc to AddOnAreaAddedFunc, i.e. adding event functions, not just handling and overriding one function
 * Use sync.Map to store area objects(and subareas?)
 * Exporting character exports also quests, effects, items, etc., its desirable for save game, but other marshaling method should be applied for exporting character to use in different game
+* Merge SaveGame struct from save to res package
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism

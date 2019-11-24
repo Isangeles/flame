@@ -25,7 +25,7 @@ package save
 
 import (
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/character"
 )
 
 // Struct for saved game.

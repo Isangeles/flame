@@ -34,7 +34,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/item"
-	"github.com/isangeles/flame/core/module/object/area"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/rng"
 	"github.com/isangeles/flame/log"
 )
@@ -44,7 +44,7 @@ const (
 )
 
 // Object creates module area object with specified ID.
-func Object(mod *module.Module, obID string) (*area.Object, error) {
+func Object(mod *module.Module, obID string) (*object.Object, error) {
 	data := res.Object(obID)
 	if data == nil {
 		return nil, fmt.Errorf("object data not found: %s", obID)
@@ -94,8 +94,8 @@ func ImportObjectsDir(path string) ([]*res.ObjectData, error) {
 }
 
 // buildObject creates new object from specified data resources.
-func buildObject(mod *module.Module, data *res.ObjectData) *area.Object {
-	ob := area.NewObject(data.BasicData)
+func buildObject(mod *module.Module, data *res.ObjectData) *object.Object {
+	ob := object.NewObject(data.BasicData)
 	// Inventory.
 	for _, it := range buildObjectItems(data.Items...) {
 		ob.Inventory().AddItem(it)

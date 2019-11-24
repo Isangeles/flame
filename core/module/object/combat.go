@@ -21,7 +21,7 @@
  *
  */
 
-package area
+package object
 
 import (
 	"fmt"

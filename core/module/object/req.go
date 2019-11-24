@@ -1,5 +1,5 @@
 /*
- * mod.go
+ * req.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,34 +21,19 @@
  *
  */
 
-package area
+package object
 
 import (
-	"fmt"
-
-	"github.com/isangeles/flame/core/data/text/lang"
-	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/req"
 )
 
-// TakeModifiers handles all specified modifiers.
-func (o *Object) TakeModifiers(source effect.Target, mods ...effect.Modifier) {
-	for _, m := range mods {
-		o.takeModifier(source, m)
-	}
+// MeetReqs check if object meet specified requirements.
+func (o *Object) MeetReqs(reqs ...req.Requirement) bool {
+	return true
 }
 
-// takeModifier handles specified modifier.
-func (o *Object) takeModifier(s effect.Target, m effect.Modifier) {
-	switch m := m.(type) {
-	case *effect.HealthMod:
-		val := m.RandomValue()
-		o.SetHealth(o.Health() + val)
-		cmbMsg := fmt.Sprintf("%s:%s:%d", o.Name(),
-			lang.Text("ui", "ob_health"), val)
-		o.SendCombat(cmbMsg)
-	case *effect.HitMod:
-		for _, e := range s.HitEffects() {
-			o.TakeEffect(e)
-		}
-	}
+// ChargeReqs takes from object all things that makes
+// this object to meet specified requirements.
+func (o *Object) ChargeReqs(reqs ...req.Requirement) {
+	// TODO: charge reqs.
 }

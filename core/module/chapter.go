@@ -23,10 +23,10 @@
 
 package module
 
-import (	
-	areaobject "github.com/isangeles/flame/core/module/object/area"
-	"github.com/isangeles/flame/core/module/object/character"
+import (
 	"github.com/isangeles/flame/core/module/area"
+	"github.com/isangeles/flame/core/module/character"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/serial"
 )
 
@@ -100,7 +100,7 @@ func (c *Chapter) Characters() (chars []*character.Character) {
 
 // Objects returns list with all area objects from all
 // loaded areas.
-func (c *Chapter) AreaObjects() (objects []*areaobject.Object) {
+func (c *Chapter) AreaObjects() (objects []*object.Object) {
 	for _, a := range c.loadedAreas {
 		for _, o := range a.AllObjects() {
 			objects = append(objects, o)
@@ -137,7 +137,7 @@ func (c *Chapter) Character(id, serial string) *character.Character {
 
 // AreaObject retruns area object with specified ID and serial
 // or nil if no object was found.
-func (c *Chapter) AreaObject(id, serial string) *areaobject.Object {
+func (c *Chapter) AreaObject(id, serial string) *object.Object {
 	for _, a := range c.loadedAreas {
 		for _, o := range a.AllObjects() {
 			if o.ID() == id && o.Serial() == serial {
@@ -164,7 +164,7 @@ func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 				}
 			}
 		}
-		
+
 	}
 	return nil
 }

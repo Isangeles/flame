@@ -26,7 +26,7 @@ package parsexml
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/character"
 )
 
 // marshalGender parses specified gender to gender XML
