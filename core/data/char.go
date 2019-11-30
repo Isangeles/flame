@@ -168,26 +168,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 
 // buildCharacter builds new character from specified data(with items and equipment).
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
-	char := character.New(data.BasicData)
-	// Inventory.
-	for _, invItData := range data.Items {
-		items := buildObjectItems(invItData)
-		for _, it := range items {
-			err := char.Inventory().AddItem(it)
-			if err != nil {
-				log.Err.Printf("data: character: %s: fail to add item: %v",
-					char.ID(), err)
-				break
-			}
-			if invItData.Trade {
-				ti := item.TradeItem{
-					Item:  it,
-					Price: invItData.TradeValue,
-				}
-				char.Inventory().AddTradeItem(&ti)
-			}
-		}
-	}
+	char := character.New(*data)
 	// Equipment.
 	for _, eqItData := range data.EqItems {
 		it := char.Inventory().Item(eqItData.ID, eqItData.Serial)

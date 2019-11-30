@@ -87,19 +87,26 @@ const (
 )
 
 // New creates new character from specified data.
-func New(data res.CharacterBasicData) *Character {
+func New(data res.CharacterData) *Character {
 	c := Character{
-		id:        data.ID,
-		serial:    data.Serial,
-		name:      data.Name,
-		sex:       Gender(data.Sex),
-		race:      Race(data.Race),
-		attitude:  Attitude(data.Attitude),
-		alignment: Alignment(data.Alignment),
+		id:        data.BasicData.ID,
+		serial:    data.BasicData.Serial,
+		name:      data.BasicData.Name,
+		sex:       Gender(data.BasicData.Sex),
+		race:      Race(data.BasicData.Race),
+		attitude:  Attitude(data.BasicData.Attitude),
+		alignment: Alignment(data.BasicData.Alignment),
 	}
-	c.attributes = Attributes{data.Str, data.Con, data.Dex, data.Int, data.Wis}
+	c.attributes = Attributes{
+		Str: data.BasicData.Str,
+		Con: data.BasicData.Con,
+		Dex: data.BasicData.Dex,
+		Int: data.BasicData.Int,
+		Wis: data.BasicData.Wis,
+	}
 	c.live = true
-	c.inventory = item.NewInventory(c.Attributes().Lift())
+	c.inventory = item.NewInventory(data.Items...)
+	c.inventory.SetCapacity(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
 	c.journal = quest.NewJournal(&c)
 	c.targets = make([]effect.Target, 1)
@@ -109,18 +116,18 @@ func New(data res.CharacterBasicData) *Character {
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.recipes = make(map[string]*craft.Recipe)
 	c.flags = make(map[string]flag.Flag)
-	c.trainings = train.NewTrainings(data.Trainings...)
+	c.trainings = train.NewTrainings(data.BasicData.Trainings...)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	c.privlog = make(chan string, 3)
 	// Set level.
-	for i := 0; i < data.Level; i++ {
+	for i := 0; i < data.BasicData.Level; i++ {
 		oldMaxExp := c.MaxExperience()
 		c.levelup()
 		c.SetExperience(oldMaxExp)
 	}
 	// Add flags.
-	for _, fd := range data.Flags {
+	for _, fd := range data.BasicData.Flags {
 		f := flag.Flag(fd.ID)
 		c.flags[f.ID()] = f
 	}
@@ -138,7 +145,7 @@ func (c *Character) Update(delta int64) {
 	}
 	// Move to dest point.
 	if c.Moving() {
-		c.Interrupt() // interrupt current acction
+		c.Interrupt() // interrupt current action
 		if c.posX < c.destX {
 			c.posX += 1
 		}

@@ -25,6 +25,10 @@ package item
 
 import (
 	"fmt"
+
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/rng"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for container with items.
@@ -41,10 +45,33 @@ type Container interface {
 
 // NewInventory creates new inventory with
 // specified maximal capacity.
-func NewInventory(cap int) *Inventory {
+func NewInventory(data ...res.InventoryItemData) *Inventory {
 	inv := new(Inventory)
 	inv.items = make(map[string]Item)
-	inv.cap = cap
+	for _, itData := range data {
+		if itData.Random > 0 && !rng.RollChance(itData.Random) {
+			continue
+		}
+		dat := res.Item(itData.ID)
+		it := NewItem(dat)
+		if it == nil {
+			log.Err.Printf("build inv: item: %s: fail to create item from data",
+				itData.ID)
+			continue
+		}
+		if len(itData.Serial) > 0 {
+			it.SetSerial(itData.Serial)
+		}
+		inv.items[it.ID()+it.Serial()] = it
+		if itData.Trade {
+			ti := TradeItem{
+				Item:  it,
+				Price: itData.TradeValue,
+			}
+			inv.AddTradeItem(&ti)
+		}
+	}
+	inv.cap = len(inv.items)
 	return inv
 }
 
@@ -100,6 +127,11 @@ func (inv *Inventory) AddTradeItem(i *TradeItem) error {
 // in inventory.
 func (inv *Inventory) Size() int {
 	return len(inv.items)
+}
+
+// SetCapacity sets maximal capacity.
+func (inv *Inventory) SetCapacity(c int) {
+	inv.cap = c
 }
 
 // Capacity returns maximal inventory

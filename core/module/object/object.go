@@ -56,19 +56,20 @@ type ObjectAction struct {
 
 // New creates new area object from
 // specified data.
-func NewObject(data res.ObjectBasicData) *Object {
+func NewObject(data res.ObjectData) *Object {
 	ob := Object{
-		id:     data.ID,
-		name:   data.Name,
-		serial: data.Serial,
-		hp:     data.HP,
-		maxHP:  data.MaxHP,
+		id:     data.BasicData.ID,
+		name:   data.BasicData.Name,
+		serial: data.BasicData.Serial,
+		hp:     data.BasicData.HP,
+		maxHP:  data.BasicData.MaxHP,
 	}
 	ob.action = ObjectAction{
-		SelfMods: effect.NewModifiers(data.Action.SelfMods...),
-		UserMods: effect.NewModifiers(data.Action.UserMods...),
+		SelfMods: effect.NewModifiers(data.BasicData.Action.SelfMods...),
+		UserMods: effect.NewModifiers(data.BasicData.Action.UserMods...),
 	}
-	ob.inventory = item.NewInventory(10)
+	ob.inventory = item.NewInventory(data.Items...)
+	ob.inventory.SetCapacity(10)
 	ob.effects = make(map[string]*effect.Effect)
 	ob.flags = make(map[string]flag.Flag)
 	ob.chatlog = make(chan string, 1)
