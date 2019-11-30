@@ -328,7 +328,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 		data.SavedData.DefX, data.SavedData.DefY = defX, defY
 	}
 	// Items.
-	data.Items = buildInventoryItems(xmlChar.Inventory.Items)
+	data.Inventory = buildInventory(xmlChar.Inventory)
 	// Equipment.
 	for _, xmlEqIt := range xmlChar.Equipment.Items {
 		slot, err := UnmarshalEqSlot(xmlEqIt.Slot)

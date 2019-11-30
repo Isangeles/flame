@@ -27,7 +27,7 @@ package res
 type CharacterData struct {
 	BasicData CharacterBasicData
 	SavedData CharacterSavedData
-	Items     []InventoryItemData
+	Inventory InventoryData
 	EqItems   []EquipmentItemData
 	Effects   []ObjectEffectData
 	Skills    []ObjectSkillData

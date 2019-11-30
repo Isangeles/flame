@@ -45,10 +45,10 @@ type Container interface {
 
 // NewInventory creates new inventory with
 // specified maximal capacity.
-func NewInventory(data ...res.InventoryItemData) *Inventory {
+func NewInventory(data res.InventoryData) *Inventory {
 	inv := new(Inventory)
 	inv.items = make(map[string]Item)
-	for _, itData := range data {
+	for _, itData := range data.Items {
 		if itData.Random > 0 && !rng.RollChance(itData.Random) {
 			continue
 		}

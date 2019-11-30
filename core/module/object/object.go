@@ -68,7 +68,7 @@ func NewObject(data res.ObjectData) *Object {
 		SelfMods: effect.NewModifiers(data.BasicData.Action.SelfMods...),
 		UserMods: effect.NewModifiers(data.BasicData.Action.UserMods...),
 	}
-	ob.inventory = item.NewInventory(data.Items...)
+	ob.inventory = item.NewInventory(data.Inventory)
 	ob.inventory.SetCapacity(10)
 	ob.effects = make(map[string]*effect.Effect)
 	ob.flags = make(map[string]flag.Flag)

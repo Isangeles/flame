@@ -27,7 +27,7 @@ package res
 type ObjectData struct {
 	BasicData ObjectBasicData
 	SavedData ObjectSavedData
-	Items     []InventoryItemData
+	Inventory InventoryData
 	Effects   []ObjectEffectData
 }
 
@@ -49,16 +49,6 @@ type ObjectSavedData struct {
 type ObjectActionData struct {
 	SelfMods []ModifierData
 	UserMods []ModifierData
-}
-
-// Struct for inventory item data
-// resource.
-type InventoryItemData struct {
-	ID         string
-	Serial     string
-	Trade      bool
-	TradeValue int
-	Random     float64
 }
 
 // Struct for object effects data.

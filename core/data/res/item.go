@@ -61,3 +61,19 @@ type MiscItemData struct {
 	Loot     bool
 	Currency bool
 }
+
+// Struct for inventory data.
+type InventoryData struct {
+	Cap   int
+	Items []InventoryItemData
+}
+
+// Struct for inventory item data
+// resource.
+type InventoryItemData struct {
+	ID         string
+	Serial     string
+	Trade      bool
+	TradeValue int
+	Random     float64
+}

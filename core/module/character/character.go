@@ -105,7 +105,7 @@ func New(data res.CharacterData) *Character {
 		Wis: data.BasicData.Wis,
 	}
 	c.live = true
-	c.inventory = item.NewInventory(data.Items...)
+	c.inventory = item.NewInventory(data.Inventory)
 	c.inventory.SetCapacity(c.Attributes().Lift())
 	c.equipment = newEquipment(&c)
 	c.journal = quest.NewJournal(&c)
