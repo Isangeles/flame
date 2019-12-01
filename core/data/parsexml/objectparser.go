@@ -212,10 +212,10 @@ func xmlObjectRecipes(recipes ...*craft.Recipe) []ObjectRecipe {
 }
 
 // xmlObjectAction parses specified object action to XML node.
-func xmlObjectAction(action object.ObjectAction) ObjectAction {
+func xmlObjectAction(action *object.Action) ObjectAction {
 	var xmlAction ObjectAction
-	xmlAction.SelfMods = xmlModifiers(action.SelfMods...)
-	xmlAction.UserMods = xmlModifiers(action.UserMods...)
+	xmlAction.SelfMods = xmlModifiers(action.SelfMods()...)
+	xmlAction.UserMods = xmlModifiers(action.UserMods()...)
 	return xmlAction
 }
 
