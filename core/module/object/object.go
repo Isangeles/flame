@@ -58,8 +58,8 @@ func NewObject(data res.ObjectData) *Object {
 		hp:     data.BasicData.HP,
 		maxHP:  data.BasicData.MaxHP,
 	}
-	if len(data.Action.SelfMods) > 0 || len(data.Action.UserMods) > 0 {
-		ob.action = NewAction(data.Action)
+	if len(data.BasicData.Action.SelfMods) > 0 || len(data.BasicData.Action.UserMods) > 0 {
+		ob.action = NewAction(data.BasicData.Action)
 	}
 	ob.inventory = item.NewInventory(data.Inventory)
 	ob.inventory.SetCapacity(10)
