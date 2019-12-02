@@ -84,8 +84,9 @@ func xmlInventory(inv *item.Inventory) *Inventory {
 
 // buildInventory creates items data from inventory items
 // nodes in specifie inventory.
-func buildInventoryItems(xmlInvItems []InventoryItem) (itemsData []res.InventoryItemData) {
-	for _, xmlIt := range xmlInvItems {
+func buildInventory(xmlInv Inventory) (data res.InventoryData) {
+	data.Cap = xmlInv.Capacity
+	for _, xmlIt := range xmlInv.Items {
 		itData := res.InventoryItemData{
 			ID:         xmlIt.ID,
 			Serial:     xmlIt.Serial,
@@ -93,7 +94,7 @@ func buildInventoryItems(xmlInvItems []InventoryItem) (itemsData []res.Inventory
 			TradeValue: xmlIt.TradeValue,
 			Random:     xmlIt.Random,
 		}
-		itemsData = append(itemsData, itData)
+		data.Items = append(data.Items, itData)
 	}
 	return
 }

@@ -24,6 +24,7 @@
 package item
 
 import (
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -39,10 +40,10 @@ type Item interface {
 
 // Interface for 'equipable' items.
 type Equiper interface {
-	ID()        string
-	Serial()    string
+	ID() string
+	Serial() string
 	EquipReqs() []req.Requirement
-	Slots()     []Slot
+	Slots() []Slot
 }
 
 // Type for slot type occupated by item.
@@ -58,6 +59,20 @@ const (
 	Legs
 	Feet
 )
+
+// NewItem creates item from specified data.
+func NewItem(data res.ItemData) Item {
+	switch d := data.(type) {
+	case *res.ArmorData:
+		return NewArmor(*d)
+	case *res.WeaponData:
+		return NewWeapon(*d)
+	case *res.MiscItemData:
+		return NewMisc(*d)
+	default:
+		return nil
+	}
+}
 
 // ID returns slot ID.
 func (s Slot) ID() string {

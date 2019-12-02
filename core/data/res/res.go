@@ -86,6 +86,21 @@ func MiscItem(id string) *MiscItemData {
 	return miscsData[id]
 }
 
+// Item returns item resource data for item
+// with specified ID or nil if data for
+// specified ID was not found.
+func Item(id string) ItemData {
+	armor := Armor(id)
+	if armor != nil {
+		return armor
+	}
+	weapon := Weapon(id)
+	if weapon != nil {
+		return weapon
+	}
+	return miscsData[id]
+}
+
 // Character returns character resource data
 // for character with specified ID or nil
 // if data for specified ID was not found.

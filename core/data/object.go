@@ -33,9 +33,7 @@ import (
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/object"
-	"github.com/isangeles/flame/core/rng"
 	"github.com/isangeles/flame/log"
 )
 
@@ -95,11 +93,7 @@ func ImportObjectsDir(path string) ([]*res.ObjectData, error) {
 
 // buildObject creates new object from specified data resources.
 func buildObject(mod *module.Module, data *res.ObjectData) *object.Object {
-	ob := object.NewObject(data.BasicData)
-	// Inventory.
-	for _, it := range buildObjectItems(data.Items...) {
-		ob.Inventory().AddItem(it)
-	}
+	ob := object.NewObject(*data)
 	// Effects.
 	for _, data := range data.Effects {
 		eff, err := Effect(mod, data.ID)
@@ -114,25 +108,4 @@ func buildObject(mod *module.Module, data *res.ObjectData) *object.Object {
 		ob.AddEffect(eff)
 	}
 	return ob
-}
-
-// buildObjectItems creates items from specified inventory
-// items data.
-func buildObjectItems(data ...res.InventoryItemData) (items []item.Item) {
-	for _, itData := range data {
-		if itData.Random > 0 && !rng.RollChance(itData.Random) {
-			continue
-		}
-		it, err := Item(itData.ID)
-		if err != nil {
-			log.Err.Printf("data: build object items: %s: fail to retrieve inv item: %v",
-				itData.ID, err)
-			continue
-		}
-		if len(itData.Serial) > 0 {
-			it.SetSerial(itData.Serial)
-		}
-		items = append(items, it)
-	}
-	return
 }
