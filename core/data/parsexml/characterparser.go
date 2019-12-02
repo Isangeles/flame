@@ -342,7 +342,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 			Serial: xmlEqIt.Serial,
 			Slot:   int(slot),
 		}
-		data.EqItems = append(data.EqItems, eqItData)
+		data.Equipment.Items = append(data.Equipment.Items, eqItData)
 	}
 	// Effects.
 	for _, xmlEffect := range xmlChar.Effects {

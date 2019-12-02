@@ -28,7 +28,7 @@ type CharacterData struct {
 	BasicData CharacterBasicData
 	SavedData CharacterSavedData
 	Inventory InventoryData
-	EqItems   []EquipmentItemData
+	Equipment EquipmentData
 	Effects   []ObjectEffectData
 	Skills    []ObjectSkillData
 	Memory    []AttitudeMemoryData
@@ -65,6 +65,11 @@ type CharacterSavedData struct {
 	HP         int
 	Mana       int
 	Exp        int
+}
+
+// Struct for character equipement data. 
+type EquipmentData struct {
+	Items []EquipmentItemData
 }
 
 // Struct for equipment item data

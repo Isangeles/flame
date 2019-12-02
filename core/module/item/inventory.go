@@ -71,7 +71,7 @@ func NewInventory(data res.InventoryData) *Inventory {
 			inv.AddTradeItem(&ti)
 		}
 	}
-	inv.cap = len(inv.items)
+	inv.cap = data.Cap
 	return inv
 }
 

@@ -170,7 +170,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
 	// Equipment.
-	for _, eqItData := range data.EqItems {
+	for _, eqItData := range data.Equipment.Items {
 		it := char.Inventory().Item(eqItData.ID, eqItData.Serial)
 		if it == nil {
 			log.Err.Printf("data: character: %s: fail to retrieve eq item from inv: %s",
