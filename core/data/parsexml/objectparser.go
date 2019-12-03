@@ -144,7 +144,9 @@ func xmlObject(ob *object.Object) *Object {
 	xmlOb.MaxHP = ob.MaxHealth()
 	posX, posY := ob.Position()
 	xmlOb.Position = fmt.Sprintf("%fx%f", posX, posY)
-	xmlOb.Action = xmlObjectAction(ob.Action())
+	if ob.Action() != nil {
+		xmlOb.Action = xmlObjectAction(ob.Action())
+	}
 	xmlOb.Inventory = *xmlInventory(ob.Inventory())
 	xmlOb.Effects = xmlObjectEffects(ob.Effects()...)
 	return xmlOb
