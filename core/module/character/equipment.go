@@ -25,8 +25,10 @@ package character
 
 import (
 	"fmt"
-
+	
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/item"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for character equipment.
@@ -58,7 +60,7 @@ const (
 
 // newEquipment creates new equipment for
 // specified character.
-func newEquipment(char *Character) *Equipment {
+func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 	eq := new(Equipment)
 	eq.char = char
 	eq.slots = append(eq.slots, newEquipmentSlot(Head))
@@ -70,6 +72,31 @@ func newEquipment(char *Character) *Equipment {
 	eq.slots = append(eq.slots, newEquipmentSlot(Finger_left))
 	eq.slots = append(eq.slots, newEquipmentSlot(Legs))
 	eq.slots = append(eq.slots, newEquipmentSlot(Feet))
+	for _, itData := range data.Items {
+		it := char.Inventory().Item(itData.ID, itData.Serial)
+		if it == nil {
+			log.Err.Printf("character: %s: eq: fail to retrieve eq item from inv: %s",
+				char.ID(), itData.ID)
+			continue
+		}
+		eqItem, ok := it.(item.Equiper)
+		if !ok {
+			log.Err.Printf("character: %s: eq: not eqipable item: %s",
+				char.ID(), it.ID())
+			continue
+		}
+		// Equip.
+		if !char.MeetReqs(eqItem.EquipReqs()...) {
+			continue
+		}
+		st := EquipmentSlotType(itData.Slot)
+		for _, s := range eq.Slots() {
+			if s.Type() != st {
+				continue
+			}
+			s.SetItem(eqItem)
+		}
+	}
 	return eq
 }
 

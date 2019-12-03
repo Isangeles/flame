@@ -107,7 +107,7 @@ func New(data res.CharacterData) *Character {
 	c.live = true
 	c.inventory = item.NewInventory(data.Inventory)
 	c.inventory.SetCapacity(c.Attributes().Lift())
-	c.equipment = newEquipment(&c)
+	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(&c)
 	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
