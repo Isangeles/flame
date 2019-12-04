@@ -35,7 +35,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/character"
-	"github.com/isangeles/flame/core/module/item"
+	"github.com/isangeles/flame/core/module/skill"
 	"github.com/isangeles/flame/log"
 )
 
@@ -169,44 +169,19 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 // buildCharacter builds new character from specified data(with items and equipment).
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
-	// Equipment.
-	for _, eqItData := range data.Equipment.Items {
-		it := char.Inventory().Item(eqItData.ID, eqItData.Serial)
-		if it == nil {
-			log.Err.Printf("data: character: %s: fail to retrieve eq item from inv: %s",
-				char.ID(), eqItData.ID)
-			continue
-		}
-		eqItem, ok := it.(item.Equiper)
-		if !ok {
-			log.Err.Printf("data: character: %s: not eqipable item: %s",
-				char.ID(), it.ID())
-			continue
-		}
-		// Equip.
-		if !char.MeetReqs(eqItem.EquipReqs()...) {
-			continue
-		}
-		st := character.EquipmentSlotType(eqItData.Slot)
-		for _, s := range char.Equipment().Slots() {
-			if s.Type() != st {
-				continue
-			}
-			s.SetItem(eqItem)
-		}
-	}
 	// Skills.
-	for _, skillData := range data.Skills {
-		skill, err := Skill(skillData.ID)
-		if err != nil {
-			log.Err.Printf("data: build character: %s: fail to retrieve skill: %v",
-				char.ID(), err)
+	for _, charSkillData := range data.Skills {
+		skillData := res.Skill(charSkillData.ID)
+		if skillData == nil {
+			log.Err.Printf("data: build character: %s: fail to retrieve skill data: %v",
+				char.ID(), charSkillData.ID)
 			continue
 		}
-		if len(skillData.Serial) > 0 {
-			skill.SetSerial(skillData.Serial)
+		skill := skill.New(*skillData)
+		if len(charSkillData.Serial) > 0 {
+			skill.SetSerial(charSkillData.Serial)
 		}
-		skill.SetCooldown(skillData.Cooldown)
+		skill.SetCooldown(charSkillData.Cooldown)
 		char.AddSkill(skill)
 	}
 	// Dialogs.

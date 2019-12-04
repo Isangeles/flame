@@ -95,6 +95,7 @@ func New(data res.SkillData) *Skill {
 	s.castTimeMax = data.Cast
 	s.cooldownMax = data.Cooldown
 	s.useReqs = req.NewRequirements(data.UseReqs...)
+	serial.AssignSerial(s)
 	return s
 }
 

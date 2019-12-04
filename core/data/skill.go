@@ -32,28 +32,12 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/skill"
-	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
 const (
 	SkillsFileExt = ".skills"
 )
-
-// Skill creates new instance of skill with specified ID
-// for specified module, returns error if skill data with such
-// ID was not found or module failed to assing serial value for
-// skill.
-func Skill(id string) (*skill.Skill, error) {
-	data := res.Skill(id)
-	if data == nil {
-		return nil, fmt.Errorf("skill not found: %s", id)
-	}
-	s := skill.New(*data)
-	serial.AssignSerial(s)
-	return s, nil
-}
 
 // ImportSkills imports all XML skills data from skills base
 // with specified path.
