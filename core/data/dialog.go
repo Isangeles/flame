@@ -48,10 +48,7 @@ func Dialog(id string) (*dialog.Dialog, error) {
 	if data == nil {
 		return nil, fmt.Errorf("dialog not found: %s", id)
 	}
-	d, err := dialog.New(*data)
-	if err != nil {
-		return nil, fmt.Errorf("fail to create dialog: %v", err)
-	}
+	d := dialog.New(*data)
 	return d, nil
 }
 

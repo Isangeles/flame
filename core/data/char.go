@@ -35,7 +35,6 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/character"
-	"github.com/isangeles/flame/core/module/skill"
 	"github.com/isangeles/flame/log"
 )
 
@@ -169,21 +168,6 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 // buildCharacter builds new character from specified data(with items and equipment).
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
-	// Skills.
-	for _, charSkillData := range data.Skills {
-		skillData := res.Skill(charSkillData.ID)
-		if skillData == nil {
-			log.Err.Printf("data: build character: %s: fail to retrieve skill data: %v",
-				char.ID(), charSkillData.ID)
-			continue
-		}
-		skill := skill.New(*skillData)
-		if len(charSkillData.Serial) > 0 {
-			skill.SetSerial(charSkillData.Serial)
-		}
-		skill.SetCooldown(charSkillData.Cooldown)
-		char.AddSkill(skill)
-	}
 	// Dialogs.
 	for _, dialogData := range data.Dialogs {
 		dialog, err := Dialog(dialogData.ID)

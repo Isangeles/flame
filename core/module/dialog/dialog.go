@@ -24,8 +24,6 @@
 package dialog
 
 import (
-	"fmt"
-
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/req"
 )
@@ -51,7 +49,7 @@ type Talker interface {
 }
 
 // New creates new dialog.
-func New(data res.DialogData) (*Dialog, error) {
+func New(data res.DialogData) *Dialog {
 	d := new(Dialog)
 	d.id = data.ID
 	d.reqs = req.NewRequirements(data.Reqs...)
@@ -62,13 +60,10 @@ func New(data res.DialogData) (*Dialog, error) {
 			d.activePhases = append(d.activePhases, p)
 		}
 	}
-	if len(d.phases) < 1 {
-		return nil, fmt.Errorf("no phases")
-	}
 	if len(d.activePhases) < 1 {
 		d.activePhases = append(d.activePhases, d.phases[0])
 	}
-	return d, nil
+	return d
 }
 
 // ID returns dialog ID.

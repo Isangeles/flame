@@ -131,6 +131,21 @@ func New(data res.CharacterData) *Character {
 		f := flag.Flag(fd.ID)
 		c.flags[f.ID()] = f
 	}
+	// Add skills.
+	for _, charSkillData := range data.Skills {
+		skillData := res.Skill(charSkillData.ID)
+		if skillData == nil {
+			log.Err.Printf("data: build character: %s: fail to retrieve skill data: %v",
+				c.ID(), charSkillData.ID)
+			continue
+		}
+		skill := skill.New(*skillData)
+		if len(charSkillData.Serial) > 0 {
+			skill.SetSerial(charSkillData.Serial)
+		}
+		skill.SetCooldown(charSkillData.Cooldown)
+		c.AddSkill(skill)
+	}
 	return &c
 }
 
