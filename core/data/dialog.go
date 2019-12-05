@@ -32,25 +32,12 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/dialog"
 	"github.com/isangeles/flame/log"
 )
 
 const (
 	DialogsFileExt = ".dialogs"
 )
-
-// Dialog returns new dialog with specified ID or
-// error if data was not found or dialog creation
-// failed.
-func Dialog(id string) (*dialog.Dialog, error) {
-	data := res.Dialog(id)
-	if data == nil {
-		return nil, fmt.Errorf("dialog not found: %s", id)
-	}
-	d := dialog.New(*data)
-	return d, nil
-}
 
 // ImportDialogs imports all dialogs from base file with
 // specified path.

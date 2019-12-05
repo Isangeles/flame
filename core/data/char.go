@@ -168,16 +168,6 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 // buildCharacter builds new character from specified data(with items and equipment).
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
-	// Dialogs.
-	for _, dialogData := range data.Dialogs {
-		dialog, err := Dialog(dialogData.ID)
-		if err != nil {
-			log.Err.Printf("data: build character: %s: fail to retrieve dialog: %v",
-				char.ID(), err)
-			continue
-		}
-		char.AddDialog(dialog)
-	}
 	// Quests.
 	for _, questData := range data.Quests {
 		quest, err := Quest(questData.ID)

@@ -135,7 +135,7 @@ func New(data res.CharacterData) *Character {
 	for _, charSkillData := range data.Skills {
 		skillData := res.Skill(charSkillData.ID)
 		if skillData == nil {
-			log.Err.Printf("data: build character: %s: fail to retrieve skill data: %v",
+			log.Err.Printf("new character: %s: fail to retrieve skill data: %v",
 				c.ID(), charSkillData.ID)
 			continue
 		}
@@ -145,6 +145,17 @@ func New(data res.CharacterData) *Character {
 		}
 		skill.SetCooldown(charSkillData.Cooldown)
 		c.AddSkill(skill)
+	}
+	// Add dialogs.
+	for _, charDialogData := range data.Dialogs {
+		dialogData := res.Dialog(charDialogData.ID)
+		if dialogData == nil {
+			log.Err.Printf("new character: %s: fail to retrieve dialog data: %s",
+				c.ID(), charDialogData.ID)
+			continue
+		}
+		dialog := dialog.New(*dialogData)
+		c.AddDialog(dialog)
 	}
 	return &c
 }
