@@ -33,7 +33,7 @@ type CharacterData struct {
 	Skills    []ObjectSkillData
 	Memory    []AttitudeMemoryData
 	Dialogs   []ObjectDialogData
-	Quests    []CharacterQuestData
+	QuestLog  CharacterQuestLogData
 	Recipes   []ObjectRecipeData
 }
 
@@ -85,6 +85,11 @@ type AttitudeMemoryData struct {
 	ObjectID     string
 	ObjectSerial string
 	Attitude     int
+}
+
+// Struct for quest log data.
+type CharacterQuestLogData struct {
+	Quests []CharacterQuestData
 }
 
 // Struct for character quest data.

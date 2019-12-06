@@ -169,7 +169,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
 	// Quests.
-	for _, questData := range data.Quests {
+	for _, questData := range data.QuestLog.Quests {
 		quest, err := Quest(questData.ID)
 		if err != nil {
 			log.Err.Printf("data: build character: %s: fail to retrieve quest: %v",

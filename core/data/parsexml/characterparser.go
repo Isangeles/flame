@@ -391,7 +391,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 			ID:    xmlQuest.ID,
 			Stage: xmlQuest.Stage,
 		}
-		data.Quests = append(data.Quests, questData)
+		data.QuestLog.Quests = append(data.QuestLog.Quests, questData)
 	}
 	// Recipes.
 	for _, xmlRecipe := range xmlChar.Crafting {
