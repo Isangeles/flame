@@ -27,6 +27,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Struct for weapons.
@@ -60,6 +61,7 @@ func NewWeapon(data res.WeaponData) *Weapon {
 	for _, sid := range data.Slots {
 		w.slots = append(w.slots, Slot(sid))
 	}
+	serial.AssignSerial(&w)
 	return &w
 }
 

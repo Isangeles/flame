@@ -32,24 +32,12 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/craft"
 	"github.com/isangeles/flame/log"
 )
 
 const (
 	RecipesFileExt = ".recipes"
 )
-
-// Recipe returns new recipe with specified ID or
-// error if data was not found.
-func Recipe(id string) (*craft.Recipe, error) {
-	data := res.Recipe(id)
-	if data == nil {
-		return nil, fmt.Errorf("recipe data not found: %s", id)
-	}
-	r := craft.NewRecipe(*data)
-	return r, nil
-}
 
 // ImportRecipes imports all recipes from base file with
 // specified path.

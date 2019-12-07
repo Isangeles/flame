@@ -25,6 +25,7 @@ package item
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Struct for miscellaneous items.
@@ -45,6 +46,7 @@ func NewMisc(data res.MiscItemData) *Misc {
 		loot:     data.Loot,
 		currency: data.Currency,
 	}
+	serial.AssignSerial(&m)
 	return &m
 }
 

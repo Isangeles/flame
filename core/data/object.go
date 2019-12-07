@@ -33,6 +33,7 @@ import (
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/log"
 )
@@ -96,15 +97,13 @@ func buildObject(mod *module.Module, data *res.ObjectData) *object.Object {
 	ob := object.NewObject(*data)
 	// Effects.
 	for _, data := range data.Effects {
-		eff, err := Effect(mod, data.ID)
-		if err != nil {
-			log.Err.Printf("data: build object: %s: fail to retrieve effect: %s",
+		effData := res.Effect(data.ID)
+		if effData == nil {
+			log.Err.Printf("data: build object: %s: fail to retrieve effect data: %s",
 				ob.ID(), data.ID)
 			continue
 		}
-		if len(data.Serial) > 0 {
-			eff.SetSerial(data.Serial)
-		}
+		eff := effect.New(*effData)
 		ob.AddEffect(eff)
 	}
 	return ob

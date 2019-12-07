@@ -39,6 +39,7 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
+	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/log"
 )
 
@@ -218,20 +219,21 @@ func restoreAreaEffects(mod *module.Module, data res.AreaData) {
 			log.Err.Printf("data: save: restore effects: module char not found: %s")
 			continue
 		}
-		for _, eData := range charData.Effects {
-			effect, err := Effect(mod, eData.ID)
-			if err != nil {
-				log.Err.Printf("data: char: %s: restore effects: fail to create effect: %v",
-					char.ID(), err)
+		for _, obEffectData := range charData.Effects {
+			effectData := res.Effect(obEffectData.ID)
+			if effectData == nil {
+				log.Err.Printf("data: char: %s: restore effects: fail to create effect: %s",
+					char.ID(), obEffectData.ID)
 				continue
 			}
-			effect.SetSerial(eData.Serial)
-			effect.SetTime(eData.Time)
+			effect := effect.New(*effectData)
+			effect.SetSerial(obEffectData.Serial)
+			effect.SetTime(obEffectData.Time)
 			// Restore effect source.
-			source := mod.Target(eData.SourceID, eData.SourceSerial)
+			source := mod.Target(obEffectData.SourceID, obEffectData.SourceSerial)
 			if source == nil {
-				log.Err.Printf("data: char: %s: restore effects: fail to find source: %s",
-					char.ID(), eData.SourceID+"_"+eData.SourceSerial)
+				log.Err.Printf("data: char: %s: restore effects: fail to find source: %s#%s",
+					char.ID(), obEffectData.SourceID, obEffectData.SourceSerial)
 			}
 			effect.SetSource(source)
 			char.AddEffect(effect)

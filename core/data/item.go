@@ -32,8 +32,6 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/item"
-	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
@@ -42,34 +40,6 @@ const (
 	WeaponsFileExt   = ".weapons"
 	MiscItemsFileExt = ".misc"
 )
-
-// Item creates new instance of item with specified ID
-// for specified module, returns error if item data with such ID
-// was not found or module failed to assign serial value for
-// item.
-func Item(id string) (item.Item, error) {
-	var i item.Item
-	// Find data resources.
-	switch {
-	case res.Armor(id) != nil:
-		armorData := res.Armor(id)
-		a := item.NewArmor(*armorData)
-		i = a
-	case res.Weapon(id) != nil:
-		weaponData := res.Weapon(id)
-		w := item.NewWeapon(*weaponData)
-		i = w
-	case res.MiscItem(id) != nil:
-		miscData := res.MiscItem(id)
-		m := item.NewMisc(*miscData)
-		i = m
-	default:
-		return nil, fmt.Errorf("item data not found: %s", id)
-	}
-	// Assign serial.
-	serial.AssignSerial(i)
-	return i, nil
-}
 
 // ImportArmors imports all XML armors from file with specified path.
 func ImportArmors(basePath string) ([]*res.ArmorData, error) {

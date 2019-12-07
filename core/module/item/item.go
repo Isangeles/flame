@@ -60,8 +60,10 @@ const (
 	Feet
 )
 
-// NewItem creates item from specified data.
-func NewItem(data res.ItemData) Item {
+// New creates item from specified data.
+// Returns nil if specified data is not a
+// armor, weapon, or misc item data.
+func New(data res.ItemData) Item {
 	switch d := data.(type) {
 	case *res.ArmorData:
 		return NewArmor(*d)

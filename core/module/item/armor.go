@@ -27,6 +27,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/req"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Struct for armor items.
@@ -58,6 +59,7 @@ func NewArmor(data res.ArmorData) *Armor {
 		a.slots = append(a.slots, Slot(sid))
 
 	}
+	serial.AssignSerial(&a)
 	return &a
 }
 

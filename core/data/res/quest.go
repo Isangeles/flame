@@ -50,7 +50,7 @@ type QuestLogData struct {
 	Quests []QuestLogQuestData
 }
 
-// Struct for character quest data.
+// Struct for quest data from quest log.
 type QuestLogQuestData struct {
 	ID    string
 	Stage string

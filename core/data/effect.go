@@ -32,29 +32,12 @@ import (
 	
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/effect"
-	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
 const (
 	EffectsFileExt = ".effects"
 )
-
-// Effect creates new instance of effect with specified ID
-// for specified module, returns error if effect data with such ID
-// was not found or module failed to assign serial value for
-// effect.
-func Effect(mod *module.Module, id string) (*effect.Effect, error) {
-	data := res.Effect(id)
-	if data.ID == "" {
-		return nil, fmt.Errorf("effect not found: %s", id)
-	}
-	e := effect.New(*data)
-	serial.AssignSerial(e)
-	return e, nil
-}
 
 // ImportEffects imports all XML effects data from effects base
 // with specified path.

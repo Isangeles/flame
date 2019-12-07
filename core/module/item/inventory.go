@@ -53,7 +53,7 @@ func NewInventory(data res.InventoryData) *Inventory {
 			continue
 		}
 		dat := res.Item(itData.ID)
-		it := NewItem(dat)
+		it := New(dat)
 		if it == nil {
 			log.Err.Printf("build inv: item: %s: fail to create item from data",
 				itData.ID)

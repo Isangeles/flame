@@ -32,25 +32,12 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/quest"
 	"github.com/isangeles/flame/log"
 )
 
 const (
 	QuestsFileExt = ".quests"
 )
-
-// Quest returns new quest with specified ID or
-// error if data was not found or quest creation
-// failed.
-func Quest(id string) (*quest.Quest, error) {
-	data := res.Quest(id)
-	if data == nil {
-		return nil, fmt.Errorf("res not found: %s", id)
-	}
-	q := quest.New(*data)
-	return q, nil
-}
 
 // ImportQuests imports all auests from base file with
 // specified path.

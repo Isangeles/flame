@@ -26,6 +26,7 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Struct for effects.
@@ -48,6 +49,7 @@ func New(data res.EffectData) *Effect {
 	e.modifiers = NewModifiers(data.Modifiers...)
 	e.duration = int64(data.Duration)
 	e.SetTime(data.Duration)
+	serial.AssignSerial(e)
 	return e
 }
 
