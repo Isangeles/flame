@@ -44,3 +44,14 @@ type QuestObjectiveData struct {
 	Finisher bool
 	Reqs     []ReqData
 }
+
+// Struct for quest log data.
+type QuestLogData struct {
+	Quests []QuestLogQuestData
+}
+
+// Struct for character quest data.
+type QuestLogQuestData struct {
+	ID    string
+	Stage string
+}

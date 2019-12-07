@@ -387,7 +387,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	}
 	// Quests.
 	for _, xmlQuest := range xmlChar.Quests {
-		questData := res.CharacterQuestData{
+		questData := res.QuestLogQuestData{
 			ID:    xmlQuest.ID,
 			Stage: xmlQuest.Stage,
 		}
