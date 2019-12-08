@@ -24,7 +24,9 @@
 package quest
 
 import (
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/flag"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for character journal.
@@ -34,10 +36,31 @@ type Journal struct {
 }
 
 // NewJournal creates quests journal.
-func NewJournal(quester Quester) *Journal {
+func NewJournal(data res.QuestLogData, quester Quester) *Journal {
 	j := new(Journal)
 	j.owner = quester
 	j.quests = make(map[string]*Quest)
+	for _, logQuestData := range data.Quests {
+		questData := res.Quest(logQuestData.ID)
+		if questData == nil {
+			log.Err.Printf("build quest log: %s#%s: fail to retrieve quest data: %s",
+				j.owner.ID(), j.owner.Serial(), logQuestData.ID)
+			continue
+		}
+		// Restore quest stage.
+		quest := New(*questData)
+		for _, s := range quest.Stages() {
+			if s.ID() == logQuestData.Stage {
+				quest.SetActiveStage(s)
+			}
+		}
+		if quest.ActiveStage() == nil {
+			log.Err.Printf("build quest log: %s#%s: quest: %s: fail to set active stage",
+				j.owner.ID(), j.owner.Serial(), quest.ID())
+		}
+		// Add quest to quest log.
+		j.AddQuest(quest)
+	}
 	return j
 }
 

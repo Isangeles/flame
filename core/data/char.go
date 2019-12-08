@@ -36,7 +36,6 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/craft"
-	"github.com/isangeles/flame/core/module/quest"
 	"github.com/isangeles/flame/log"
 )
 
@@ -170,28 +169,6 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 // buildCharacter builds new character from specified data(with items and equipment).
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
-	// Quests.
-	for _, logQuestData := range data.QuestLog.Quests {
-		questData := res.Quest(logQuestData.ID)
-		if questData == nil {
-			log.Err.Printf("data: build character: %s: fail to retrieve quest: %s",
-				char.ID(), logQuestData.ID)
-			continue
-		}
-		// Restore quest stage.
-		quest := quest.New(*questData)
-		for _, s := range quest.Stages() {
-			if s.ID() == logQuestData.Stage {
-				quest.SetActiveStage(s)
-			}
-		}
-		if quest.ActiveStage() == nil {
-			log.Err.Printf("data: build character: %s: quest: %s: fail to set active stage",
-				char.ID(), quest.ID())
-		}
-		// Add quest to quest log.
-		char.Journal().AddQuest(quest)
-	}
 	// Recipes.
 	for _, obRecipeData := range data.Recipes {
 		recipeData := res.Recipe(obRecipeData.ID)

@@ -55,9 +55,10 @@ Translation files are placed in `/lang` directory both for modules and chapters.
 ## Contributing
 You are welcome to contribute to project development.
 
-If you looking for things to do, then check TODO file.
+If you looking for things to do, then check TODO file or contact me(dev@isangeles.pl).
 
-When you finish, open pull request to merge your changes with main branch.
+When you find something to do, create new branch for your feature.
+After you finish, open pull request to merge your changes with master branch.
 
 ## Contact
 * Isangeles <<dev@isangeles.pl>>

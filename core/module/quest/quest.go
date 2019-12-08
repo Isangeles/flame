@@ -38,6 +38,8 @@ type Quest struct {
 
 // Interface for objects with quests.
 type Quester interface {
+	ID() string
+	Serial() string
 	Journal() *Journal
 	MeetReqs(reqs ...req.Requirement) bool
 }
