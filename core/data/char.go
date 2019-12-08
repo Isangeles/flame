@@ -170,7 +170,7 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
 	// Recipes.
-	for _, obRecipeData := range data.Recipes {
+	for _, obRecipeData := range data.Crafting.Recipes {
 		recipeData := res.Recipe(obRecipeData.ID)
 		if recipeData == nil {
 			log.Err.Printf("data: build character: %s: fail to retrieve recipe: %s",

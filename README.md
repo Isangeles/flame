@@ -52,6 +52,7 @@ Chapter data are available only when specific chapter is active, data files are 
 
 Translation files are placed in `/lang` directory both for modules and chapters.
 
+Example module is available [here](https://github.com/Isangeles/arena).
 ## Contributing
 You are welcome to contribute to project development.
 

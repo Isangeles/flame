@@ -34,7 +34,7 @@ type CharacterData struct {
 	Memory    []AttitudeMemoryData
 	Dialogs   []ObjectDialogData
 	QuestLog  QuestLogData
-	Recipes   []ObjectRecipeData
+	Crafting  CraftingData
 }
 
 // Struct for basic character data.

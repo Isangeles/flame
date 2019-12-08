@@ -76,8 +76,3 @@ type ObjectDialogData struct {
 type FlagData struct {
 	ID string
 }
-
-// Struct for object recipe data.
-type ObjectRecipeData struct {
-	ID string
-}

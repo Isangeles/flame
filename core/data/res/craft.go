@@ -38,3 +38,13 @@ type RecipeResultData struct {
 	Amount int
 	Item   ItemData
 }
+
+// Struct for crafting data.
+type CraftingData struct {
+	Recipes []CraftingRecipeData
+}
+
+// Struct for crafting recipe data.
+type CraftingRecipeData struct {
+	ID string
+}

@@ -395,10 +395,10 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	}
 	// Recipes.
 	for _, xmlRecipe := range xmlChar.Crafting {
-		recipeData := res.ObjectRecipeData{
+		recipeData := res.CraftingRecipeData{
 			ID: xmlRecipe.ID,
 		}
-		data.Recipes = append(data.Recipes, recipeData)
+		data.Crafting.Recipes = append(data.Crafting.Recipes, recipeData)
 	}
 	return &data, nil
 }
