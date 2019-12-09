@@ -21,7 +21,6 @@
  *
  */
 
-// Package for crafting structs.
 package craft
 
 import (

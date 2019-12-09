@@ -35,7 +35,6 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/character"
-	"github.com/isangeles/flame/core/module/craft"
 	"github.com/isangeles/flame/log"
 )
 
@@ -169,16 +168,5 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 // buildCharacter builds new character from specified data(with items and equipment).
 func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
 	char := character.New(*data)
-	// Recipes.
-	for _, obRecipeData := range data.Crafting.Recipes {
-		recipeData := res.Recipe(obRecipeData.ID)
-		if recipeData == nil {
-			log.Err.Printf("data: build character: %s: fail to retrieve recipe: %s",
-				char.ID(), obRecipeData.ID)
-			continue
-		}
-		recipe := craft.NewRecipe(*recipeData)
-		char.AddRecipe(recipe)
-	}
 	return char
 }

@@ -66,12 +66,12 @@ type Character struct {
 	inventory        *item.Inventory
 	equipment        *Equipment
 	journal          *quest.Journal
+	crafting         *craft.Crafting
 	targets          []effect.Target
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
-	recipes          map[string]*craft.Recipe
 	flags            map[string]flag.Flag
 	trainings        []train.Training
 	chatlog          chan string
@@ -109,12 +109,12 @@ func New(data res.CharacterData) *Character {
 	c.inventory.SetCapacity(c.Attributes().Lift())
 	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(data.QuestLog, &c)
+	c.crafting = craft.NewCrafting(data.Crafting, &c)
 	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
-	c.recipes = make(map[string]*craft.Recipe)
 	c.flags = make(map[string]flag.Flag)
 	c.trainings = train.NewTrainings(data.BasicData.Trainings...)
 	c.chatlog = make(chan string, 1)
@@ -639,9 +639,14 @@ func (c *Character) Journal() *quest.Journal {
 	return c.journal
 }
 
+// Crafting returns character crafting object.
+func (c *Character) Crafting() *craft.Crafting {
+	return c.crafting
+}
+
 // Recipes returns character recipes.
 func (c *Character) Recipes() (recipes []*craft.Recipe) {
-	for _, r := range c.recipes {
+	for _, r := range c.Crafting().Recipes() {
 		recipes = append(recipes, r)
 	}
 	return
@@ -649,7 +654,7 @@ func (c *Character) Recipes() (recipes []*craft.Recipe) {
 
 // AddRecipe adds specified recipe to character.
 func (c *Character) AddRecipe(r *craft.Recipe) {
-	c.recipes[r.ID()] = r
+	c.Crafting().AddRecipes(r)
 }
 
 // Trainings returns all trainings.
