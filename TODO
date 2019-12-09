@@ -1,6 +1,7 @@
 MAJOR:
 * Switching chapters
 * Item materials
+* Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)

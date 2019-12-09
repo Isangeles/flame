@@ -4,7 +4,7 @@
   The main goal is to create simple, flexible, extensible and completely modular game engine.
   Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
 
-  Easiest way to use Flame is to download some kind of graphical or textual interface(like [Mural](https://github.com/isangeles/mural)(GUI) or [Burn Shell](https://github.com/isangeles/burnsh)(CLI)) and create module or modify existing one(like [Arena](https://github.com/Isangeles/arena)).
+  Easiest way to use Flame is to download some graphical or textual interface(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or modify existing one(like [Arena](https://github.com/Isangeles/arena)).
 
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
