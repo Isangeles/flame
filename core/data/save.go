@@ -160,7 +160,7 @@ func buildSavedArea(mod *module.Module, data res.AreaData) *area.Area {
 	area := area.NewArea(data.ID)
 	// Characters.
 	for _, charData := range data.Chars {
-		char := buildCharacter(mod, &charData)
+		char := character.New(charData)
 		// Restore HP, mana & exp.
 		char.SetHealth(charData.SavedData.HP)
 		char.SetMana(charData.SavedData.Mana)

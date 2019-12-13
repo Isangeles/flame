@@ -12,8 +12,8 @@ MINOR:
 * Exporting character exports also quests, effects, items, etc., its desirable for save game, but other marshaling method should be applied for exporting character to use in different game
 * Merge SaveGame struct from save to res package
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
-* Remove buildCharacter function, since is not needed anymore
 * Remove character.AddRecipe and character.Recipes function, since now character recipes are accessible through crafting object
+* Move building effects from data.buildObject to object.Object constructor, and remove buildObject function
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism

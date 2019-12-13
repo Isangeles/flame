@@ -33,7 +33,6 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/log"
 )
@@ -41,18 +40,6 @@ import (
 const (
 	CharsFileExt = ".characters"
 )
-
-// Character creates module character with specified ID.
-func Character(mod *module.Module, charID string) (*character.Character, error) {
-	// Get data.
-	data := res.Character(charID)
-	if data == nil {
-		return nil, fmt.Errorf("character data not found: %s", charID)
-	}
-	// Full build character(with skills, itmes, etc.).
-	char := buildCharacter(mod, data)
-	return char, nil
-}
 
 // ImportCharactersData import characters data from base file
 // with specified path.
@@ -95,7 +82,7 @@ func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
 
 // ImportCharacters imports characters from base file with
 // specified path.
-func ImportCharacters(mod *module.Module, path string) ([]*character.Character, error) {
+func ImportCharacters(path string) ([]*character.Character, error) {
 	charFile, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to open char base file: %v", err)
@@ -107,7 +94,7 @@ func ImportCharacters(mod *module.Module, path string) ([]*character.Character, 
 	}
 	chars := make([]*character.Character, 0)
 	for _, charData := range charsData {
-		char := buildCharacter(mod, charData)
+		char := character.New(*charData)
 		chars = append(chars, char)
 	}
 	return chars, nil
@@ -115,7 +102,7 @@ func ImportCharacters(mod *module.Module, path string) ([]*character.Character, 
 
 // ImportCharactersDir imports all characters files from directory
 // with specified path.
-func ImportCharactersDir(mod *module.Module, dirPath string) ([]*character.Character, error) {
+func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 	chars := make([]*character.Character, 0)
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -126,7 +113,7 @@ func ImportCharactersDir(mod *module.Module, dirPath string) ([]*character.Chara
 			continue
 		}
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
-		impChars, err := ImportCharacters(mod, charFilePath)
+		impChars, err := ImportCharacters(charFilePath)
 		if err != nil {
 			log.Err.Printf("data char import: %s: fail to parse char file: %v",
 				charFilePath, err)
@@ -163,10 +150,4 @@ func ExportCharacter(char *character.Character, dirPath string) error {
 	w.WriteString(xml)
 	w.Flush()
 	return nil
-}
-
-// buildCharacter builds new character from specified data(with items and equipment).
-func buildCharacter(mod *module.Module, data *res.CharacterData) *character.Character {
-	char := character.New(*data)
-	return char
 }

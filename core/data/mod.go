@@ -33,6 +33,7 @@ import (
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
+	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
@@ -152,7 +153,7 @@ func buildArea(mod *module.Module, data res.ModuleAreaData) *area.Area {
 				data.ID, areaCharData.ID)
 			continue
 		}
-		char := buildCharacter(mod, charData)
+		char := character.New(*charData)
 		// Set serial & position.
 		serial.AssignSerial(char)
 		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
