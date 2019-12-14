@@ -40,6 +40,7 @@ import (
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/log"
 )
 
@@ -57,7 +58,7 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 	xml, err := parsexml.MarshalSaveGame(save)
 	if err != nil {
 		return fmt.Errorf("fail to marshal game: %v", err)
-	}
+	} 
 	// Create savegame file.
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
@@ -177,7 +178,7 @@ func buildSavedArea(mod *module.Module, data res.AreaData) *area.Area {
 		name := lang.TextDir(mod.Conf().LangPath(), obData.BasicData.ID)
 		obData.BasicData.Name = name
 		// Build object.
-		ob := buildObject(mod, &obData)
+		ob := object.New(obData)
 		// Restore position.
 		ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
 		// Object to area.

@@ -1,5 +1,5 @@
 /*
- * objects.go
+ * object.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -30,6 +30,7 @@ import (
 	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/objects"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for area objects.
@@ -50,7 +51,7 @@ type Object struct {
 
 // New creates new area object from
 // specified data.
-func NewObject(data res.ObjectData) *Object {
+func New(data res.ObjectData) *Object {
 	ob := Object{
 		id:     data.BasicData.ID,
 		name:   data.BasicData.Name,
@@ -67,10 +68,21 @@ func NewObject(data res.ObjectData) *Object {
 	ob.flags = make(map[string]flag.Flag)
 	ob.chatlog = make(chan string, 1)
 	ob.combatlog = make(chan string, 3)
+	// Add effects.
+	for _, data := range data.Effects {
+		effData := res.Effect(data.ID)
+		if effData == nil {
+			log.Err.Printf("object: %s: fail to retrieve effect data: %s",
+				ob.ID(), data.ID)
+			continue
+		}
+		eff := effect.New(*effData)
+		ob.AddEffect(eff)
+	}
 	return &ob
 }
 
-// Update updates objects.
+// Update updates object.
 func (ob *Object) Update(delta int64) {
 	// Effects.
 	for serial, e := range ob.effects {

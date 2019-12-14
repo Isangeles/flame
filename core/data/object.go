@@ -33,7 +33,6 @@ import (
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/log"
 )
@@ -49,7 +48,7 @@ func Object(mod *module.Module, obID string) (*object.Object, error) {
 		return nil, fmt.Errorf("object data not found: %s", obID)
 	}
 	data.BasicData.HP = data.BasicData.MaxHP
-	ob := buildObject(mod, data)
+	ob := object.New(*data)
 	return ob, nil
 }
 
@@ -90,21 +89,4 @@ func ImportObjectsDir(path string) ([]*res.ObjectData, error) {
 		objects = append(objects, impObjects...)
 	}
 	return objects, nil
-}
-
-// buildObject creates new object from specified data resources.
-func buildObject(mod *module.Module, data *res.ObjectData) *object.Object {
-	ob := object.NewObject(*data)
-	// Effects.
-	for _, data := range data.Effects {
-		effData := res.Effect(data.ID)
-		if effData == nil {
-			log.Err.Printf("data: build object: %s: fail to retrieve effect data: %s",
-				ob.ID(), data.ID)
-			continue
-		}
-		eff := effect.New(*effData)
-		ob.AddEffect(eff)
-	}
-	return ob
 }
