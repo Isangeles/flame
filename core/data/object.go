@@ -47,7 +47,6 @@ func Object(mod *module.Module, obID string) (*object.Object, error) {
 	if data == nil {
 		return nil, fmt.Errorf("object data not found: %s", obID)
 	}
-	data.BasicData.HP = data.BasicData.MaxHP
 	ob := object.New(*data)
 	return ob, nil
 }

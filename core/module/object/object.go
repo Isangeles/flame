@@ -56,9 +56,9 @@ func New(data res.ObjectData) *Object {
 		id:     data.BasicData.ID,
 		name:   data.BasicData.Name,
 		serial: data.BasicData.Serial,
-		hp:     data.BasicData.HP,
 		maxHP:  data.BasicData.MaxHP,
 	}
+	ob.SetHealth(ob.MaxHealth())
 	if len(data.BasicData.Action.SelfMods) > 0 || len(data.BasicData.Action.UserMods) > 0 {
 		ob.action = NewAction(data.BasicData.Action)
 	}

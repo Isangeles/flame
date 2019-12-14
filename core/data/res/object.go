@@ -36,12 +36,13 @@ type ObjectBasicData struct {
 	ID        string
 	Name      string
 	Serial    string
-	HP, MaxHP int
+	MaxHP     int
 	Action    ObjectActionData
 }
 
 // Struct for saved object data.
 type ObjectSavedData struct {
+	HP         int
 	PosX, PosY float64
 }
 

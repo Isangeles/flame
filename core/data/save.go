@@ -179,6 +179,8 @@ func buildSavedArea(mod *module.Module, data res.AreaData) *area.Area {
 		obData.BasicData.Name = name
 		// Build object.
 		ob := object.New(obData)
+		// Restore health.
+		ob.SetHealth(obData.SavedData.HP)
 		// Restore position.
 		ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
 		// Object to area.

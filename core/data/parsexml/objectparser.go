@@ -228,13 +228,14 @@ func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
 	baseData := res.ObjectBasicData{
 		ID:     xmlOb.ID,
 		Serial: xmlOb.Serial,
-		HP:     xmlOb.HP,
 		MaxHP:  xmlOb.MaxHP,
 	}
 	// Action.
 	baseData.Action.SelfMods = buildModifiers(&xmlOb.Action.SelfMods)
 	baseData.Action.UserMods = buildModifiers(&xmlOb.Action.UserMods)
 	data := res.ObjectData{BasicData: baseData}
+	// Saved health.
+	data.SavedData.HP = xmlOb.HP
 	// Position.
 	if xmlOb.Position != "" {
 		posX, posY, err := UnmarshalPosition(xmlOb.Position)
