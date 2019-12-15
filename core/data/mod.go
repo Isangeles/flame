@@ -34,6 +34,7 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
+	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
@@ -164,17 +165,18 @@ func buildArea(mod *module.Module, data res.ModuleAreaData) *area.Area {
 	// Objects.
 	for _, areaObData := range data.Objects {
 		// Retrieve object data.
-		object, err := Object(mod, areaObData.ID)
-		if err != nil {
-			log.Err.Printf("data: build area %s: object: %s: %v",
-				data.ID, areaObData.ID, err)
+		obData := res.Object(areaObData.ID)
+		if obData == nil {
+			log.Err.Printf("data: build area %s: object data not found: %s",
+				data.ID, areaObData.ID)
 			continue
 		}
+		ob := object.New(*obData)
 		// Set serial & position.
-		serial.AssignSerial(object)
-		object.SetPosition(areaObData.PosX, areaObData.PosY)
+		serial.AssignSerial(ob)
+		ob.SetPosition(areaObData.PosX, areaObData.PosY)
 		// Object to area.
-		area.AddObject(object)
+		area.AddObject(ob)
 	}
 	// Subareas.
 	for _, subareaData := range data.Subareas {

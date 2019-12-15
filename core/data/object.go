@@ -32,24 +32,12 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/log"
 )
 
 const (
 	ObjectsFileExt = ".objects"
 )
-
-// Object creates module area object with specified ID.
-func Object(mod *module.Module, obID string) (*object.Object, error) {
-	data := res.Object(obID)
-	if data == nil {
-		return nil, fmt.Errorf("object data not found: %s", obID)
-	}
-	ob := object.New(*data)
-	return ob, nil
-}
 
 // ImportObjectsData imports area objects data from base
 // file with specified path.
