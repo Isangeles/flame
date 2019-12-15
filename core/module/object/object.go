@@ -30,6 +30,7 @@ import (
 	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/objects"
+	"github.com/isangeles/flame/core/module/serial"
 	"github.com/isangeles/flame/log"
 )
 
@@ -79,6 +80,8 @@ func New(data res.ObjectData) *Object {
 		eff := effect.New(*effData)
 		ob.AddEffect(eff)
 	}
+	// Assign serial.
+	serial.AssignSerial(&ob)
 	return &ob
 }
 

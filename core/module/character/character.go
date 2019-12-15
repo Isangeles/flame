@@ -157,6 +157,8 @@ func New(data res.CharacterData) *Character {
 		dialog := dialog.New(*dialogData)
 		c.AddDialog(dialog)
 	}
+	// Assign serial.
+	serial.AssignSerial(&c)
 	return &c
 }
 
