@@ -186,7 +186,7 @@ func xmlCharacter(char *character.Character) *Character {
 	xmlChar.Dialogs = *xmlObjectDialogs(char.Dialogs()...)
 	xmlChar.Quests = xmlQuests(char.Journal().Quests())
 	xmlChar.Flags = xmlFlags(char.Flags())
-	xmlChar.Crafting = xmlObjectRecipes(char.Recipes()...)
+	xmlChar.Crafting = xmlObjectRecipes(char.Crafting().Recipes()...)
 	xmlChar.Trainings = *xmlTrainings(char.Trainings()...)
 	return xmlChar
 }

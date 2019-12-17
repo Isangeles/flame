@@ -225,7 +225,7 @@ func (c *Character) Update(delta int64) {
 		c.cooldown = global_cd
 	}
 	// Recipes.
-	for _, r := range c.Recipes() {
+	for _, r := range c.Crafting().Recipes() {
 		r.Update(delta)
 		if !r.Casted() {
 			continue
@@ -504,7 +504,7 @@ func (c *Character) Casting() bool {
 			return true
 		}
 	}
-	for _, r := range c.Recipes() {
+	for _, r := range c.Crafting().Recipes() {
 		if r.Casting() {
 			return true
 		}
@@ -644,19 +644,6 @@ func (c *Character) Journal() *quest.Journal {
 // Crafting returns character crafting object.
 func (c *Character) Crafting() *craft.Crafting {
 	return c.crafting
-}
-
-// Recipes returns character recipes.
-func (c *Character) Recipes() (recipes []*craft.Recipe) {
-	for _, r := range c.Crafting().Recipes() {
-		recipes = append(recipes, r)
-	}
-	return
-}
-
-// AddRecipe adds specified recipe to character.
-func (c *Character) AddRecipe(r *craft.Recipe) {
-	c.Crafting().AddRecipes(r)
 }
 
 // Trainings returns all trainings.
