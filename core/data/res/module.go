@@ -1,5 +1,5 @@
 /*
- * scenario.go
+ * module.go
  *
  * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -25,10 +25,10 @@ package res
 
 // Struct for area data.
 type ModuleAreaData struct {
-	ID       string
-	NPCS     []AreaCharData
-	Objects  []AreaObjectData
-	Subareas []ModuleAreaData
+	ID         string
+	Characters []AreaCharData
+	Objects    []AreaObjectData
+	Subareas   []ModuleAreaData
 }
 
 // Struct for area character data.

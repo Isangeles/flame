@@ -29,13 +29,9 @@ import (
 	"path/filepath"
 
 	"github.com/isangeles/flame/core/data/parsexml"
-	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
-	"github.com/isangeles/flame/core/module/character"
-	"github.com/isangeles/flame/core/module/object"
-	"github.com/isangeles/flame/log"
 )
 
 const (
@@ -99,7 +95,7 @@ func LoadArea(mod *module.Module, id string) error {
 		return fmt.Errorf("fail to parse area data: %v", err)
 	}
 	// Build mainarea.
-	mainarea := buildArea(mod, *areaData)
+	mainarea := area.NewArea(*areaData)
 	// Add area to active module chapter.
 	chap.AddAreas(mainarea)
 	return nil
@@ -139,46 +135,4 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 		StartAreaID: confValues["start-area"],
 	}
 	return conf, nil
-}
-
-// buildArea creates area from specified data.
-func buildArea(mod *module.Module, data res.ModuleAreaData) *area.Area {
-	area := area.NewArea(data.ID)
-	// NPCs.
-	for _, areaCharData := range data.NPCS {
-		// Retireve char data.
-		charData := res.Character(areaCharData.ID)
-		if charData == nil {
-			log.Err.Printf("data: build area: %s: npc data not found: %s",
-				data.ID, areaCharData.ID)
-			continue
-		}
-		char := character.New(*charData)
-		// Set position.
-		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
-		char.SetDefaultPosition(areaCharData.PosX, areaCharData.PosY)
-		// Char to area.
-		area.AddCharacter(char)
-	}
-	// Objects.
-	for _, areaObData := range data.Objects {
-		// Retrieve object data.
-		obData := res.Object(areaObData.ID)
-		if obData == nil {
-			log.Err.Printf("data: build area %s: object data not found: %s",
-				data.ID, areaObData.ID)
-			continue
-		}
-		ob := object.New(*obData)
-		// Set position.
-		ob.SetPosition(areaObData.PosX, areaObData.PosY)
-		// Object to area.
-		area.AddObject(ob)
-	}
-	// Subareas.
-	for _, subareaData := range data.Subareas {
-		subarea := buildArea(mod, subareaData)
-		area.AddSubarea(subarea)
-	}
-	return area
 }

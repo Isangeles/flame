@@ -27,10 +27,12 @@ import (
 	"math"
 	"sync"
 
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/object"
 	"github.com/isangeles/flame/core/module/objects"
+	"github.com/isangeles/flame/log"
 )
 
 // Area struct represents game world area.
@@ -42,12 +44,48 @@ type Area struct {
 }
 
 // NewArea returns new instace of object.
-func NewArea(id string) *Area {
+func NewArea(data res.ModuleAreaData) *Area {
 	a := new(Area)
-	a.id = id
+	a.id = data.ID
 	a.chars = new(sync.Map)
 	a.objects = make(map[string]*object.Object)
 	a.subareas = make(map[string]*Area)
+	// Characters.
+	for _, areaCharData := range data.Characters {
+		// Retireve char data.
+		charData := res.Character(areaCharData.ID)
+		if charData == nil {
+			log.Err.Printf("area: %s: npc data not found: %s",
+				a.ID(), areaCharData.ID)
+			continue
+		}
+		char := character.New(*charData)
+		// Set position.
+		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
+		char.SetDefaultPosition(areaCharData.PosX, areaCharData.PosY)
+		// Char to area.
+		a.AddCharacter(char)
+	}
+	// Objects.
+	for _, areaObData := range data.Objects {
+		// Retrieve object data.
+		obData := res.Object(areaObData.ID)
+		if obData == nil {
+			log.Err.Printf("area %s: object data not found: %s",
+				a.ID(), areaObData.ID)
+			continue
+		}
+		ob := object.New(*obData)
+		// Set position.
+		ob.SetPosition(areaObData.PosX, areaObData.PosY)
+		// Object to area.
+		a.AddObject(ob)
+	}
+	// Subareas.
+	for _, subareaData := range data.Subareas {
+		subarea := NewArea(subareaData)
+		a.AddSubarea(subarea)
+	}
 	return a
 }
 

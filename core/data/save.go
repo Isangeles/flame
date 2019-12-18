@@ -158,7 +158,10 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 
 // buildSavedArea creates area from saved data.
 func buildSavedArea(mod *module.Module, data res.AreaData) *area.Area {
-	area := area.NewArea(data.ID)
+	moduleAreaData := res.ModuleAreaData{
+		ID: data.ID,
+	}
+	area := area.NewArea(moduleAreaData)
 	// Characters.
 	for _, charData := range data.Chars {
 		char := character.New(charData)

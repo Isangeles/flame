@@ -82,13 +82,12 @@ func MarshalArea(areaData *res.ModuleAreaData) (string, error) {
 func xmlArea(areaData *res.ModuleAreaData) *Area {
 	xmlArea := new(Area)
 	xmlArea.ID = areaData.ID
-	fmt.Printf("area: %s: subareas: %v\n", areaData.ID, areaData.Subareas)
 	for _, sad := range areaData.Subareas {
 		xmlSubarea := new(Area)
 		xmlArea.ID = sad.ID
 		// Characters.
 		xmlChars := xmlArea.Characters
-		for _, npc := range sad.NPCS {
+		for _, npc := range sad.Characters {
 			xmlNPC := new(AreaChar)
 			xmlNPC.ID = npc.ID
 			xmlNPC.Position = MarshalPosition(npc.PosX, npc.PosY)
@@ -123,7 +122,7 @@ func buildAreaData(xmlArea *Area) *res.ModuleAreaData {
 			PosX: x,
 			PosY: y,
 		}
-		area.NPCS = append(area.NPCS, char)
+		area.Characters = append(area.Characters, char)
 	}
 	// Objects.
 	for _, xmlOb := range xmlArea.Objects {
