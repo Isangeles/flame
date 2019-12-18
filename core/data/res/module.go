@@ -24,11 +24,11 @@
 package res
 
 // Struct for area data.
-type ModuleAreaData struct {
+type AreaData struct {
 	ID         string
 	Characters []AreaCharData
 	Objects    []AreaObjectData
-	Subareas   []ModuleAreaData
+	Subareas   []AreaData
 }
 
 // Struct for area character data.

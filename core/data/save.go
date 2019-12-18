@@ -95,7 +95,7 @@ func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGa
 		return nil, fmt.Errorf("fail to unmarshal savegame data: %v", err)
 	}
 	// Load chapter with ID from save.
-	err = LoadChapter(mod, gameData.Chapter.ID)
+	err = LoadChapter(mod, gameData.SavedChapter.ID)
 	if err != nil {
 		return nil, fmt.Errorf("fail to load chapter: %v", err)
 	}
@@ -139,7 +139,7 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 	game := new(save.SaveGame)
 	game.Name = gameData.Name
 	game.Mod = mod
-	chapterData := &gameData.Chapter
+	chapterData := &gameData.SavedChapter
 	// Areas.
 	for _, areaData := range chapterData.Areas {
 		// Create area from saved data.
@@ -157,11 +157,11 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame,
 }
 
 // buildSavedArea creates area from saved data.
-func buildSavedArea(mod *module.Module, data res.AreaData) *area.Area {
-	moduleAreaData := res.ModuleAreaData{
+func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
+	areaData := res.AreaData{
 		ID: data.ID,
 	}
-	area := area.NewArea(moduleAreaData)
+	area := area.New(areaData)
 	// Characters.
 	for _, charData := range data.Chars {
 		char := character.New(charData)
@@ -198,7 +198,7 @@ func buildSavedArea(mod *module.Module, data res.AreaData) *area.Area {
 }
 
 // restorePlayers returns list with PCs.
-func restoreAreaPlayers(mod *module.Module, data res.AreaData) (pcs []*character.Character) {
+func restoreAreaPlayers(mod *module.Module, data res.SavedAreaData) (pcs []*character.Character) {
 	for _, charData := range data.Chars {
 		if !charData.SavedData.PC {
 			continue
@@ -218,7 +218,7 @@ func restoreAreaPlayers(mod *module.Module, data res.AreaData) (pcs []*character
 }
 
 // restoreAreaEffects restores saved effects for characters and objects.
-func restoreAreaEffects(mod *module.Module, data res.AreaData) {
+func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
 		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
 		if char == nil {
@@ -251,7 +251,7 @@ func restoreAreaEffects(mod *module.Module, data res.AreaData) {
 }
 
 // restoreAreaMemory restores saved memory for characters.
-func restoreAreaMemory(mod *module.Module, data res.AreaData) {
+func restoreAreaMemory(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
 		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
 		if char == nil {

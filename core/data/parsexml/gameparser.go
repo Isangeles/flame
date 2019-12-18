@@ -96,11 +96,11 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 	game := new(res.GameData)
 	game.Name = xmlGame.Name
 	// Chapter.
-	game.Chapter.ID = xmlGame.Chapter.ID
+	game.SavedChapter.ID = xmlGame.Chapter.ID
 	// Areas.
 	for _, xmlArea := range xmlGame.Chapter.Areas {
 		area := *unmarshalGameArea(xmlArea)
-		game.Chapter.Areas = append(game.Chapter.Areas, area)
+		game.SavedChapter.Areas = append(game.SavedChapter.Areas, area)
 	}
 	return game, nil
 }
@@ -134,8 +134,8 @@ func marshalGameArea(game *save.SaveGame, a *area.Area) *SavedArea {
 }
 
 // unmarshalGameArea parses specified saved area node to area data.
-func unmarshalGameArea(xmlArea SavedArea) *res.AreaData {
-	area := new(res.AreaData)
+func unmarshalGameArea(xmlArea SavedArea) *res.SavedAreaData {
+	area := new(res.SavedAreaData)
 	area.ID = xmlArea.ID
 	// Characters.
 	for _, xmlChar := range xmlArea.Characters {

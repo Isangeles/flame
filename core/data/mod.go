@@ -95,7 +95,7 @@ func LoadArea(mod *module.Module, id string) error {
 		return fmt.Errorf("fail to parse area data: %v", err)
 	}
 	// Build mainarea.
-	mainarea := area.NewArea(*areaData)
+	mainarea := area.New(*areaData)
 	// Add area to active module chapter.
 	chap.AddAreas(mainarea)
 	return nil

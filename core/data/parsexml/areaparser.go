@@ -56,7 +56,7 @@ type AreaChar struct {
 }
 
 // UnmarshalArea parses area from XML data to resource.
-func UnmarshalArea(data io.Reader) (*res.ModuleAreaData, error) {
+func UnmarshalArea(data io.Reader) (*res.AreaData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlArea := new(Area)
 	err := xml.Unmarshal(doc, xmlArea)
@@ -68,7 +68,7 @@ func UnmarshalArea(data io.Reader) (*res.ModuleAreaData, error) {
 }
 
 // MarshalArea parses scenario data to XML string.
-func MarshalArea(areaData *res.ModuleAreaData) (string, error) {
+func MarshalArea(areaData *res.AreaData) (string, error) {
 	xmlArea := xmlArea(areaData)
 	out, err := xml.Marshal(xmlArea)
 	if err != nil {
@@ -79,7 +79,7 @@ func MarshalArea(areaData *res.ModuleAreaData) (string, error) {
 
 // xmlArea creates XML struct from specified module
 // area data.
-func xmlArea(areaData *res.ModuleAreaData) *Area {
+func xmlArea(areaData *res.AreaData) *Area {
 	xmlArea := new(Area)
 	xmlArea.ID = areaData.ID
 	for _, sad := range areaData.Subareas {
@@ -107,8 +107,8 @@ func xmlArea(areaData *res.ModuleAreaData) *Area {
 }
 
 // buildAreaData creates area data from specified XML data.
-func buildAreaData(xmlArea *Area) *res.ModuleAreaData {
-	area := res.ModuleAreaData{ID: xmlArea.ID}
+func buildAreaData(xmlArea *Area) *res.AreaData {
+	area := res.AreaData{ID: xmlArea.ID}
 	// Characters.
 	for _, xmlChar := range xmlArea.Characters {
 		x, y, err := UnmarshalPosition(xmlChar.Position)

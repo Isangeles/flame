@@ -25,22 +25,22 @@ package res
 
 // Struct for game data.
 type GameData struct {
-	Name    string
-	Chapter ChapterData
+	Name         string
+	SavedChapter SavedChapterData
 }
 
 // Struct for game chapter
 // data.
-type ChapterData struct {
+type SavedChapterData struct {
 	ID    string
-	Areas []AreaData
+	Areas []SavedAreaData
 }
 
 // Struct for scenario area
 // data.
-type AreaData struct {
+type SavedAreaData struct {
 	ID       string
 	Chars    []CharacterData
 	Objects  []ObjectData
-	Subareas []AreaData
+	Subareas []SavedAreaData
 }

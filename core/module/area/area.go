@@ -44,7 +44,7 @@ type Area struct {
 }
 
 // NewArea returns new instace of object.
-func NewArea(data res.ModuleAreaData) *Area {
+func New(data res.AreaData) *Area {
 	a := new(Area)
 	a.id = data.ID
 	a.chars = new(sync.Map)
@@ -83,7 +83,7 @@ func NewArea(data res.ModuleAreaData) *Area {
 	}
 	// Subareas.
 	for _, subareaData := range data.Subareas {
-		subarea := NewArea(subareaData)
+		subarea := New(subareaData)
 		a.AddSubarea(subarea)
 	}
 	return a
