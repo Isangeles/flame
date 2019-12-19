@@ -50,12 +50,7 @@ var (
 
 // SaveGame saves specified game to savegame file.
 func SaveGame(game *core.Game, dirPath, saveName string) error {
-	// Parse game data.
-	save := new(save.SaveGame)
-	save.Name = saveName
-	save.Mod = game.Module()
-	save.Players = game.Players()
-	xml, err := parsexml.MarshalSaveGame(save)
+	xml, err := parsexml.MarshalSaveGame(game)
 	if err != nil {
 		return fmt.Errorf("fail to marshal game: %v", err)
 	} 
@@ -82,6 +77,7 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 // ImportSavedGame imports saved game from save file with specified name in
 // specified dir.
 func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGame, error) {
+	fmt.Printf("players: %v\n", mod.Characters())
 	filePath := filepath.FromSlash(dirPath + "/" + fileName)
 	if !strings.HasSuffix(filePath, SavegameFileExt) {
 		filePath = filePath + SavegameFileExt
@@ -205,7 +201,8 @@ func restoreAreaPlayers(mod *module.Module, data res.SavedAreaData) (pcs []*char
 		}
 		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
 		if char == nil {
-			log.Err.Printf("data: save: restore players: pc not found: %s")
+			log.Err.Printf("data: save: restore players: pc not found: %s#%s",
+				charData.BasicData.ID, charData.BasicData.Serial)
 			continue
 		}
 		pcs = append(pcs, char)
@@ -222,7 +219,8 @@ func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
 		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
 		if char == nil {
-			log.Err.Printf("data: save: restore effects: module char not found: %s")
+			log.Err.Printf("data: save: restore effects: module char not found: %s#%s",
+				charData.BasicData.ID, charData.BasicData.Serial)
 			continue
 		}
 		for _, obEffectData := range charData.Effects {
