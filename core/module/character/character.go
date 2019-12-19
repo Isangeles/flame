@@ -90,7 +90,6 @@ const (
 func New(data res.CharacterData) *Character {
 	c := Character{
 		id:        data.BasicData.ID,
-		serial:    data.BasicData.Serial,
 		name:      data.BasicData.Name,
 		sex:       Gender(data.BasicData.Sex),
 		race:      Race(data.BasicData.Race),

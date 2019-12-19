@@ -165,6 +165,8 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	// Characters.
 	for _, charData := range data.Chars {
 		char := character.New(charData)
+		// Restore serial.
+		char.SetSerial(charData.BasicData.Serial)
 		// Restore HP, mana & exp.
 		char.SetHealth(charData.SavedData.HP)
 		char.SetMana(charData.SavedData.Mana)
@@ -182,9 +184,10 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 		obData.BasicData.Name = name
 		// Build object.
 		ob := object.New(obData)
-		// Restore health.
+		// Restore serial.
+		ob.SetSerial(obData.BasicData.Serial)
+		// Restore health & position.
 		ob.SetHealth(obData.SavedData.HP)
-		// Restore position.
 		ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
 		// Object to area.
 		area.AddObject(ob)
@@ -205,7 +208,8 @@ func restoreAreaPlayers(mod *module.Module, data res.SavedAreaData) (pcs []*char
 		}
 		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
 		if char == nil {
-			log.Err.Printf("data: save: restore players: pc not found: %s")
+			log.Err.Printf("data: save: restore players: pc not found: %s#%s",
+				charData.BasicData.ID, charData.BasicData.Serial)
 			continue
 		}
 		pcs = append(pcs, char)
@@ -222,7 +226,8 @@ func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
 		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
 		if char == nil {
-			log.Err.Printf("data: save: restore effects: module char not found: %s")
+			log.Err.Printf("data: save: restore effects: module char not found: %s#%s",
+				charData.BasicData.ID, charData.BasicData.Serial)
 			continue
 		}
 		for _, obEffectData := range charData.Effects {
