@@ -29,8 +29,8 @@ import (
 	"io"
 	"io/ioutil"
 
+	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/core/module/area"
 )
@@ -60,11 +60,11 @@ type SavedArea struct {
 }
 
 // MarshalGame parses specified game to XML savegame data.
-func MarshalSaveGame(game *save.SaveGame) (string, error) {
+func MarshalGame(game *core.Game) (string, error) {
 	xmlGame := new(SavedGame)
-	xmlGame.Name = game.Name
+	//xmlGame.Name = game.Name
 	// Chapter.
-	chapter := game.Mod.Chapter()
+	chapter := game.Module().Chapter()
 	if chapter == nil {
 		return "", fmt.Errorf("no game chapter set")
 	}
@@ -106,14 +106,14 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 }
 
 // marshalGameArea parses specified area to saved area node.
-func marshalGameArea(game *save.SaveGame, a *area.Area) *SavedArea {
+func marshalGameArea(game *core.Game, a *area.Area) *SavedArea {
 	xmlArea := new(SavedArea)
 	xmlArea.ID = a.ID()
 	// Characters.
 	for _, c := range a.Characters() {
 		xmlChar := xmlCharacter(c)
 		serialID := xmlChar.ID + "_" + xmlChar.Serial
-		for _, pc := range game.Players {
+		for _, pc := range game.Players() {
 			if pc.SerialID() == serialID {
 				xmlChar.PC = true
 			}

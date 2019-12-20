@@ -120,18 +120,10 @@ func LoadGame(saveName string) (*core.Game, error) {
 	}
 	// Import saved game.
 	savesPath := config.ModuleSavegamesPath()
-	sav, err := data.ImportSavedGame(Mod(), savesPath, saveName)
+	game, err := data.ImportGame(Mod(), savesPath, saveName)
 	if err != nil {
 		return nil, fmt.Errorf("fail to load game: %v", err)
 	}
-	mod = sav.Mod
-	game, err := core.NewGame(mod)
-	if err != nil {
-		return nil, fmt.Errorf("fail to create game: %v", err)
-	}
 	SetGame(game)
-	for _, pc := range sav.Players {
-		game.AddPlayer(pc)
-	}
 	return game, nil
 }
