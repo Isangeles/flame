@@ -34,7 +34,6 @@ import (
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/save"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
@@ -48,9 +47,9 @@ var (
 	SavegameFileExt = ".savegame"
 )
 
-// SaveGame saves specified game to savegame file.
-func SaveGame(game *core.Game, dirPath, saveName string) error {
-	xml, err := parsexml.MarshalSaveGame(game)
+// ExportGame saves specified game to savegame file in specified directory.
+func ExportGame(game *core.Game, dirPath, saveName string) error {
+	xml, err := parsexml.MarshalGame(game)
 	if err != nil {
 		return fmt.Errorf("fail to marshal game: %v", err)
 	} 
@@ -74,10 +73,9 @@ func SaveGame(game *core.Game, dirPath, saveName string) error {
 	return nil
 }
 
-// ImportSavedGame imports saved game from save file with specified name in
+// ImportGame imports saved game from save file with specified name in
 // specified dir.
-func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGame, error) {
-	fmt.Printf("players: %v\n", mod.Characters())
+func ImportGame(mod *module.Module, dirPath, fileName string) (*core.Game, error) {
 	filePath := filepath.FromSlash(dirPath + "/" + fileName)
 	if !strings.HasSuffix(filePath, SavegameFileExt) {
 		filePath = filePath + SavegameFileExt
@@ -95,59 +93,62 @@ func ImportSavedGame(mod *module.Module, dirPath, fileName string) (*save.SaveGa
 	if err != nil {
 		return nil, fmt.Errorf("fail to load chapter: %v", err)
 	}
-	// Load chapter data(to build quests, characters, erc.).
+	// Load chapter data(to build quests, characters, etc.).
 	err = LoadChapterData(mod.Chapter())
 	if err != nil {
 		return nil, fmt.Errorf("fail to load chapter data: %v", err)
 	}
-	save, err := buildSavedGame(mod, gameData)
+	game, err := buildSavedGame(mod, gameData)
 	if err != nil {
 		return nil, fmt.Errorf("fail to build game from saved data: %v", err)
 	}
-	return save, nil
+	return game, nil
 }
 
-// ImportSavedGamesDir imports all saved games from save files in
+// ImportGamesDir imports all saved games from save files in
 // directory with specified path.
-func ImportSavedGamesDir(mod *module.Module, dirPath string) ([]*save.SaveGame, error) {
+func ImportGamesDir(mod *module.Module, dirPath string) ([]*core.Game, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		log.Err.Printf("fail to read dir: %v", err)
 	}
-	saves := make([]*save.SaveGame, 0)
+	games := make([]*core.Game, 0)
 	for _, fInfo := range files {
 		if !strings.HasSuffix(fInfo.Name(), SavegameFileExt) {
 			continue
 		}
-		sav, err := ImportSavedGame(mod, dirPath, fInfo.Name())
+		game, err := ImportGame(mod, dirPath, fInfo.Name())
 		if err != nil {
-			log.Err.Printf("data savegame load: fail to import save: %v", err)
+			log.Err.Printf("data savegame load: fail to import saved game: %v", err)
 			continue
 		}
-		saves = append(saves, sav)
+		games = append(games, game)
 	}
-	return saves, nil
+	return games, nil
 }
 
 // buildSavedGame build saved game from specified data.
-func buildSavedGame(mod *module.Module, gameData *res.GameData) (*save.SaveGame, error) {
+func buildSavedGame(mod *module.Module, gameData *res.GameData) (*core.Game, error) {
 	// Create game from saved data.
-	game := new(save.SaveGame)
-	game.Name = gameData.Name
-	game.Mod = mod
+	game, err := core.NewGame(mod)
+	if err != nil {
+		return nil, fmt.Errorf("fail to create saved game: %v", err)
+	}
 	chapterData := &gameData.SavedChapter
 	// Areas.
 	for _, areaData := range chapterData.Areas {
 		// Create area from saved data.
 		area := buildSavedArea(mod, areaData)
-		game.Mod.Chapter().AddAreas(area)
+		game.Module().Chapter().AddAreas(area)
 	}
 	// Restore players, effects and memory.
 	for _, areaData := range chapterData.Areas {
 		restoreAreaEffects(mod, areaData)
 		restoreAreaMemory(mod, areaData)
 		pcs := restoreAreaPlayers(mod, areaData)
-		game.Players = append(game.Players, pcs...)
+		for _, pc := range pcs {
+			game.AddPlayer(pc)
+		}
 	}
 	return game, nil
 }

@@ -60,7 +60,7 @@ type SavedArea struct {
 }
 
 // MarshalGame parses specified game to XML savegame data.
-func MarshalSaveGame(game *core.Game) (string, error) {
+func MarshalGame(game *core.Game) (string, error) {
 	xmlGame := new(SavedGame)
 	//xmlGame.Name = game.Name
 	// Chapter.
