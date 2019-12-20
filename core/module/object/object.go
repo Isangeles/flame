@@ -56,7 +56,6 @@ func New(data res.ObjectData) *Object {
 	ob := Object{
 		id:     data.BasicData.ID,
 		name:   data.BasicData.Name,
-		serial: data.BasicData.Serial,
 		maxHP:  data.BasicData.MaxHP,
 	}
 	ob.SetHealth(ob.MaxHealth())

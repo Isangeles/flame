@@ -161,6 +161,8 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	// Characters.
 	for _, charData := range data.Chars {
 		char := character.New(charData)
+		// Restore serial.
+		char.SetSerial(charData.BasicData.Serial)
 		// Restore HP, mana & exp.
 		char.SetHealth(charData.SavedData.HP)
 		char.SetMana(charData.SavedData.Mana)
@@ -178,9 +180,10 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 		obData.BasicData.Name = name
 		// Build object.
 		ob := object.New(obData)
-		// Restore health.
+		// Restore serial.
+		ob.SetSerial(obData.BasicData.Serial)
+		// Restore health & position.
 		ob.SetHealth(obData.SavedData.HP)
-		// Restore position.
 		ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
 		// Object to area.
 		area.AddObject(ob)
