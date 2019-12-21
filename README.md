@@ -4,13 +4,23 @@
   The main goal is to create simple, flexible, extensible and completely modular game engine.
   Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
 
-  Easiest way to use Flame is to download some graphical or textual interface(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or modify existing one(like [Arena](https://github.com/Isangeles/arena)).
+  Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or modify existing one(like [Arena](https://github.com/Isangeles/arena)).
 
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
   Flame modules are available for download [here](http://flame.isangeles.pl/mods).
 
   Currently in a early development stage.
+
+  Flame as a project consists with many different repositories, some of them are independent and can be reused in other projects:
+
+  * [Flame](https://github.com/Isangeles/flame) - engine core
+  * [Burn](https://github.com/Isangeles/burn) - commands interpreter with it's own scripting language [Ash](https://github.com/Isangeles/burn/tree/master/ash) for creating cutscenes etc.
+  * [Burnsh](https://github.com/Isangeles/burnsh) - textual fronted(CLI)
+  * [Mural](https://github.com/Isangeles/mural) - graphical fronted(2d GUI)
+  * [MTK](https://github.com/Isangeles/mtk) - simple graphical toolkit
+  * [Stone](https://github.com/Isangeles/stone) - simple library to render [Tiled](https://www.mapeditor.org) maps
+  * [Arena](https://github.com/Isangeles/arena) - example Flame module
 
   ### List of games that use Flame:
   #### Arena ####
