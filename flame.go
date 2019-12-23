@@ -9,7 +9,11 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY; without even the implied warranty o
+
++
++
+
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -21,13 +25,12 @@
  *
  */
 
-// Flame engine is modular RPG game engine.
+// Main package that allows starting new game for current module.
 package flame
 
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
@@ -109,21 +112,5 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	for _, pc := range pcs {
 		game.AddPlayer(pc)
 	}
-	return game, nil
-}
-
-// LoadGame loads game from save with specified name
-// and sets loaded game as current game.
-func LoadGame(saveName string) (*core.Game, error) {
-	if Mod() == nil {
-		return nil, fmt.Errorf("no module loaded")
-	}
-	// Import saved game.
-	savesPath := config.ModuleSavegamesPath()
-	game, err := data.ImportGame(Mod(), savesPath, saveName)
-	if err != nil {
-		return nil, fmt.Errorf("fail to load game: %v", err)
-	}
-	SetGame(game)
 	return game, nil
 }
