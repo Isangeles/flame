@@ -34,6 +34,7 @@ var (
 	dialogsData map[string]*DialogData
 	questsData  map[string]*QuestData
 	recipesData map[string]*RecipeData
+	areasData   map[string]*AreaData
 )
 
 // On init.
@@ -48,6 +49,7 @@ func init() {
 	dialogsData = make(map[string]*DialogData)
 	questsData = make(map[string]*QuestData)
 	recipesData = make(map[string]*RecipeData)
+	areasData = make(map[string]*AreaData)
 }
 
 // Effect returns resources for effect
@@ -136,6 +138,13 @@ func Recipe(id string) *RecipeData {
 	return recipesData[id]
 }
 
+// Area returns area resource data
+// for area with specified ID or nil
+// if data for specified ID was not found.
+func Area(id string) *AreaData {
+	return areasData[id]
+}
+
 // Effects returns all effects resources.
 func Effects() (d []*EffectData) {
 	for _, ed := range effectsData {
@@ -208,6 +217,14 @@ func Quests() (d []*QuestData) {
 func Recipes() (r []*RecipeData) {
 	for _, rd := range recipesData {
 		r = append(r, rd)
+	}
+	return
+}
+
+// Areas retuens all areas resources.
+func Areas() (a []*AreaData) {
+	for _, ad := range areasData {
+		a = append(a, ad)
 	}
 	return
 }
@@ -355,5 +372,14 @@ func SetRecipesData(data []*RecipeData) {
 	recipesData = make(map[string]*RecipeData)
 	for _, rd := range data {
 		recipesData[rd.ID] = rd
+	}
+}
+
+// SetAreasData sets specified data as
+// areas resources.
+func SetAreasData(data []*AreaData) {
+	areasData = make(map[string]*AreaData)
+	for _, ad := range data {
+		areasData[ad.ID] = ad
 	}
 }

@@ -120,5 +120,11 @@ func LoadChapterData(chapter *module.Chapter) error {
 		return fmt.Errorf("fail to import quests: %v", err)
 	}
 	res.SetQuestsData(questsData)
+	// Areas.
+	areasData, err := ImportAreasDir(chapter.Conf().AreasPath())
+	if err != nil {
+		return fmt.Errorf("fail to import areas: %v", err)
+	}
+	res.SetAreasData(areasData)
 	return nil
 }

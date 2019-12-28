@@ -57,7 +57,7 @@ func ImportArea(path string) (*res.AreaData, error) {
 }
 
 // ImportAreaDir imports all areas from directory with specified path.
-func ImportAreaDir(path string) ([]*res.AreaData, error) {
+func ImportAreasDir(path string) ([]*res.AreaData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
