@@ -27,6 +27,7 @@ package core
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
@@ -171,6 +172,7 @@ func (g *Game) updateObjectsArea() {
 			continue
 		}
 		var newArea *area.Area
+		// Search for area in current chapter.
 		for _, a := range chapter.Areas() {
 			if a.ID() == c.AreaID() {
 				newArea = a
@@ -182,6 +184,14 @@ func (g *Game) updateObjectsArea() {
 					break
 				}
 			}
+		}
+		if newArea == nil {
+			// Search for area data in res package.
+			areaData := res.Area(c.AreaID())
+			if areaData != nil {
+				newArea = area.New(*areaData)
+			}
+			chapter.AddAreas(newArea)
 		}
 		if newArea == nil {
 			log.Err.Printf("area update: %s#%s: area not found: %s\n",
