@@ -28,14 +28,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/text"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
-)
-
-const (
-	AreaFileExt = ".area"
 )
 
 // Module creates new module from specified path.
@@ -82,17 +77,11 @@ func LoadArea(mod *module.Module, id string) error {
 		return fmt.Errorf("no module chapter set")
 	}
 	// Load files.
-	areaPath := filepath.FromSlash(fmt.Sprintf("%s/%s/main%s",
-		chap.Conf().AreasPath(), id, AreaFileExt))
-	docArea, err := os.Open(areaPath)
+	areaPath := filepath.FromSlash(fmt.Sprintf("%s/%s",
+		chap.Conf().AreasPath(), id))
+	areaData, err := ImportArea(areaPath)
 	if err != nil {
-		return fmt.Errorf("fail to open area file: %v", err)
-	}
-	defer docArea.Close()
-	// Unmarshal area file.
-	areaData, err := parsexml.UnmarshalArea(docArea)
-	if err != nil {
-		return fmt.Errorf("fail to parse area data: %v", err)
+		return fmt.Errorf("fail to import area: %v", err)
 	}
 	// Build mainarea.
 	mainarea := area.New(*areaData)
