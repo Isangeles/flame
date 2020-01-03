@@ -25,7 +25,7 @@
   ### List of games that use Flame:
   #### Arena ####
 
-  Description: simple demo game with [Mural GUI](https://github.com/isangeles/mural) support.
+  Description: simple demo game based on [Arena](https://github.com/isangeles/arena) module with [Mural GUI](https://github.com/isangeles/mural) support.
 
   Download: [Linux](https://drive.google.com/open?id=1CAUiHdGq8sxrrNWkRwF1QSaNSVWLKDVg), [Windows](https://drive.google.com/open?id=1rR_k_39o-hqTywUZO628ggA3iN7ZBZTJ)
 
@@ -66,7 +66,7 @@ Example module is available [here](https://github.com/Isangeles/arena).
 ## Contributing
 You are welcome to contribute to project development.
 
-If you looking for things to do, then check TODO file or contact me(dev@isangeles.pl).
+If you looking for things to do, then check [TODO file](https://github.com/Isangeles/flame/blob/master/TODO) or contact me(dev@isangeles.pl).
 
 When you find something to do, create new branch for your feature.
 After you finish, open pull request to merge your changes with master branch.
@@ -75,7 +75,7 @@ After you finish, open pull request to merge your changes with master branch.
 * Isangeles <<dev@isangeles.pl>>
 
 ## License
-Copyright 2018-2019 Dariusz Sikora <<dev@isangeles.pl>>
+Copyright 2018-2020 Dariusz Sikora <<dev@isangeles.pl>>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
