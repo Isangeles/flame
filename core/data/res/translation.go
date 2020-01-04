@@ -1,5 +1,5 @@
 /*
- * unmarshal.go
+ * translation.go
  *
  * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,35 +21,10 @@
  *
  */
 
-package parsetxt
+package res
 
-import (
-	"io"
-	"bufio"
-	"strings"
-)
-
-const (
-	commentPrefix = "#"
-	idValuesSep   = ":"
-	valuesSep     = ";"
-)
-
-// UnmarshalTextValue retrieves key-values from specified data.
-func UnmarshalTextValue(data io.Reader) map[string][]string {
-	texts := make(map[string][]string)
-	scann := bufio.NewScanner(data)
-	for scann.Scan() {
-		line := scann.Text()
-		if strings.HasPrefix(line, commentPrefix) {
-			continue
-		}
-		sepID := strings.Index(line, idValuesSep)
-		if sepID > -1 {
-			lineID := line[:sepID]
-			t := line[sepID+1:]
-			texts[lineID] = append(texts[lineID], strings.Split(t, valuesSep)...)
-		}
-	}
-	return texts
+// Struct for translation data.
+type TranslationData struct {
+	ID    string
+	Texts []string
 }

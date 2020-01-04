@@ -1,7 +1,7 @@
 /*
  * res.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ var (
 	questsData  map[string]*QuestData
 	recipesData map[string]*RecipeData
 	areasData   map[string]*AreaData
+	langData    map[string]*TranslationData
 )
 
 // On init.
@@ -50,6 +51,7 @@ func init() {
 	questsData = make(map[string]*QuestData)
 	recipesData = make(map[string]*RecipeData)
 	areasData = make(map[string]*AreaData)
+	langData = make(map[string]*TranslationData)
 }
 
 // Effect returns resources for effect
@@ -145,6 +147,12 @@ func Area(id string) *AreaData {
 	return areasData[id]
 }
 
+// Translation returns translation data
+// texts for specified ID.
+func Translation(id string) *TranslationData {
+	return langData[id]
+}
+
 // Effects returns all effects resources.
 func Effects() (d []*EffectData) {
 	for _, ed := range effectsData {
@@ -221,10 +229,18 @@ func Recipes() (r []*RecipeData) {
 	return
 }
 
-// Areas retuens all areas resources.
+// Areas returns all areas resources.
 func Areas() (a []*AreaData) {
 	for _, ad := range areasData {
 		a = append(a, ad)
+	}
+	return
+}
+
+// Translations returns all translation resources.
+func Translations() (t []*TranslationData) {
+	for _, td := range langData {
+		t = append(t, td)
 	}
 	return
 }
@@ -383,3 +399,13 @@ func SetAreasData(data []*AreaData) {
 		areasData[ad.ID] = ad
 	}
 }
+
+// SetTranslationData sets specified data as
+// translation resources.
+func SetTranslationData(data []*TranslationData) {
+	langData = make(map[string]*TranslationData)
+	for _, td := range data {
+		langData[td.ID] = td
+	}
+}
+
