@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ package object
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/item"
@@ -68,6 +69,10 @@ func New(data res.ObjectData) *Object {
 	ob.flags = make(map[string]flag.Flag)
 	ob.chatlog = make(chan string, 1)
 	ob.combatlog = make(chan string, 3)
+	// Translate name if not set.
+	if len(ob.Name()) < 0 {
+		ob.SetName(lang.Text(ob.ID()))
+	}
 	// Add effects.
 	for _, data := range data.Effects {
 		effData := res.Effect(data.ID)

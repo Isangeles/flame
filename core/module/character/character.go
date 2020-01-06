@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/flag"
 	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/craft"
@@ -119,6 +120,10 @@ func New(data res.CharacterData) *Character {
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	c.privlog = make(chan string, 3)
+	// Translate name if not set.
+	if len(c.Name()) < 1 {
+		c.SetName(lang.Text(c.ID()))
+	}
 	// Set level.
 	for i := 0; i < data.BasicData.Level; i++ {
 		oldMaxExp := c.MaxExperience()
