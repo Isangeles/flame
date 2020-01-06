@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,6 +87,16 @@ func LoadModuleData(mod *module.Module) error {
 		od.BasicData.Name = lang.TextDir(mod.Conf().LangPath(), od.BasicData.ID)
 	}
 	res.SetObjectsData(objectsData)
+	// Translation.
+	langData, err := ImportLangDir(mod.Conf().LangPath())
+	if err != nil {
+		return fmt.Errorf("fail to load translation data: %v", err)
+	}
+	resData := res.Translations()
+	for _, td := range langData {
+		resData = append(resData, td)
+	}
+	res.SetTranslationData(resData)
 	return nil
 }
 
@@ -97,9 +107,6 @@ func LoadChapterData(chapter *module.Chapter) error {
 	npcData, err := ImportCharactersDataDir(chapter.Conf().NPCPath())
 	if err != nil {
 		return fmt.Errorf("fail to import npc: %v", err)
-	}
-	for _, npcd := range npcData {
-		npcd.BasicData.Name = lang.TextDir(chapter.Conf().LangPath(), npcd.BasicData.ID)
 	}
 	res.SetCharactersData(npcData)
 	// Area objects.
@@ -126,5 +133,15 @@ func LoadChapterData(chapter *module.Chapter) error {
 		return fmt.Errorf("fail to import areas: %v", err)
 	}
 	res.SetAreasData(areasData)
+	// Translation.
+	langData, err := ImportLangDir(chapter.Conf().LangPath())
+	if err != nil {
+		return fmt.Errorf("fail to import translation data: %v", err)
+	}
+	resData := res.Translations()
+	for _, td := range langData {
+		resData = append(resData, td)
+	}
+	res.SetTranslationData(resData)
 	return nil
 }
