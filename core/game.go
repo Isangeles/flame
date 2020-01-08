@@ -28,7 +28,6 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
@@ -89,9 +88,6 @@ func (g *Game) Update(delta int64) {
 // Pause toggles game update pause.
 func (g *Game) Pause(pause bool) {
 	g.paused = pause
-	if g.Paused() {
-		log.Inf.Printf(lang.Text("ui", "game_pause_info"))
-	}
 }
 
 // Paused checks whether game is paused.
