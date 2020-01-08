@@ -33,6 +33,22 @@ import (
 	"github.com/isangeles/flame/core/module"
 )
 
+// LoadTranslationData loads all lang files from
+// from directory with specified path.
+func LoadTranslationData(path string) error {	
+	// Translation.
+	langData, err := ImportLangDir(path)
+	if err != nil {
+		return fmt.Errorf("fail to import lang dir: %v", err)
+	}
+	resData := res.Translations()
+	for _, td := range langData {
+		resData = append(resData, td)
+	}
+	res.SetTranslationData(resData)
+	return nil
+}
+
 // LoadModuleData loads module data(items, skills, etc.)
 // for specified module.
 func LoadModuleData(mod *module.Module) error {
@@ -88,15 +104,10 @@ func LoadModuleData(mod *module.Module) error {
 	}
 	res.SetObjectsData(objectsData)
 	// Translation.
-	langData, err := ImportLangDir(mod.Conf().LangPath())
+	err = LoadTranslationData(mod.Conf().LangPath())
 	if err != nil {
 		return fmt.Errorf("fail to load translation data: %v", err)
 	}
-	resData := res.Translations()
-	for _, td := range langData {
-		resData = append(resData, td)
-	}
-	res.SetTranslationData(resData)
 	return nil
 }
 
@@ -134,14 +145,9 @@ func LoadChapterData(chapter *module.Chapter) error {
 	}
 	res.SetAreasData(areasData)
 	// Translation.
-	langData, err := ImportLangDir(chapter.Conf().LangPath())
+	err = LoadTranslationData(chapter.Conf().LangPath())
 	if err != nil {
 		return fmt.Errorf("fail to import translation data: %v", err)
 	}
-	resData := res.Translations()
-	for _, td := range langData {
-		resData = append(resData, td)
-	}
-	res.SetTranslationData(resData)
 	return nil
 }
