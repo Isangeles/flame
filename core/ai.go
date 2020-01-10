@@ -1,7 +1,7 @@
 /*
  * ai.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 package core
 
 import (
-	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/skill"
@@ -149,8 +149,8 @@ func (ai *AI) moveAround(npc *character.Character) {
 // saySomething sends random text on NPC chat channel.
 func (ai *AI) saySomething(npc *character.Character) {
 	switch npc.Race() {
-	case character.Human:
-		t := lang.AllText(ai.game.Module().Conf().ChatLangPath(), npc.Race().ID())
+	case character.Human, character.Elf, character.Gnome, character.Dwarf:
+		t := lang.Texts("random_chat_human")
 		if len(t) < 1 {
 			return
 		}
