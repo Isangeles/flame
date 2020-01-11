@@ -1,7 +1,7 @@
 /*
  * main.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +22,6 @@
  */
 
 // Example of loading module and creating game.
-// Before start, path to valid flame module
-// must be specified in .flame file placed
-// in executable directory.
 package main
 
 import (
@@ -34,11 +31,11 @@ import (
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/object/character"
+	"github.com/isangeles/flame/core/module/character"
 )
 var (
 	// Example pc data.
-	pcData res.CharacterBasicData = res.CharacterBasicData{
+	pcBasicData res.CharacterBasicData = res.CharacterBasicData{
 		ID:        "pc",
 		Name:      "PC",
 		Level:     1,
@@ -74,6 +71,9 @@ func main() {
 	// Set module.
 	flame.SetModule(mod)
 	// Create PC.
+	pcData := res.CharacterData{
+		BasicData: pcBasicData,
+	}
 	pc := character.New(pcData)
 	// Start game.
 	g, err := flame.StartGame(pc)

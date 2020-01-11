@@ -1,0 +1,59 @@
+attr_str:Strenght
+attr_con:Constitution
+attr_dex:Dexterity
+attr_wis:Wisdom
+attr_int:Intelligence
+attr_pts:Points
+race_human:Human
+race_elf:Elf
+race_dwarf:Dwarf
+race_gnome:Gnome
+race_wolf:Wolf
+race_goblin:Goblin
+race_unknown:Unknown
+gender_male:Male
+gender_female:Female
+att_frindly:Friendly
+att_neutral:Neutral
+att_hostile:Hostile
+ali_law_good:Lawful good
+ali_neu_good:Neutral good
+ali_cha_good:Chaotic good
+ali_law_neutral:Lawful neutral
+ali_tru_neutral:True neutral
+ali_cha_neutral:Chaotic neutral
+ali_law_evil:Lawful evil
+ali_neu_evil:Neutral evil
+ali_cha_evil:Chaotic evil
+ob_name:Name
+ob_health:Health
+ob_mana:Mana
+ob_effect:Effect
+com_yes:Yes
+com_no:No
+game_pause_info:Game paused
+skill_not_known:Skill not known
+cant_do_right_now:Can't do right now
+req_item:Item
+req_currency:Cost
+cli_newchar_name:Character name
+cli_newchar_race:Character race
+cli_newchar_gender:Character gender
+cli_newchar_attrs:Character attributes
+cli_newchar_attrs_summary:Attributes(strenght, constitution, dexterity, wisdom, intelligence)
+cli_newchar_points:points
+cli_newchar_value:value
+cli_newchar_summary:Character
+cli_newgame_chars:Playable characters
+cli_newgame_select_char:Select character
+cli_newgame_summary:Selected character
+cli_accept_dialog:Accept or reset[A/r]
+cli_newchar_invalid_name_err:Invalid character name
+cli_newchar_invalid_value_err:Invalid value
+cli_newchar_no_pts_error:Not enought attributes points
+cli_newgame_no_chars_err:No playable characters
+cli_newgame_start_err:Fail to start new game
+cli_loadgame_saves:Saves
+cli_loadgame_select_save:Select save
+cli_nan_error:NaN
+cli_no_mod_err:No module loaded

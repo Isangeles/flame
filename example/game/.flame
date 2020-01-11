@@ -1,4 +1,4 @@
 # Flame engine configuration file
 lang:english
-module:
+module:test
 debug:true
