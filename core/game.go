@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import (
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
-	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/log"
 )
 
@@ -65,7 +64,6 @@ func NewGame(mod *module.Module) (*Game, error) {
 // Update updates game, delta value must be
 // time from last update in milliseconds.
 func (g *Game) Update(delta int64) {
-	go g.listenWorld()
 	if g.paused {
 		return
 	}
@@ -117,42 +115,6 @@ func (g *Game) Players() (pcs []*character.Character) {
 // AI returns game AI.
 func (g *Game) AI() *AI {
 	return g.ai
-}
-
-// listenWorld listens players and near objects
-// messages channels and prints messages to
-// engine log.
-func (g *Game) listenWorld() {
-	// Players.
-	for _, pc := range g.pcs {
-		select {
-		case msg := <-pc.PrivateLog():
-			log.Inf.Printf(msg)
-		default:
-		}
-		// Near objects.
-		area := g.Module().Chapter().CharacterArea(pc)
-		if area == nil {
-			continue
-		}
-		for _, tar := range area.NearTargets(pc, pc.SightRange()) {
-			tar, ok := tar.(objects.Logger)
-			if !ok {
-				continue
-			}
-			select {
-			case msg := <-tar.CombatLog():
-				log.Cmb.Printf(msg)
-			case msg := <-tar.ChatLog():
-				log.Cht.Printf(fmt.Sprintf("%s: %s", tar.Name(), msg))
-			case msg := <-tar.PrivateLog():
-				if tar == pc {
-					log.Cht.Printf(msg)
-				}
-			default:
-			}
-		}
-	}
 }
 
 // updateObjectsArea checks and moves game objects to
