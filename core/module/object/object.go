@@ -70,7 +70,7 @@ func New(data res.ObjectData) *Object {
 	ob.chatlog = make(chan string, 1)
 	ob.combatlog = make(chan string, 3)
 	// Translate name if not set.
-	if len(ob.Name()) < 0 {
+	if len(ob.Name()) < 1 {
 		ob.SetName(lang.Text(ob.ID()))
 	}
 	// Add effects.

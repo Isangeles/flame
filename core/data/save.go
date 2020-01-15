@@ -1,7 +1,7 @@
 /*
- * savegame.go
+ * save.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ import (
 	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
@@ -176,9 +175,6 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	}
 	// Objects.
 	for _, obData := range data.Objects {
-		// Retrieve name from lang.
-		name := lang.TextDir(mod.Conf().LangPath(), obData.BasicData.ID)
-		obData.BasicData.Name = name
 		// Build object.
 		ob := object.New(obData)
 		// Restore serial.
