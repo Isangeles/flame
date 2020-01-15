@@ -29,7 +29,6 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/module"
 )
 
@@ -57,17 +56,11 @@ func LoadModuleData(mod *module.Module) error {
 	if err != nil {
 		return fmt.Errorf("fail to load effects: %v", err)
 	}
-	for _, ed := range effectsData {
-		ed.Name = lang.TextDir(mod.Conf().LangPath(), ed.ID)
-	}
 	res.SetEffectsData(effectsData)
 	// Skills.
 	skillsData, err := ImportSkillsDir(mod.Conf().SkillsPath())
 	if err != nil {
 		return fmt.Errorf("fail to load skills: %v", err)
-	}
-	for _, sd := range skillsData {
-		sd.Name = lang.TextDir(mod.Conf().LangPath(), sd.ID)
 	}
 	res.SetSkillsData(skillsData)
 	// Armors.
@@ -98,9 +91,6 @@ func LoadModuleData(mod *module.Module) error {
 	objectsData, err := ImportObjectsDir(mod.Conf().ObjectsPath())
 	if err != nil {
 		return fmt.Errorf("fail to load area objects: %v", err)
-	}
-	for _, od := range objectsData {
-		od.BasicData.Name = lang.TextDir(mod.Conf().LangPath(), od.BasicData.ID)
 	}
 	res.SetObjectsData(objectsData)
 	// Translation.

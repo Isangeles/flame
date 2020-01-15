@@ -1,7 +1,7 @@
 /*
  * skill.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/req"
@@ -95,6 +96,9 @@ func New(data res.SkillData) *Skill {
 	s.castTimeMax = data.Cast
 	s.cooldownMax = data.Cooldown
 	s.useReqs = req.NewRequirements(data.UseReqs...)
+	if len(s.name) < 1 {
+		s.name = lang.Text(s.id)
+	}
 	serial.AssignSerial(s)
 	return s
 }

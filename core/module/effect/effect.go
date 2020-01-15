@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ package effect
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/serial"
 )
 
@@ -49,6 +50,9 @@ func New(data res.EffectData) *Effect {
 	e.modifiers = NewModifiers(data.Modifiers...)
 	e.duration = int64(data.Duration)
 	e.SetTime(data.Duration)
+	if len(e.name) < 1 {
+		e.name = lang.Text(e.id)
+	}
 	serial.AssignSerial(e)
 	return e
 }
