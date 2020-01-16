@@ -1,7 +1,7 @@
 /*
  * mod.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ package object
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
 )
 
@@ -43,8 +43,8 @@ func (o *Object) takeModifier(s effect.Target, m effect.Modifier) {
 	case *effect.HealthMod:
 		val := m.RandomValue()
 		o.SetHealth(o.Health() + val)
-		cmbMsg := fmt.Sprintf("%s:%s:%d", o.Name(),
-			lang.Text("ui", "ob_health"), val)
+		cmbMsg := fmt.Sprintf("%s: %s: %d", o.Name(),
+			lang.Text("ob_health"), val)
 		o.SendCombat(cmbMsg)
 	case *effect.HitMod:
 		for _, e := range s.HitEffects() {

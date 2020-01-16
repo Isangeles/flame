@@ -1,7 +1,7 @@
 /*
  * craft.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,17 +26,15 @@ package character
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/config"
-	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/craft"
 )
 
 // Craft attemps to make specified recipe.
 func (c *Character) Craft(r *craft.Recipe) {
-	langPath := config.LangPath()
 	if !c.MeetReqs(r.Reqs()...) {
-		msg := fmt.Sprintf("%s:%s:%s", c.Name(), r.ID(),
-			lang.TextDir(langPath, "reqs_not_meet"))
+		msg := fmt.Sprintf("%s: %s: %s", c.Name(), r.ID(),
+			lang.Text("reqs_not_meet"))
 		c.SendPrivate(msg)
 		return
 	}

@@ -1,7 +1,7 @@
 /*
  * config.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/core/data/text"
-	"github.com/isangeles/flame/core/data/text/lang"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/log"
 )
@@ -70,7 +69,6 @@ func LoadConfig() error {
 			modName = modNamePath[0]
 		}
 	}
-	lang.SetLangPath(LangPath())
 	log.Dbg.Print("config file loaded")
 	return nil
 }

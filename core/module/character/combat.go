@@ -1,7 +1,7 @@
 /*
  * combat.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import (
 
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/data/text/lang"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/objects"
@@ -119,10 +119,9 @@ func (c *Character) HitEffects() []*effect.Effect {
 // If character fail to use skill then proper message is sent
 // on character private chat channel.
 func (c *Character) UseSkill(s *skill.Skill) {
-	langPath := config.LangPath()
 	if c.Casting() || c.Moving() || c.cooldown > 0 {
 		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
-			lang.TextDir(langPath, "cant_do_right_now"))
+			lang.Text("cant_do_right_now"))
 		c.SendPrivate(msg)
 		return
 	}
@@ -137,13 +136,13 @@ func (c *Character) UseSkill(s *skill.Skill) {
 					c.SetDestPoint(tarPos.Position())
 				}
 			}
-			msg := fmt.Sprintf("%s:%s:%v", c.Name(), s.Name(), err)
+			msg := fmt.Sprintf("%s: %s: %v", c.Name(), s.Name(), err)
 			c.SendPrivate(msg)
 		}
 		return
 	}
-	msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
-		lang.TextDir(langPath, "skill_not_known"))
+	msg := fmt.Sprintf("%s: %s: %s", c.Name(), s.Name(),
+		lang.Text("skill_not_known"))
 	c.SendPrivate(msg)
 }
 
@@ -164,7 +163,7 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	}
 	c.MemorizeTarget(&mem)
 	// Send combat message.
-	msg := fmt.Sprintf("%s:%s:%s", c.Name(), lang.Text("ui", "ob_effect"), e.Name())
+	msg := fmt.Sprintf("%s: %s: %s", c.Name(), lang.Text("ob_effect"), e.Name())
 	if config.Debug() { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
