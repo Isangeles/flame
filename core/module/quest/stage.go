@@ -1,7 +1,7 @@
 /*
  * stage.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,14 @@ package quest
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/flag"
 )
 
 // Struct for quest stage.
 type Stage struct {
 	id            string
+	info          string
 	ordinal       int
 	start         bool
 	last          bool
@@ -47,6 +49,7 @@ func NewStage(data res.QuestStageData) *Stage {
 	s.start = s.ordinal == 0
 	s.last = data.Next == "end" 
 	s.next = data.Next
+	// Objectives.
 	for _, od := range data.Objectives {
 		o := NewObjective(od)
 		s.objectives = append(s.objectives, o)
@@ -56,12 +59,18 @@ func NewStage(data res.QuestStageData) *Stage {
 		f := flag.Flag(fd.ID)
 		s.completeFlags = append(s.completeFlags, f)
 	}
+	s.info = lang.Text(s.ID())
 	return s
 }
 
 // ID returns stage ID.
 func (s *Stage) ID() string {
 	return s.id
+}
+
+// Info returns stage info.
+func (s *Stage) Info() string {
+	return s.info
 }
 
 // Ordinal returns stage ordinal number.

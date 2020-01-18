@@ -1,7 +1,7 @@
 /*
  * quest.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,14 @@ package quest
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/req"
 )
 
 // Struct for quest.
 type Quest struct {
 	id          string
+	name, info  string
 	completed   bool
 	activeStage *Stage
 	stages      []*Stage
@@ -61,12 +63,27 @@ func New(data res.QuestData) *Quest {
 			q.activeStage = s
 		}
 	}
+	nameInfo := lang.Texts(q.ID())
+	q.name = nameInfo[0]
+	if len(nameInfo) > 1 {
+		q.info = nameInfo[1]
+	}
 	return q
 }
 
 // ID returns quest ID.
 func (q *Quest) ID() string {
 	return q.id
+}
+
+// Name returns name of the quest.
+func (q *Quest) Name() string {
+	return q.name
+}
+
+// Info returns info about quest.
+func (q *Quest) Info() string {
+	return q.info
 }
 
 // Completed check if quest was marked
