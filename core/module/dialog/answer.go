@@ -1,7 +1,7 @@
 /*
  * answer.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ package dialog
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/req"
 )
@@ -32,6 +33,7 @@ import (
 // Struct for dialog text answer.
 type Answer struct {
 	id             string
+	text           string
 	to             string
 	endsDialog     bool
 	startsTrade    bool
@@ -52,6 +54,7 @@ func NewAnswer(data *res.DialogAnswerData) *Answer {
 	a.reqs = req.NewRequirements(data.Reqs...)
 	a.talkerMods = effect.NewModifiers(data.TalkerMods...)
 	a.ownerMods = effect.NewModifiers(data.OwnerMods...)
+	a.text = lang.Text(a.ID())
 	return a
 }
 
@@ -96,4 +99,9 @@ func (a *Answer) TalkerModifiers() []effect.Modifier {
 // OnwerModifiers returns modifiers for dialog owner.
 func (a *Answer) OwnerModifiers() []effect.Modifier {
 	return a.ownerMods
+}
+
+// String returns translated text for answer.
+func (a *Answer) String() string {
+	return a.text
 }

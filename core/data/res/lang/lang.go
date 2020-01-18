@@ -31,6 +31,8 @@ import (
 )
 
 // Text returns first text for specified ID.
+// Returns error text if translation data for
+// specified ID was not found.
 func Text(id string) string {
 	data := res.Translation(id)
 	if data == nil {
@@ -40,6 +42,9 @@ func Text(id string) string {
 }
 
 // Texts returns all texts for specified ID.
+// Returns 1-length slice with error text
+// if transaltion data for specified ID was
+// not found.
 func Texts(id string) []string {
 	data := res.Translation(id)
 	if data == nil {

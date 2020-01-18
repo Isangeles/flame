@@ -1,7 +1,7 @@
 /*
  * phase.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ package dialog
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"	
 	"github.com/isangeles/flame/core/module/req"
 )
@@ -32,6 +33,7 @@ import (
 // Struct for dialog phase.
 type Phase struct {
 	id         string
+	text       string
 	ordinalID  string
 	start      bool
 	reqs       []req.Requirement
@@ -53,6 +55,7 @@ func NewPhase(data *res.DialogStageData) *Phase {
 		a := NewAnswer(ad)
 		p.answers = append(p.answers, a)
 	}
+	p.text = lang.Text(p.ID())
 	return p
 }
 
@@ -79,4 +82,9 @@ func (p *Phase) TalkerModifiers() []effect.Modifier {
 // OnwerModifiers returns modifiers for dialog owner.
 func (p *Phase) OwnerModifiers() []effect.Modifier {
 	return p.ownerMods
+}
+
+// String returns translated text for phase.
+func (p *Phase) String() string {
+	return p.text
 }
