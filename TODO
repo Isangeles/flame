@@ -12,6 +12,7 @@ MINOR:
 * Exporting character exports also quests, effects, items, etc., its desirable for save game, but other marshaling method should be applied for exporting character to use in different game
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for parsexml and data packages
+* camelcase names for consts in: quest, skill
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
