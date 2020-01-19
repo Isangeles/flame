@@ -1,7 +1,7 @@
 /*
  * recipe.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ package craft
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/item"
 	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/serial"
@@ -33,6 +34,7 @@ import (
 // Struct for recipes.
 type Recipe struct {
 	id          string
+	name, info  string
 	catID       string
 	res         []res.RecipeResultData
 	reqs        []req.Requirement
@@ -50,6 +52,11 @@ func NewRecipe(data res.RecipeData) *Recipe {
 	r.res = data.Results
 	r.reqs = req.NewRequirements(data.Reqs...)
 	r.castTimeMax = data.Cast
+	nameInfo := lang.Texts(r.ID())
+	r.name = nameInfo[0]
+	if len(nameInfo) > 1 {
+		r.info = nameInfo[1]
+	}
 	return r
 }
 
@@ -94,6 +101,16 @@ func (r *Recipe) Cast() {
 // ID returns recipe ID.
 func (r *Recipe) ID() string {
 	return r.id
+}
+
+// Name returns recipe name.
+func (r *Recipe) Name() string {
+	return r.name
+}
+
+// Info returns recipe info.
+func (r *Recipe) Info() string {
+	return r.info
 }
 
 // CategoryID returns ID of recipe category.
