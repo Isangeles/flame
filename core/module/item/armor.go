@@ -1,7 +1,7 @@
 /*
  * armor.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ package item
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/serial"
@@ -33,6 +34,8 @@ import (
 // Struct for armor items.
 type Armor struct {
 	id        string
+	name      string
+	info      string
 	serial    string
 	level     int
 	value     int
@@ -59,6 +62,11 @@ func NewArmor(data res.ArmorData) *Armor {
 		a.slots = append(a.slots, Slot(sid))
 
 	}
+	nameInfo := lang.Texts(a.ID())
+	a.name = nameInfo[0]
+	if len(nameInfo) > 1 {
+		a.info = nameInfo[1]
+	}
 	serial.AssignSerial(&a)
 	return &a
 }
@@ -66,6 +74,16 @@ func NewArmor(data res.ArmorData) *Armor {
 // ID returns armor ID.
 func (a *Armor) ID() string {
 	return a.id
+}
+
+// Name returns armor name.
+func (a *Armor) Name() string {
+	return a.name
+}
+
+// Info returns armor info.
+func (a *Armor) Info() string {
+	return a.info
 }
 
 // Serial returns armor serial value.

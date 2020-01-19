@@ -1,7 +1,7 @@
 /*
  * misc.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,17 +25,19 @@ package item
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Struct for miscellaneous items.
 type Misc struct {
-	id       string
-	serial   string
-	value    int
-	level    int
-	loot     bool
-	currency bool
+	id         string
+	name, info string
+	serial     string
+	value      int
+	level      int
+	loot       bool
+	currency   bool
 }
 
 // NewMisc creates new misc item.
@@ -46,6 +48,11 @@ func NewMisc(data res.MiscItemData) *Misc {
 		loot:     data.Loot,
 		currency: data.Currency,
 	}
+	nameInfo := lang.Texts(m.ID())
+	m.name = nameInfo[0]
+	if len(nameInfo) > 1 {
+		m.info = nameInfo[1]
+	}
 	serial.AssignSerial(&m)
 	return &m
 }
@@ -53,6 +60,16 @@ func NewMisc(data res.MiscItemData) *Misc {
 // ID returns item ID.
 func (m *Misc) ID() string {
 	return m.id
+}
+
+// Name returns item name.
+func (m *Misc) Name() string {
+	return m.name
+}
+
+// Info returns item info.
+func (m *Misc) Info() string {
+	return m.info
 }
 
 // Serial returns item serial value.

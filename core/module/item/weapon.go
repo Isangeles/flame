@@ -1,7 +1,7 @@
 /*
  * weapon.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ package item
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/req"
 	"github.com/isangeles/flame/core/module/serial"
@@ -33,6 +34,7 @@ import (
 // Struct for weapons.
 type Weapon struct {
 	id             string
+	name, info     string
 	serial         string
 	value          int
 	level          int
@@ -61,6 +63,11 @@ func NewWeapon(data res.WeaponData) *Weapon {
 	for _, sid := range data.Slots {
 		w.slots = append(w.slots, Slot(sid))
 	}
+	nameInfo := lang.Texts(w.ID())
+	w.name = nameInfo[0]
+	if len(nameInfo) > 1 {
+		w.info = nameInfo[1]
+	}
 	serial.AssignSerial(&w)
 	return &w
 }
@@ -68,6 +75,16 @@ func NewWeapon(data res.WeaponData) *Weapon {
 // ID returns weapon ID.
 func (w *Weapon) ID() string {
 	return w.id
+}
+
+// Name returns weapon name.
+func (w *Weapon) Name() string {
+	return w.name
+}
+
+// Info return weapon info.
+func (w *Weapon) Info() string {
+	return w.info
 }
 
 // Serial returns weapon serial value.
