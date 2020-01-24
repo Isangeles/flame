@@ -1,0 +1,17 @@
+.TH .flame
+.SH NAME
+\[char46]flame \- engine configuration file
+.SH DESCRIPTION
+.b .flame
+This file contains engine configuration values.
+.SH VALUES
+lang \- language ID, precisely name of directory under lang with translation files
+.br
+module \- ID of module to load at start and(optionaly) path to this module
+.br
+debug \- toggles engine debug mode, 'true' enables mode, everything else disables it
+.SH EXAMPLE
+.nf
+lang:english
+module:arena;data/modules/arena
+debug:true
