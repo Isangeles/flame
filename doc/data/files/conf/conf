@@ -1,0 +1,18 @@
+.TH Config_files
+.SH Name
+\[char46]conf/\[char46]flame/\[char46]lang \- files with configuration values
+.SH DESCRIPTION
+.b Configuration files
+Configuration files are plain text files with configuration
+values.
+.br
+File format is following: key-values, each in new line, separated
+by colon and multiple values separated by semicolons.
+.br
+[ID]:[value1];[value2]\\n
+.SH EXAMPLE
+.nf
+id1:val1
+id2:val1;val2
+.SH SEE ALSO
+mod.conf, chapter.conf, \[char46]flame, \[char46]lang

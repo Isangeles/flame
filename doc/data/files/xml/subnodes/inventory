@@ -1,0 +1,27 @@
+.TH Inventory_subnode
+.SH NAME
+<inventory> \- node with object inventory data
+.SH DESCRIPTION
+<inventory> node stores all items and other inventory data, like capacity.
+.SH NODES
+.SS <item>
+Node with character inventory item.
+.br
+Allowed only under <inventory> node.
+.P
+Attributes:
+.br
+id \- item ID
+.br
+trade \- determines if item is for trade, optional boolean value, false by default
+.br
+trade-value \- trade value, only non-negative integers allowed
+.P
+Allowed subnodes: -
+.SH EXAMPLE
+<inventory>
+      <item id="imWater1"
+            trade="true"
+            trade-value="5"/>
+      <item id="iwIronSword"/>
+</inventory>

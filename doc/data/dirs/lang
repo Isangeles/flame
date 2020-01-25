@@ -1,0 +1,24 @@
+.TH Lang_dir
+.SH NAME
+lang \- directory with translation data
+.SH DESCRIPTION
+.b Lang directory
+Lang directory stores \[char46]lang files in subdirectories, each for different language.
+.br
+For example, all \[char46]lang files for english language must be placed in: lang/english
+.br
+Following lang directories are handled by engine:
+.nf
+data/lang
+data/modules/[module]/lang
+data/modules/[module]/chapters/[chapter]/lang
+.SH FILES & SUBDIRECTORIES
+Only *\[char46]lang files are handled inside lang directory.
+.SH EXAMPLE
+.nf
+/lang
+	items.lang
+	dialogs.lang
+	quests.lang
+.SH SEE ALSO
+files/.lang

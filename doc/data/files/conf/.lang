@@ -1,0 +1,18 @@
+.TH Lang_files
+.SH NAME
+\[char46]lang \- files with translation data
+.SH DESCRIPTION
+.b Lang files
+Lang files are using same format as configuration files.
+.br
+\[char46]lang files could have any name, they need to be placed in
+lang directories in order to be loaded by engine.
+.br
+.SH EXAMPLE
+In order to translate, for example, item name and info, we need to add following
+line to one of module \[char46]lang files:
+.nf
+itemID:name;info
+.SH SEE ALSO
+config
+dirs/lang
