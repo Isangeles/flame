@@ -63,6 +63,19 @@ Chapter data are available only when specific chapter is active, data files are 
 Translation files are placed in `/lang` directory both for modules and chapters.
 
 Example module is available [here](https://github.com/Isangeles/arena).
+
+## Documentation
+Documentation of configuration files and data files in the form of troff pages is available under `doc/data` directory.
+
+You can easily view documentation pages with `man` command.
+
+For example to display documentation page for XML data files with characters:
+```
+$ man doc/data/files/xml/.characters
+```
+
+Note that documentation is still incomplete.
+
 ## Contributing
 You are welcome to contribute to project development.
 
