@@ -52,10 +52,10 @@ func (c *Character) takeModifier(s effect.Target, m effect.Modifier) {
 	case *effect.HealthMod:
 		val := m.RandomValue()
 		c.SetHealth(c.Health() + val)
-		if c.onDamageTaken != nil {
-			c.onDamageTaken(val)
+		if c.onHealthMod != nil {
+			c.onHealthMod(val)
 		}
-		cmbMsg := fmt.Sprintf("%s:%s:%d", c.Name(),
+		cmbMsg := fmt.Sprintf("%s: %s: %d", c.Name(),
 			lang.Text("ob_health"), val)
 		c.SendCombat(cmbMsg)
 	case *effect.HitMod:

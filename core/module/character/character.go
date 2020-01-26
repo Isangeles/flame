@@ -80,7 +80,7 @@ type Character struct {
 	privlog          chan string
 	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
-	onDamageTaken    func(d int)
+	onHealthMod      func(v int)
 }
 
 const (
@@ -557,10 +557,10 @@ func (c *Character) SetOnChatSentFunc(f func(t string)) {
 	c.onChatSent = f
 }
 
-// SetOnDamageTakenFunc sets function triggered after taking
-// damage.
-func (c *Character) SetOnDamageTakenFunc(f func(d int)) {
-	c.onDamageTaken = f
+// SetOnHealthModFunc sets function triggered after modifing
+// character health value.
+func (c *Character) SetOnHealthModFunc(f func(v int)) {
+	c.onHealthMod = f
 }
 
 // Interrupt stops any acction(like skill
