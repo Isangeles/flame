@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,10 +39,6 @@ type ModifierData interface{}
 type HealthModData struct {
 	Min, Max int
 }
-
-// Struct for hit modifier
-// data.
-type HitModData struct {}
 
 // Struct for flag modifier
 // data.

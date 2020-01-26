@@ -58,10 +58,6 @@ func (c *Character) takeModifier(s effect.Target, m effect.Modifier) {
 		cmbMsg := fmt.Sprintf("%s: %s: %d", c.Name(),
 			lang.Text("ob_health"), val)
 		c.SendCombat(cmbMsg)
-	case *effect.HitMod:
-		for _, e := range s.HitEffects() {
-			c.TakeEffect(e)
-		}
 	case *effect.QuestMod:
 		data := res.Quest(m.QuestID())
 		if data == nil {

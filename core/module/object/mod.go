@@ -46,9 +46,5 @@ func (o *Object) takeModifier(s effect.Target, m effect.Modifier) {
 		cmbMsg := fmt.Sprintf("%s: %s: %d", o.Name(),
 			lang.Text("ob_health"), val)
 		o.SendCombat(cmbMsg)
-	case *effect.HitMod:
-		for _, e := range s.HitEffects() {
-			o.TakeEffect(e)
-		}
 	}
 }

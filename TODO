@@ -4,7 +4,7 @@ MAJOR:
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
 * Documentation for XML data files: armors, weapons, skills, dialogs, areas, objects,
   quests, recipes, effects, savegame
-* Documentaion for directories: data, savegames, modules, module, chapters, chapter,
+* Documentation for directories: data, savegames, modules, module, chapters, chapter,
   items, module/objects, chapter/objects, recipes, areas, effects, skills, npc, dialogs,
   areas, area
 MINOR:

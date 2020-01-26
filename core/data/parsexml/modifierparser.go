@@ -1,7 +1,7 @@
 /*
  * modifierparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ import (
 type Modifiers struct {
 	XMLName    xml.Name    `xml:"modifiers"`
 	HealthMods []HealthMod `xml:"health-mod"`
-	HitMods    []HitMod    `xml:"hit-mod"`
 	FlagMods   []FlagMod   `xml:"flag-mod"`
 	QuestMods  []QuestMod  `xml:"quest-mod"`
 	AreaMods   []AreaMod   `xml:"area-mod"`
@@ -45,11 +44,6 @@ type HealthMod struct {
 	XMLName  xml.Name `xml:"health-mod"`
 	MinValue int      `xml:"min,attr"`
 	MaxValue int      `xml:"max,attr"`
-}
-
-// Struct for hit modifier XML node.
-type HitMod struct {
-	XMLName xml.Name `xml:"hit-mod"`
 }
 
 // Struct for flag modifier XML node.
@@ -83,9 +77,6 @@ func xmlModifiers(mods ...effect.Modifier) Modifiers {
 				MaxValue: md.Max(),
 			}
 			xmlMods.HealthMods = append(xmlMods.HealthMods, xmlMod)
-		case *effect.HitMod:
-			xmlMod := HitMod{}
-			xmlMods.HitMods = append(xmlMods.HitMods, xmlMod)
 		case *effect.FlagMod:
 			xmlMod := FlagMod{
 				ID:      md.Flag().ID(),
@@ -113,11 +104,6 @@ func buildModifiers(xmlModifiers *Modifiers) (mods []res.ModifierData) {
 	// Health modifiers.
 	for _, xmlMod := range xmlModifiers.HealthMods {
 		mod := res.HealthModData{xmlMod.MinValue, xmlMod.MaxValue}
-		mods = append(mods, mod)
-	}
-	// Hit modifiers.
-	for _ = range xmlModifiers.HitMods {
-		mod := res.HitModData{}
 		mods = append(mods, mod)
 	}
 	// Flag modifiers.
