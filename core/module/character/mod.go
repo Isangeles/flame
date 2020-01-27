@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/quest"
 	"github.com/isangeles/flame/log"
 )
@@ -50,10 +51,15 @@ func (c *Character) takeModifier(s effect.Target, m effect.Modifier) {
 	case *effect.FlagMod:
 		c.AddFlag(m.Flag())
 	case *effect.HealthMod:
+		lived := c.Live()
 		val := m.RandomValue()
 		c.SetHealth(c.Health() + val)
 		if c.onHealthMod != nil {
 			c.onHealthMod(val)
+		}
+		if s, ok := s.(objects.Experiencer); ok && lived && !c.Live() {
+			exp := 100 * c.Level()
+			s.SetExperience(s.Experience() + exp)
 		}
 		cmbMsg := fmt.Sprintf("%s: %s: %d", c.Name(),
 			lang.Text("ob_health"), val)

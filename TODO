@@ -22,7 +22,6 @@ MINOR:
 * Camelcase names for consts in: quest, skill
 * Rename module config files(mod.conf, chapter.conf) to .mod, .chapter, etc.
 * Injecting characters names in dialog texts
-* Adding experience to character after killing other character/object
 * Remove combat messages from character, this should be handled by fronted,
   through e.g. onHealthMod function
 DONE:
