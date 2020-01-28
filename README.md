@@ -69,9 +69,9 @@ Documentation of configuration files and data files in the form of troff pages i
 
 You can easily view documentation pages with `man` command.
 
-For example to display documentation page for XML data files with characters:
+For example to display documentation page for XML files with .characters extension:
 ```
-$ man doc/data/files/xml/.characters
+$ man doc/data/file/xml/.characters
 ```
 
 Note that documentation is still incomplete.
