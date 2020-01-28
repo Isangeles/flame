@@ -19,6 +19,7 @@ trade-value \- trade value, only non-negative integers allowed
 .P
 Allowed subnodes: -
 .SH EXAMPLE
+.nf
 <inventory>
       <item id="imWater1"
             trade="true"

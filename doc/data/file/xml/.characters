@@ -6,7 +6,7 @@
 .SH NODES
 .SS <characters>
 This node holds char nodes.
-.PP
+.P
 Attributes: -
 .P
 Allowed subnodes:
