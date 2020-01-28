@@ -15,3 +15,5 @@ debug \- toggles engine debug mode, 'true' enables mode, everything else disable
 lang:english
 module:arena;data/modules/arena
 debug:true
+.SH SEE ALSO
+file/conf/conf

@@ -1,0 +1,18 @@
+.TH Items_dir
+.SH NAME
+items \- directory with items data files
+.SH DESCRIPTION
+Items directory stores data files for game items.
+.br
+Follwing items directories are handled by engine: data/modules/[module]/items
+.SH FILES & SUBDIRECTORIES
+Files handled inside directory: *\[char46]weapons, *\[char46]armors, *\[char46]misc
+.SH EXAMPLE
+.nf
+/items
+	main1.weapons
+	main2.weapons
+	main.armors
+	main.misc
+.SH SEE ALSO
+file/xml/.weapons, file/xml/.armors, file/xml/.misc

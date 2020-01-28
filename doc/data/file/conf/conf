@@ -15,4 +15,4 @@ by colon and multiple values separated by semicolons.
 id1:val1
 id2:val1;val2
 .SH SEE ALSO
-mod.conf, chapter.conf, \[char46]flame, \[char46]lang
+file/conf/mod.conf, file/conf/chapter.conf, file/conf/\[char46]flame, file/conf/\[char46]lang

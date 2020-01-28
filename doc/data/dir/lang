@@ -21,4 +21,4 @@ Only *\[char46]lang files are handled inside lang directory.
 	dialogs.lang
 	quests.lang
 .SH SEE ALSO
-files/.lang
+file/conf/.lang
