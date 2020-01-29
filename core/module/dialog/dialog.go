@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,8 +34,8 @@ type Dialog struct {
 	finished     bool
 	trading      bool
 	training     bool
-	activePhases []*Phase
-	phases       []*Phase
+	activeStages []*Stage
+	stages       []*Stage
 	reqs         []req.Requirement
 	owner        Talker
 }
@@ -54,14 +54,14 @@ func New(data res.DialogData) *Dialog {
 	d.id = data.ID
 	d.reqs = req.NewRequirements(data.Reqs...)
 	for _, sd := range data.Stages {
-		p := NewPhase(sd)
-		d.phases = append(d.phases, p)
+		p := NewStage(sd)
+		d.stages = append(d.stages, p)
 		if p.start {
-			d.activePhases = append(d.activePhases, p)
+			d.activeStages = append(d.activeStages, p)
 		}
 	}
-	if len(d.activePhases) < 1 {
-		d.activePhases = append(d.activePhases, d.phases[0])
+	if len(d.activeStages) < 1 {
+		d.activeStages = append(d.activeStages, d.stages[0])
 	}
 	return d
 }
@@ -73,26 +73,27 @@ func (d *Dialog) ID() string {
 
 // Restart moves dialog to starting phase.
 func (d *Dialog) Restart() {
-	d.activePhases = make([]*Phase, 0)
-	for _, p := range d.phases {
+	d.activeStages = make([]*Stage, 0)
+	for _, p := range d.stages {
 		if p.start {
-			d.activePhases = append(d.activePhases, p)
+			d.activeStages = append(d.activeStages, p)
 		}
 	}
-	if len(d.activePhases) < 1 {
-		d.activePhases = append(d.activePhases, d.phases[0])
+	if len(d.activeStages) < 1 {
+		d.activeStages = append(d.activeStages, d.stages[0])
 	}
 	d.finished = false
 }
 
-// Phases returns all active phases
+// Stages returns all active stages
 // of dialog.
-func (d *Dialog) Phases() []*Phase {
-	return d.activePhases
+func (d *Dialog) Stages() []*Stage {
+	return d.activeStages
 }
 
 // Next moves dialog forward for specified
-// answer. Returns error if there is no text
+// answer.
+// Returns error if there is no text
 // for specified answer in dialog.
 func (d *Dialog) Next(a *Answer) {
 	d.trading = a.StartsTrade()
@@ -101,10 +102,10 @@ func (d *Dialog) Next(a *Answer) {
 		d.finished = true
 		return
 	}
-	d.activePhases = make([]*Phase, 0)
-	for _, p := range d.phases {
+	d.activeStages = make([]*Stage, 0)
+	for _, p := range d.stages {
 		if p.ordinalID == a.to {
-			d.activePhases = append(d.activePhases, p)
+			d.activeStages = append(d.activeStages, p)
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * phase.go
+ * stage.go
  *
  * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -30,8 +30,8 @@ import (
 	"github.com/isangeles/flame/core/module/req"
 )
 
-// Struct for dialog phase.
-type Phase struct {
+// Struct for dialog stage.
+type Stage struct {
 	id         string
 	text       string
 	ordinalID  string
@@ -42,49 +42,49 @@ type Phase struct {
 	answers    []*Answer
 }
 
-// NewPhase creates new dialog phase.
-func NewPhase(data *res.DialogStageData) *Phase {
-	p := new(Phase)
-	p.id = data.ID
-	p.ordinalID = data.OrdinalID
-	p.start = data.Start
-	p.reqs = req.NewRequirements(data.Reqs...)
-	p.talkerMods = effect.NewModifiers(data.TalkerMods...)
-	p.ownerMods = effect.NewModifiers(data.OwnerMods...)
+// NewStage creates new dialog stage.
+func NewStage(data *res.DialogStageData) *Stage {
+	s := new(Stage)
+	s.id = data.ID
+	s.ordinalID = data.OrdinalID
+	s.start = data.Start
+	s.reqs = req.NewRequirements(data.Reqs...)
+	s.talkerMods = effect.NewModifiers(data.TalkerMods...)
+	s.ownerMods = effect.NewModifiers(data.OwnerMods...)
 	for _, ad := range data.Answers {
 		a := NewAnswer(ad)
-		p.answers = append(p.answers, a)
+		s.answers = append(s.answers, a)
 	}
-	p.text = lang.Text(p.ID())
-	return p
+	s.text = lang.Text(s.ID())
+	return s
 }
 
-// ID returns dialog phase ID.
-func (p *Phase) ID() string {
-	return p.id
+// ID returns dialog stage ID.
+func (s *Stage) ID() string {
+	return s.id
 }
 
-// Answers returns all dialog phase answers.
-func (p *Phase) Answers() []*Answer {
-	return p.answers
+// Answers returns all dialog stage answers.
+func (s *Stage) Answers() []*Answer {
+	return s.answers
 }
 
-// Requirements returns requrements for dialog phase.
-func (p *Phase) Requirements() []req.Requirement {
-	return p.reqs
+// Requirements returns requrements for dialog stage.
+func (s *Stage) Requirements() []req.Requirement {
+	return s.reqs
 }
 
 // TalkerModifiers retruns modifiers for talker.
-func (p *Phase) TalkerModifiers() []effect.Modifier {
-	return p.talkerMods
+func (s *Stage) TalkerModifiers() []effect.Modifier {
+	return s.talkerMods
 }
 
 // OnwerModifiers returns modifiers for dialog owner.
-func (p *Phase) OwnerModifiers() []effect.Modifier {
-	return p.ownerMods
+func (s *Stage) OwnerModifiers() []effect.Modifier {
+	return s.ownerMods
 }
 
-// String returns translated text for phase.
-func (p *Phase) String() string {
-	return p.text
+// String returns translated text for stage.
+func (s *Stage) String() string {
+	return s.text
 }
