@@ -25,6 +25,8 @@ package dialog
 
 import (
 	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/req"
 )
 
@@ -34,18 +36,23 @@ type Dialog struct {
 	finished     bool
 	trading      bool
 	training     bool
+	activeStage  *Stage
 	activeStages []*Stage
 	stages       []*Stage
 	reqs         []req.Requirement
 	owner        Talker
+	target       Talker
 }
 
 // Interface for objects with dialogs.
 type Talker interface {
 	ID() string
+	Serial() string
 	Name() string
 	SendChat(t string)
 	Dialogs() []*Dialog
+	MeetReqs(reqs ...req.Requirement) bool
+	TakeModifiers(s objects.Object, mods ...effect.Modifier)
 }
 
 // New creates new dialog.
@@ -59,9 +66,6 @@ func New(data res.DialogData) *Dialog {
 		if p.start {
 			d.activeStages = append(d.activeStages, p)
 		}
-	}
-	if len(d.activeStages) < 1 {
-		d.activeStages = append(d.activeStages, d.stages[0])
 	}
 	return d
 }
@@ -79,16 +83,12 @@ func (d *Dialog) Restart() {
 			d.activeStages = append(d.activeStages, p)
 		}
 	}
-	if len(d.activeStages) < 1 {
-		d.activeStages = append(d.activeStages, d.stages[0])
-	}
 	d.finished = false
 }
 
-// Stages returns all active stages
-// of dialog.
-func (d *Dialog) Stages() []*Stage {
-	return d.activeStages
+// Stage returns active stage.
+func (d *Dialog) Stage() *Stage {
+	return d.activeStage
 }
 
 // Next moves dialog forward for specified
@@ -96,18 +96,28 @@ func (d *Dialog) Stages() []*Stage {
 // Returns error if there is no text
 // for specified answer in dialog.
 func (d *Dialog) Next(a *Answer) {
+	if d.Target() == nil {
+		return
+	}
 	d.trading = a.StartsTrade()
 	d.training = a.StartsTraining()
 	if a.EndsDialog() {
 		d.finished = true
 		return
 	}
+	// Search for proper stage for target.
 	d.activeStages = make([]*Stage, 0)
 	for _, p := range d.stages {
 		if p.ordinalID == a.to {
 			d.activeStages = append(d.activeStages, p)
 		}
 	}
+	d.activeStage = talkerStage(d.Target(), d.activeStages)
+	// Apply modifiers.
+	d.Owner().TakeModifiers(d.Target(), a.OwnerModifiers()...)
+	d.Target().TakeModifiers(d.Owner(), a.TargetModifiers()...)
+	d.Owner().TakeModifiers(d.Target(), d.Stage().OwnerModifiers()...)
+	d.Target().TakeModifiers(d.Owner(), d.Stage().TargetModifiers()...)
 }
 
 // Finished checks if dialog is finished.
@@ -141,4 +151,26 @@ func (d *Dialog) SetOwner(t Talker) {
 // if dialog don't have owner.
 func (d *Dialog) Owner() Talker {
 	return d.owner
+}
+
+// SetTarget sets dialog target.
+func (d *Dialog) SetTarget(t Talker) {
+	d.target = t
+	d.activeStage = talkerStage(d.Target(), d.activeStages)
+}
+
+// Target returns dialog target.
+func (d *Dialog) Target() Talker {
+	return d.target
+}
+
+// activeStage returns active stage for
+// specified object.
+func talkerStage(t Talker, stages []*Stage) *Stage {
+	for _, s := range stages {
+		if t.MeetReqs(s.Requirements()...) {
+			return s
+		}
+	}
+	return nil
 }

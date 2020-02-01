@@ -75,7 +75,7 @@ func (s *Stage) Requirements() []req.Requirement {
 }
 
 // TalkerModifiers retruns modifiers for talker.
-func (s *Stage) TalkerModifiers() []effect.Modifier {
+func (s *Stage) TargetModifiers() []effect.Modifier {
 	return s.talkerMods
 }
 

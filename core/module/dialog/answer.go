@@ -92,7 +92,7 @@ func (a *Answer) Requirements() []req.Requirement {
 }
 
 // TalkerModifiers retruns modifiers for talker.
-func (a *Answer) TalkerModifiers() []effect.Modifier {
+func (a *Answer) TargetModifiers() []effect.Modifier {
 	return a.talkerMods
 }
 
