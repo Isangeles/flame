@@ -35,14 +35,14 @@ import (
 )
 
 // TakeModifiers handles all specified modifiers.
-func (c *Character) TakeModifiers(source effect.Target, mods ...effect.Modifier) {
+func (c *Character) TakeModifiers(source objects.Object, mods ...effect.Modifier) {
 	for _, m := range mods {
 		c.takeModifier(source, m)
 	}
 }
 
 // takeModifier handles specified modifier.
-func (c *Character) takeModifier(s effect.Target, m effect.Modifier) {
+func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 	switch m := m.(type) {
 	case *effect.AreaMod:
 		c.SetAreaID(m.AreaID())

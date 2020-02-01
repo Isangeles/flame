@@ -28,17 +28,18 @@ import (
 
 	"github.com/isangeles/flame/core/data/res/lang"
 	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/objects"
 )
 
 // TakeModifiers handles all specified modifiers.
-func (o *Object) TakeModifiers(source effect.Target, mods ...effect.Modifier) {
+func (o *Object) TakeModifiers(source objects.Object, mods ...effect.Modifier) {
 	for _, m := range mods {
 		o.takeModifier(source, m)
 	}
 }
 
 // takeModifier handles specified modifier.
-func (o *Object) takeModifier(s effect.Target, m effect.Modifier) {
+func (o *Object) takeModifier(s objects.Object, m effect.Modifier) {
 	switch m := m.(type) {
 	case *effect.HealthMod:
 		val := m.RandomValue()
