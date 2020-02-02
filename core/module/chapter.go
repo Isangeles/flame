@@ -1,7 +1,7 @@
 /*
  * chapter.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ import (
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/object"
-	"github.com/isangeles/flame/core/module/serial"
 )
 
 // Chapter struct represents module chapter.
@@ -173,34 +172,4 @@ func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 // new area to chapter.
 func (c *Chapter) SetOnAreaAddedFunc(f func(s *area.Area)) {
 	c.onAreaAdded = f
-}
-
-// generateSerials generates unique serial values
-// for all chapter objects without serial value.
-// TODO: remove this(?).
-func (c *Chapter) generateSerials() {
-	// Characters.
-	for _, char := range c.Characters() {
-		if char.Serial() == "" {
-			serial.AssignSerial(char)
-		}
-		for _, i := range char.Inventory().Items() {
-			if i.Serial() != "" {
-				continue
-			}
-			serial.AssignSerial(i)
-		}
-		for _, e := range char.Effects() {
-			if e.Serial() != "" {
-				continue
-			}
-			serial.AssignSerial(e)
-		}
-		for _, s := range char.Skills() {
-			if s.Serial() != "" {
-				continue
-			}
-			serial.AssignSerial(s)
-		}
-	}
 }
