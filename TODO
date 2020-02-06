@@ -1,12 +1,15 @@
 MAJOR:
 * Switching chapters
 * Item materials
+* Useable items
+* Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
-* Documentation for XML data files: armors, weapons, skills, dialogs, areas, objects,
+* Documentation for XML data files: armors, skills, dialogs, areas, objects,
   quests, recipes, effects, savegame
 * Documentation for directories: data, savegames, modules, module, chapters, chapter,
-  items, module/objects, chapter/objects, recipes, areas, effects, skills, npc, dialogs,
+  module/objects, chapter/objects, recipes, areas, effects, skills, npc, dialogs,
   areas, area
+* Package to parse JSON data files(parsejson, like parsexml), to replace XML data files with JSON files
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
