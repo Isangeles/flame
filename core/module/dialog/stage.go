@@ -32,6 +32,7 @@ import (
 
 // Struct for dialog stage.
 type Stage struct {
+	dialog     *Dialog
 	id         string
 	text       string
 	ordinalID  string
@@ -43,8 +44,9 @@ type Stage struct {
 }
 
 // NewStage creates new dialog stage.
-func NewStage(data *res.DialogStageData) *Stage {
+func NewStage(dialog *Dialog, data *res.DialogStageData) *Stage {
 	s := new(Stage)
+	s.dialog = dialog
 	s.id = data.ID
 	s.ordinalID = data.OrdinalID
 	s.start = data.Start
@@ -52,7 +54,7 @@ func NewStage(data *res.DialogStageData) *Stage {
 	s.talkerMods = effect.NewModifiers(data.TalkerMods...)
 	s.ownerMods = effect.NewModifiers(data.OwnerMods...)
 	for _, ad := range data.Answers {
-		a := NewAnswer(ad)
+		a := NewAnswer(s.dialog, ad)
 		s.answers = append(s.answers, a)
 	}
 	s.text = lang.Text(s.ID())
@@ -86,5 +88,5 @@ func (s *Stage) OwnerModifiers() []effect.Modifier {
 
 // String returns translated text for stage.
 func (s *Stage) String() string {
-	return s.text
+	return s.dialog.dialogText(s.text)
 }

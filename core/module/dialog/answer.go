@@ -32,6 +32,7 @@ import (
 
 // Struct for dialog text answer.
 type Answer struct {
+	dialog         *Dialog
 	id             string
 	text           string
 	to             string
@@ -44,8 +45,9 @@ type Answer struct {
 }
 
 // NewAnswer creates new dialog answer.
-func NewAnswer(data *res.DialogAnswerData) *Answer {
+func NewAnswer(dialog *Dialog, data *res.DialogAnswerData) *Answer {
 	a := new(Answer)
+	a.dialog = dialog
 	a.id = data.ID
 	a.to = data.To
 	a.endsDialog = data.End
@@ -103,5 +105,5 @@ func (a *Answer) OwnerModifiers() []effect.Modifier {
 
 // String returns translated text for answer.
 func (a *Answer) String() string {
-	return a.text
+	return a.dialog.dialogText(a.text)
 }

@@ -24,10 +24,17 @@
 package dialog
 
 import (
+	"strings"
+	
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/req"
+)
+
+const (
+	OwnerNameMacro = "@ownerName"
+	TargetNameMacro = "@targetName"
 )
 
 // Struct for dialog.
@@ -61,7 +68,7 @@ func New(data res.DialogData) *Dialog {
 	d.id = data.ID
 	d.reqs = req.NewRequirements(data.Reqs...)
 	for _, sd := range data.Stages {
-		p := NewStage(sd)
+		p := NewStage(d, sd)
 		d.stages = append(d.stages, p)
 		if p.start {
 			d.activeStages = append(d.activeStages, p)
@@ -162,6 +169,14 @@ func (d *Dialog) SetTarget(t Talker) {
 // Target returns dialog target.
 func (d *Dialog) Target() Talker {
 	return d.target
+}
+
+// dialogText replaces all macros in specified
+// text with proper info from owner/target.
+func (d *Dialog) dialogText(t string) string {
+	text := strings.ReplaceAll(t, OwnerNameMacro, d.Owner().Name())
+	text = strings.ReplaceAll(text, TargetNameMacro, d.Target().Name())
+	return text
 }
 
 // activeStage returns active stage for

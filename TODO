@@ -23,7 +23,6 @@ MINOR:
 * Tests for parsexml and data packages
 * Camelcase names for consts in: quest, skill
 * Rename module config files(mod.conf, chapter.conf) to .mod, .chapter, etc.
-* Injecting characters names in dialog texts
 * Remove stage modifiers from dialog, modifiers should be passed only through
   stage answers
 DONE:
