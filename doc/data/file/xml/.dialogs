@@ -1,0 +1,129 @@
+.TH Dialogs_file
+.SH NAME
+*\[char46]dialogs \- file with dialogs
+.SH DESCRIPTION
+*\[char46]dialogs files stores character dialogs data.
+.SH NODES
+.SS <dialogs>
+Node with dialogs.
+.P
+Attributes: -
+.P
+Allowed subnodes: <dialog>
+.SS <dialog>
+Node with dialog data.
+.P
+Attributes:
+.br
+id \- unique dialog ID
+.P
+Allowed subnodes: <stage>
+.SS <stage>
+Node with dialog stage.
+.br
+Contains <reqs> node and <modifiers> nodes for dialog owner and target.
+.br
+See subnodes/reqs and subnodes/modifiers doc pages.
+.P
+Attributes:
+.br
+id \- stage ID
+.br
+start \- determines if stage is one of possible starting stage, could be many, first one with reqs met by target is selected
+.br
+ordinal \- stage ordinal ID, corresponding to answer 'to' attribute, could be many stages with same ordinal,
+first one with reqs met by target is selected
+.P
+Allowed subnodes: <answer>, <reqs>, <talker>, <owner>
+.SS <answer>
+Node with stage answer.
+.br
+Contains <reqs> node and <modifiers> nodes for dialog owner and target.
+.br
+See subnodes/reqs and subnodes/modifiers doc pages.
+.P
+Attributes:
+.br
+id \- answer ID
+.br
+to \- ordinal ID of next stage after selecting this answer or one of predefined values: end(marks dialog as finished), trade(starts trading between owner and target), train(starts training between owner and target)
+.P
+Allowed subnodes: <reqs>, <talker>, <owner>
+.SS <owner>
+Node with dialog owner modifiers.
+.P
+Attributes: -
+.P
+Allowed subnodes: <modifiers>
+.SS <talker>
+Node dialog target modifiers.
+.P
+Attributes: -
+.P
+Allowed subnodes: <modifiers>
+.SH EXAMPLE
+.nf
+<dialogs>
+	<dialog id="dEugene1">
+		<stage id="welcome1" start="true" ordinal="0">
+			<answer id="dEugene1_s0_1_a1" to="3">
+				<reqs>
+					<flag-req id="qAloeSearch1_s1_f1"/>
+				</reqs>
+			</answer>
+			<answer id="trade1" to="trade"/>
+			<answer id="train1" to="training"/>
+			<answer id="bye1" to="end"/>
+			<reqs>
+				<flag-req id="fAloeSearch_start"/>
+			</reqs>
+		</stage>
+		<stage id="dEugene1_s0_2" start="true" ordinal="0">
+			<answer id="dEugene1_s0_2_a1" to="1"/>
+			<reqs>
+				<flag-req id="fAloeSearch_start" off="true"/>
+			</reqs>
+		</stage>
+		<stage id="dEugene1_s1_1" start="true" ordinal="1">
+			<answer id="dEugene1_s1_1_a1" to="2">
+				<owner>
+					<modifiers>
+						<flag-mod id="fAloeSearch_info"/>
+					</modifiers>
+				</owner>
+			</answer>
+			<answer id="bye1" to="end"/>
+			<reqs>
+				<flag-req id="fAloeSearch_start" off="true"/>
+			</reqs>
+		</stage>
+		<stage id="dEugene1_s2_1" ordinal="2">
+			<answer id="bye1" to="end"/>
+			<reqs>
+				<gender-req type="male"/>
+			</reqs>
+		</stage>
+		<stage id="dEugene1_s2_2" ordinal="2">
+			<answer id="bye1" to="end"/>
+			<reqs>
+				<gender-req type="female"/>
+			</reqs>
+			<talker>
+				<modifiers>
+					<flag-mod id="fAloeSearch_start"/>
+					<quest-mod start="qAloeSearch1"/>
+				</modifiers>
+			</talker>
+		</stage>
+		<stage id="dEugene1_s3_1" ordinal="3">
+			<answer id="bye1" to="end"/>
+			<talker>
+				<modifiers>
+					<flag-mod id="fAloeSearch_talk1"/>
+				</modifiers>
+			</talker>
+		</stage>
+	</dialog>
+</dialogs>
+.SH SEE ALSO
+file/xml/subnodes/reqs, file/xml/subnodes/modifiers
