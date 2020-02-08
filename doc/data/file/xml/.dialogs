@@ -126,4 +126,4 @@ Allowed subnodes: <modifiers>
 	</dialog>
 </dialogs>
 .SH SEE ALSO
-file/xml/subnodes/reqs, file/xml/subnodes/modifiers
+file/xml/subnode/reqs, file/xml/subnode/modifiers
