@@ -148,4 +148,4 @@ Allowed subnodes: <reqs>
   </char>
 <characters>
 .SH SEE ALSO
-dir/characters, dir/npc, file/xml/subnode/reqs, file/xml/subnode/inventory
+data/dir/characters, data/dir/npc, data/file/xml/subnode/reqs, data/file/xml/subnode/inventory

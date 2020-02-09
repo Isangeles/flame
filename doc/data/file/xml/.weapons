@@ -82,4 +82,4 @@ Allowed subnodes: -
   </weapon>
 </weapons>
 .SH SEE ALSO
-dir/items, file/xml/.effects, file/xml/.armors, file/xml/.misc
+data/dir/items, data/file/xml/.effects, data/file/xml/.armors, data/file/xml/.misc

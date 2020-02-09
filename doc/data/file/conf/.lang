@@ -14,4 +14,4 @@ line to one of module \[char46]lang files:
 .nf
 itemID:name;info
 .SH SEE ALSO
-file/conf/conf, dir/lang
+data/file/conf/conf, data/dir/lang

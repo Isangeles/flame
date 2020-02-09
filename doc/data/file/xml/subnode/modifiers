@@ -50,4 +50,4 @@ Allowed subnodes: -
 	<flag-req id="flag2" off="true"/>
 </modifiers>
 .SH SEE ALSO
-file/xml/.quests, dir/dialogs
+data/file/xml/.quests, data/dir/dialogs

@@ -16,4 +16,4 @@ lang:english
 module:arena;data/modules/arena
 debug:true
 .SH SEE ALSO
-file/conf/conf
+data/file/conf/conf

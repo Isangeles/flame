@@ -3,6 +3,17 @@
 *\[char46]dialogs \- file with dialogs
 .SH DESCRIPTION
 *\[char46]dialogs files stores character dialogs data.
+.br
+Dialog texts for stages and answers are retrieved from translation data. To specifiy them simply place text as value for stage/answer ID as key in .lang file in chapters lang directory.
+See file/conf/.lang for more info about lang files.
+.br
+Stages and answers handles macros placed in translated text, for example to use dialog target name in stage/answer text: 'Hi, @targetName'.
+.br
+List of macros:
+.br
+@ownerName \- replaced by name of dialog owner
+.br
+@targetName \- replaced by name of dialog target
 .SH NODES
 .SS <dialogs>
 Node with dialogs.
@@ -51,12 +62,16 @@ to \- ordinal ID of next stage after selecting this answer or one of predefined 
 Allowed subnodes: <reqs>, <talker>, <owner>
 .SS <owner>
 Node with dialog owner modifiers.
+.br
+See subnode/modifiers.
 .P
 Attributes: -
 .P
 Allowed subnodes: <modifiers>
 .SS <talker>
 Node dialog target modifiers.
+.br
+See subnode/modifiers.
 .P
 Attributes: -
 .P
@@ -126,4 +141,4 @@ Allowed subnodes: <modifiers>
 	</dialog>
 </dialogs>
 .SH SEE ALSO
-file/xml/subnode/reqs, file/xml/subnode/modifiers
+data/file/xml/subnode/reqs, data/file/xml/subnode/modifiers, data/file/conf/.lang, data/dir/dialogs, data/dir/lang, data/dir/chapter
