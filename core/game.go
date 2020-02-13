@@ -25,12 +25,9 @@
 package core
 
 import (
-	"fmt"
-
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
-	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/log"
 )
 
@@ -38,27 +35,16 @@ import (
 // module and PCs.
 type Game struct {
 	mod    *module.Module
-	pcs    map[string]*character.Character
 	ai     *AI
 	paused bool
 }
 
 // NewGame creates new game for specified module.
-func NewGame(mod *module.Module) (*Game, error) {
+func NewGame(mod *module.Module) *Game {
 	g := new(Game)
 	g.mod = mod
-	g.pcs = make(map[string]*character.Character)
 	g.ai = NewAI(g)
-	if g.mod.Chapter() == nil {
-		return nil, fmt.Errorf("no active module chapter")
-	}
-	// Chapter NPCs under AI control.
-	for _, c := range g.mod.Chapter().Characters() {
-		g.ai.AddCharacter(c)
-	}
-	// Events.
-	g.mod.Chapter().SetOnAreaAddedFunc(g.onModAreaAdded)
-	return g, nil
+	return g
 }
 
 // Update updates game, delta value must be
@@ -67,14 +53,13 @@ func (g *Game) Update(delta int64) {
 	if g.paused {
 		return
 	}
+	chapter := g.Module().Chapter()
 	// Characters.
-	updateChars := g.Module().Chapter().Characters()
-	for _, c := range updateChars {
+	for _, c := range chapter.Characters() {
 		c.Update(delta)
 	}
 	// Area objects.
-	updateObjects := g.Module().Chapter().AreaObjects()
-	for _, o := range updateObjects {
+	for _, o := range chapter.AreaObjects() {
 		o.Update(delta)
 	}
 	// AI.
@@ -96,20 +81,6 @@ func (g *Game) Paused() bool {
 // Module returns game module.
 func (g *Game) Module() *module.Module {
 	return g.mod
-}
-
-// AddPlayer adds specified character to game as player.
-func (g *Game) AddPlayer(char *character.Character) {
-	g.pcs[char.ID()+char.Serial()] = char
-	g.ai.RemoveCharacter(char)
-}
-
-// Players returns all game PCs.
-func (g *Game) Players() (pcs []*character.Character) {
-	for _, pc := range g.pcs {
-		pcs = append(pcs, pc)
-	}
-	return
 }
 
 // AI returns game AI.
@@ -159,15 +130,5 @@ func (g *Game) updateObjectsArea() {
 		}
 		newArea.AddCharacter(c)
 		currentArea.RemoveCharacter(c)
-	}
-}
-
-// Triggered after adding new area to module chapter.
-func (g *Game) onModAreaAdded(a *area.Area) {
-	for _, c := range a.AllCharacters() {
-		if g.pcs[c.ID()+c.Serial()] != nil {
-			continue
-		}
-		g.ai.AddCharacter(c)
 	}
 }

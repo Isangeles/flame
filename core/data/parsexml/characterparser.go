@@ -1,7 +1,7 @@
 /*
  * characterparser.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,6 @@ type Character struct {
 	Guild       string           `xml:"guild,attr"`
 	Level       int              `xml:"level,attr"`
 	Attributes  Attributes       `xml:"attributes"`
-	PC          bool             `xml:"pc,attr"`
 	HP          int              `xml:"hp,attr"`
 	Mana        int              `xml:"mana,attr"`
 	Exp         int              `xml:"exp,attr"`
@@ -131,13 +130,13 @@ func UnmarshalCharacters(data io.Reader) ([]*res.CharacterData, error) {
 	xmlBase := new(Characters)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	chars := make([]*res.CharacterData, 0)
 	for _, xmlChar := range xmlBase.Characters {
 		char, err := buildCharacterData(&xmlChar)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal character: build data fail: %v", err)
+			log.Err.Printf("xml: unmarshal character: build data unable: %v", err)
 			continue
 		}
 		chars = append(chars, char)
@@ -153,7 +152,7 @@ func MarshalCharacter(char *character.Character) (string, error) {
 	xmlCharBase.Characters = append(xmlCharBase.Characters, *xmlChar)
 	out, err := xml.Marshal(xmlCharBase)
 	if err != nil {
-		return "", fmt.Errorf("fail to marshal char: %v", err)
+		return "", fmt.Errorf("unable to marshal char: %v", err)
 	}
 	return string(out[:]), nil
 }
@@ -275,22 +274,22 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	data := res.CharacterData{BasicData: baseData}
 	sex, err := UnmarshalGender(xmlChar.Gender)
 	if err != nil {
-		return nil, fmt.Errorf("fail to parse gender: %v", err)
+		return nil, fmt.Errorf("unable to parse gender: %v", err)
 	}
 	data.BasicData.Sex = int(sex)
 	race, err := UnmarshalRace(xmlChar.Race)
 	if err != nil {
-		return nil, fmt.Errorf("fail to parse race: %v", err)
+		return nil, fmt.Errorf("unable to parse race: %v", err)
 	}
 	data.BasicData.Race = int(race)
 	attitude, err := UnmarshalAttitude(xmlChar.Attitude)
 	if err != nil {
-		return nil, fmt.Errorf("fail to parse attitude: %v", err)
+		return nil, fmt.Errorf("unable to parse attitude: %v", err)
 	}
 	data.BasicData.Attitude = int(attitude)
 	alignment, err := UnmarshalAlignment(xmlChar.Alignment)
 	if err != nil {
-		return nil, fmt.Errorf("fail to parse alignment: %v", err)
+		return nil, fmt.Errorf("unable to parse alignment: %v", err)
 	}
 	data.BasicData.Alignment = int(alignment)
 	// Attributes.
@@ -308,7 +307,6 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	// Trainings.
 	data.BasicData.Trainings = buildTrainings(&xmlChar.Trainings)
 	// Save.
-	data.SavedData.PC = xmlChar.PC
 	data.SavedData.HP = xmlChar.HP
 	data.SavedData.Mana = xmlChar.Mana
 	data.SavedData.Exp = xmlChar.Exp
@@ -316,14 +314,14 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	if xmlChar.Position != "" {
 		posX, posY, err := UnmarshalPosition(xmlChar.Position)
 		if err != nil {
-			return nil, fmt.Errorf("fail to parse position: %v", err)
+			return nil, fmt.Errorf("unable to parse position: %v", err)
 		}
 		data.SavedData.PosX, data.SavedData.PosY = posX, posY
 	}
 	if xmlChar.DefPosition != "" {
 		defX, defY, err := UnmarshalPosition(xmlChar.DefPosition)
 		if err != nil {
-			return nil, fmt.Errorf("fail to parse default position: %v", err)
+			return nil, fmt.Errorf("unable to parse default position: %v", err)
 		}
 		data.SavedData.DefX, data.SavedData.DefY = defX, defY
 	}
@@ -333,7 +331,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	for _, xmlEqIt := range xmlChar.Equipment.Items {
 		slot, err := UnmarshalEqSlot(xmlEqIt.Slot)
 		if err != nil {
-			log.Err.Printf("xml: build character: %s: parse eq item: %s: fail to parse lslot: %v",
+			log.Err.Printf("xml: build character: %s: parse eq item: %s: unable to parse lslot: %v",
 				xmlChar.ID, xmlEqIt.ID, err)
 			continue
 		}
@@ -367,7 +365,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	for _, xmlAtt := range xmlChar.Memory.Nodes {
 		att, err := UnmarshalAttitude(xmlAtt.Attitude)
 		if err != nil {
-			log.Err.Printf("xml: build character: %s: fail to parse att mem: %s",
+			log.Err.Printf("xml: build character: %s: unable to parse att mem: %s",
 				xmlChar.ID, err)
 			continue
 		}

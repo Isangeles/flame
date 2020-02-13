@@ -50,18 +50,18 @@ var (
 func ExportGame(game *core.Game, dirPath, saveName string) error {
 	xml, err := parsexml.MarshalGame(game)
 	if err != nil {
-		return fmt.Errorf("fail to marshal game: %v", err)
+		return fmt.Errorf("unable to marshal game: %v", err)
 	} 
 	// Create savegame file.
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
-		return fmt.Errorf("fail to create savegames dir: %v", err)
+		return fmt.Errorf("unable to create savegames dir: %v", err)
 	}
 	filePath := filepath.FromSlash(dirPath + "/" + saveName +
 		SavegameFileExt)
 	f, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("fail to write savegame file: %v", err)
+		return fmt.Errorf("unable to write savegame file: %v", err)
 	}
 	defer f.Close()
 	// Write data to file.
@@ -81,25 +81,25 @@ func ImportGame(mod *module.Module, dirPath, fileName string) (*core.Game, error
 	}
 	doc, err := os.Open(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open savegame file: %v", err)
+		return nil, fmt.Errorf("unable to open savegame file: %v", err)
 	}
 	gameData, err := parsexml.UnmarshalGame(doc)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal savegame data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal savegame data: %v", err)
 	}
 	// Load chapter with ID from save.
 	err = LoadChapter(mod, gameData.SavedChapter.ID)
 	if err != nil {
-		return nil, fmt.Errorf("fail to load chapter: %v", err)
+		return nil, fmt.Errorf("unable to load chapter: %v", err)
 	}
 	// Load chapter data(to build quests, characters, etc.).
 	err = LoadChapterData(mod.Chapter())
 	if err != nil {
-		return nil, fmt.Errorf("fail to load chapter data: %v", err)
+		return nil, fmt.Errorf("unable to load chapter data: %v", err)
 	}
 	game, err := buildSavedGame(mod, gameData)
 	if err != nil {
-		return nil, fmt.Errorf("fail to build game from saved data: %v", err)
+		return nil, fmt.Errorf("unable to build game from saved data: %v", err)
 	}
 	return game, nil
 }
@@ -109,7 +109,7 @@ func ImportGame(mod *module.Module, dirPath, fileName string) (*core.Game, error
 func ImportGamesDir(mod *module.Module, dirPath string) ([]*core.Game, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		log.Err.Printf("fail to read dir: %v", err)
+		log.Err.Printf("unable to read dir: %v", err)
 	}
 	games := make([]*core.Game, 0)
 	for _, fInfo := range files {
@@ -118,7 +118,7 @@ func ImportGamesDir(mod *module.Module, dirPath string) ([]*core.Game, error) {
 		}
 		game, err := ImportGame(mod, dirPath, fInfo.Name())
 		if err != nil {
-			log.Err.Printf("data savegame load: fail to import saved game: %v", err)
+			log.Err.Printf("data savegame load: unable to import saved game: %v", err)
 			continue
 		}
 		games = append(games, game)
@@ -129,10 +129,7 @@ func ImportGamesDir(mod *module.Module, dirPath string) ([]*core.Game, error) {
 // buildSavedGame build saved game from specified data.
 func buildSavedGame(mod *module.Module, gameData *res.GameData) (*core.Game, error) {
 	// Create game from saved data.
-	game, err := core.NewGame(mod)
-	if err != nil {
-		return nil, fmt.Errorf("fail to create saved game: %v", err)
-	}
+	game := core.NewGame(mod)
 	chapterData := &gameData.SavedChapter
 	// Areas.
 	for _, areaData := range chapterData.Areas {
@@ -140,14 +137,10 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*core.Game, err
 		area := buildSavedArea(mod, areaData)
 		game.Module().Chapter().AddAreas(area)
 	}
-	// Restore players, effects and memory.
+	// Restore objects effects and memory.
 	for _, areaData := range chapterData.Areas {
 		restoreAreaEffects(mod, areaData)
 		restoreAreaMemory(mod, areaData)
-		pcs := restoreAreaPlayers(mod, areaData)
-		for _, pc := range pcs {
-			game.AddPlayer(pc)
-		}
 	}
 	return game, nil
 }
@@ -193,27 +186,6 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	return area
 }
 
-// restorePlayers returns list with PCs.
-func restoreAreaPlayers(mod *module.Module, data res.SavedAreaData) (pcs []*character.Character) {
-	for _, charData := range data.Chars {
-		if !charData.SavedData.PC {
-			continue
-		}
-		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
-		if char == nil {
-			log.Err.Printf("data: save: restore players: pc not found: %s#%s",
-				charData.BasicData.ID, charData.BasicData.Serial)
-			continue
-		}
-		pcs = append(pcs, char)
-	}
-	for _, subareaData := range data.Subareas {
-		subPlayers := restoreAreaPlayers(mod, subareaData)
-		pcs = append(pcs, subPlayers...)
-	}
-	return
-}
-
 // restoreAreaEffects restores saved effects for characters and objects.
 func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
@@ -226,7 +198,7 @@ func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 		for _, obEffectData := range charData.Effects {
 			effectData := res.Effect(obEffectData.ID)
 			if effectData == nil {
-				log.Err.Printf("data: char: %s: restore effects: fail to create effect: %s",
+				log.Err.Printf("data: char: %s: restore effects: unable to create effect: %s",
 					char.ID(), obEffectData.ID)
 				continue
 			}
@@ -236,7 +208,7 @@ func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 			// Restore effect source.
 			source := mod.Target(obEffectData.SourceID, obEffectData.SourceSerial)
 			if source == nil {
-				log.Err.Printf("data: char: %s: restore effects: fail to find source: %s#%s",
+				log.Err.Printf("data: char: %s: restore effects: unable to find source: %s#%s",
 					char.ID(), obEffectData.SourceID, obEffectData.SourceSerial)
 			}
 			effect.SetSource(source)

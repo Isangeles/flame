@@ -1,7 +1,7 @@
 /*
  * gameparser.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,12 +112,6 @@ func marshalGameArea(game *core.Game, a *area.Area) *SavedArea {
 	// Characters.
 	for _, c := range a.Characters() {
 		xmlChar := xmlCharacter(c)
-		serialID := xmlChar.ID + "_" + xmlChar.Serial
-		for _, pc := range game.Players() {
-			if pc.SerialID() == serialID {
-				xmlChar.PC = true
-			}
-		}
 		xmlArea.Characters = append(xmlArea.Characters, *xmlChar)
 	}
 	// Objects.

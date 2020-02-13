@@ -1,7 +1,7 @@
 /*
  * flame.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,23 +75,24 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	// Load start chapter for module.
 	err := data.LoadChapter(Mod(), Mod().Conf().StartChapter)
 	if err != nil {
-		return nil, fmt.Errorf("fail to load start chapter: %v", err)
+		return nil, fmt.Errorf("unable to load start chapter: %v", err)
 	}
 	// Load chapter data(to build quests, characters, erc.).
 	err = data.LoadChapterData(Mod().Chapter())
 	if err != nil {
-		return nil, fmt.Errorf("fail to load module data: %v", err)
+		return nil, fmt.Errorf("unable to load module data: %v", err)
 	}
 	// Load chapter start area.
 	chapter := Mod().Chapter()
 	err = data.LoadArea(Mod(), chapter.Conf().StartAreaID)
 	if err != nil {
-		return nil, fmt.Errorf("fail to load start area: %v", err)
+		return nil, fmt.Errorf("unable to load start area: %v", err)
 	}
 	// Create new game.
-	game, err = core.NewGame(mod)
-	if err != nil {
-		return nil, fmt.Errorf("fail to create game: %v", err)
+	game = core.NewGame(mod)
+	// Chapter NPCs under AI control.
+	for _, c := range mod.Chapter().Characters() {
+		game.AI().AddCharacter(c)
 	}
 	SetGame(game)
 	// All players to start area.
@@ -103,10 +104,6 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	for _, pc := range pcs {
 		serial.AssignSerial(pc)
 		startArea.AddCharacter(pc)
-	}
-	// Add players to game.
-	for _, pc := range pcs {
-		game.AddPlayer(pc)
 	}
 	return game, nil
 }
