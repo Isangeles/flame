@@ -1,7 +1,7 @@
 /*
  * module.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,14 +27,14 @@
 package module
 
 import (
-	"github.com/isangeles/flame/core/module/objects"
 	"github.com/isangeles/flame/core/module/effect"
+	"github.com/isangeles/flame/core/module/objects"
 )
 
 // Module struct represents engine module.
 type Module struct {
-	conf            ModConf
-	chapter         *Chapter
+	conf    ModConf
+	chapter *Chapter
 }
 
 // NewModule creates new instance of module with specified configuration

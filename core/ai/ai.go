@@ -21,10 +21,11 @@
  *
  */
 
-package core
+package ai
 
 import (
 	"github.com/isangeles/flame/core/data/res/lang"
+	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/effect"
 	"github.com/isangeles/flame/core/module/skill"
@@ -39,16 +40,16 @@ var (
 
 // Struct for controlling non-player characters.
 type AI struct {
-	game      *Game
+	mod       *module.Module
 	npcs      map[string]*character.Character
 	moveTimer int64
 	chatTimer int64
 }
 
-// NewAI creates new AI.
-func NewAI(g *Game) *AI {
+// New creates new AI.
+func New(mod *module.Module) *AI {
 	ai := new(AI)
-	ai.game = g
+	ai.mod = mod
 	ai.npcs = make(map[string]*character.Character)
 	return ai
 }
@@ -83,7 +84,7 @@ func (ai *AI) Update(delta int64) {
 		tar := npc.Targets()[0]
 		if tar == nil || npc.AttitudeFor(tar) != character.Hostile {
 			// Look for hostile target.
-			area := ai.game.Module().Chapter().CharacterArea(npc)
+			area := ai.mod.Chapter().CharacterArea(npc)
 			if area == nil {
 				continue
 			}

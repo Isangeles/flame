@@ -31,7 +31,6 @@ import (
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/character"
-	"github.com/isangeles/flame/core/module/serial"
 )
 
 const (
@@ -90,11 +89,11 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	}
 	// Create new game.
 	game = core.NewGame(mod)
+	SetGame(game)
 	// Chapter NPCs under AI control.
-	for _, c := range mod.Chapter().Characters() {
+	for _, c := range chapter.Characters() {
 		game.AI().AddCharacter(c)
 	}
-	SetGame(game)
 	// All players to start area.
 	startArea := chapter.Area(chapter.Conf().StartAreaID)
 	if startArea == nil {
@@ -102,7 +101,6 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 			chapter.Conf().StartAreaID)
 	}
 	for _, pc := range pcs {
-		serial.AssignSerial(pc)
 		startArea.AddCharacter(pc)
 	}
 	return game, nil

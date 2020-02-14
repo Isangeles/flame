@@ -25,6 +25,7 @@
 package core
 
 import (
+	"github.com/isangeles/flame/core/ai"
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
@@ -35,7 +36,7 @@ import (
 // module and PCs.
 type Game struct {
 	mod    *module.Module
-	ai     *AI
+	npcAI  *ai.AI
 	paused bool
 }
 
@@ -43,7 +44,7 @@ type Game struct {
 func NewGame(mod *module.Module) *Game {
 	g := new(Game)
 	g.mod = mod
-	g.ai = NewAI(g)
+	g.npcAI = ai.New(g.Module())
 	return g
 }
 
@@ -62,8 +63,7 @@ func (g *Game) Update(delta int64) {
 	for _, o := range chapter.AreaObjects() {
 		o.Update(delta)
 	}
-	// AI.
-	g.ai.Update(delta)
+	g.AI().Update(delta)
 	// Objects area.
 	g.updateObjectsArea()
 }
@@ -84,8 +84,8 @@ func (g *Game) Module() *module.Module {
 }
 
 // AI returns game AI.
-func (g *Game) AI() *AI {
-	return g.ai
+func (g *Game) AI() *ai.AI {
+	return g.npcAI
 }
 
 // updateObjectsArea checks and moves game objects to
