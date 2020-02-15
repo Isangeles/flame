@@ -128,20 +128,20 @@ func ImportGamesDir(mod *module.Module, dirPath string) ([]*core.Game, error) {
 
 // buildSavedGame build saved game from specified data.
 func buildSavedGame(mod *module.Module, gameData *res.GameData) (*core.Game, error) {
-	// Create game from saved data.
-	game := core.NewGame(mod)
 	chapterData := &gameData.SavedChapter
 	// Areas.
 	for _, areaData := range chapterData.Areas {
 		// Create area from saved data.
 		area := buildSavedArea(mod, areaData)
-		game.Module().Chapter().AddAreas(area)
+		mod.Chapter().AddAreas(area)
 	}
 	// Restore objects effects and memory.
 	for _, areaData := range chapterData.Areas {
 		restoreAreaEffects(mod, areaData)
 		restoreAreaMemory(mod, areaData)
 	}
+	// Create game from saved data.
+	game := core.NewGame(mod)
 	return game, nil
 }
 

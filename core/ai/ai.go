@@ -120,14 +120,26 @@ func (ai *AI) Update(delta int64) {
 	}
 }
 
-// AddCharacter adds specified character to control by AI.
-func (ai *AI) AddCharacter(char *character.Character) {
-	ai.npcs[char.ID()+char.Serial()] = char
+// Characters returns all characters under AI control.
+func (ai *AI) Characters() (chars []*character.Character) {
+	for _, c := range ai.npcs {
+		chars = append(chars, c)
+	}
+	return
+}
+
+// AddCharacters adds specified characters to control by AI.
+func (ai *AI) AddCharacters(chars ...*character.Character) {
+	for _, c := range chars {
+		ai.npcs[c.ID()+c.Serial()] = c
+	}
 }
 
 // RemoveCharacters removes specified character from AI control.
-func (ai *AI) RemoveCharacter(char *character.Character) {
-	delete(ai.npcs, char.ID()+char.Serial())
+func (ai *AI) RemoveCharacters(chars ...*character.Character) {
+	for _, c := range chars {
+		delete(ai.npcs, c.ID()+c.Serial())
+	}
 }
 
 // moveAround moves specified character in random direction.

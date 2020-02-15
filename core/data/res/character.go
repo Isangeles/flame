@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ type CharacterBasicData struct {
 	ID        string
 	Serial    string
 	Name      string
+	AI        bool
 	Level     int
 	Sex       int
 	Race      int
@@ -59,7 +60,6 @@ type CharacterBasicData struct {
 
 // Struct for saved character data.
 type CharacterSavedData struct {
-	PC         bool
 	PosX, PosY float64
 	DefX, DefY float64
 	HP         int

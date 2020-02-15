@@ -60,6 +60,7 @@ type Character struct {
 	Exp         int              `xml:"exp,attr"`
 	Position    string           `xml:"position,value"`
 	DefPosition string           `xml:"default-position,value"`
+	AI          bool             `xml:"ai,attr"`
 	Inventory   Inventory        `xml:"inventory"`
 	Equipment   Equipment        `xml:"equipment"`
 	Effects     []ObjectEffect   `xml:"effects>effect"`
@@ -164,6 +165,7 @@ func xmlCharacter(char *character.Character) *Character {
 	xmlChar.ID = char.ID()
 	xmlChar.Serial = char.Serial()
 	xmlChar.Name = char.Name()
+	xmlChar.AI = char.AI()
 	xmlChar.Level = char.Level()
 	xmlChar.Gender = marshalGender(char.Gender())
 	xmlChar.Race = marshalRace(char.Race())
@@ -268,6 +270,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 		ID:     xmlChar.ID,
 		Serial: xmlChar.Serial,
 		Name:   xmlChar.Name,
+		AI:     xmlChar.AI,
 		Level:  xmlChar.Level,
 		Guild:  xmlChar.Guild,
 	}

@@ -90,10 +90,6 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	// Create new game.
 	game = core.NewGame(mod)
 	SetGame(game)
-	// Chapter NPCs under AI control.
-	for _, c := range chapter.Characters() {
-		game.AI().AddCharacter(c)
-	}
 	// All players to start area.
 	startArea := chapter.Area(chapter.Conf().StartAreaID)
 	if startArea == nil {

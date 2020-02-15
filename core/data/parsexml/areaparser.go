@@ -53,6 +53,7 @@ type AreaChar struct {
 	XMLName  xml.Name `xml:"char"`
 	ID       string   `xml:"id,attr"`
 	Position string   `xml:"position,attr"`
+	AI       bool     `xml:"ai,attr"`
 }
 
 // UnmarshalArea parses area from XML data to resource.
@@ -91,6 +92,7 @@ func xmlArea(areaData *res.AreaData) *Area {
 			xmlNPC := new(AreaChar)
 			xmlNPC.ID = npc.ID
 			xmlNPC.Position = MarshalPosition(npc.PosX, npc.PosY)
+			xmlNPC.AI = npc.AI
 			xmlChars = append(xmlChars, *xmlNPC)
 		}
 		// Objects.
@@ -121,6 +123,7 @@ func buildAreaData(xmlArea *Area) *res.AreaData {
 			ID:   xmlChar.ID,
 			PosX: x,
 			PosY: y,
+			AI:   xmlChar.AI,
 		}
 		area.Characters = append(area.Characters, char)
 	}
