@@ -1,0 +1,33 @@
+.TH Chapter_dir
+.SH NAME
+[chapter ID] - directory with chapter data, named after chapter ID
+.SH DESCRIPTION
+Chapter directory stores all chapter data, i.e. NPCs, dialogs, quests, objects, areas.
+.br
+Chapter data are available only when specific chapter is active.
+.SH FILES & SUBDIRECTORIES
+.P
+Files:
+.br
+chapter.conf \- chapter configuration file
+.P
+Sub-directories:
+.br
+areas \- directory with chapters areas
+dialogs \- directory with dialogs data files
+lang \- directory with translation files for dialogs, characters, objects and quests
+npc \- directory with characters data files for non-player characters
+objects \- directory with objects data files
+quests \- directory with quests data files
+.SH EXAMPLE
+.nf
+/prologue
+	mod.conf
+	areas
+	dialogs
+	lang
+	objects
+	quests
+.SH SEE ALSO
+data/dir/chatpers, data/dir/areas, data/dir/dialogs, data/dir/npc, data/dir/lang,
+data/dir/objects, data/dir/quests, data/file/conf/mod.conf

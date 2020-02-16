@@ -1,0 +1,15 @@
+.TH Chapters_dir
+.SH NAME
+chapters \- directory with module chapters
+.SH DESCRIPTION
+Chapters directory stores all module chapters in sub-directories.
+.SH FILES & SUBDIRECTORIES
+Sub-directories: each chapter has it's own directory with chapter ID as directory name.
+.SH EXAMPLE
+.nf
+/chapters
+	prologue
+	chapter1
+	epilogue
+.SH SEE ALSO
+data/dir/chapter

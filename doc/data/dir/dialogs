@@ -12,4 +12,4 @@ Files handles inside directory: *\[char46]dialogs
 /dialogs
 	main.dialogs
 .SH SEE ALSO
-file/xml/.dialogs
+data/file/xml/.dialogs

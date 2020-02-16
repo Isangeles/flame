@@ -1,0 +1,15 @@
+.TH Modules_dir
+.SH NAME
+modules \- directory with game modules
+.SH DESCRIPTION
+Modules directory stores all game modules in sub-directories.
+.SH FILES & SUBDIRECTORIES
+Sub-directories: each module has it's own directory with module ID as directory name.
+.SH EXAMPLE
+.nf
+/module
+	test-mod
+	mod1
+	mod2
+.SH SEE ALSO
+data/dir/module
