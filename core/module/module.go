@@ -37,9 +37,9 @@ type Module struct {
 	chapter *Chapter
 }
 
-// NewModule creates new instance of module with specified configuration
-// and data.
-func NewModule(conf ModConf) *Module {
+// New creates new instance of module with specified
+// configuration and data.
+func New(conf ModConf) *Module {
 	m := new(Module)
 	m.conf = conf
 	return m

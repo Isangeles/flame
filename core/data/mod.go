@@ -42,7 +42,7 @@ func Module(path, langID string) (*module.Module, error) {
 			err)
 	}
 	// Create module.
-	m := module.NewModule(mc)
+	m := module.New(mc)
 	return m, nil
 }
 
