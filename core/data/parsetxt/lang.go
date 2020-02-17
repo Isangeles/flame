@@ -32,7 +32,7 @@ import (
 // UnmarshalLangData retrives all translation data from
 // specified source.
 func UnmarshalLangData(data io.Reader) []*res.TranslationData {
-	values := UnmarshalTextValue(data)
+	values := UnmarshalConfig(data)
 	return buildTranslationData(values)
 }
 

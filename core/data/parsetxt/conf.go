@@ -1,5 +1,5 @@
 /*
- * unmarshal.go
+ * conf.go
  *
  * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -24,6 +24,7 @@
 package parsetxt
 
 import (
+	"fmt"
 	"io"
 	"bufio"
 	"strings"
@@ -31,12 +32,12 @@ import (
 
 const (
 	commentPrefix = "#"
-	idValuesSep   = ":"
+	keyValuesSep  = ":"
 	valuesSep     = ";"
 )
 
-// UnmarshalTextValue retrieves key-values from specified data.
-func UnmarshalTextValue(data io.Reader) map[string][]string {
+// UnmarshalConfig retrieves key-values from specified data.
+func UnmarshalConfig(data io.Reader) map[string][]string {
 	texts := make(map[string][]string)
 	scann := bufio.NewScanner(data)
 	for scann.Scan() {
@@ -44,7 +45,7 @@ func UnmarshalTextValue(data io.Reader) map[string][]string {
 		if strings.HasPrefix(line, commentPrefix) {
 			continue
 		}
-		sepID := strings.Index(line, idValuesSep)
+		sepID := strings.Index(line, keyValuesSep)
 		if sepID > -1 {
 			lineID := line[:sepID]
 			t := line[sepID+1:]
@@ -52,4 +53,20 @@ func UnmarshalTextValue(data io.Reader) map[string][]string {
 		}
 	}
 	return texts
+}
+
+// MarshalConfig parses specified key-values map to
+// config string.
+func MarshalConfig(keyValues map[string][]string) (config string) {
+	for key, values := range keyValues {
+		config = fmt.Sprintf("%s%s%s", config, key, keyValuesSep)
+		for i, v := range values {
+			config = fmt.Sprintf("%s%s", config, v)
+			if i < len(values)-1 {
+				config += valuesSep
+			}
+		}
+		config = fmt.Sprintf("%s\n", config)
+	}
+	return strings.TrimSpace(config)
 }
