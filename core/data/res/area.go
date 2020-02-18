@@ -1,5 +1,5 @@
 /*
- * module.go
+ * area.go
  *
  * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
