@@ -68,7 +68,7 @@ func UnmarshalArea(data io.Reader) (*res.AreaData, error) {
 	return areaData, nil
 }
 
-// MarshalArea parses scenario data to XML string.
+// MarshalArea parses area data to XML string.
 func MarshalArea(areaData *res.AreaData) (string, error) {
 	xmlArea := xmlArea(areaData)
 	out, err := xml.Marshal(xmlArea)

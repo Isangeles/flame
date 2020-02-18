@@ -230,3 +230,29 @@ func (a *Area) NearObjects(x, y, maxrange float64) []objects.Positioner {
 	}
 	return objects
 }
+
+// Data returns area data resource.
+func (a *Area) Data() res.AreaData {
+	data := res.AreaData{
+		ID: a.ID(),
+	}
+	for _, c := range a.Characters() {
+		charData := res.AreaCharData{
+			ID: c.ID(),
+			AI: c.AI(),
+		}
+		charData.PosX, charData.PosY = c.Position()
+		data.Characters = append(data.Characters, charData)
+	}
+	for _, o := range a.Objects() {
+		obData := res.AreaObjectData{
+			ID: o.ID(),
+		}
+		obData.PosX, obData.PosY = o.Position()
+		data.Objects = append(data.Objects, obData)
+	}
+	for _, sa := range a.Subareas() {
+		data.Subareas = append(data.Subareas, sa.Data())
+	}
+	return data
+}
