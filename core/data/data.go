@@ -38,7 +38,7 @@ func LoadTranslationData(path string) error {
 	// Translation.
 	langData, err := ImportLangDir(path)
 	if err != nil {
-		return fmt.Errorf("fail to import lang dir: %v", err)
+		return fmt.Errorf("unable to import lang dir: %v", err)
 	}
 	resData := res.Translations()
 	for _, td := range langData {
@@ -54,49 +54,49 @@ func LoadModuleData(mod *module.Module) error {
 	// Effects.
 	effectsData, err := ImportEffectsDir(mod.Conf().EffectsPath())
 	if err != nil {
-		return fmt.Errorf("fail to load effects: %v", err)
+		return fmt.Errorf("unable to load effects: %v", err)
 	}
 	res.SetEffectsData(effectsData)
 	// Skills.
 	skillsData, err := ImportSkillsDir(mod.Conf().SkillsPath())
 	if err != nil {
-		return fmt.Errorf("fail to load skills: %v", err)
+		return fmt.Errorf("unable to load skills: %v", err)
 	}
 	res.SetSkillsData(skillsData)
 	// Armors.
 	armorsData, err := ImportArmorsDir(mod.Conf().ItemsPath())
 	if err != nil {
-		return fmt.Errorf("fail to load armros: %v", err)
+		return fmt.Errorf("unable to load armros: %v", err)
 	}
 	res.SetArmorsData(armorsData)
 	// Weapons.
 	weaponsData, err := ImportWeaponsDir(mod.Conf().ItemsPath())
 	if err != nil {
-		return fmt.Errorf("fail to load weapons: %v", err)
+		return fmt.Errorf("unable to load weapons: %v", err)
 	}
 	res.SetWeaponsData(weaponsData)
 	// Misc items.
 	miscItemsData, err := ImportMiscItemsDir(mod.Conf().ItemsPath())
 	if err != nil {
-		return fmt.Errorf("fail to load misc items: %v", err)
+		return fmt.Errorf("unable to load misc items: %v", err)
 	}
 	res.SetMiscItemsData(miscItemsData)
 	// Recipes.
 	recipesData, err := ImportRecipesDir(mod.Conf().RecipesPath())
 	if err != nil {
-		return fmt.Errorf("fail to load recipes: %v", err)
+		return fmt.Errorf("unable to load recipes: %v", err)
 	}
 	res.SetRecipesData(recipesData)
 	// Area objects.
 	objectsData, err := ImportObjectsDir(mod.Conf().ObjectsPath())
 	if err != nil {
-		return fmt.Errorf("fail to load area objects: %v", err)
+		return fmt.Errorf("unable to load area objects: %v", err)
 	}
 	res.SetObjectsData(objectsData)
 	// Translation.
 	err = LoadTranslationData(mod.Conf().LangPath())
 	if err != nil {
-		return fmt.Errorf("fail to load translation data: %v", err)
+		return fmt.Errorf("unable to load translation data: %v", err)
 	}
 	return nil
 }
@@ -104,40 +104,40 @@ func LoadModuleData(mod *module.Module) error {
 // LoadChapterData loads chapter data(NPC, quests, etc.)
 // for specified chapter.
 func LoadChapterData(chapter *module.Chapter) error {
-	// NPC.
-	npcData, err := ImportCharactersDataDir(chapter.Conf().NPCPath())
+	// Characters.
+	charactersData, err := ImportCharactersDataDir(chapter.Conf().CharactersPath())
 	if err != nil {
-		return fmt.Errorf("fail to import npc: %v", err)
+		return fmt.Errorf("unable to import character: %v", err)
 	}
-	res.SetCharactersData(npcData)
+	res.SetCharactersData(charactersData)
 	// Area objects.
 	objectsData, err := ImportObjectsDir(chapter.Conf().ObjectsPath())
 	if err != nil {
-		return fmt.Errorf("fail to import object: %v", err)
+		return fmt.Errorf("unable to import object: %v", err)
 	}
 	res.AddObjectData(objectsData...) // adding to global module objects
 	// Dialogs.
 	dialogsData, err := ImportDialogsDir(chapter.Conf().DialogsPath())
 	if err != nil {
-		return fmt.Errorf("fail to import dialogs: %v", err)
+		return fmt.Errorf("unable to import dialogs: %v", err)
 	}
 	res.SetDialogsData(dialogsData)
 	// Quests.
 	questsData, err := ImportQuestsDir(chapter.Conf().QuestsPath())
 	if err != nil {
-		return fmt.Errorf("fail to import quests: %v", err)
+		return fmt.Errorf("unable to import quests: %v", err)
 	}
 	res.SetQuestsData(questsData)
 	// Areas.
 	areasData, err := ImportAreasDir(chapter.Conf().AreasPath())
 	if err != nil {
-		return fmt.Errorf("fail to import areas: %v", err)
+		return fmt.Errorf("unable to import areas: %v", err)
 	}
 	res.SetAreasData(areasData)
 	// Translation.
 	err = LoadTranslationData(chapter.Conf().LangPath())
 	if err != nil {
-		return fmt.Errorf("fail to import translation data: %v", err)
+		return fmt.Errorf("unable to import translation data: %v", err)
 	}
 	return nil
 }

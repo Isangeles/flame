@@ -1,7 +1,7 @@
 /*
  * chapterconf.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,10 +55,10 @@ func (cc ChapterConf) LangPath() string {
 		"/" + cc.Lang)
 }
 
-// NPCPath returns path to chapter NPCs
+// CharactersPath returns path to chapter characters
 // directory.
-func (cc ChapterConf) NPCPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/npc")
+func (cc ChapterConf) CharactersPath() string {
+	return filepath.FromSlash(cc.FullPath() + "/characters")
 }
 
 // ObjectsPath returns path to chapter objects
