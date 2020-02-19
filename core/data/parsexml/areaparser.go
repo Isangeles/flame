@@ -1,7 +1,7 @@
 /*
  * areaparser.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,10 +35,11 @@ import (
 
 // Struct for XML area node.
 type Area struct {
-	ID         string       `xml:"id,attr"`
-	Characters []AreaChar   `xml:"npcs>char"`
-	Objects    []AreaObject `xml:"objects>object"`
-	Subareas   []Area       `xml:"subareas>area"`
+	XMLName    xml.Name        `xml:"area"`
+	ID         string          `xml:"id,attr"`
+	Characters []AreaCharacter `xml:"characters>character"`
+	Objects    []AreaObject    `xml:"objects>object"`
+	Subareas   []Area          `xml:"subareas>area"`
 }
 
 // Struct for XML object node.
@@ -49,8 +50,8 @@ type AreaObject struct {
 }
 
 // Struct for XML area character node.
-type AreaChar struct {
-	XMLName  xml.Name `xml:"char"`
+type AreaCharacter struct {
+	XMLName  xml.Name `xml:"character"`
 	ID       string   `xml:"id,attr"`
 	Position string   `xml:"position,attr"`
 	AI       bool     `xml:"ai,attr"`
@@ -89,7 +90,7 @@ func xmlArea(areaData *res.AreaData) *Area {
 		// Characters.
 		xmlChars := xmlArea.Characters
 		for _, npc := range sad.Characters {
-			xmlNPC := new(AreaChar)
+			xmlNPC := new(AreaCharacter)
 			xmlNPC.ID = npc.ID
 			xmlNPC.Position = MarshalPosition(npc.PosX, npc.PosY)
 			xmlNPC.AI = npc.AI
