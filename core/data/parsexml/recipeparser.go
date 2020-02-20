@@ -1,7 +1,7 @@
 /*
  * recipeparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,13 +63,13 @@ func UnmarshalRecipes(data io.Reader) ([]*res.RecipeData, error) {
 	xmlBase := new(Recipes)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	recipes := make([]*res.RecipeData, 0)
 	for _, xmlRecipe := range xmlBase.Recipes {
 		recipe, err := buildRecipeData(xmlRecipe)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal recipe: build data fail: %v", err)
+			log.Err.Printf("xml: unmarshal recipe: unable to build data: %v", err)
 		}
 		recipes = append(recipes, recipe)
 	}

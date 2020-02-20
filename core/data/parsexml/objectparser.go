@@ -1,7 +1,7 @@
 /*
  * objectparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,13 +119,13 @@ func UnmarshalObjectsBase(data io.Reader) ([]*res.ObjectData, error) {
 	xmlBase := new(Objects)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	objects := make([]*res.ObjectData, 0)
 	for _, xmlObject := range xmlBase.Nodes {
 		object, err := buildObjectData(&xmlObject)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal object: %s: build data fail: %v",
+			log.Err.Printf("xml: unmarshal object: %s: unable to build data: %v",
 				xmlObject.ID, err)
 			continue
 		}
@@ -240,7 +240,7 @@ func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
 	if xmlOb.Position != "" {
 		posX, posY, err := UnmarshalPosition(xmlOb.Position)
 		if err != nil {
-			return nil, fmt.Errorf("fail to parse position: %v", err)
+			return nil, fmt.Errorf("unable to parse position: %v", err)
 		}
 		data.SavedData.PosX, data.SavedData.PosY = posX, posY
 	}

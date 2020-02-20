@@ -1,7 +1,7 @@
 /*
  * armorparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,13 +59,13 @@ func UnmarshalArmors(data io.Reader) ([]*res.ArmorData, error) {
 	xmlBase := new(Armors)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	armors := make([]*res.ArmorData, 0)
 	for _, xmlArmor := range xmlBase.Armors {
 		armorData, err := buildArmorData(xmlArmor)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal armor: build data fail: %v", err)
+			log.Err.Printf("xml: unmarshal armor: unable to build data: %v", err)
 			continue
 		}
 		armors = append(armors, armorData)
@@ -78,7 +78,7 @@ func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
 	reqs := buildReqs(&xmlArmor.Reqs)
 	slots, err := UnmarshalItemSlots(xmlArmor.Slots)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal slot types: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal slot types: %v", err)
 	}
 	slotsID := make([]int, 0)
 	for _, s := range slots {

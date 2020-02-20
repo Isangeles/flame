@@ -79,7 +79,7 @@ func MarshalGame(game *core.Game) (string, error) {
 	}
 	out, err := xml.Marshal(xmlGame)
 	if err != nil {
-		return "", fmt.Errorf("fail to marshal data")
+		return "", fmt.Errorf("unable to marshal data")
 	}
 	return string(out[:]), nil
 }
@@ -91,7 +91,7 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 	xmlGame := new(SavedGame)
 	err := xml.Unmarshal(doc, xmlGame)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	game := new(res.GameData)
 	game.Name = xmlGame.Name

@@ -126,7 +126,7 @@ func buildReqs(xmlReqs *Reqs) []res.ReqData {
 	for _, xmlReq := range xmlReqs.GenderReqs {
 		gen, err := UnmarshalGender(xmlReq.Type)
 		if err != nil {
-			log.Err.Printf("xml:parse_req:fail_to_parse_gender:%v", err)
+			log.Err.Printf("xml: build reqs: unable to unmarshal gender: %v", err)
 		}
 		req := res.GenderReqData{
 			Type: int(gen),

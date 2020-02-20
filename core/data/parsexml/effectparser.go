@@ -1,7 +1,7 @@
 /*
  * effectparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ func UnmarshalEffects(data io.Reader) ([]*res.EffectData, error) {
 	xmlBase := new(Effects)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	effects := make([]*res.EffectData, 0)
 	for _, xmlEffect := range xmlBase.Nodes {

@@ -1,7 +1,7 @@
 /*
  * questparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,14 +70,14 @@ func UnmarshalQuests(data io.Reader) ([]*res.QuestData, error) {
 	xmlBase := new(QuestsBase)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail_to_unmarshal_xml_data:%v",
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v",
 			err)
 	}
 	quests := make([]*res.QuestData, 0)
 	for _, xmlQuest := range xmlBase.Quests {
 		quest, err := buildQuestData(xmlQuest)
 		if err != nil {
-			log.Err.Printf("xml:unmarshal_quest:build_data_fail:%v", err)
+			log.Err.Printf("xml: unmarshal quest: build data fail: %v", err)
 			continue
 		}
 		quests = append(quests, quest)

@@ -1,7 +1,7 @@
 /*
  * dialogparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,13 +74,13 @@ func UnmarshalDialogs(data io.Reader) ([]*res.DialogData, error) {
 	xmlBase := new(Dialogs)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	dialogs := make([]*res.DialogData, 0)
 	for _, xmlDialog := range xmlBase.Dialogs {
 		dialog, err := buildDialogData(xmlDialog)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal dialog: build data fail: %v", err)
+			log.Err.Printf("xml: unmarshal dialog: unable to build data: %v", err)
 			continue
 		}
 		dialogs = append(dialogs, dialog)

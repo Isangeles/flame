@@ -1,7 +1,7 @@
 /*
  * weaponparser.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,13 +58,13 @@ func UnmarshalWeapons(data io.Reader) ([]*res.WeaponData, error) {
 	xmlBase := new(Weapons)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	weapons := make([]*res.WeaponData, 0)
 	for _, xmlWeapon := range xmlBase.Items {
 		weapon, err := buildWeaponData(xmlWeapon)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal weapon: build data fail: %v", err)
+			log.Err.Printf("xml: unmarshal weapon: build data unable: %v", err)
 			continue
 		}
 		weapons = append(weapons, weapon)
@@ -77,7 +77,7 @@ func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 	reqs := buildReqs(&xmlWeapon.Reqs)
 	slots, err := UnmarshalItemSlots(xmlWeapon.Slots)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal slot types: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal slot types: %v", err)
 	}
 	slotsID := make([]int, 0)
 	for _, s := range slots {
@@ -85,7 +85,7 @@ func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 	}
 	dmgType, err := UnmarshalElementType(xmlWeapon.Damage.Type)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal damage type: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal damage type: %v", err)
 	}
 	hitEffects := make([]res.EffectData, 0)
 	for _, xmlEffect := range xmlWeapon.Damage.Effects {

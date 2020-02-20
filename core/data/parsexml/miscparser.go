@@ -1,7 +1,7 @@
 /*
  * miscparser.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,13 +55,13 @@ func UnmarshalMiscItems(data io.Reader) ([]*res.MiscItemData, error) {
 	xmlBase := new(Miscs)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	miscs := make([]*res.MiscItemData, 0)
 	for _, xmlMisc := range xmlBase.Items {
 		misc, err := buildMiscData(xmlMisc)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal misc item: build data fail: %v", err)
+			log.Err.Printf("xml: unmarshal misc item: unable to build data: %v", err)
 			continue
 		}
 		miscs = append(miscs, misc)

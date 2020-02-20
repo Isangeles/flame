@@ -63,7 +63,7 @@ func UnmarshalArea(data io.Reader) (*res.AreaData, error) {
 	xmlArea := new(Area)
 	err := xml.Unmarshal(doc, xmlArea)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml: %v", err)
 	}
 	areaData := buildAreaData(xmlArea)
 	return areaData, nil
@@ -74,39 +74,37 @@ func MarshalArea(areaData *res.AreaData) (string, error) {
 	xmlArea := xmlArea(areaData)
 	out, err := xml.Marshal(xmlArea)
 	if err != nil {
-		return "", fmt.Errorf("fail to marshal data: %v", err)
+		return "", fmt.Errorf("unable to marshal data: %v", err)
 	}
 	return string(out[:]), nil
 }
 
 // xmlArea creates XML struct from specified module
 // area data.
-func xmlArea(areaData *res.AreaData) *Area {
-	xmlArea := new(Area)
-	xmlArea.ID = areaData.ID
-	for _, sad := range areaData.Subareas {
-		xmlSubarea := new(Area)
-		xmlArea.ID = sad.ID
-		// Characters.
-		xmlChars := xmlArea.Characters
-		for _, npc := range sad.Characters {
-			xmlNPC := new(AreaCharacter)
-			xmlNPC.ID = npc.ID
-			xmlNPC.Position = MarshalPosition(npc.PosX, npc.PosY)
-			xmlNPC.AI = npc.AI
-			xmlChars = append(xmlChars, *xmlNPC)
-		}
-		// Objects.
-		xmlObjects := xmlArea.Objects
-		for _, ob := range sad.Objects {
-			xmlOb := new(AreaObject)
-			xmlOb.ID = ob.ID
-			xmlOb.Position = MarshalPosition(ob.PosX, ob.PosY)
-			xmlObjects = append(xmlObjects, *xmlOb)
-		}
-		xmlArea.Subareas = append(xmlArea.Subareas, *xmlSubarea)
+func xmlArea(data *res.AreaData) *Area {
+	xmlData := new(Area)
+	xmlData.ID = data.ID
+	// Characters.
+	for _, c := range data.Characters {
+		xmlChar := new(AreaCharacter)
+		xmlChar.ID = c.ID
+		xmlChar.Position = MarshalPosition(c.PosX, c.PosY)
+		xmlChar.AI = c.AI
+		xmlData.Characters = append(xmlData.Characters, *xmlChar)
 	}
-	return xmlArea
+	// Objects.
+	for _, o := range data.Objects {
+		xmlOb := new(AreaObject)
+		xmlOb.ID = o.ID
+		xmlOb.Position = MarshalPosition(o.PosX, o.PosY)
+		xmlData.Objects = append(xmlData.Objects, *xmlOb)
+	}
+	// Subareas.
+	for _, sad := range data.Subareas {
+		xmlSubarea := xmlArea(&sad)
+		xmlData.Subareas = append(xmlData.Subareas, *xmlSubarea)
+	}
+	return xmlData
 }
 
 // buildAreaData creates area data from specified XML data.
@@ -116,7 +114,7 @@ func buildAreaData(xmlArea *Area) *res.AreaData {
 	for _, xmlChar := range xmlArea.Characters {
 		x, y, err := UnmarshalPosition(xmlChar.Position)
 		if err != nil {
-			log.Err.Printf("xml: build area: %s: build char: %s: fail to parse position: %v",
+			log.Err.Printf("xml: build area: %s: build char: %s: unable to parse position: %v",
 				xmlArea.ID, xmlChar.ID, err)
 			continue
 		}
@@ -132,7 +130,7 @@ func buildAreaData(xmlArea *Area) *res.AreaData {
 	for _, xmlOb := range xmlArea.Objects {
 		x, y, err := UnmarshalPosition(xmlOb.Position)
 		if err != nil {
-			log.Err.Printf("xml: build area: %s: build object: %s: fail to parse position: %v",
+			log.Err.Printf("xml: build area: %s: build object: %s: unable to parse position: %v",
 				xmlArea.ID, xmlOb.ID, err)
 			continue
 		}

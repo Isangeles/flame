@@ -58,13 +58,13 @@ func UnmarshalSkills(data io.Reader) ([]*res.SkillData, error) {
 	xmlBase := new(Skills)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	skills := make([]*res.SkillData, 0)
 	for _, xmlSkill := range xmlBase.Skills {
 		skill, err := buildSkillData(xmlSkill)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal character: build data fail: %v", err)
+			log.Err.Printf("xml: unmarshal character: build data unable: %v", err)
 			continue
 		}
 		skills = append(skills, skill)
@@ -87,7 +87,7 @@ func buildSkillData(xmlSkill Skill) (*res.SkillData, error) {
 	}
 	skillRange, err := UnmarshalSkillRange(xmlSkill.Range)
 	if err != nil {
-		return nil, fmt.Errorf("fail to parse range: %v", err)
+		return nil, fmt.Errorf("unable to parse range: %v", err)
 	}
 	data := res.SkillData{
 		ID:       xmlSkill.ID,

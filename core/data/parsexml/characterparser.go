@@ -137,7 +137,7 @@ func UnmarshalCharacters(data io.Reader) ([]*res.CharacterData, error) {
 	for _, xmlChar := range xmlBase.Characters {
 		char, err := buildCharacterData(&xmlChar)
 		if err != nil {
-			log.Err.Printf("xml: unmarshal character: build data unable: %v", err)
+			log.Err.Printf("xml: unmarshal character: unable to build data: %v", err)
 			continue
 		}
 		chars = append(chars, char)
