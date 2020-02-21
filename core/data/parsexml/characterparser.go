@@ -145,8 +145,21 @@ func UnmarshalCharacters(data io.Reader) ([]*res.CharacterData, error) {
 	return chars, nil
 }
 
-// MarshalCharacter parses game character to XML characters
-// base string.
+// MarshalCharacters parses specified characters to XML string.
+func MarshalCharacters(chars ...*character.Character) (string, error) {
+	xmlChars := new(Characters)
+	for _, c := range chars {
+		xmlChar := xmlCharacter(c)
+		xmlChars.Characters = append(xmlChars.Characters, *xmlChar)
+	}
+	out, err := xml.Marshal(xmlChars)
+	if err != nil {
+		return "", fmt.Errorf("unable to marshal xml: %v", err)
+	}
+	return string(out[:]), nil
+}
+
+// MarshalCharacter parses game character to XML string.
 func MarshalCharacter(char *character.Character) (string, error) {
 	xmlCharBase := new(Characters)
 	xmlChar := xmlCharacter(char)

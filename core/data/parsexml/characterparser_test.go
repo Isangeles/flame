@@ -122,3 +122,37 @@ func TestMarshalCharacter(t *testing.T) {
 		t.Errorf("Marshaled data is invalid: alignment: %s", xmlChar)
 	}
 }
+
+// Test for marshaling characters data.
+func TestMarshalCharacters(t *testing.T) {
+	var data res.CharacterData
+	data.BasicData = res.CharacterBasicData{
+		ID:        "char1",
+		Name:      "charName",
+		AI:        true,
+		Level:     2,
+		Sex:       1,
+		Race:      1,
+		Attitude:  1,
+		Guild:     "guildID",
+		Alignment: 1,
+		Str:       2,
+		Con:       3,
+		Dex:       4,
+		Int:       5,
+		Wis:       6,
+	}
+	char1 := character.New(data)
+	data.BasicData.ID = "char2"
+	char2 := character.New(data)
+	xmlChars, err := MarshalCharacters(char1, char2)
+	if err != nil {
+		t.Errorf("Unable to marshal character: %v", err)
+	}
+	if !strings.Contains(xmlChars, "id=\"char1\"") {
+		t.Errorf("Marshaled data is invalid: char1 ID: %s", xmlChars)
+	}
+	if !strings.Contains(xmlChars, "id=\"char2\"") {
+		t.Errorf("Marshaled data is invalid: char2 ID: %s", xmlChars)
+	}
+}
