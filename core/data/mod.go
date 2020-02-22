@@ -1,7 +1,7 @@
 /*
  * mod.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ func Module(path, langID string) (*module.Module, error) {
 	// Load module config file.
 	mc, err := modConf(path, langID)
 	if err != nil {
-		return nil, fmt.Errorf("fail to load module config: %v",
+		return nil, fmt.Errorf("unable to load module config: %v",
 			err)
 	}
 	// Create module.
@@ -51,10 +51,10 @@ func Module(path, langID string) (*module.Module, error) {
 func LoadChapter(mod *module.Module, id string) error {
 	// Load chapter config file.
 	chapPath := filepath.FromSlash(mod.Conf().ChaptersPath() +
-		"/" + mod.Conf().StartChapter)
+		"/" + mod.Conf().Chapter)
 	chapConf, err := chapterConf(chapPath)
 	if err != nil {
-		return fmt.Errorf("fail to read chapter conf: %s: %v",
+		return fmt.Errorf("unable to read chapter conf: %s: %v",
 			chapPath, err)
 	}
 	chapConf.ID = id
@@ -63,7 +63,7 @@ func LoadChapter(mod *module.Module, id string) error {
 	startChap := module.NewChapter(mod, chapConf)
 	err = mod.SetChapter(startChap) // move to start chapter
 	if err != nil {
-		return fmt.Errorf("fail to set mod chapter: %v", err)
+		return fmt.Errorf("unable to set mod chapter: %v", err)
 	}
 	return nil
 }
@@ -81,7 +81,7 @@ func LoadArea(mod *module.Module, id string) error {
 		chap.Conf().AreasPath(), id))
 	areaData, err := ImportArea(areaPath)
 	if err != nil {
-		return fmt.Errorf("fail to import area: %v", err)
+		return fmt.Errorf("unable to import area: %v", err)
 	}
 	// Build mainarea.
 	mainarea := area.New(*areaData)
@@ -102,11 +102,11 @@ func modConf(path, lang string) (module.ModConf, error) {
 	// Read conf.
 	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter")
 	if err != nil {
-		return conf, fmt.Errorf("fail to retrieve values: %s", err)
+		return conf, fmt.Errorf("unable to retrieve values: %s", err)
 	}
 	// Set conf values.
 	conf.ID = confValues["id"]
-	conf.StartChapter = confValues["start-chapter"]
+	conf.Chapter = confValues["chapter"]
 	return conf, nil
 }
 
@@ -116,7 +116,7 @@ func chapterConf(chapterPath string) (module.ChapterConf, error) {
 	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
 	confValues, err := text.ReadValue(confPath, "start-area")
 	if err != nil {
-		return module.ChapterConf{}, fmt.Errorf("fail to read conf values: %v",
+		return module.ChapterConf{}, fmt.Errorf("unable to read conf values: %v",
 			err)
 	}
 	conf := module.ChapterConf{

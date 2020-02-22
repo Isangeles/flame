@@ -71,8 +71,8 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	if Mod() == nil {
 		return nil, fmt.Errorf("no module loaded")
 	}
-	// Load start chapter for module.
-	err := data.LoadChapter(Mod(), Mod().Conf().StartChapter)
+	// Load active chapter for module.
+	err := data.LoadChapter(Mod(), Mod().Conf().Chapter)
 	if err != nil {
 		return nil, fmt.Errorf("unable to load start chapter: %v", err)
 	}
