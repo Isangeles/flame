@@ -81,16 +81,11 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to load module data: %v", err)
 	}
-	// Load chapter start area.
-	chapter := Mod().Chapter()
-	err = data.LoadArea(Mod(), chapter.Conf().StartAreaID)
-	if err != nil {
-		return nil, fmt.Errorf("unable to load start area: %v", err)
-	}
 	// Create new game.
 	game = core.NewGame(mod)
 	SetGame(game)
 	// All players to start area.
+	chapter := Mod().Chapter()
 	startArea := chapter.Area(chapter.Conf().StartAreaID)
 	if startArea == nil {
 		return nil, fmt.Errorf("start area not found: %s: %v",

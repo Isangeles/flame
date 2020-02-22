@@ -24,6 +24,7 @@
 package module
 
 import (
+	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module/area"
 	"github.com/isangeles/flame/core/module/character"
 	"github.com/isangeles/flame/core/module/object"
@@ -57,10 +58,22 @@ func (c *Chapter) Module() *Module {
 	return c.mod
 }
 
-// Area returns active(loaded) area with specified ID,
+// Area returns area with specified ID,
 // or nil if area with such ID was not found.
+// Loads area if area with specified ID was not
+// requested before.
 func (c *Chapter) Area(areaID string) *area.Area {
-	return c.loadedAreas[areaID]
+	a := c.loadedAreas[areaID]
+	if a != nil {
+		return a
+	}
+	areaData := res.Area(areaID)
+	if areaData == nil {
+		return nil
+	}
+	a = area.New(*areaData)
+	c.AddAreas(a)
+	return a
 }
 
 // Areas returns all active(loaded) areas.
@@ -71,7 +84,8 @@ func (c *Chapter) Areas() (areas []*area.Area) {
 	return
 }
 
-// SetAreas sets specified areas as loaded areas.
+// AddAreas adds specified areas to loaded
+// areas list.
 func (c *Chapter) AddAreas(areas ...*area.Area) {
 	for _, a := range areas {
 		c.loadedAreas[a.ID()] = a

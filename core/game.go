@@ -45,7 +45,10 @@ func NewGame(mod *module.Module) *Game {
 	g := new(Game)
 	g.mod = mod
 	g.npcAI = ai.New(g.Module())
-	g.chapterChanged()
+	if g.Module().Chapter() != nil {
+		g.chapterLoaded(g.Module().Chapter())
+	}
+	g.Module().SetOnChapterChangedFunc(g.chapterLoaded)
 	return g
 }
 
@@ -134,17 +137,23 @@ func (g *Game) updateObjectsArea() {
 	}
 }
 
-// chapterChanged handles module chapter change.
-func (g *Game) chapterChanged() {
+// chapterLoaded handles new loaded chapter.
+func (g *Game) chapterLoaded(c *module.Chapter) {
+	for _, a := range c.Areas() {
+		g.areaLoaded(a)
+	}
+	c.SetOnAreaAddedFunc(g.areaLoaded)
+}
+
+// areaLoaded handles new loaded area.
+func (g *Game) areaLoaded(a *area.Area) {
 	chapter := g.Module().Chapter()
 	if chapter == nil {
 		return
 	}
-	for _, a := range chapter.Areas() {
-		for _, c := range a.AllCharacters() {
-			if c.AI() {
-				g.AI().AddCharacters(c)
-			}
+	for _, c := range a.AllCharacters() {
+		if c.AI() {
+			g.AI().AddCharacters(c)
 		}
 	}
 }

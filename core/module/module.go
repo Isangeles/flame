@@ -35,6 +35,7 @@ import (
 type Module struct {
 	conf    Config
 	chapter *Chapter
+	onChapterChanged func(c *Chapter)
 }
 
 // New creates new instance of module with specified
@@ -46,9 +47,11 @@ func New(conf Config) *Module {
 }
 
 // Jumps to next module chapter.
-func (m *Module) SetChapter(chapter *Chapter) error {
+func (m *Module) SetChapter(chapter *Chapter) {
 	m.chapter = chapter
-	return nil
+	if m.onChapterChanged != nil {
+		m.onChapterChanged(m.Chapter())
+	}
 }
 
 // Chapter returns current module chapter.
@@ -87,4 +90,9 @@ func (m *Module) Object(id, serial string) objects.Object {
 		return ob
 	}
 	return nil
+}
+
+// SetOnChapterChangedFunc sets function triggered on chapter change.
+func (m *Module) SetOnChapterChangedFunc(f func(c *Chapter)) {
+	m.onChapterChanged = f
 }
