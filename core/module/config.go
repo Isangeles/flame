@@ -1,5 +1,5 @@
 /*
- * modconf.go
+ * config.go
  *
  * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -27,8 +27,8 @@ import (
 	"path/filepath"
 )
 
-// ModConf struct represents module configuration.
-type ModConf struct {
+// Config struct represents module configuration.
+type Config struct {
 	ID      string
 	Path    string
 	Lang    string
@@ -36,62 +36,62 @@ type ModConf struct {
 }
 
 // ChaptersPath returns path to module chapters.
-func (c ModConf) ChaptersPath() string {
-	return filepath.FromSlash(c.Path + "/chapters")
+func (c Config) ChaptersPath() string {
+	return filepath.Join(c.Path, "chapters")
 }
 
 // CharactersPath returns path to directory for
 // exported characters.
-func (c ModConf) CharactersPath() string {
-	return filepath.FromSlash(c.Path + "/characters")
+func (c Config) CharactersPath() string {
+	return filepath.Join(c.Path, "characters")
 }
 
 // ObjectsPath returns path to directory with
 // area objects bases.
-func (c ModConf) ObjectsPath() string {
-	return filepath.FromSlash(c.Path + "/objects")
+func (c Config) ObjectsPath() string {
+	return filepath.Join(c.Path, "objects")
 }
 
 // ItemsPath returns path to directory with
 // items bases.
-func (c ModConf) ItemsPath() string {
-	return filepath.FromSlash(c.Path + "/items")
+func (c Config) ItemsPath() string {
+	return filepath.Join(c.Path, "items")
 }
 
 // EffectsPath returns path to directory with
 // effects bases.
-func (c ModConf) EffectsPath() string {
-	return filepath.FromSlash(c.Path + "/effects")
+func (c Config) EffectsPath() string {
+	return filepath.Join(c.Path, "effects")
 }
 
 // SkillsPath returns path to directory with
 // skills base.
-func (c ModConf) SkillsPath() string {
-	return filepath.FromSlash(c.Path + "/skills")
+func (c Config) SkillsPath() string {
+	return filepath.Join(c.Path, "skills")
 }
 
 // RecipesPath returns path to directory with
 // recipes base.
-func (c ModConf) RecipesPath() string {
-	return filepath.FromSlash(c.Path + "/recipes")
+func (c Config) RecipesPath() string {
+	return filepath.Join(c.Path, "recipes")
 }
 
 // LangPath returns path to lang directory.
-func (c ModConf) LangPath() string {
-	return filepath.FromSlash(c.Path + "/lang/" + c.Lang)
+func (c Config) LangPath() string {
+	return filepath.Join(c.Path, "lang", c.Lang)
 }
 
 // ItemsLangPath returns path to items lang file.
-func (c ModConf) ItemsLangPath() string {
-	return filepath.FromSlash(c.LangPath() + "/items")
+func (c Config) ItemsLangPath() string {
+	return filepath.Join(c.LangPath(), "items")
 }
 
 // ChatLangPath returns path to random chat lang file.
-func (c ModConf) ChatLangPath() string {
-	return filepath.FromSlash(c.LangPath() + "/random_chat")
+func (c Config) ChatLangPath() string {
+	return filepath.Join(c.LangPath(), "random_chat")
 }
 
 // RecipesLangPath returns path to recipes lang file.
-func (c ModConf) RecipesLangPath() string {
-	return filepath.FromSlash(c.LangPath() + "/recipes")
+func (c Config) RecipesLangPath() string {
+	return filepath.Join(c.LangPath(), "recipes")
 }

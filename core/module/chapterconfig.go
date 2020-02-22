@@ -29,7 +29,7 @@ import (
 
 // Struct for chapter configurtion
 // values.
-type ChapterConf struct {
+type ChapterConfig struct {
 	ID, Path    string
 	ModulePath  string
 	Lang        string
@@ -38,51 +38,50 @@ type ChapterConf struct {
 }
 
 // FullPath returns path to chapter directory.
-func (cc ChapterConf) FullPath() string {
+func (cc ChapterConfig) FullPath() string {
 	return filepath.FromSlash(cc.Path)
 }
 
 // AreasPath returns path to chapters areas
 // directory.
-func (cc ChapterConf) AreasPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/areas")
+func (cc ChapterConfig) AreasPath() string {
+	return filepath.Join(cc.FullPath(), "areas")
 }
 
 // LangPath returns path to chapter
 // lang directory.
-func (cc ChapterConf) LangPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/lang" +
-		"/" + cc.Lang)
+func (cc ChapterConfig) LangPath() string {
+	return filepath.Join(cc.FullPath(), "lang", cc.Lang)
 }
 
 // CharactersPath returns path to chapter characters
 // directory.
-func (cc ChapterConf) CharactersPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/characters")
+func (cc ChapterConfig) CharactersPath() string {
+	return filepath.Join(cc.FullPath(), "characters")
 }
 
 // ObjectsPath returns path to chapter objects
 // directory.
-func (cc ChapterConf) ObjectsPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/objects")
+func (cc ChapterConfig) ObjectsPath() string {
+	return filepath.Join(cc.FullPath(), "objects")
 }
 
 // DialogsPath returns path to chapter dialogs directory.
-func (cc ChapterConf) DialogsPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/dialogs")
+func (cc ChapterConfig) DialogsPath() string {
+	return filepath.Join(cc.FullPath(), "dialogs")
 }
 
 // QuestsPath retruns path to chapter quests directory.
-func (cc ChapterConf) QuestsPath() string {
-	return filepath.FromSlash(cc.FullPath() + "/quests")
+func (cc ChapterConfig) QuestsPath() string {
+	return filepath.Join(cc.FullPath(), "quests")
 }
 
 // DialogsLangPath returns path to dialogs lang file.
-func (cc ChapterConf) DialogsLangPath() string {
-	return filepath.FromSlash(cc.LangPath() + "/dialogs")
+func (cc ChapterConfig) DialogsLangPath() string {
+	return filepath.Join(cc.LangPath(), "dialogs")
 }
 
 // QuestsLangPath returns path to quests lang file.
-func (cc ChapterConf) QuestsLangPath() string {
-	return filepath.FromSlash(cc.LangPath() + "/quests")
+func (cc ChapterConfig) QuestsLangPath() string {
+	return filepath.Join(cc.LangPath(), "quests")
 }

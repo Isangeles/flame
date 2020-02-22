@@ -50,8 +50,7 @@ func Module(path, langID string) (*module.Module, error) {
 // specified ID.
 func LoadChapter(mod *module.Module, id string) error {
 	// Load chapter config file.
-	chapPath := filepath.FromSlash(mod.Conf().ChaptersPath() +
-		"/" + mod.Conf().Chapter)
+	chapPath := filepath.Join(mod.Conf().ChaptersPath(), mod.Conf().Chapter)
 	chapConf, err := chapterConf(chapPath)
 	if err != nil {
 		return fmt.Errorf("unable to read chapter conf: %s: %v",
@@ -77,8 +76,7 @@ func LoadArea(mod *module.Module, id string) error {
 		return fmt.Errorf("no module chapter set")
 	}
 	// Load files.
-	areaPath := filepath.FromSlash(fmt.Sprintf("%s/%s",
-		chap.Conf().AreasPath(), id))
+	areaPath := filepath.Join(chap.Conf().AreasPath(), id)
 	areaData, err := ImportArea(areaPath)
 	if err != nil {
 		return fmt.Errorf("unable to import area: %v", err)
@@ -92,15 +90,15 @@ func LoadArea(mod *module.Module, id string) error {
 
 // modConf loads module configuration file
 // from specified path.
-func modConf(path, lang string) (module.ModConf, error) {
-	conf := module.ModConf{Path: path, Lang: lang}
+func modConf(path, lang string) (module.Config, error) {
+	conf := module.Config{Path: path, Lang: lang}
 	// Check if mod dir exists.
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return conf, fmt.Errorf("module not found: '%s': %v", path, err)
 	}
-	modConfPath := filepath.FromSlash(path + "/mod.conf")
+	modConfPath := filepath.Join(path, "mod.conf")
 	// Read conf.
-	confValues, err := text.ReadValue(modConfPath, "id", "start-chapter")
+	confValues, err := text.ReadValue(modConfPath, "id", "chapter")
 	if err != nil {
 		return conf, fmt.Errorf("unable to retrieve values: %s", err)
 	}
@@ -112,14 +110,14 @@ func modConf(path, lang string) (module.ModConf, error) {
 
 // chapterConf loads chapter configuration file,
 // returns error if configuration not found or corrupted.
-func chapterConf(chapterPath string) (module.ChapterConf, error) {
-	confPath := filepath.FromSlash(chapterPath + "/chapter.conf")
+func chapterConf(chapterPath string) (module.ChapterConfig, error) {
+	confPath := filepath.Join(chapterPath, "chapter.conf")
 	confValues, err := text.ReadValue(confPath, "start-area")
 	if err != nil {
-		return module.ChapterConf{}, fmt.Errorf("unable to read conf values: %v",
+		return module.ChapterConfig{}, fmt.Errorf("unable to read conf values: %v",
 			err)
 	}
-	conf := module.ChapterConf{
+	conf := module.ChapterConfig{
 		Path:        chapterPath,
 		StartAreaID: confValues["start-area"],
 	}

@@ -31,14 +31,14 @@ import (
 
 // Chapter struct represents module chapter.
 type Chapter struct {
-	conf        ChapterConf
+	conf        ChapterConfig
 	mod         *Module
 	loadedAreas map[string]*area.Area
 	onAreaAdded func(s *area.Area)
 }
 
 // NewChapters creates new instance of module chapter.
-func NewChapter(mod *Module, conf ChapterConf) *Chapter {
+func NewChapter(mod *Module, conf ChapterConfig) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = conf
@@ -82,7 +82,7 @@ func (c *Chapter) AddAreas(areas ...*area.Area) {
 }
 
 // Conf returns chapter configuration.
-func (c *Chapter) Conf() ChapterConf {
+func (c *Chapter) Conf() ChapterConfig {
 	return c.conf
 }
 
