@@ -4,12 +4,11 @@ MAJOR:
 * Useable items
 * Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
-* Documentation for XML data files: armors, skills, areas, objects,
-  quests, recipes, effects, savegame
-* Documentation for directories: data, savegames, modules, module, chapters, chapter,
-  module/objects, chapter/objects, recipes, areas, effects, skills, npc, dialogs,
-  areas, area
+* Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
+* Documentation for directories: data, savegames, module/objects, chapter/objects, recipes, areas,
+  effects, skills, npc, areas, area
 * Package to parse JSON data files(parsejson, like parsexml), to replace XML data files with JSON files
+* Respawning area mobs
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
@@ -27,6 +26,8 @@ MINOR:
   stage answers
 * XML: rename talker node in dialog to target
 * Item modifier
+* Remove start-area value from chapter config, start areas should be handled by interface
+* Remove data/text package, should be replaced by data/parsetxt
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
