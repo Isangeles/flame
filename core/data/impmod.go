@@ -1,5 +1,5 @@
 /*
- * mod.go
+ * impmod.go
  *
  * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -33,10 +33,10 @@ import (
 	"github.com/isangeles/flame/core/module/area"
 )
 
-// Module creates new module from specified path.
-func Module(path, langID string) (*module.Module, error) {
+// ImportModule imports module from directory with specified path.
+func ImportModule(path, langID string) (*module.Module, error) {
 	// Load module config file.
-	mc, err := modConf(path, langID)
+	mc, err := importModuleConfig(path, langID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to load module config: %v",
 			err)
@@ -51,7 +51,7 @@ func Module(path, langID string) (*module.Module, error) {
 func LoadChapter(mod *module.Module, id string) error {
 	// Load chapter config file.
 	chapPath := filepath.Join(mod.Conf().ChaptersPath(), mod.Conf().Chapter)
-	chapConf, err := chapterConf(chapPath)
+	chapConf, err := importChapterConfig(chapPath)
 	if err != nil {
 		return fmt.Errorf("unable to read chapter conf: %s: %v",
 			chapPath, err)
@@ -85,9 +85,9 @@ func LoadArea(mod *module.Module, id string) error {
 	return nil
 }
 
-// modConf loads module configuration file
-// from specified path.
-func modConf(path, lang string) (module.Config, error) {
+// exportModuleConfig imports module configuration  from
+// file with specified path.
+func importModuleConfig(path, lang string) (module.Config, error) {
 	conf := module.Config{Path: path, Lang: lang}
 	// Check if mod dir exists.
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -105,9 +105,9 @@ func modConf(path, lang string) (module.Config, error) {
 	return conf, nil
 }
 
-// chapterConf loads chapter configuration file,
-// returns error if configuration not found or corrupted.
-func chapterConf(chapterPath string) (module.ChapterConfig, error) {
+// importChapterConfig imports chapter configuration from file with specified path,
+// returns error if configuration not found or invalid.
+func importChapterConfig(chapterPath string) (module.ChapterConfig, error) {
 	confPath := filepath.Join(chapterPath, "chapter.conf")
 	confValues, err := text.ReadValue(confPath, "start-area")
 	if err != nil {
