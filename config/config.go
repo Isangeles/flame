@@ -28,9 +28,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/data/parsetxt"
 	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/log"
 )
@@ -50,46 +49,50 @@ var (
 
 // LoadConfig loads engine configuration file.
 func LoadConfig() error {
-	// Retrieve values from conf file.
-	values, err := text.ReadValue(ConfigFileName, "module", "lang", "debug")
+	// Load config file.
+	file, err := os.Open(ConfigFileName)
 	if err != nil {
-		SaveConfig() // replace 'corrupted' config with default config
-		return fmt.Errorf("fail to load conf values: %v", err)
+		SaveConfig() // save default config
+		return fmt.Errorf("unable to open config file: %v", err)
 	}
+	values := parsetxt.UnmarshalConfig(file)
 	// Set values.
-	langID = values["lang"]
-	SetDebug(values["debug"] == "true")
-	modNamePath := strings.Split(values["module"], ";")
-	if modNamePath[0] != "" {
-		if len(modNamePath) < 2 {
-			modName = modNamePath[0]
-			modPath = filepath.FromSlash(modPath + "/" + modName)
-		} else {
-			modPath = modNamePath[1]
-			modName = modNamePath[0]
-		}
+	if len(values["lang"]) > 0 {
+		langID = values["lang"][0]
 	}
-	log.Dbg.Print("config file loaded")
+	if len(values["debug"]) > 0 {
+		SetDebug(values["debug"][0] == "true")
+	}
+	if len(values["module"]) > 1 {
+		modName = values["module"][0]
+		modPath = values["module"][1]
+	} else if len(values["module"]) > 0 {
+		modName = values["module"][0]
+		modPath = filepath.Join(modPath, modName)
+	}
+	log.Dbg.Print("Config file loaded")
 	return nil
 }
 
 // SaveConfig saves engine configuration in file.
 func SaveConfig() error {
 	// Create file.
-	f, err := os.Create(ConfigFileName)
+	file, err := os.Create(ConfigFileName)
 	if err != nil {
-		return fmt.Errorf("fail to create conf file: %v", err)
+		return fmt.Errorf("unable to create conf file: %v", err)
 	}
-	defer f.Close()
-	// Write values.
-	w := bufio.NewWriter(f)
-	w.WriteString(fmt.Sprintf("%s\n", "# Flame engine configuration file")) // default header
-	w.WriteString(fmt.Sprintf("lang:%s\n", langID))
-	w.WriteString(fmt.Sprintf("module:%s;%s\n", ModuleName(), ModulePath()))
-	w.WriteString(fmt.Sprintf("debug:%v\n", Debug()))
-	// Save.
+	defer file.Close()
+	// Marshal config.
+	conf := make(map[string][]string)
+	conf["lang"] = []string{langID}
+	conf["module"] = []string{ModuleName(), ModulePath()}
+	conf["debug"] = []string{fmt.Sprintf("%v", Debug())}
+	confText := parsetxt.MarshalConfig(conf)
+	// Write config text to file.
+	w := bufio.NewWriter(file)
+	w.WriteString(confText)
 	w.Flush()
-	log.Dbg.Print("config file saved")
+	log.Dbg.Print("Config file saved")
 	return nil
 }
 
