@@ -164,7 +164,7 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	c.MemorizeTarget(&mem)
 	// Send combat message.
 	msg := fmt.Sprintf("%s: %s: %s", c.Name(), lang.Text("ob_effect"), e.Name())
-	if config.Debug() { // add effect serial ID to combat message
+	if config.Debug { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
 	c.SendCombat(msg)

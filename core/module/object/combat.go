@@ -41,7 +41,7 @@ func (ob *Object) HitEffects() []*effect.Effect {
 func (ob *Object) TakeEffect(e *effect.Effect) {
 	ob.AddEffect(e)
 	msg := fmt.Sprintf("%s: %s: %s", ob.Name(), lang.Text("ob_effect"), e.Name())
-	if config.Debug() { // add effect serial ID to combat message
+	if config.Debug { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
 	ob.SendCombat(msg)

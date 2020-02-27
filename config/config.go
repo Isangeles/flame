@@ -30,7 +30,6 @@ import (
 	"path/filepath"
 
 	"github.com/isangeles/flame/core/data/parsetxt"
-	"github.com/isangeles/flame/core/enginelog"
 	"github.com/isangeles/flame/log"
 )
 
@@ -39,12 +38,10 @@ const (
 )
 
 var (
-	langID        = "english" // default eng
-	debug         = false
-	savegamesPath = "savegames"
-	modName       = ""
-	modPath       = "data/modules"
-	langPath      = "data/lang"
+	Lang       = "english" // default eng
+	Debug      = false
+	ModuleName = ""
+	ModulePath = "data/modules"
 )
 
 // LoadConfig loads engine configuration file.
@@ -58,17 +55,17 @@ func LoadConfig() error {
 	values := parsetxt.UnmarshalConfig(file)
 	// Set values.
 	if len(values["lang"]) > 0 {
-		langID = values["lang"][0]
+		Lang = values["lang"][0]
 	}
 	if len(values["debug"]) > 0 {
-		SetDebug(values["debug"][0] == "true")
+		Debug = values["debug"][0] == "true"
 	}
 	if len(values["module"]) > 1 {
-		modName = values["module"][0]
-		modPath = values["module"][1]
+		ModuleName = values["module"][0]
+		ModulePath = values["module"][1]
 	} else if len(values["module"]) > 0 {
-		modName = values["module"][0]
-		modPath = filepath.Join(modPath, modName)
+		ModuleName = values["module"][0]
+		ModulePath = filepath.Join(ModulePath, ModuleName)
 	}
 	log.Dbg.Print("Config file loaded")
 	return nil
@@ -84,9 +81,9 @@ func SaveConfig() error {
 	defer file.Close()
 	// Marshal config.
 	conf := make(map[string][]string)
-	conf["lang"] = []string{langID}
-	conf["module"] = []string{ModuleName(), ModulePath()}
-	conf["debug"] = []string{fmt.Sprintf("%v", Debug())}
+	conf["lang"] = []string{Lang}
+	conf["module"] = []string{ModuleName, ModulePath}
+	conf["debug"] = []string{fmt.Sprintf("%v", Debug)}
 	confText := parsetxt.MarshalConfig(conf)
 	// Write config text to file.
 	w := bufio.NewWriter(file)
@@ -96,49 +93,15 @@ func SaveConfig() error {
 	return nil
 }
 
-// LangID returns current language ID.
-func LangID() string {
-	return langID
-}
-
-// Debug checks whether debug mode is
-// enabled.
-func Debug() bool {
-	return debug
-}
-
 // SavegamesPath returns current path
 // to savegames directory or errror
 // if no module is loaded.
 func ModuleSavegamesPath() string {
-	return filepath.FromSlash(savegamesPath + "/" + ModuleName())
-}
-
-// ModulePath returns path to modules directory.
-func ModulePath() string {
-	return modPath
-}
-
-// ModuleName returns module name from config.
-func ModuleName() string {
-	return modName
-}
-
-// SetLang sets language with specified ID as current language.
-func SetLang(lng string) error {
-	// TODO: check if specified language is supported.
-	langID = lng
-	return nil
+	return filepath.Join("savegames", ModuleName)
 }
 
 // LangPath returns path to current lang
 // directory.
 func LangPath() string {
-	return filepath.FromSlash(langPath + "/" + langID)
-}
-
-// SetDebug toggles debug mode.
-func SetDebug(dbg bool) {
-	debug = dbg
-	enginelog.SetDebug(dbg)
+	return filepath.Join("data/lang", Lang)
 }

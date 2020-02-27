@@ -1,7 +1,7 @@
 /*
  * log.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,17 +34,11 @@ import (
 var (
 	messages []Message
 	counter  int64
-	debuging = false
 )
 
 // Messages returns all messages from log.
 func Messages() []Message {
 	return messages
-}
-
-// SetDebug toggles debug mode.
-func SetDebug(dbg bool) {
-	debuging = dbg
 }
 
 // Info registers specified text as info message.
@@ -57,9 +51,6 @@ func logInfo(msg string) {
 	m.id = fmt.Sprintf("%d", counter)
 	counter += 1
 	messages = append(messages, m)
-	if debuging {	
-		fmt.Print(msg)
-	}
 }
 
 // Error registers specified text as error message.
@@ -77,9 +68,6 @@ func logError(msg string) {
 
 // Debug registers specified text as debug message.
 func logDebug(msg string) {
-	if !debuging {
-		return
-	}
 	m := Message{
 		date:  time.Now(),
 		text:  msg,
