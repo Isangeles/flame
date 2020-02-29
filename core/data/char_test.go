@@ -1,7 +1,7 @@
 /*
  * data_test.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,37 +24,37 @@
 package data
 
 import (
-	"flag"
 	"testing"
+
+	"github.com/isangeles/flame/core/data/res"
+	"github.com/isangeles/flame/core/module/character"
 )
 
-var (
-	file = flag.String("file", "", "System path to characters base file")
-	dir  = flag.String("dir", "", "System path to directory with characters bases")
-)
-
-// Test for importing characters from characters base file.
-// Use '-file' flag to point file with characters
-// to test.
-func TestImportCharacters(t *testing.T) {
-	chars, err := ImportCharacters(*file)
-	if err != nil {
-		t.Errorf("fail_to_import_characters:%v\n", err)
-		return
+// Test for exporting characters to characters file.
+func TestExportCharacters(t *testing.T) {
+	var data res.CharacterData
+	data.BasicData = res.CharacterBasicData{
+		ID:        "char1",
+		Name:      "charName",
+		AI:        true,
+		Level:     2,
+		Sex:       1,
+		Race:      1,
+		Attitude:  1,
+		Guild:     "guildID",
+		Alignment: 1,
+		Str:       2,
+		Con:       3,
+		Dex:       4,
+		Int:       5,
+		Wis:       6,
 	}
-	t.Logf("import_charasters_file_success_imported_characters:%d\n",
-		len(chars))
-}
-
-// Test for importing characters from file in directory.
-// Use '-dir' flag to point directory with characters
-// bases to test.
-func TestImportCharactersDir(t *testing.T) {
-	chars, err := ImportCharactersDir(*dir)
+	chars := make([]*character.Character, 0)
+	chars = append(chars, character.New(data))
+	data.BasicData.ID = "char2"
+	chars = append(chars, character.New(data))
+	err := ExportCharacters("testchars", chars...)
 	if err != nil {
-		t.Errorf("fail_to_import_characters_dir:%v\n", err)
-		return
+		t.Errorf("Unable to export characters: %v", err)
 	}
-	t.Logf("import_characters_dir_success:imported_chars:%d\n",
-		len(chars))
 }

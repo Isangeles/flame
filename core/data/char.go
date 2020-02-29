@@ -1,7 +1,7 @@
 /*
  * char.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,12 +46,12 @@ const (
 func ImportCharactersData(path string) ([]*res.CharacterData, error) {
 	baseFile, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open char base file: %v", err)
+		return nil, fmt.Errorf("unable to open char base file: %v", err)
 	}
 	defer baseFile.Close()
 	chars, err := parsexml.UnmarshalCharacters(baseFile)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal chars base: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal chars base: %v", err)
 	}
 	return chars, nil
 }
@@ -61,7 +61,7 @@ func ImportCharactersData(path string) ([]*res.CharacterData, error) {
 func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	chars := make([]*res.CharacterData, 0)
 	for _, finfo := range files {
@@ -71,7 +71,7 @@ func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
 		basePath := filepath.FromSlash(path + "/" + finfo.Name())
 		impChars, err := ImportCharactersData(basePath)
 		if err != nil {
-			log.Err.Printf("data: import chars dir: %s: fail to parse char file: %v",
+			log.Err.Printf("data: import chars dir: %s: unable to parse char file: %v",
 				basePath, err)
 			continue
 		}
@@ -85,12 +85,12 @@ func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
 func ImportCharacters(path string) ([]*character.Character, error) {
 	charFile, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open char base file: %v", err)
+		return nil, fmt.Errorf("unable to open char base file: %v", err)
 	}
 	defer charFile.Close()
 	charsData, err := parsexml.UnmarshalCharacters(charFile)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal chars base: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal chars base: %v", err)
 	}
 	chars := make([]*character.Character, 0)
 	for _, charData := range charsData {
@@ -106,7 +106,7 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 	chars := make([]*character.Character, 0)
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return chars, fmt.Errorf("fail to read dir: %v", err)
+		return chars, fmt.Errorf("unable to read dir: %v", err)
 	}
 	for _, fInfo := range files {
 		if !strings.HasSuffix(fInfo.Name(), CharsFileExt) {
@@ -115,7 +115,7 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
 		impChars, err := ImportCharacters(charFilePath)
 		if err != nil {
-			log.Err.Printf("data char import: %s: fail to parse char file: %v",
+			log.Err.Printf("data char import: %s: unable to parse char file: %v",
 				charFilePath, err)
 			continue
 		}
@@ -126,27 +126,29 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 	return chars, nil
 }
 
-// ExportCharacter saves specified character to
-// [Module]/characters directory.
-func ExportCharacter(char *character.Character, dirPath string) error {
+// ExportCharacters saves characters to new file with specified path.
+func ExportCharacters(path string, chars ...*character.Character) error {
 	// Parse character data.
-	xml, err := parsexml.MarshalCharacter(char)
+	xml, err := parsexml.MarshalCharacters(chars...)
 	if err != nil {
-		return fmt.Errorf("fail to export char: %v", err)
+		return fmt.Errorf("unable to marshal characters: %v", err)
 	}
 	// Create character file.
+	if !strings.HasSuffix(path, CharsFileExt) {
+		path += CharsFileExt
+	}
+	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
-		return fmt.Errorf("fail to create chrs dir: %v", err)
+		return fmt.Errorf("unable to create characters file directory: %v", err)
 	}
-	f, err := os.Create(filepath.FromSlash(dirPath+"/"+
-		strings.ToLower(char.Name())) + CharsFileExt)
+	file, err := os.Create(path)
 	if err != nil {
-		return fmt.Errorf("fail to create char file: %v", err)
+		return fmt.Errorf("unable to create characters file: %v", err)
 	}
-	defer f.Close()
+	defer file.Close()
 	// Write data to file.
-	w := bufio.NewWriter(f)
+	w := bufio.NewWriter(file)
 	w.WriteString(xml)
 	w.Flush()
 	return nil
