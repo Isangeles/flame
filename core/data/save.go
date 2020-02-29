@@ -225,7 +225,8 @@ func restoreAreaMemory(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
 		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
 		if char == nil {
-			log.Err.Printf("data: save: restore effects: module char not found: %s")
+			log.Err.Printf("data: save: restore effects: module char not found: %s#%s",
+				charData.BasicData.ID, charData.BasicData.Serial)
 			continue
 		}
 		for _, memData := range charData.Memory {
