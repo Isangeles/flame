@@ -1,6 +1,6 @@
-.TH mod.conf
+.TH .module
 .SH NAME
-mod.conf \- module configuration file
+.module \- module configuration file
 .SH DESCRIPTION
 .b mod.conf
 This file contains module configuration values.

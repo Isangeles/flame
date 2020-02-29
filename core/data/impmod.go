@@ -36,11 +36,12 @@ import (
 // ImportModule imports module from directory with specified path.
 func ImportModule(path, langID string) (*module.Module, error) {
 	// Load module config file.
-	mc, err := importModuleConfig(path, langID)
+	mc, err := importModuleConfig(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to load module config: %v",
 			err)
 	}
+	mc.Lang = langID
 	// Create module.
 	m := module.New(mc)
 	return m, nil
@@ -87,13 +88,13 @@ func LoadArea(mod *module.Module, id string) error {
 
 // exportModuleConfig imports module configuration  from
 // file with specified path.
-func importModuleConfig(path, lang string) (module.Config, error) {
-	conf := module.Config{Path: path, Lang: lang}
+func importModuleConfig(path string) (module.Config, error) {
+	conf := module.Config{Path: path}
 	// Check if mod dir exists.
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return conf, fmt.Errorf("module not found: '%s': %v", path, err)
 	}
-	modConfPath := filepath.Join(path, "mod.conf")
+	modConfPath := filepath.Join(path, ".module")
 	// Read conf.
 	confValues, err := text.ReadValue(modConfPath, "id", "chapter")
 	if err != nil {
@@ -108,7 +109,7 @@ func importModuleConfig(path, lang string) (module.Config, error) {
 // importChapterConfig imports chapter configuration from file with specified path,
 // returns error if configuration not found or invalid.
 func importChapterConfig(chapterPath string) (module.ChapterConfig, error) {
-	confPath := filepath.Join(chapterPath, "chapter.conf")
+	confPath := filepath.Join(chapterPath, ".chapter")
 	confValues, err := text.ReadValue(confPath, "start-area")
 	if err != nil {
 		return module.ChapterConfig{}, fmt.Errorf("unable to read conf values: %v",

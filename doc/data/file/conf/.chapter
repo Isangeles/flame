@@ -1,6 +1,6 @@
-.TH chapter.conf
+.TH .chapter
 .SH NAME
-mod.conf \- chapter configuration file
+.chapter \- chapter configuration file
 .SH DESCRIPTION
 .b mod.conf
 This file contains chapter configuration values.

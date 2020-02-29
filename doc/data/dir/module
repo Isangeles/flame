@@ -35,4 +35,4 @@ characters \- directory with exported characters
 	skills
 .SH SEE ALSO
 data/dir/chatpers, data/dir/effects, data/dir/items, data/dir/characters, data/dir/lang,
-data/dir/objects, data/dir/recipes, data/dir/skills, data/file/conf/mod.conf
+data/dir/objects, data/dir/recipes, data/dir/skills, data/file/conf/.module

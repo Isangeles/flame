@@ -30,4 +30,4 @@ quests \- directory with quests data files
 	quests
 .SH SEE ALSO
 data/dir/chatpers, data/dir/areas, data/dir/dialogs, data/dir/npc, data/dir/lang,
-data/dir/objects, data/dir/quests, data/file/conf/mod.conf
+data/dir/objects, data/dir/quests, data/file/conf/.chapter

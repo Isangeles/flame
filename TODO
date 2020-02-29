@@ -21,7 +21,6 @@ MINOR:
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for parsexml and data packages
 * Camelcase names for consts in: quest, skill
-* Rename module config files(mod.conf, chapter.conf) to .mod, .chapter, etc.
 * Remove stage modifiers from dialog, modifiers should be passed only through
   stage answers
 * XML: rename talker node in dialog to target
