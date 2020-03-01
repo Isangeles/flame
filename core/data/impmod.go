@@ -27,8 +27,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 
-	"github.com/isangeles/flame/core/data/text"
+	"github.com/isangeles/flame/core/data/parsetxt"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
 )
@@ -36,7 +37,8 @@ import (
 // ImportModule imports module from directory with specified path.
 func ImportModule(path, langID string) (*module.Module, error) {
 	// Load module config file.
-	mc, err := importModuleConfig(path)
+	confPath := filepath.Join(path, ".module")
+	mc, err := importModuleConfig(confPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to load module config: %v",
 			err)
@@ -52,7 +54,8 @@ func ImportModule(path, langID string) (*module.Module, error) {
 func LoadChapter(mod *module.Module, id string) error {
 	// Load chapter config file.
 	chapPath := filepath.Join(mod.Conf().ChaptersPath(), mod.Conf().Chapter)
-	chapConf, err := importChapterConfig(chapPath)
+	confPath := filepath.Join(chapPath, ".chapter")
+	chapConf, err := importChapterConfig(confPath)
 	if err != nil {
 		return fmt.Errorf("unable to read chapter conf: %s: %v",
 			chapPath, err)
@@ -89,35 +92,44 @@ func LoadArea(mod *module.Module, id string) error {
 // exportModuleConfig imports module configuration  from
 // file with specified path.
 func importModuleConfig(path string) (module.Config, error) {
-	conf := module.Config{Path: path}
+	conf := module.Config{Path: filepath.Dir(path)}
 	// Check if mod dir exists.
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return conf, fmt.Errorf("module not found: '%s': %v", path, err)
 	}
-	modConfPath := filepath.Join(path, ".module")
 	// Read conf.
-	confValues, err := text.ReadValue(modConfPath, "id", "chapter")
+	file, err := os.Open(path)
 	if err != nil {
-		return conf, fmt.Errorf("unable to retrieve values: %s", err)
+		return conf, fmt.Errorf("unable to open config file: %v", err)
 	}
+	defer file.Close()
+	confValues := parsetxt.UnmarshalConfig(file)
 	// Set conf values.
-	conf.ID = confValues["id"]
-	conf.Chapter = confValues["chapter"]
+	if len(confValues["id"]) > 0 {
+		conf.ID = confValues["id"][0]
+	}
+	if len(confValues["chapter"]) > 0 {
+		conf.Chapter = confValues["chapter"][0]
+	}
 	return conf, nil
 }
 
 // importChapterConfig imports chapter configuration from file with specified path,
 // returns error if configuration not found or invalid.
-func importChapterConfig(chapterPath string) (module.ChapterConfig, error) {
-	confPath := filepath.Join(chapterPath, ".chapter")
-	confValues, err := text.ReadValue(confPath, "start-area")
+func importChapterConfig(path string) (module.ChapterConfig, error) {
+	conf := module.ChapterConfig{Path: filepath.Dir(path)}
+	file, err := os.Open(path)
 	if err != nil {
-		return module.ChapterConfig{}, fmt.Errorf("unable to read conf values: %v",
-			err)
+		return conf, fmt.Errorf("unable to open config file: %v", err)
 	}
-	conf := module.ChapterConfig{
-		Path:        chapterPath,
-		StartAreaID: confValues["start-area"],
+	defer file.Close()
+	confValues := parsetxt.UnmarshalConfig(file)
+	if len(confValues["start-area"]) > 0 {
+		conf.StartArea = confValues["start-area"][0]
+	}
+	if len(confValues["start-pos"]) > 1 {
+		conf.StartPosX, _ = strconv.ParseFloat(confValues["start-pos"][0], 64)
+		conf.StartPosY, _ = strconv.ParseFloat(confValues["start-pos"][1], 64)
 	}
 	return conf, nil
 }

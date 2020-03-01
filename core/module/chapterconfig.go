@@ -30,10 +30,13 @@ import (
 // Struct for chapter configurtion
 // values.
 type ChapterConfig struct {
-	ID, Path    string
+	ID          string
+	Path        string
 	ModulePath  string
 	Lang        string
-	StartAreaID string
+	StartArea   string
+	StartPosX   float64
+	StartPosY   float64
 	NextChapter string
 }
 

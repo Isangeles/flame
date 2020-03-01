@@ -158,7 +158,7 @@ func exportModuleConfig(conf module.Config, path string) error {
 func exportChapterConfig(conf module.ChapterConfig, path string) error {
 	confValues := make(map[string][]string)
 	confValues["id"] = []string{conf.ID}
-	confValues["start-area"] = []string{conf.StartAreaID}
+	confValues["start-area"] = []string{conf.StartArea}
 	config := parsetxt.MarshalConfig(confValues)
 	file, err := os.Create(path)
 	if err != nil {

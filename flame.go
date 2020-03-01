@@ -86,10 +86,10 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	SetGame(game)
 	// All players to start area.
 	chapter := Mod().Chapter()
-	startArea := chapter.Area(chapter.Conf().StartAreaID)
+	startArea := chapter.Area(chapter.Conf().StartArea)
 	if startArea == nil {
 		return nil, fmt.Errorf("start area not found: %s: %v",
-			chapter.Conf().StartAreaID)
+			chapter.Conf().StartArea)
 	}
 	for _, pc := range pcs {
 		startArea.AddCharacter(pc)
