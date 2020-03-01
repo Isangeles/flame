@@ -39,14 +39,34 @@ func TestExportModule(t *testing.T) {
 	}
 	mod := module.New(modConf)
 	chConf := module.ChapterConfig{
-		ID:          "ch1",
-		StartAreaID: "a1",
+		ID:        "ch1",
+		StartArea: "a1",
 	}
 	chapter := module.NewChapter(mod, chConf)
 	mod.SetChapter(chapter)
 	areaData := res.AreaData{
 		ID: "a1",
 	}
+	var charData res.CharacterData
+	charData.BasicData = res.CharacterBasicData{
+		ID:        "char1",
+		Name:      "charName",
+		AI:        true,
+		Level:     2,
+		Sex:       1,
+		Race:      1,
+		Attitude:  1,
+		Guild:     "guildID",
+		Alignment: 1,
+		Str:       2,
+		Con:       3,
+		Dex:       4,
+		Int:       5,
+		Wis:       6,
+	}
+	res.SetCharactersData(append(res.Characters(), &charData))
+	areaCharData := res.AreaCharData{ID: charData.BasicData.ID}
+	areaData.Characters = append(areaData.Characters, areaCharData)
 	area := area.New(areaData)
 	chapter.AddAreas(area)
 	err := ExportModule(mod, "testexp")

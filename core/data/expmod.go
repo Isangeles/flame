@@ -33,7 +33,6 @@ import (
 	"github.com/isangeles/flame/core/data/parsexml"
 	"github.com/isangeles/flame/core/module"
 	"github.com/isangeles/flame/core/module/area"
-	"github.com/isangeles/flame/core/module/character"
 )
 
 // ExportModule exports module to new a directory under specified path.
@@ -43,12 +42,12 @@ func ExportModule(mod *module.Module, path string) error {
 		return fmt.Errorf("unable to create module dir: %v", err)
 	}
 	confPath := filepath.Join(path, "mod.conf")
-	err = exportModuleConfig(mod.Conf(), confPath)
+	err = exportModuleConfig(confPath, mod.Conf())
 	if err != nil {
 		return fmt.Errorf("unable to create module config file: %v", err)
 	}
 	chapterPath := filepath.Join(path, "chapters", mod.Chapter().ID())
-	err = exportChapter(mod.Chapter(), chapterPath)
+	err = exportChapter(chapterPath, mod.Chapter())
 	if err != nil {
 		return fmt.Errorf("unable to export module chapter: %v", err)
 	}
@@ -56,7 +55,7 @@ func ExportModule(mod *module.Module, path string) error {
 }
 
 // exportChapter exports chapter to a new directory under specified path.
-func exportChapter(chapter *module.Chapter, path string) error {
+func exportChapter(path string, chapter *module.Chapter) error {
 	// Dir.
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
@@ -64,7 +63,7 @@ func exportChapter(chapter *module.Chapter, path string) error {
 	}
 	// Config.
 	confPath := filepath.Join(path, "chapter.conf")
-	err = exportChapterConfig(chapter.Conf(), confPath)
+	err = exportChapterConfig(confPath, chapter.Conf())
 	if err != nil {
 		return fmt.Errorf("unable to create chapter config file: %v", err)
 	}
@@ -72,14 +71,14 @@ func exportChapter(chapter *module.Chapter, path string) error {
 	areasPath := filepath.Join(path, "areas")
 	for _, a := range chapter.Areas() {
 		areaPath := filepath.Join(areasPath, a.ID())
-		err = exportArea(a, areaPath)
+		err = exportArea(areaPath, a)
 		if err != nil {
 			return fmt.Errorf("unable to export area: %s: %v", a.ID(), err)
 		}
 	}
 	// Characters.
-	charsPath := filepath.Join(path, "characters")
-	err = exportCharacters(chapter.Characters(), charsPath)
+	charsPath := filepath.Join(path, "characters", "main")
+	err = ExportCharacters(charsPath, chapter.Characters()...)
 	if err != nil {
 		return fmt.Errorf("unable to export characters: %v", err)
 	}
@@ -88,7 +87,7 @@ func exportChapter(chapter *module.Chapter, path string) error {
 
 // exportArea exports area to a new file under specified
 // directory.
-func exportArea(area *area.Area, path string) error {
+func exportArea(path string, area *area.Area) error {
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
 		return fmt.Errorf("unable to create area dir: %v", err)
@@ -110,32 +109,9 @@ func exportArea(area *area.Area, path string) error {
 	return nil
 }
 
-// exportCharacters exports character to a new directory under
-// specified path.
-func exportCharacters(chars []*character.Character, path string) error {
-	err := os.MkdirAll(path, 0755)
-	if err != nil {
-		return fmt.Errorf("unable to create characters dir: %v", err)
-	}
-	xmlChars, err := parsexml.MarshalCharacters(chars...)
-	if err != nil {
-		return fmt.Errorf("unable to marshal characters: %v", err)
-	}
-	charsFilePath := filepath.Join(path, "main.characters")
-	charsFile, err := os.Create(charsFilePath)
-	if err != nil {
-		return fmt.Errorf("unable to create characters file: %v", err)
-	}
-	defer charsFile.Close()
-	w := bufio.NewWriter(charsFile)
-	w.WriteString(xmlChars)
-	w.Flush()
-	return nil
-}
-
 // exportModuleConfig exports module config to a new
 // file under specified path.
-func exportModuleConfig(conf module.Config, path string) error {
+func exportModuleConfig(path string, conf module.Config) error {
 	confValues := make(map[string][]string)
 	confValues["id"] = []string{conf.ID}
 	confValues["path"] = []string{conf.Path}
@@ -155,7 +131,7 @@ func exportModuleConfig(conf module.Config, path string) error {
 
 // exportChapterConfig exports chapter config to a new
 // file under specified path.
-func exportChapterConfig(conf module.ChapterConfig, path string) error {
+func exportChapterConfig(path string, conf module.ChapterConfig) error {
 	confValues := make(map[string][]string)
 	confValues["id"] = []string{conf.ID}
 	confValues["start-area"] = []string{conf.StartArea}
