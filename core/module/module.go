@@ -33,7 +33,7 @@ import (
 
 // Module struct represents engine module.
 type Module struct {
-	conf    Config
+	conf    *Config
 	chapter *Chapter
 	onChapterChanged func(c *Chapter)
 }
@@ -42,7 +42,7 @@ type Module struct {
 // configuration and data.
 func New(conf Config) *Module {
 	m := new(Module)
-	m.conf = conf
+	m.conf = &conf
 	return m
 }
 
@@ -60,7 +60,7 @@ func (m *Module) Chapter() *Chapter {
 }
 
 // Conf returns module configuration.
-func (m *Module) Conf() Config {
+func (m *Module) Conf() *Config {
 	return m.conf
 }
 

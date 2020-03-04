@@ -42,7 +42,7 @@ func ExportModule(mod *module.Module, path string) error {
 		return fmt.Errorf("unable to create module dir: %v", err)
 	}
 	confPath := filepath.Join(path, "mod.conf")
-	err = exportModuleConfig(confPath, mod.Conf())
+	err = exportModuleConfig(confPath, *mod.Conf())
 	if err != nil {
 		return fmt.Errorf("unable to create module config file: %v", err)
 	}
