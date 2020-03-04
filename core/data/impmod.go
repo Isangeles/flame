@@ -35,7 +35,7 @@ import (
 )
 
 // ImportModule imports module from directory with specified path.
-func ImportModule(path, langID string) (*module.Module, error) {
+func ImportModule(path string) (*module.Module, error) {
 	// Load module config file.
 	confPath := filepath.Join(path, ".module")
 	mc, err := importModuleConfig(confPath)
@@ -43,7 +43,6 @@ func ImportModule(path, langID string) (*module.Module, error) {
 		return nil, fmt.Errorf("unable to load module config: %v",
 			err)
 	}
-	mc.Lang = langID
 	// Create module.
 	m := module.New(mc)
 	return m, nil
