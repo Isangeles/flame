@@ -34,6 +34,7 @@ import (
 )
 
 const (
+	Name, Version  = "Flame Engine", "0.0.0"
 	ConfigFileName = ".flame"
 )
 

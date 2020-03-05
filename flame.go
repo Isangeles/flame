@@ -33,10 +33,6 @@ import (
 	"github.com/isangeles/flame/core/module/character"
 )
 
-const (
-	Name, Version = "Flame Engine", "0.0.0"
-)
-
 var (
 	mod  *module.Module
 	game *core.Game
