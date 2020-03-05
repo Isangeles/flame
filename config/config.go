@@ -38,10 +38,9 @@ const (
 )
 
 var (
-	Lang       = "english" // default eng
-	Debug      = false
-	ModuleName = ""
-	ModulePath = "data/modules"
+	Lang   = "english" // default eng
+	Debug  = false
+	Module = ""
 )
 
 // LoadConfig loads engine configuration file.
@@ -60,12 +59,8 @@ func LoadConfig() error {
 	if len(values["debug"]) > 0 {
 		Debug = values["debug"][0] == "true"
 	}
-	if len(values["module"]) > 1 {
-		ModuleName = values["module"][0]
-		ModulePath = values["module"][1]
-	} else if len(values["module"]) > 0 {
-		ModuleName = values["module"][0]
-		ModulePath = filepath.Join(ModulePath, ModuleName)
+	if len(values["module"]) > 0 {
+		Module = values["module"][0]
 	}
 	log.Dbg.Print("Config file loaded")
 	return nil
@@ -82,7 +77,7 @@ func SaveConfig() error {
 	// Marshal config.
 	conf := make(map[string][]string)
 	conf["lang"] = []string{Lang}
-	conf["module"] = []string{ModuleName, ModulePath}
+	conf["module"] = []string{Module}
 	conf["debug"] = []string{fmt.Sprintf("%v", Debug)}
 	confText := parsetxt.MarshalConfig(conf)
 	// Write config text to file.
@@ -97,11 +92,16 @@ func SaveConfig() error {
 // to savegames directory or errror
 // if no module is loaded.
 func ModuleSavegamesPath() string {
-	return filepath.Join("savegames", ModuleName)
+	return filepath.Join("savegames", Module)
 }
 
 // LangPath returns path to current lang
 // directory.
 func LangPath() string {
 	return filepath.Join("data/lang", Lang)
+}
+
+// ModulePath returns path to current module.
+func ModulePath() string {
+	return filepath.Join("data/modules", Module)
 }
