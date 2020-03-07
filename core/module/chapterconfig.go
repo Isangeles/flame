@@ -33,7 +33,6 @@ type ChapterConfig struct {
 	ID          string
 	Path        string
 	ModulePath  string
-	Lang        string
 	StartArea   string
 	StartPosX   float64
 	StartPosY   float64
@@ -51,10 +50,9 @@ func (cc ChapterConfig) AreasPath() string {
 	return filepath.Join(cc.FullPath(), "areas")
 }
 
-// LangPath returns path to chapter
-// lang directory.
+// LangPath returns path to chapter lang directory.
 func (cc ChapterConfig) LangPath() string {
-	return filepath.Join(cc.FullPath(), "lang", cc.Lang)
+	return filepath.Join(cc.FullPath(), "lang")
 }
 
 // CharactersPath returns path to chapter characters
@@ -77,14 +75,4 @@ func (cc ChapterConfig) DialogsPath() string {
 // QuestsPath retruns path to chapter quests directory.
 func (cc ChapterConfig) QuestsPath() string {
 	return filepath.Join(cc.FullPath(), "quests")
-}
-
-// DialogsLangPath returns path to dialogs lang file.
-func (cc ChapterConfig) DialogsLangPath() string {
-	return filepath.Join(cc.LangPath(), "dialogs")
-}
-
-// QuestsLangPath returns path to quests lang file.
-func (cc ChapterConfig) QuestsLangPath() string {
-	return filepath.Join(cc.LangPath(), "quests")
 }

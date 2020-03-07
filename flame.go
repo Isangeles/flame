@@ -72,11 +72,6 @@ func StartGame(pcs ...*character.Character) (*core.Game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to load start chapter: %v", err)
 	}
-	// Load chapter data(to build quests, characters, erc.).
-	err = data.LoadChapterData(Mod().Chapter())
-	if err != nil {
-		return nil, fmt.Errorf("unable to load module data: %v", err)
-	}
 	// Create new game.
 	game = core.NewGame(mod)
 	SetGame(game)

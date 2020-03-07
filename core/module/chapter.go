@@ -43,7 +43,6 @@ func NewChapter(mod *Module, conf ChapterConfig) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = conf
-	c.conf.Lang = c.mod.Conf().Lang
 	c.loadedAreas = make(map[string]*area.Area)
 	return c
 }

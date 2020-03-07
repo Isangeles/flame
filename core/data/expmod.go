@@ -115,7 +115,6 @@ func exportModuleConfig(path string, conf module.Config) error {
 	confValues := make(map[string][]string)
 	confValues["id"] = []string{conf.ID}
 	confValues["path"] = []string{conf.Path}
-	confValues["lang"] = []string{conf.Lang}
 	confValues["chapter"] = []string{conf.Chapter}
 	config := parsetxt.MarshalConfig(confValues)
 	file, err := os.Create(path)

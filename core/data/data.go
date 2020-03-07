@@ -27,10 +27,76 @@ package data
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/isangeles/flame/core/data/res"
 	"github.com/isangeles/flame/core/module"
+	"github.com/isangeles/flame/core/module/area"
 )
+
+// LoadChapter loads chapter with  specified ID
+// for specified module.
+func LoadChapter(mod *module.Module, id string) error {
+	// Load chapter config file.
+	chapPath := filepath.Join(mod.Conf().ChaptersPath(), mod.Conf().Chapter)
+	confPath := filepath.Join(chapPath, ".chapter")
+	chapConf, err := importChapterConfig(confPath)
+	if err != nil {
+		return fmt.Errorf("unable to read chapter conf: %s: %v",
+			chapPath, err)
+	}
+	chapConf.ID = id
+	chapConf.ModulePath = mod.Conf().Path
+	// Create chapter & set as current module chapter.
+	chapter := module.NewChapter(mod, chapConf)
+	// Load chapter data.
+	err = loadChapterData(chapter)
+	if err != nil {
+		return fmt.Errorf("unable to load chapter data: %v", err)
+	}
+	mod.SetChapter(chapter)
+	return nil
+}
+
+// LoadArea loads area with specified ID for current
+// chapter of specified module.
+func LoadArea(mod *module.Module, id string) error {
+	// Check whether mod has active chapter.
+	chap := mod.Chapter()
+	if chap == nil {
+		return fmt.Errorf("no module chapter set")
+	}
+	// Load files.
+	areaPath := filepath.Join(chap.Conf().AreasPath(), id)
+	areaData, err := ImportArea(areaPath)
+	if err != nil {
+		return fmt.Errorf("unable to import area: %v", err)
+	}
+	// Build mainarea.
+	mainarea := area.New(*areaData)
+	// Add area to active module chapter.
+	chap.AddAreas(mainarea)
+	return nil
+}
+
+// LoadModuleLang loads translation data for specified
+// language for specified module.
+func LoadModuleLang(mod *module.Module, lang string) error {
+	modLangPath := filepath.Join(mod.Conf().LangPath(), lang)
+	err := LoadTranslationData(modLangPath)
+	if err != nil {
+		return fmt.Errorf("unable to load module translation data: %v", err)
+	}
+	if mod.Chapter() == nil {
+		return nil
+	}
+	chapterLangPath := filepath.Join(mod.Chapter().Conf().LangPath(), lang)
+	err = LoadTranslationData(chapterLangPath)
+	if err != nil {
+		return fmt.Errorf("unable to load chapter translation data: %v", err)
+	}
+	return nil
+}
 
 // LoadTranslationData loads all lang files from
 // from directory with specified path.
@@ -48,9 +114,9 @@ func LoadTranslationData(path string) error {
 	return nil
 }
 
-// LoadModuleData loads module data(items, skills, etc.)
+// loadModuleData loads module data(items, skills, etc.)
 // for specified module.
-func LoadModuleData(mod *module.Module) error {
+func loadModuleData(mod *module.Module) error {
 	// Effects.
 	effectsData, err := ImportEffectsDir(mod.Conf().EffectsPath())
 	if err != nil {
@@ -93,17 +159,12 @@ func LoadModuleData(mod *module.Module) error {
 		return fmt.Errorf("unable to load area objects: %v", err)
 	}
 	res.SetObjectsData(objectsData)
-	// Translation.
-	err = LoadTranslationData(mod.Conf().LangPath())
-	if err != nil {
-		return fmt.Errorf("unable to load translation data: %v", err)
-	}
 	return nil
 }
 
-// LoadChapterData loads chapter data(NPC, quests, etc.)
+// loadChapterData loads chapter data(NPC, quests, etc.)
 // for specified chapter.
-func LoadChapterData(chapter *module.Chapter) error {
+func loadChapterData(chapter *module.Chapter) error {
 	// Characters.
 	charactersData, err := ImportCharactersDataDir(chapter.Conf().CharactersPath())
 	if err != nil {
@@ -134,10 +195,5 @@ func LoadChapterData(chapter *module.Chapter) error {
 		return fmt.Errorf("unable to import areas: %v", err)
 	}
 	res.SetAreasData(areasData)
-	// Translation.
-	err = LoadTranslationData(chapter.Conf().LangPath())
-	if err != nil {
-		return fmt.Errorf("unable to import translation data: %v", err)
-	}
 	return nil
 }

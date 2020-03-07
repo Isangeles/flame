@@ -31,61 +31,27 @@ import (
 
 	"github.com/isangeles/flame/core/data/parsetxt"
 	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/area"
 )
 
 // ImportModule imports module from directory with specified path.
 func ImportModule(path string) (*module.Module, error) {
 	// Load module config file.
 	confPath := filepath.Join(path, ".module")
-	mc, err := importModuleConfig(confPath)
+	conf, err := importModuleConfig(confPath)
 	if err != nil {
-		return nil, fmt.Errorf("unable to load module config: %v",
-			err)
+		return nil, fmt.Errorf("unable to import module config: %v", err)
 	}
 	// Create module.
-	m := module.New(mc)
+	m := module.New(conf)
+	err = loadModuleData(m)
+	if err != nil {
+		return nil, fmt.Errorf("unable to load module data: %v", err)
+	}
+	err = LoadChapter(m, m.Conf().Chapter)
+	if err != nil {
+		return nil, fmt.Errorf("unable to load module chapter: %v", err)
+	}
 	return m, nil
-}
-
-// LoadChapter loads module chapter with
-// specified ID.
-func LoadChapter(mod *module.Module, id string) error {
-	// Load chapter config file.
-	chapPath := filepath.Join(mod.Conf().ChaptersPath(), mod.Conf().Chapter)
-	confPath := filepath.Join(chapPath, ".chapter")
-	chapConf, err := importChapterConfig(confPath)
-	if err != nil {
-		return fmt.Errorf("unable to read chapter conf: %s: %v",
-			chapPath, err)
-	}
-	chapConf.ID = id
-	chapConf.ModulePath = mod.Conf().Path
-	// Create chapter & set as current module chapter.
-	startChap := module.NewChapter(mod, chapConf)
-	mod.SetChapter(startChap)
-	return nil
-}
-
-// LoadArea loads area with specified
-// ID for current module chapter.
-func LoadArea(mod *module.Module, id string) error {
-	// Check whether mod has active chapter.
-	chap := mod.Chapter()
-	if chap == nil {
-		return fmt.Errorf("no module chapter set")
-	}
-	// Load files.
-	areaPath := filepath.Join(chap.Conf().AreasPath(), id)
-	areaData, err := ImportArea(areaPath)
-	if err != nil {
-		return fmt.Errorf("unable to import area: %v", err)
-	}
-	// Build mainarea.
-	mainarea := area.New(*areaData)
-	// Add area to active module chapter.
-	chap.AddAreas(mainarea)
-	return nil
 }
 
 // exportModuleConfig imports module configuration  from

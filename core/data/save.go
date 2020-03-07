@@ -92,11 +92,6 @@ func ImportGame(mod *module.Module, dirPath, fileName string) (*core.Game, error
 	if err != nil {
 		return nil, fmt.Errorf("unable to load chapter: %v", err)
 	}
-	// Load chapter data(to build quests, characters, etc.).
-	err = LoadChapterData(mod.Chapter())
-	if err != nil {
-		return nil, fmt.Errorf("unable to load chapter data: %v", err)
-	}
 	game, err := buildSavedGame(mod, gameData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to build game from saved data: %v", err)

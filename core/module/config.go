@@ -31,7 +31,6 @@ import (
 type Config struct {
 	ID      string
 	Path    string
-	Lang    string
 	Chapter string
 }
 
@@ -78,20 +77,5 @@ func (c Config) RecipesPath() string {
 
 // LangPath returns path to lang directory.
 func (c Config) LangPath() string {
-	return filepath.Join(c.Path, "lang", c.Lang)
-}
-
-// ItemsLangPath returns path to items lang file.
-func (c Config) ItemsLangPath() string {
-	return filepath.Join(c.LangPath(), "items")
-}
-
-// ChatLangPath returns path to random chat lang file.
-func (c Config) ChatLangPath() string {
-	return filepath.Join(c.LangPath(), "random_chat")
-}
-
-// RecipesLangPath returns path to recipes lang file.
-func (c Config) RecipesLangPath() string {
-	return filepath.Join(c.LangPath(), "recipes")
+	return filepath.Join(c.Path, "lang")
 }
