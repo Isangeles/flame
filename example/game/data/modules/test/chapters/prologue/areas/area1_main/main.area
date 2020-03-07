@@ -1,1 +1,6 @@
-<Area id="area1_main"><npcs></npcs><objects></objects><subareas></subareas></Area>
+<?xml version="1.0" encoding="utf-8"?>
+<area id="area1_main">
+	<characters></characters>
+	<objects></objects>
+	<subareas></subareas>
+</area>

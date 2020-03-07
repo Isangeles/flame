@@ -27,7 +27,7 @@ package main
 import (
 	"fmt"
 	
-	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/core"
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/core/data"
 	"github.com/isangeles/flame/core/data/res"
@@ -56,34 +56,33 @@ func main() {
 	// Load flame config.
 	err := config.LoadConfig()
 	if err != nil {
-		fmt.Printf("fail to load config: %v", err)
+		panic(fmt.Errorf("Unable to load config: %v", err))
 	}
-	// Load module from config.
-	mod, err := data.Module(config.ModulePath(), config.LangID())
+	// Import module from config.
+	mod, err := data.ImportModule(config.ModulePath())
 	if err != nil {
-		panic(fmt.Sprintf("fail to retrieve module: %v", err))
+		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
-	// Load module data.
-	err = data.LoadModuleData(mod)
-	if err != nil {
-		panic(fmt.Sprintf("fail to load module data: %v", err))
-	}
-	// Set module.
-	flame.SetModule(mod)
+	// Create game.
+	game := core.NewGame(mod)
 	// Create PC.
 	pcData := res.CharacterData{
 		BasicData: pcBasicData,
 	}
 	pc := character.New(pcData)
-	// Start game.
-	g, err := flame.StartGame(pc)
-	if err != nil {
-		panic(fmt.Sprintf("fail to start game: %v", err))
+	// Add PC to start area and set position.
+	chapterConf := game.Module().Chapter().Conf()
+	startArea := game.Module().Chapter().Area(chapterConf.StartArea)
+	if startArea == nil {
+		panic(fmt.Errorf("Start area not found: %s",
+			chapterConf.StartArea))
 	}
+	startArea.AddCharacter(pc)
+	pc.SetPosition(chapterConf.StartPosX, chapterConf.StartPosY)
 	// Print game info.
-	fmt.Printf("game started\n")
-	fmt.Printf("players:\n")
-	for _, p := range g.Players() {
-		fmt.Printf("%s#%s\n", p.ID(), p.Serial())
+	fmt.Printf("Game started\n")
+	fmt.Printf("Characters:\n")
+	for _, c := range game.Module().Chapter().Characters() {
+		fmt.Printf("%s#%s\n", c.ID(), c.Serial())
 	}
 }
