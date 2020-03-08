@@ -21,69 +21,139 @@
  *
  */
 
-// Main package that allows starting new game for current module.
+// flame package provides game struct.
 package flame
 
 import (
-	"fmt"
-
-	"github.com/isangeles/flame/core"
-	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/module"
-	"github.com/isangeles/flame/core/module/character"
+	"github.com/isangeles/flame/ai"
+	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/module"
+	"github.com/isangeles/flame/module/area"
+	"github.com/isangeles/flame/log"
 )
 
-var (
-	mod  *module.Module
-	game *core.Game
-)
-
-// SetModule sets specified module as current module.
-func SetModule(m *module.Module) {
-	mod = m
+// Struct for game, contains game
+// module and PCs.
+type Game struct {
+	mod    *module.Module
+	npcAI  *ai.AI
+	paused bool
 }
 
-// Mod returns currently loaded module or nil
-// if no module is loaded.
-func Mod() *module.Module {
-	return mod
+// NewGame creates new game for specified module.
+func NewGame(mod *module.Module) *Game {
+	g := new(Game)
+	g.mod = mod
+	g.npcAI = ai.New(g.Module())
+	if g.Module().Chapter() != nil {
+		g.chapterLoaded(g.Module().Chapter())
+	}
+	g.Module().SetOnChapterChangedFunc(g.chapterLoaded)
+	return g
 }
 
-// Game returns currently active game or nil
-// if no game is active.
-func Game() *core.Game {
-	return game
+// Update updates game, delta value must be
+// time from last update in milliseconds.
+func (g *Game) Update(delta int64) {
+	if g.paused {
+		return
+	}
+	chapter := g.Module().Chapter()
+	// Characters.
+	for _, c := range chapter.Characters() {
+		c.Update(delta)
+	}
+	// Area objects.
+	for _, o := range chapter.AreaObjects() {
+		o.Update(delta)
+	}
+	g.AI().Update(delta)
+	// Objects area.
+	g.updateObjectsArea()
 }
 
-// SetGame sets specified game as
-// current game.
-func SetGame(g *core.Game) {
-	game = g
+// Pause toggles game update pause.
+func (g *Game) Pause(pause bool) {
+	g.paused = pause
 }
 
-// StartGame starts new game for loaded module with specified
-// characters as PCs.
-func StartGame(pcs ...*character.Character) (*core.Game, error) {
-	if Mod() == nil {
-		return nil, fmt.Errorf("no module loaded")
+// Paused checks whether game is paused.
+func (g *Game) Paused() bool {
+	return g.paused
+}
+
+// Module returns game module.
+func (g *Game) Module() *module.Module {
+	return g.mod
+}
+
+// AI returns game AI.
+func (g *Game) AI() *ai.AI {
+	return g.npcAI
+}
+
+// updateObjectsArea checks and moves game objects to
+// proper areas, if needed.
+func (g *Game) updateObjectsArea() {
+	chapter := g.Module().Chapter()
+	if chapter == nil {
+		return
 	}
-	// Load active chapter for module.
-	err := data.LoadChapter(Mod(), Mod().Conf().Chapter)
-	if err != nil {
-		return nil, fmt.Errorf("unable to load start chapter: %v", err)
+	for _, c := range chapter.Characters() {
+		currentArea := chapter.CharacterArea(c)
+		if currentArea != nil && currentArea.ID() == c.AreaID() {
+			continue
+		}
+		var newArea *area.Area
+		// Search for area in current chapter.
+		for _, a := range chapter.Areas() {
+			if a.ID() == c.AreaID() {
+				newArea = a
+				break
+			}
+			for _, sa := range a.AllSubareas() {
+				if sa.ID() == c.AreaID() {
+					newArea = sa
+					break
+				}
+			}
+		}
+		if newArea == nil {
+			// Search for area data in res package.
+			areaData := res.Area(c.AreaID())
+			if areaData != nil {
+				newArea = area.New(*areaData)
+			}
+			chapter.AddAreas(newArea)
+		}
+		if newArea == nil {
+			log.Err.Printf("area update: %s#%s: area not found: %s\n",
+				c.ID(), c.Serial(), c.AreaID())
+			c.SetAreaID(currentArea.ID())
+			return
+		}
+		newArea.AddCharacter(c)
+		currentArea.RemoveCharacter(c)
 	}
-	// Create new game.
-	game = core.NewGame(mod)
-	SetGame(game)
-	// All players to start area.
-	chapter := Mod().Chapter()
-	startArea := chapter.Area(chapter.Conf().StartArea)
-	if startArea == nil {
-		return nil, fmt.Errorf("start area not found: %s: %v",
-			chapter.Conf().StartArea)
+}
+
+// chapterLoaded handles new loaded chapter.
+func (g *Game) chapterLoaded(c *module.Chapter) {
+	for _, a := range c.Areas() {
+		g.areaLoaded(a)
 	}
-	for _, pc := range pcs {
-		startArea.AddCharacter(pc)
+	c.SetOnAreaAddedFunc(g.areaLoaded)
+}
+
+// areaLoaded handles new loaded area.
+func (g *Game) areaLoaded(a *area.Area) {
+	chapter := g.Module().Chapter()
+	if chapter == nil {
+		return
 	}
-	return game, nil
+	for _, c := range a.AllCharacters() {
+		if c.AI() {
+			g.AI().AddCharacters(c)
+		}
+	}
 }

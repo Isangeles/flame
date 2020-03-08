@@ -29,7 +29,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/isangeles/flame/core/data/parsetxt"
+	"github.com/isangeles/flame/data/parsetxt"
 	"github.com/isangeles/flame/log"
 )
 

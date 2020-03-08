@@ -27,11 +27,11 @@ package main
 import (
 	"fmt"
 	
-	"github.com/isangeles/flame/core"
+	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/config"
-	"github.com/isangeles/flame/core/data"
-	"github.com/isangeles/flame/core/data/res"
-	"github.com/isangeles/flame/core/module/character"
+	"github.com/isangeles/flame/data"
+	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/module/character"
 )
 var (
 	// Example pc data.
@@ -64,7 +64,7 @@ func main() {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
 	// Create game.
-	game := core.NewGame(mod)
+	game := flame.NewGame(mod)
 	// Create PC.
 	pcData := res.CharacterData{
 		BasicData: pcBasicData,
