@@ -24,7 +24,7 @@
 // Package with engine log.
 // To use log, create new log.Loger with one of
 // log writers as writer.
-package enginelog
+package log
 
 import (
 	"fmt"

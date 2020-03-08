@@ -1,7 +1,7 @@
 /*
  * writers.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
  * 
  */
 
-package enginelog
+package log
 
 var (
-	InfLog infoWriter
-	ErrLog errorWriter
-	DbgLog debugWriter
+	InfWriter infoWriter
+	ErrWriter errorWriter
+	DbgWriter debugWriter
 )
 
 // infoWriter writes info messages to engine log.
