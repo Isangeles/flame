@@ -9,6 +9,8 @@ MAJOR:
   effects, skills, npc, areas, area
 * Package to parse JSON data files(parsejson, like parsexml), to replace XML data files with JSON files
 * Respawning area mobs
+* Ability to place items on the ground
+* Kill requirement(figure out how to track killed characters/objects, etc.)
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
@@ -25,8 +27,6 @@ MINOR:
   stage answers
 * XML: rename talker node in dialog to target
 * Item modifier
-* Remove start-area value from chapter config, start areas should be handled by interface
-* Remove data/text package, should be replaced by data/parsetxt
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
