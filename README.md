@@ -2,6 +2,7 @@
   Flame is RPG game engine written from scratch in Go.
 
   The main goal is to create simple, flexible, extensible and completely modular game engine.
+  
   Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
 
   Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or modify existing one(like [Arena](https://github.com/Isangeles/arena)).
@@ -37,17 +38,17 @@ Configuration values are loaded from `.flame` file in Flame executable directory
 
 ### Configuration values:
 ```
-  lang:[language ID];
+  lang:[language ID]
 ```
 Description: specifies game language, language ID is name of directory with translation files in lang directories(e.g. `data/lang` or `data/modules/[mod]/lang`).
 
 ```
-  module:[module ID];[module path](optional);
+  module:[module ID]
 ```
-Description: specifies module to load at start, module ID is ID specified in `mod.conf` file inside main module directory, module path is optional and stands for module directory path, if not provided engine will search default modules path(`data/modules`).
+Description: specifies module from `data/modules` directory to load at start, module ID is ID specified in `.module` file inside main module directory.
 
 ```
-  debug:[true/false];
+  debug:[true/false]
 ```
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
 
