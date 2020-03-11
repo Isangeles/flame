@@ -11,6 +11,7 @@ MAJOR:
 * Respawning area mobs
 * Ability to place items on the ground
 * Kill requirement(figure out how to track killed characters/objects, etc.)
+* Custom races for characters(separate struct, handling data files, etc.) instead of predefined ones
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
