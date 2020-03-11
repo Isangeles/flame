@@ -1,7 +1,7 @@
 /*
  * alignment.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,15 +27,15 @@ package character
 type Alignment int
 
 const (
-	Lawful_good Alignment = iota
-	Neutral_good
-	Chaotic_good
-	Lawful_neutral
-	True_neutral
-	Chaotic_neutral
-	Lawful_evil
-	Neutral_evil
-	Chaotic_evil
+	LawfulGood Alignment = iota
+	NeutralGood
+	ChaoticGood
+	LawfulNeutral
+	TrueNeutral
+	ChaoticNeutral
+	LawfulEvil
+	NeutralEvil
+	ChaoticEvil
 )
 
 // String returns text representation of
@@ -47,23 +47,23 @@ func (a Alignment) String() string {
 // Id returns alignemnt ID.
 func (a Alignment) ID() string {
 	switch a {
-	case Lawful_good:
+	case LawfulGood:
 		return "ali_law_good"
-	case Neutral_good:
+	case NeutralGood:
 		return "ali_neu_good"
-	case Chaotic_good:
+	case ChaoticGood:
 		return "ali_cha_good"
-	case Lawful_neutral:
+	case LawfulNeutral:
 		return "ali_law_neutral"
-	case True_neutral:
+	case TrueNeutral:
 		return "ali_tru_neutral"
-	case Chaotic_neutral:
+	case ChaoticNeutral:
 		return "ali_cha_neutral"
-	case Lawful_evil:
+	case LawfulEvil:
 		return "ali_law_evil"
-	case Neutral_evil:
+	case NeutralEvil:
 		return "ali_neu_evil"
-	case Chaotic_evil:
+	case ChaoticEvil:
 		return "alsi_cha_evil"
 	default:
 		return "ali_unknown"

@@ -110,23 +110,23 @@ func UnmarshalAttitude(attitudeAttr string) (character.Attitude, error) {
 func UnmarshalAlignment(aliAttr string) (character.Alignment, error) {
 	switch aliAttr {
 	case "lawful_good":
-		return character.Lawful_good, nil
+		return character.LawfulGood, nil
 	case "neutral_good":
-		return character.Neutral_good, nil
+		return character.NeutralGood, nil
 	case "chaotic_good":
-		return character.Chaotic_good, nil
+		return character.ChaoticGood, nil
 	case "lawful_neutral":
-		return character.Lawful_neutral, nil
+		return character.LawfulNeutral, nil
 	case "chaotic_neutral":
-		return character.Chaotic_neutral, nil
+		return character.ChaoticNeutral, nil
 	case "true_neutral":
-		return character.True_neutral, nil
+		return character.TrueNeutral, nil
 	case "lawful_evil":
-		return character.Lawful_evil, nil
+		return character.LawfulEvil, nil
 	case "neutral_evil":
-		return character.Neutral_evil, nil
+		return character.NeutralEvil, nil
 	case "chaotic_evil":
-		return character.Chaotic_evil, nil
+		return character.ChaoticEvil, nil
 	default:
 		return -1, fmt.Errorf("unsupported alignment value: %s", aliAttr)
 	}

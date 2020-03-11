@@ -82,23 +82,23 @@ func marshalAttitude(attitude character.Attitude) string {
 // attribute value.
 func marshalAlignment(alignment character.Alignment) string {
 	switch alignment {
-	case character.Lawful_good:
+	case character.LawfulGood:
 		return "lawful_good"
-	case character.Neutral_good:
+	case character.NeutralGood:
 		return "neutral_good"
-	case character.Chaotic_good:
+	case character.ChaoticGood:
 		return "chaotic_good"
-	case character.Lawful_neutral:
+	case character.LawfulNeutral:
 		return "lawful_neutral"
-	case character.True_neutral:
+	case character.TrueNeutral:
 		return "true_neutral"
-	case character.Chaotic_neutral:
+	case character.ChaoticNeutral:
 		return "chaotic_neutral"
-	case character.Lawful_evil:
+	case character.LawfulEvil:
 		return "lawful_evil"
-	case character.Neutral_evil:
+	case character.NeutralEvil:
 		return "neutral_evil"
-	case character.Chaotic_evil:
+	case character.ChaoticEvil:
 		return "chaotic_evil"
 	default:
 		return "unknown"

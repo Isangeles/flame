@@ -42,7 +42,7 @@ var (
 		Sex:       int(character.Male),
 		Race:      int(character.Human),
 		Attitude:  int(character.Friendly),
-		Alignment: int(character.True_neutral),
+		Alignment: int(character.TrueNeutral),
 		Str:       1,
 		Con:       1,
 		Dex:       1,
