@@ -123,6 +123,9 @@ func (d *Dialog) Next(a *Answer) {
 	// Apply modifiers.
 	d.Owner().TakeModifiers(d.Target(), a.OwnerModifiers()...)
 	d.Target().TakeModifiers(d.Owner(), a.TargetModifiers()...)
+	if d.Stage() == nil {
+		return
+	}
 	d.Owner().TakeModifiers(d.Target(), d.Stage().OwnerModifiers()...)
 	d.Target().TakeModifiers(d.Owner(), d.Stage().TargetModifiers()...)
 }
