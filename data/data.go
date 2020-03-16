@@ -176,7 +176,7 @@ func loadChapterData(chapter *module.Chapter) error {
 	if err != nil {
 		return fmt.Errorf("unable to import object: %v", err)
 	}
-	res.AddObjectData(objectsData...) // adding to global module objects
+	res.SetObjectsData(append(res.Objects(), objectsData...)) // adding to global module objects
 	// Dialogs.
 	dialogsData, err := ImportDialogsDir(chapter.Conf().DialogsPath())
 	if err != nil {

@@ -245,62 +245,6 @@ func Translations() (t []*TranslationData) {
 	return
 }
 
-// AddArmorData adds specified armor data to
-// armors resources.
-func AddArmorData(data ...*ArmorData) {
-	for _, ad := range data {
-		armorsData[ad.ID] = ad
-	}
-}
-
-// AddWeaponData adds specified weapon data to
-// weapons resources.
-func AddWeaponData(data ...*WeaponData) {
-	for _, wd := range data {
-		weaponsData[wd.ID] = wd
-	}
-}
-
-// AddMiscItemData adds specified misc item data to
-// misc items resources.
-func AddMiscItemData(data ...*MiscItemData) {
-	for _, md := range data {
-		miscsData[md.ID] = md
-	}
-}
-
-// AddDialogsData adds specified dialogs data
-// to dialogs resources.
-func AddDialogsData(data ...*DialogData) {
-	for _, dd := range data {
-		dialogsData[dd.ID] = dd
-	}
-}
-
-// AddQuestsData adds specified quests data
-// to quests resources.
-func AddQuestsData(data ...*QuestData) {
-	for _, qd := range data {
-		questsData[qd.ID] = qd
-	}
-}
-
-// AddRecipesData adds specified recipes data
-// to recipes resources.
-func AddRecipeData(data ...*RecipeData) {
-	for _, rd := range data {
-		recipesData[rd.ID] = rd
-	}
-}
-
-// AddObjectData adds specified area object
-// data to area objects resources.
-func AddObjectData(data ...*ObjectData) {
-	for _, od := range data {
-		objectsData[od.BasicData.ID] = od
-	}
-}
-
 // SetEffectsData sets specified effects data
 // as effects resources.
 func SetEffectsData(data []*EffectData) {
