@@ -86,3 +86,8 @@ type AttitudeMemoryData struct {
 	ObjectSerial string
 	Attitude     int
 }
+
+// Struct for race data.
+type RaceData struct {
+	ID string
+}

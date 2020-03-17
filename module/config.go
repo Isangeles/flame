@@ -75,6 +75,12 @@ func (c Config) RecipesPath() string {
 	return filepath.Join(c.Path, "recipes")
 }
 
+// RacesPath returns path to directory with
+// races data files.
+func (c Config) RacesPath() string {
+	return filepath.Join(c.CharactersPath(), "races")
+}
+
 // LangPath returns path to lang directory.
 func (c Config) LangPath() string {
 	return filepath.Join(c.Path, "lang")

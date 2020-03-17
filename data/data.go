@@ -159,6 +159,12 @@ func loadModuleData(mod *module.Module) error {
 		return fmt.Errorf("unable to load area objects: %v", err)
 	}
 	res.SetObjectsData(objectsData)
+	// Races.
+	racesData, err := ImportRacesDir(mod.Conf().RacesPath())
+	if err != nil {
+		return fmt.Errorf("unable to load races: %v", err)
+	}
+	res.SetRacesData(racesData)
 	return nil
 }
 

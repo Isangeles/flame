@@ -35,6 +35,7 @@ var (
 	questsData  map[string]*QuestData
 	recipesData map[string]*RecipeData
 	areasData   map[string]*AreaData
+	racesData   map[string]*RaceData
 	langData    map[string]*TranslationData
 )
 
@@ -51,6 +52,7 @@ func init() {
 	questsData = make(map[string]*QuestData)
 	recipesData = make(map[string]*RecipeData)
 	areasData = make(map[string]*AreaData)
+	racesData = make(map[string]*RaceData)
 	langData = make(map[string]*TranslationData)
 }
 
@@ -147,6 +149,13 @@ func Area(id string) *AreaData {
 	return areasData[id]
 }
 
+// Race returns area resource data
+// for race with specified ID or nil
+// if data for specified ID was not found.
+func Race(id string) *RaceData {
+	return racesData[id]
+}
+
 // Translation returns translation data
 // texts for specified ID.
 func Translation(id string) *TranslationData {
@@ -233,6 +242,14 @@ func Recipes() (r []*RecipeData) {
 func Areas() (a []*AreaData) {
 	for _, ad := range areasData {
 		a = append(a, ad)
+	}
+	return
+}
+
+// Races returns all races resources.
+func Races() (r []*RaceData) {
+	for _, rd := range racesData {
+		r = append(r, rd)
 	}
 	return
 }
@@ -341,6 +358,15 @@ func SetAreasData(data []*AreaData) {
 	areasData = make(map[string]*AreaData)
 	for _, ad := range data {
 		areasData[ad.ID] = ad
+	}
+}
+
+// SetRacesData sets specified data as
+// races resources.
+func SetRacesData(data []*RaceData) {
+	racesData = make(map[string]*RaceData)
+	for _, rd := range data {
+		racesData[rd.ID] = rd
 	}
 }
 
