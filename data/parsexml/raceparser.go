@@ -40,8 +40,9 @@ type Races struct {
 
 // Struct for XML race node.
 type Race struct {
-	XMLName xml.Name `xml:"race"`
-	ID      string   `xml:"id,attr"`
+	XMLName  xml.Name `xml:"race"`
+	ID       string   `xml:"id,attr"`
+	Playable bool     `xml:"playable,attr"`
 }
 
 // UnmarshalRaces retrieves races from specified XML data.
@@ -63,7 +64,8 @@ func UnmarshalRaces(data io.Reader) ([]*res.RaceData, error) {
 // buildRaceData creates race resource data from specified XML data.
 func buildRaceData(xmlRace Race) *res.RaceData {
 	rd := res.RaceData{
-		ID: xmlRace.ID,
+		ID:       xmlRace.ID,
+		Playable: xmlRace.Playable,
 	}
 	return &rd
 }

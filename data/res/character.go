@@ -89,5 +89,6 @@ type AttitudeMemoryData struct {
 
 // Struct for race data.
 type RaceData struct {
-	ID string
+	ID       string
+	Playable bool
 }

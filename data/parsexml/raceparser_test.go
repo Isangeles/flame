@@ -31,8 +31,8 @@ import (
 // Test for unmarshaling races data.
 func TestUnmarshalRaces(t *testing.T) {
 	xmlRaces := `<races>
-	<race id="rHuman"></race>
-	<race id="rElf"></race>
+	<race id="rHuman" playable="true"></race>
+	<race id="rElf" playable="true"></race>
 	<race id="rDwarf"></race>
 	<race id="rGnome"></race>
 </races>`
