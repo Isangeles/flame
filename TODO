@@ -11,7 +11,6 @@ MAJOR:
 * Respawning area mobs
 * Ability to place items on the ground
 * Kill requirement(figure out how to track killed characters/objects, etc.)
-* Custom races for characters(separate struct, handling data files, etc.) instead of predefined ones
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
@@ -28,6 +27,7 @@ MINOR:
   stage answers
 * XML: rename talker node in dialog to target
 * Item modifier
+* AI: separate idle dialogs for each race
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
