@@ -70,28 +70,6 @@ func UnmarshalGender(genderAttr string) (character.Gender, error) {
 	}
 }
 
-// UnmarshalRace parses specified race XML attribute.
-func UnmarshalRace(raceAttr string) (character.Race, error) {
-	switch raceAttr {
-	case "human":
-		return character.Human, nil
-	case "elf":
-		return character.Elf, nil
-	case "dwarf":
-		return character.Dwarf, nil
-	case "gnome":
-		return character.Gnome, nil
-	case "wolf":
-		return character.Wolf, nil
-	case "goblin":
-		return character.Goblin, nil
-	case "unknown", "*":
-		return character.UnknownRace, nil
-	default:
-		return -1, fmt.Errorf("unsupported race value: %s", raceAttr)
-	}
-}
-
 // UnmarshalAttitude parses specified attitude XML attribute.
 func UnmarshalAttitude(attitudeAttr string) (character.Attitude, error) {
 	switch attitudeAttr {

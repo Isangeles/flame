@@ -181,7 +181,7 @@ func xmlCharacter(char *character.Character) *Character {
 	xmlChar.AI = char.AI()
 	xmlChar.Level = char.Level()
 	xmlChar.Gender = marshalGender(char.Gender())
-	xmlChar.Race = marshalRace(char.Race())
+	xmlChar.Race = char.Race().ID()
 	xmlChar.Attitude = marshalAttitude(char.Attitude())
 	xmlChar.Alignment = marshalAlignment(char.Alignment())
 	xmlChar.Attributes = xmlAttributes(char.Attributes())
@@ -293,11 +293,7 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 		return nil, fmt.Errorf("unable to parse gender: %v", err)
 	}
 	data.BasicData.Sex = int(sex)
-	race, err := UnmarshalRace(xmlChar.Race)
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse race: %v", err)
-	}
-	data.BasicData.Race = int(race)
+	data.BasicData.Race = xmlChar.Race
 	attitude, err := UnmarshalAttitude(xmlChar.Attitude)
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse attitude: %v", err)

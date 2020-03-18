@@ -45,7 +45,7 @@ type CharacterBasicData struct {
 	AI        bool
 	Level     int
 	Sex       int
-	Race      int
+	Race      string
 	Attitude  int
 	Guild     string
 	Alignment int

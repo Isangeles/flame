@@ -42,27 +42,6 @@ func marshalGender(sex character.Gender) string {
 	}
 }
 
-// marshalRace parses specified race to race XML
-// attribute value.
-func marshalRace(race character.Race) string {
-	switch race {
-	case character.Human:
-		return "human"
-	case character.Elf:
-		return "elf"
-	case character.Dwarf:
-		return "dwarf"
-	case character.Gnome:
-		return "gnome"
-	case character.Wolf:
-		return "wolf"
-	case character.Goblin:
-		return "goblin"
-	default:
-		return "unknown"
-	}
-}
-
 // marshalAttitude parses specified attitude to attitude XML
 // attribute value.
 func marshalAttitude(attitude character.Attitude) string {

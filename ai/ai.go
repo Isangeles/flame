@@ -161,16 +161,13 @@ func (ai *AI) moveAround(npc *character.Character) {
 
 // saySomething sends random text on NPC chat channel.
 func (ai *AI) saySomething(npc *character.Character) {
-	switch npc.Race() {
-	case character.Human, character.Elf, character.Gnome, character.Dwarf:
-		t := lang.Texts("random_chat_human")
-		if len(t) < 1 {
-			return
-		}
-		id := rng.RollInt(1, len(t))
-		id -= 1
-		npc.SendChat(t[id])
+	t := lang.Texts("random_chat_human")
+	if len(t) < 1 {
+		return
 	}
+	id := rng.RollInt(1, len(t))
+	id -= 1
+	npc.SendChat(t[id])
 }
 
 // combatSkill selects NPC skill to use in combat or nil if specified

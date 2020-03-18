@@ -40,7 +40,7 @@ var (
 		Name:      "PC",
 		Level:     1,
 		Sex:       int(character.Male),
-		Race:      int(character.Human),
+		Race:      "rHuman",
 		Attitude:  int(character.Friendly),
 		Alignment: int(character.TrueNeutral),
 		Str:       1,

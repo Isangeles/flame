@@ -4,13 +4,6 @@ attr_dex:Dexterity
 attr_wis:Wisdom
 attr_int:Intelligence
 attr_pts:Points
-race_human:Human
-race_elf:Elf
-race_dwarf:Dwarf
-race_gnome:Gnome
-race_wolf:Wolf
-race_goblin:Goblin
-race_unknown:Unknown
 gender_male:Male
 gender_female:Female
 att_frindly:Friendly

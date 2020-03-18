@@ -54,7 +54,7 @@ type Character struct {
 	agony            bool
 	ai               bool
 	sex              Gender
-	race             Race
+	race             *Race
 	attitude         Attitude
 	alignment        Alignment
 	guild            Guild
@@ -96,7 +96,6 @@ func New(data res.CharacterData) *Character {
 		name:      data.BasicData.Name,
 		ai:        data.BasicData.AI,
 		sex:       Gender(data.BasicData.Sex),
-		race:      Race(data.BasicData.Race),
 		attitude:  Attitude(data.BasicData.Attitude),
 		alignment: Alignment(data.BasicData.Alignment),
 	}
@@ -126,6 +125,11 @@ func New(data res.CharacterData) *Character {
 	// Translate name if not set.
 	if len(c.Name()) < 1 {
 		c.SetName(lang.Text(c.ID()))
+	}
+	// Set Race.
+	raceData := res.Race(data.BasicData.Race)
+	if raceData != nil {
+		c.race = NewRace(*raceData)
 	}
 	// Set level.
 	for i := 0; i < data.BasicData.Level; i++ {
@@ -334,7 +338,7 @@ func (c *Character) Gender() Gender {
 }
 
 // Race returns character race.
-func (c *Character) Race() Race {
+func (c *Character) Race() *Race {
 	return c.race
 }
 
