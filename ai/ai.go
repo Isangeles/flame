@@ -24,6 +24,8 @@
 package ai
 
 import (
+	"fmt"
+
 	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/character"
@@ -161,13 +163,16 @@ func (ai *AI) moveAround(npc *character.Character) {
 
 // saySomething sends random text on NPC chat channel.
 func (ai *AI) saySomething(npc *character.Character) {
-	t := lang.Texts("random_chat_human")
-	if len(t) < 1 {
+	if npc.Race() == nil {
 		return
 	}
-	id := rng.RollInt(1, len(t))
-	id -= 1
-	npc.SendChat(t[id])
+	textID := fmt.Sprintf("random_chat_%s", npc.Race().ID())
+	texts := lang.Texts(textID)
+	if len(texts) < 1 {
+		return
+	}
+	id := rng.RollInt(0, len(texts)-1)
+	npc.SendChat(texts[id])
 }
 
 // combatSkill selects NPC skill to use in combat or nil if specified
