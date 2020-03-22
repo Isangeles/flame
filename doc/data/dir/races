@@ -1,0 +1,15 @@
+.TH Races_dir
+.SH NAME
+races \- directory with character races
+.SH DESCRIPTION
+Races directory stores races data files.
+.br
+Races directory is placed in module characters directory.
+.SH FILES & SUBDIRECTORIES
+Files: .races data files.
+.SH EXAMPLE
+.nf
+/races
+	main.races
+.SH SEE ALSO
+data/dir/module, data/dir/races, data/dir/characters, data/file/xml/.races

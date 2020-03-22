@@ -1,0 +1,22 @@
+.TH Characters_dir
+.SH NAME
+characters \- directory with characters
+.SH DESCRIPTION
+Characters directory stores characters data files and custom races.
+.br
+Characters directory inside module main directory stores module characters and races inside
+races sub-directory.
+.br
+Characters directory inside chapter main directory stores chapter-specific characters.
+.SH FILES & SUBDIRECTORIES
+Files: .characters data files.
+.br
+Sub-directories: races directory with custom races for characters.
+.SH EXAMPLE
+.nf
+/characters
+	main.characters
+	races
+.SH SEE ALSO
+data/dir/chapter, data/dir/module, data/dir/races, data/file/xml/.characters,
+data/file/xml/.races

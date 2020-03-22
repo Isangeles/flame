@@ -1,0 +1,34 @@
+.TH Races_file
+.SH NAME
+*\[char46]races \- file with races for game characters
+.SH DESCRIPTION
+*\[char46]races files stores custom races for game characters.
+.SH NODES
+.SS <races>
+This node holds race nodes.
+.P
+Attributes: -
+.P
+Allowed subnodes: <race>
+.SS <race>
+Node for race.
+.br
+Allowed only under <races> node.
+.P
+Attributes:
+.br
+id \- unique ID of race
+.br
+playable \- specifies if race is playable
+.P
+Allowed subnodes: -
+.SH EXAMPLE
+.nf
+<races>
+        <race id="raceHuman" playable="true"></race>
+        <race id="raceElf" playable="true"></race>
+        <race id="raceWolf"></race>
+        <race id="raceGoblin"></race>
+</races>
+.SH SEE ALSO
+data/dir/characters, data/dir/npc, data/file/xml/subnode/reqs, data/file/xml/subnode/inventory
