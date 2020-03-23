@@ -54,7 +54,7 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 	case *req.LevelReq:
 		return char.Level() >= r.MinLevel()
 	case *req.GenderReq:
-		return int(char.Gender()) == r.Type()
+		return string(char.Gender()) == r.Gender()
 	case *req.FlagReq:
 		f := char.flags[r.FlagID()]
 		if r.FlagOff() {

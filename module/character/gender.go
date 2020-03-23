@@ -1,7 +1,7 @@
 /*
  * gender.go
  *
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,23 +23,10 @@
 
 package character
 
-// Type for charactes genders
-type Gender int
+// Type for character genders.
+type Gender string
 
 const (
-	Male Gender = iota
-	Female
-	UnknownGender
+	Male Gender = Gender("genderMale")
+	Female = Gender("genderFemale")
 )
-
-// ID returns gender ID.
-func (g Gender) ID() string {
-	switch g {
-	case Male:
-		return "gender_male"
-	case Female:
-		return "gender_female"
-	default:
-		return "gender_unknown"
-	}
-}

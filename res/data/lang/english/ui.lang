@@ -4,8 +4,6 @@ attr_dex:Dexterity
 attr_wis:Wisdom
 attr_int:Intelligence
 attr_pts:Points
-gender_male:Male
-gender_female:Female
 att_frindly:Friendly
 att_neutral:Neutral
 att_hostile:Hostile

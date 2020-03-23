@@ -35,8 +35,8 @@ import (
 func TestUnmarshalCharacters(t *testing.T) {
 	xmlChars := `<characters>
         <char id="char"
-                gender="male"
-                race="human"
+                gender="genderMale"
+                race="raceHuman"
                 attitude="neutral"
                 alignment="chaotic_good"
                 guild=""
@@ -90,8 +90,8 @@ func TestMarshalCharacter(t *testing.T) {
 		Name:      "charName",
 		AI:        true,
 		Level:     2,
-		Sex:       1,
-		Race:      1,
+		Sex:       "genderFemale",
+		Race:      "",
 		Attitude:  1,
 		Guild:     "guildID",
 		Alignment: 1,
@@ -109,10 +109,10 @@ func TestMarshalCharacter(t *testing.T) {
 	if !strings.Contains(xmlChar, "id=\"char\"") {
 		t.Errorf("Marshaled data is invalid: ID: %s", xmlChar)
 	}
-	if !strings.Contains(xmlChar, "race=\"elf\"") {
+	if !strings.Contains(xmlChar, "race=\"\"") {
 		t.Errorf("Marshaled data is invalid: race: %s", xmlChar)
 	}
-	if !strings.Contains(xmlChar, "gender=\"female\"") {
+	if !strings.Contains(xmlChar, "gender=\"genderFemale\"") {
 		t.Errorf("Marshaled data is invalid: gender: %s", xmlChar)
 	}
 	if !strings.Contains(xmlChar, "attitude=\"neutral\"") {
@@ -131,10 +131,10 @@ func TestMarshalCharacters(t *testing.T) {
 		Name:      "charName",
 		AI:        true,
 		Level:     2,
-		Sex:       1,
-		Race:      1,
+		Sex:       "genderMale",
+		Race:      "raceHuman",
 		Attitude:  1,
-		Guild:     "guildID",
+		Guild:     "guild",
 		Alignment: 1,
 		Str:       2,
 		Con:       3,

@@ -29,20 +29,20 @@ import (
 
 // Struct for gender requirement.
 type GenderReq struct {
-	genType int
-	meet    bool
+	gender string
+	meet   bool
 }
 
 // NewGenderReq creates new gender requirement.
 func NewGenderReq(data res.GenderReqData) *GenderReq {
 	gr := new(GenderReq)
-	gr.genType = data.Type
+	gr.gender = data.Gender
 	return gr
 }
 
 // Type returns ID of required gender type.
-func (gr *GenderReq) Type() int {
-	return gr.genType
+func (gr *GenderReq) Gender() string {
+	return gr.gender
 }
 
 // Meet checks wheter requirement is set as meet.

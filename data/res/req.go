@@ -33,7 +33,7 @@ type LevelReqData struct {
 
 // Struct for gender requirement data.
 type GenderReqData struct {
-	Type int
+	Gender string
 }
 
 // Struct for flag requirement data.

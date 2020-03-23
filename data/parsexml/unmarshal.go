@@ -56,20 +56,6 @@ func UnmarshalPosition(attr string) (float64, float64, error) {
 	return x, y, nil
 }
 
-// UnmarshalGender parses specified gender XML attribute,
-func UnmarshalGender(genderAttr string) (character.Gender, error) {
-	switch genderAttr {
-	case "male":
-		return character.Male, nil
-	case "female":
-		return character.Female, nil
-	case "unknwon", "*":
-		return character.UnknownGender, nil
-	default:
-		return -1, fmt.Errorf("unsupported gender value: %s", genderAttr)
-	}
-}
-
 // UnmarshalAttitude parses specified attitude XML attribute.
 func UnmarshalAttitude(attitudeAttr string) (character.Attitude, error) {
 	switch attitudeAttr {

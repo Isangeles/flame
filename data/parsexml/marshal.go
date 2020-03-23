@@ -29,19 +29,6 @@ import (
 	"github.com/isangeles/flame/module/character"
 )
 
-// marshalGender parses specified gender to gender XML
-// attribute value.
-func marshalGender(sex character.Gender) string {
-	switch sex {
-	case character.Male:
-		return "male"
-	case character.Female:
-		return "female"
-	default:
-		return "male"
-	}
-}
-
 // marshalAttitude parses specified attitude to attitude XML
 // attribute value.
 func marshalAttitude(attitude character.Attitude) string {

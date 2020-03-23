@@ -28,7 +28,6 @@ import (
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/req"
-	"github.com/isangeles/flame/log"
 )
 
 // Struct for requirements XML node.
@@ -124,12 +123,8 @@ func buildReqs(xmlReqs *Reqs) []res.ReqData {
 	}
 	// Gender reqs.
 	for _, xmlReq := range xmlReqs.GenderReqs {
-		gen, err := UnmarshalGender(xmlReq.Type)
-		if err != nil {
-			log.Err.Printf("xml: build reqs: unable to unmarshal gender: %v", err)
-		}
 		req := res.GenderReqData{
-			Type: int(gen),
+			Gender: xmlReq.Type,
 		}
 		reqs = append(reqs, req)
 	}
