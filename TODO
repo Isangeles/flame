@@ -29,6 +29,8 @@ MINOR:
 * XML: rename talker node in dialog to target
 * Item modifier
 * Change underlying type for character types(alignment, attitude) from int to string
+* Area weather
+* In-game time
 DONE:
 * Generating of unique serial values for game objects
 * Save/load game mechanism
