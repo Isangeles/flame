@@ -38,7 +38,6 @@ import (
 // Struct for saved game XML node.
 type SavedGame struct {
 	XMLName xml.Name     `xml:"game"`
-	Name    string       `xml:"name,attr"`
 	Chapter SavedChapter `xml:"chapter"`
 }
 
@@ -62,7 +61,6 @@ type SavedArea struct {
 // MarshalGame parses specified game to XML savegame data.
 func MarshalGame(game *flame.Game) (string, error) {
 	xmlGame := new(SavedGame)
-	//xmlGame.Name = game.Name
 	// Chapter.
 	chapter := game.Module().Chapter()
 	if chapter == nil {
@@ -94,7 +92,6 @@ func UnmarshalGame(data io.Reader) (*res.GameData, error) {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
 	game := new(res.GameData)
-	game.Name = xmlGame.Name
 	// Chapter.
 	game.SavedChapter.ID = xmlGame.Chapter.ID
 	// Areas.

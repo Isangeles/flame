@@ -25,7 +25,6 @@ package res
 
 // Struct for game data.
 type GameData struct {
-	Name         string
 	SavedChapter SavedChapterData
 }
 
