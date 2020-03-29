@@ -85,15 +85,11 @@ func buildSkillData(xmlSkill Skill) (*res.SkillData, error) {
 		}
 		effects = append(effects, *eff)
 	}
-	skillRange, err := UnmarshalSkillRange(xmlSkill.Range)
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse range: %v", err)
-	}
 	data := res.SkillData{
 		ID:       xmlSkill.ID,
 		Cast:     int64(xmlSkill.CastSec * 1000),
 		Cooldown: int64(xmlSkill.CooldownSec * 1000),
-		Range:    int(skillRange),
+		Range:    xmlSkill.Range,
 		Melee:    xmlSkill.Melee,
 		Spell:    xmlSkill.Spell,
 		Effects:  effects,

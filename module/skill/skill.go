@@ -60,10 +60,10 @@ type Skill struct {
 
 // Type for skills target
 // types.
-type TargetType int
+type TargetType string
 
 // Type for skill range.
-type Range int
+type Range string
 
 const (
 	// Errors.
@@ -74,14 +74,14 @@ const (
 	RANGE_ERR         = "user_too_far"
 	NOT_READY_ERR     = "skill_not_ready"
 	// Target types.
-	Target_all TargetType = iota
-	Target_others
-	Target_self
+	TargetAll TargetType = TargetType("skillTarAll")
+	TargetOthers = TargetType("skillTarOthers")
+	TargetSelf = TargetType("skillTarSelf")
 	// Skill ranges.
-	Range_touch = iota
-	Range_close
-	Range_far
-	Range_huge
+	RangeTouch = Range("skillRangeTouch")
+	RangeClose = Range("skillRangeClose")
+	RangeFar = Range("skillRangeFar")
+	RangeHuge = Range("skillRangeHuge")
 )
 
 // NewSkill creates new skill with specifie parameters.
@@ -172,14 +172,14 @@ func (s *Skill) Cast(user effect.Target, target effect.Target) error {
 	if !s.Ready() {
 		return fmt.Errorf(NOT_READY_ERR)
 	}
-	if s.tartype != Target_all && target == nil {
+	if s.tartype != TargetAll && target == nil {
 		return fmt.Errorf(NO_TARGET_ERR)
 	}
-	if s.tartype == Target_others &&
+	if s.tartype == TargetOthers &&
 		user.ID()+user.Serial() == target.ID()+target.Serial() {
 		return fmt.Errorf(OTHERS_TARGET_ERR)
 	}
-	if s.tartype == Target_self &&
+	if s.tartype == TargetSelf &&
 		user.ID()+user.Serial() != target.ID()+target.Serial() {
 		return fmt.Errorf(SELF_TARGET_ERR)
 	}
@@ -258,11 +258,11 @@ func (s *Skill) SetReady(ready bool) {
 // Value returns range value.
 func (r Range) Value() float64 {
 	switch {
-	case r <= Range_touch:
+	case r <= RangeTouch:
 		return 50.0
-	case r == Range_close:
+	case r == RangeClose:
 		return 100.0
-	case r == Range_far:
+	case r == RangeFar:
 		return 500.0
 	default:
 		return 1000.0

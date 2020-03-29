@@ -31,7 +31,6 @@ import (
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
-	"github.com/isangeles/flame/module/skill"
 )
 
 var (
@@ -119,23 +118,6 @@ func UnmarshalEqSlot(slot string) (character.EquipmentSlotType, error) {
 		return character.Chest, nil
 	default:
 		return -1, fmt.Errorf("unsupported eq slot type value: %s", slot)
-	}
-}
-
-// UnmarshalSkillRange parses specified skill range XML attribute
-// to skill range type.
-func UnmarshalSkillRange(rg string) (skill.Range, error) {
-	switch rg {
-	case "touch":
-		return skill.Range_touch, nil
-	case "close":
-		return skill.Range_close, nil
-	case "far":
-		return skill.Range_far, nil
-	case "huge":
-		return skill.Range_huge, nil
-	default:
-		return -1, fmt.Errorf("unsupported skill range type value: %s", rg)
 	}
 }
 
