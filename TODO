@@ -7,11 +7,14 @@ MAJOR:
 * Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
 * Documentation for directories: data, savegames, module/objects, chapter/objects, recipes, areas,
   effects, skills, areas, area
-* Package to parse JSON data files(parsejson, like parsexml), to replace XML data files with JSON files
+* Switch to JSON format for data files
+* Remove parsexml package, use structs from res package to parse data files
 * Respawning area mobs
 * Ability to place items on the ground
 * Kill requirement(figure out how to track killed characters/objects, etc.)
 * Effects for custom races
+* AOE effects
+* Character visibility effect(for stealth skill, etc.)
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
@@ -28,7 +31,7 @@ MINOR:
   stage answers
 * XML: rename talker node in dialog to target
 * Item modifier
-* Change underlying type for character types(alignment, attitude) from int to string
+* Change underlying type for equipment slots, item slots, skill range and elements from int to string
 * Area weather
 * In-game time
 DONE:
