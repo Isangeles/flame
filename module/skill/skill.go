@@ -25,7 +25,7 @@
 package skill
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
@@ -65,14 +65,17 @@ type TargetType string
 // Type for skill range.
 type Range string
 
-const (
+var (
 	// Errors.
-	OTHERS_TARGET_ERR = "only_others_target"
-	SELF_TARGET_ERR   = "only_self_target"
-	NO_TARGET_ERR     = "no_target"
-	REQS_NOT_MET_ERR  = "reqs_not_meet"
-	RANGE_ERR         = "user_too_far"
-	NOT_READY_ERR     = "skill_not_ready"
+	OtherTargetOnly = errors.New("other taget only")
+	SelfTargetOnly  = errors.New("self target only")
+	NoTarget        = errors.New("no target")
+	ReqsNotMet      = errors.New("requirements not met")
+	TooFar          = errors.New("target too far")
+	NotReady        = errors.New("not ready")
+)
+
+const (
 	// Target types.
 	TargetAll TargetType = TargetType("skillTarAll")
 	TargetOthers = TargetType("skillTarOthers")
@@ -170,27 +173,27 @@ func (s *Skill) SetName(name string) {
 // as skill user.
 func (s *Skill) Cast(user effect.Target, target effect.Target) error {
 	if !s.Ready() {
-		return fmt.Errorf(NOT_READY_ERR)
+		return NotReady
 	}
 	if s.tartype != TargetAll && target == nil {
-		return fmt.Errorf(NO_TARGET_ERR)
+		return NoTarget
 	}
 	if s.tartype == TargetOthers &&
 		user.ID()+user.Serial() == target.ID()+target.Serial() {
-		return fmt.Errorf(OTHERS_TARGET_ERR)
+		return OtherTargetOnly
 	}
 	if s.tartype == TargetSelf &&
 		user.ID()+user.Serial() != target.ID()+target.Serial() {
-		return fmt.Errorf(SELF_TARGET_ERR)
+		return SelfTargetOnly
 	}
 	if userTargetRange(user, target) > s.castRange.Value() {
-		return fmt.Errorf(RANGE_ERR)
+		return TooFar
 	}
 	s.user = user
 	s.target = target
 	if user, ok := s.user.(req.RequirementsTarget); ok &&
 		!user.MeetReqs(s.useReqs...) {
-		return fmt.Errorf(REQS_NOT_MET_ERR)
+		return ReqsNotMet
 	}
 	s.castTime = 0
 	s.casting = true
