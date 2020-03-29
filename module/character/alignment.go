@@ -24,48 +24,16 @@
 package character
 
 // Type for character alignment.
-type Alignment int
+type Alignment string
 
 const (
-	LawfulGood Alignment = iota
-	NeutralGood
-	ChaoticGood
-	LawfulNeutral
-	TrueNeutral
-	ChaoticNeutral
-	LawfulEvil
-	NeutralEvil
-	ChaoticEvil
+	LawfulGood Alignment = Alignment("aliLawfulGood")
+	NeutralGood = Alignment("aliNeutralGood")
+	ChaoticGood = Alignment("aliChaoticGood")
+	LawfulNeutral = Alignment("aliLawfulNeutral")
+	TrueNeutral = Alignment("aliTrueNeutral")
+	ChaoticNeutral = Alignment("aliChaoticNeutral")
+	LawfulEvil = Alignment("aliLawfulEvil")
+	NeutralEvil = Alignment("aliNeutralEvil")
+	ChaoticEvil = Alignment("aliChaoticEvil")
 )
-
-// String returns text representation of
-// alignement.
-func (a Alignment) String() string {
-	return a.ID()
-}
-
-// Id returns alignemnt ID.
-func (a Alignment) ID() string {
-	switch a {
-	case LawfulGood:
-		return "ali_law_good"
-	case NeutralGood:
-		return "ali_neu_good"
-	case ChaoticGood:
-		return "ali_cha_good"
-	case LawfulNeutral:
-		return "ali_law_neutral"
-	case TrueNeutral:
-		return "ali_tru_neutral"
-	case ChaoticNeutral:
-		return "ali_cha_neutral"
-	case LawfulEvil:
-		return "ali_law_evil"
-	case NeutralEvil:
-		return "ali_neu_evil"
-	case ChaoticEvil:
-		return "alsi_cha_evil"
-	default:
-		return "ali_unknown"
-	}
-}

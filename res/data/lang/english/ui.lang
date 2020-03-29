@@ -3,27 +3,5 @@ attr_con:Constitution
 attr_dex:Dexterity
 attr_wis:Wisdom
 attr_int:Intelligence
-attr_pts:Points
-att_frindly:Friendly
-att_neutral:Neutral
-att_hostile:Hostile
-ali_law_good:Lawful good
-ali_neu_good:Neutral good
-ali_cha_good:Chaotic good
-ali_law_neutral:Lawful neutral
-ali_tru_neutral:True neutral
-ali_cha_neutral:Chaotic neutral
-ali_law_evil:Lawful evil
-ali_neu_evil:Neutral evil
-ali_cha_evil:Chaotic evil
-ob_name:Name
-ob_health:Health
-ob_mana:Mana
-ob_effect:Effect
-com_yes:Yes
-com_no:No
-game_pause_info:Game paused
 skill_not_known:Skill not known
 cant_do_right_now:Can't do right now
-req_item:Item
-req_currency:Cost

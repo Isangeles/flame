@@ -56,46 +56,6 @@ func UnmarshalPosition(attr string) (float64, float64, error) {
 	return x, y, nil
 }
 
-// UnmarshalAttitude parses specified attitude XML attribute.
-func UnmarshalAttitude(attitudeAttr string) (character.Attitude, error) {
-	switch attitudeAttr {
-	case "friendly":
-		return character.Friendly, nil
-	case "neutral":
-		return character.Neutral, nil
-	case "hostile":
-		return character.Hostile, nil
-	default:
-		return -1, fmt.Errorf("unsupported attitude value: %s", attitudeAttr)
-	}
-}
-
-// UnmarshalAlignment parses specified alignemnt XML attribute.
-func UnmarshalAlignment(aliAttr string) (character.Alignment, error) {
-	switch aliAttr {
-	case "lawful_good":
-		return character.LawfulGood, nil
-	case "neutral_good":
-		return character.NeutralGood, nil
-	case "chaotic_good":
-		return character.ChaoticGood, nil
-	case "lawful_neutral":
-		return character.LawfulNeutral, nil
-	case "chaotic_neutral":
-		return character.ChaoticNeutral, nil
-	case "true_neutral":
-		return character.TrueNeutral, nil
-	case "lawful_evil":
-		return character.LawfulEvil, nil
-	case "neutral_evil":
-		return character.NeutralEvil, nil
-	case "chaotic_evil":
-		return character.ChaoticEvil, nil
-	default:
-		return -1, fmt.Errorf("unsupported alignment value: %s", aliAttr)
-	}
-}
-
 // UnmarshalAttributes parses specified attributes from XML doc.
 func UnmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 	stats := strings.Split(attributesAttr, ";")

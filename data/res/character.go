@@ -46,9 +46,9 @@ type CharacterBasicData struct {
 	Level     int
 	Sex       string
 	Race      string
-	Attitude  int
+	Attitude  string
 	Guild     string
-	Alignment int
+	Alignment string
 	Str       int
 	Con       int
 	Dex       int
@@ -84,7 +84,7 @@ type EquipmentItemData struct {
 type AttitudeMemoryData struct {
 	ObjectID     string
 	ObjectSerial string
-	Attitude     int
+	Attitude     string
 }
 
 // Struct for race data.

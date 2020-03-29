@@ -1,7 +1,7 @@
 /*
  * attitude.go
  * 
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,24 +24,10 @@
 package character
 
 // Type for character attitude.
-type Attitude int
+type Attitude string
 
 const (
-	Friendly Attitude = iota
-	Neutral
-	Hostile
+	Friendly Attitude = Attitude("attFriendly")
+	Neutral = Attitude("attNeutral")
+	Hostile = Attitude("attHostile")
 )
-
-// ID returns attitude ID.
-func (a Attitude) ID() string {
-	switch a {
-	case Friendly:
-		return "att_friendly"
-	case Neutral:
-		return "att_neutral"
-	case Hostile:
-		return "att_hostile"
-	default:
-		return "att_unknown"
-	}
-}

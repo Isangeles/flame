@@ -92,9 +92,9 @@ func TestMarshalCharacter(t *testing.T) {
 		Level:     2,
 		Sex:       "genderFemale",
 		Race:      "",
-		Attitude:  1,
+		Attitude:  "attFriendly",
 		Guild:     "guildID",
-		Alignment: 1,
+		Alignment: "aliTrueNeutral",
 		Str:       2,
 		Con:       3,
 		Dex:       4,
@@ -115,10 +115,10 @@ func TestMarshalCharacter(t *testing.T) {
 	if !strings.Contains(xmlChar, "gender=\"genderFemale\"") {
 		t.Errorf("Marshaled data is invalid: gender: %s", xmlChar)
 	}
-	if !strings.Contains(xmlChar, "attitude=\"neutral\"") {
+	if !strings.Contains(xmlChar, "attitude=\"attFriendly\"") {
 		t.Errorf("Marshaled data is invalid: attitude: %s", xmlChar)
 	}
-	if !strings.Contains(xmlChar, "alignment=\"neutral_good\"") {
+	if !strings.Contains(xmlChar, "alignment=\"aliTrueNeutral\"") {
 		t.Errorf("Marshaled data is invalid: alignment: %s", xmlChar)
 	}
 }
@@ -133,9 +133,9 @@ func TestMarshalCharacters(t *testing.T) {
 		Level:     2,
 		Sex:       "genderMale",
 		Race:      "raceHuman",
-		Attitude:  1,
+		Attitude:  "attFriendly",
 		Guild:     "guild",
-		Alignment: 1,
+		Alignment: "aliTrueNeutral",
 		Str:       2,
 		Con:       3,
 		Dex:       4,

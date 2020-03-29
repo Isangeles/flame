@@ -184,8 +184,8 @@ func xmlCharacter(char *character.Character) *Character {
 	if char.Race() != nil {
 		xmlChar.Race = char.Race().ID()
 	}
-	xmlChar.Attitude = marshalAttitude(char.Attitude())
-	xmlChar.Alignment = marshalAlignment(char.Alignment())
+	xmlChar.Attitude = string(char.Attitude())
+	xmlChar.Alignment = string(char.Alignment())
 	xmlChar.Attributes = xmlAttributes(char.Attributes())
 	xmlChar.HP = char.Health()
 	xmlChar.Mana = char.Mana()
@@ -243,11 +243,10 @@ func xmlEquipment(eq *character.Equipment) *Equipment {
 func xmlMemory(mem []*character.TargetMemory) *Memory {
 	xmlMem := new(Memory)
 	for _, am := range mem {
-		attAttr := marshalAttitude(am.Attitude)
 		xmlAtt := TargetMemory{
 			ID:       am.Target.ID(),
 			Serial:   am.Target.Serial(),
-			Attitude: attAttr,
+			Attitude: string(am.Attitude),
 		}
 		xmlMem.Nodes = append(xmlMem.Nodes, xmlAtt)
 	}
@@ -292,16 +291,8 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	data := res.CharacterData{BasicData: baseData}
 	data.BasicData.Sex = xmlChar.Gender
 	data.BasicData.Race = xmlChar.Race
-	attitude, err := UnmarshalAttitude(xmlChar.Attitude)
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse attitude: %v", err)
-	}
-	data.BasicData.Attitude = int(attitude)
-	alignment, err := UnmarshalAlignment(xmlChar.Alignment)
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse alignment: %v", err)
-	}
-	data.BasicData.Alignment = int(alignment)
+	data.BasicData.Attitude = xmlChar.Attitude
+	data.BasicData.Alignment = xmlChar.Alignment
 	// Attributes.
 	attrs := xmlChar.Attributes
 	data.BasicData.Str = attrs.Strenght
@@ -373,16 +364,10 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	}
 	// Memory.
 	for _, xmlAtt := range xmlChar.Memory.Nodes {
-		att, err := UnmarshalAttitude(xmlAtt.Attitude)
-		if err != nil {
-			log.Err.Printf("xml: build character: %s: unable to parse att mem: %s",
-				xmlChar.ID, err)
-			continue
-		}
 		attData := res.AttitudeMemoryData{
 			ObjectID:     xmlAtt.ID,
 			ObjectSerial: xmlAtt.Serial,
-			Attitude:     int(att),
+			Attitude:     xmlAtt.Attitude,
 		}
 		data.Memory = append(data.Memory, attData)
 	}

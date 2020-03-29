@@ -29,48 +29,6 @@ import (
 	"github.com/isangeles/flame/module/character"
 )
 
-// marshalAttitude parses specified attitude to attitude XML
-// attribute value.
-func marshalAttitude(attitude character.Attitude) string {
-	switch attitude {
-	case character.Friendly:
-		return "friendly"
-	case character.Neutral:
-		return "neutral"
-	case character.Hostile:
-		return "hostile"
-	default:
-		return "unknown"
-	}
-}
-
-// marshalAlignment parses specified alignment to alignment XML
-// attribute value.
-func marshalAlignment(alignment character.Alignment) string {
-	switch alignment {
-	case character.LawfulGood:
-		return "lawful_good"
-	case character.NeutralGood:
-		return "neutral_good"
-	case character.ChaoticGood:
-		return "chaotic_good"
-	case character.LawfulNeutral:
-		return "lawful_neutral"
-	case character.TrueNeutral:
-		return "true_neutral"
-	case character.ChaoticNeutral:
-		return "chaotic_neutral"
-	case character.LawfulEvil:
-		return "lawful_evil"
-	case character.NeutralEvil:
-		return "neutral_evil"
-	case character.ChaoticEvil:
-		return "chaotic_evil"
-	default:
-		return "unknown"
-	}
-}
-
 // marshalEqSlot parses specified equipment slot to XML
 // attribute value.
 func MarshalEqSlot(eqSlot *character.EquipmentSlot) string {
