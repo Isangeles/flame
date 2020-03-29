@@ -66,7 +66,9 @@ Translation files are placed in `/lang` directory both for modules and chapters.
 Example module is available [here](https://github.com/Isangeles/arena).
 
 ## Documentation
-Documentation of configuration files and data files in the form of troff pages is available under `doc/data` directory.
+Source code documentation can be easily browsed with `go doc` command.
+
+Documentation of configuration files and data files in the form of [Troff](http://doc.cat-v.org/plan_9/4th_edition/papers/troff/) pages is available under `doc/data` directory.
 
 You can easily view documentation pages with `man` command.
 
@@ -75,7 +77,7 @@ For example to display documentation page for XML files with .characters extensi
 $ man doc/data/file/xml/.characters
 ```
 
-Note that documentation is still incomplete.
+Note that documentation of data files is still incomplete.
 
 ## Contributing
 You are welcome to contribute to project development.
