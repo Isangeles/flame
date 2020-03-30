@@ -53,9 +53,9 @@ Description: specifies module from `data/modules` directory to load at start, mo
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
 
 ## Modules
-Modules are stored by default in `data/modules` directory, different path to module can be specified in engine configuration file(`.flame`).
-
 Modules contains all game data in form of textual files. Modules are divided into chapters, thats contains chapter-specific data.
+
+Modules are stored by default in `data/modules` directory, different path to module can be specified in engine configuration file(`.flame`).
 
 Module data are available across all chapters, data files are placed subdirectories(`/items`, `/objects`, etc.) in module directory.
 
@@ -68,7 +68,7 @@ Example module is available [here](https://github.com/Isangeles/arena).
 ## Documentation
 Source code documentation can be easily browsed with `go doc` command.
 
-Documentation of configuration files and data files in the form of [Troff](http://doc.cat-v.org/plan_9/4th_edition/papers/troff/) pages is available under `doc/data` directory.
+Documentation of configuration files and data files in the form of Troff pages is available under `doc/data` directory.
 
 You can easily view documentation pages with `man` command.
 
