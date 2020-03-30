@@ -47,17 +47,16 @@ type Equiper interface {
 }
 
 // Type for slot type occupated by item.
-type Slot int
+type Slot string
 
 const (
-	None Slot = iota
-	Head
-	Neck
-	Chest
-	Hand
-	Finger
-	Legs
-	Feet
+	Head = Slot("itSlotHead")
+	Neck = Slot("itSlotNeck")
+	Chest = Slot("itSlotChest")
+	Hand = Slot("itSlotHand")
+	Finger = Slot("itSlotFinger")
+	Legs = Slot("itSlotLegs")
+	Feet = Slot("itSlotFeet")
 )
 
 // New creates item from specified data.

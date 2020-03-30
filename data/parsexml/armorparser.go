@@ -47,10 +47,16 @@ type Armor struct {
 	Value     int            `xml:"value,attr"`
 	Level     int            `xml:"level,attr"`
 	Armor     int            `xml:"armor,attr"`
-	Slots     string         `xml:"slots,attr"`
+	Slots     []ItemSlot     `xml:"slots>slot"`
 	Loot      bool           `xml:"loot,attr"`
 	Reqs      Reqs           `xml:"eq>reqs"`
 	EQEffects []ObjectEffect `xml:"eq>effects>effect"`
+}
+
+// Struct for item slot node.
+type ItemSlot struct {
+	XMLName xml.Name `xml:"slot"`
+	ID      string   `xml:"id,attr"`
 }
 
 // UnmarshalArmors retrieves armor data from specified XML data.
@@ -76,13 +82,9 @@ func UnmarshalArmors(data io.Reader) ([]*res.ArmorData, error) {
 // buildArmorData creates armor resource from specified armor node.
 func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
 	reqs := buildReqs(&xmlArmor.Reqs)
-	slots, err := UnmarshalItemSlots(xmlArmor.Slots)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal slot types: %v", err)
-	}
-	slotsID := make([]int, 0)
-	for _, s := range slots {
-		slotsID = append(slotsID, int(s))
+	slotsID := make([]string, len(xmlArmor.Slots))
+	for _, s := range xmlArmor.Slots {
+		slotsID = append(slotsID, s.ID)
 	}
 	eqEffects := make([]res.EffectData, 0)
 	for _, xmlEffect := range xmlArmor.EQEffects {

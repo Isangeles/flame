@@ -1,7 +1,7 @@
 /*
  * item.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ type ArmorData struct {
 	Armor     int
 	EQEffects []EffectData
 	EQReqs    []ReqData
-	Slots     []int
+	Slots     []string
 	Loot      bool
 }
 
@@ -49,7 +49,7 @@ type WeaponData struct {
 	DMGType    int
 	DMGEffects []EffectData
 	EQReqs     []ReqData
-	Slots      []int
+	Slots      []string
 	Loot       bool
 }
 

@@ -41,15 +41,15 @@ type Weapons struct {
 
 // Struct for weapon XML node.
 type Weapon struct {
-	XMLName xml.Name `xml:"weapon"`
-	ID      string   `xml:"id,attr"`
-	Serial  string   `xml:"serial,attr"`
-	Value   int      `xml:"value,attr"`
-	Level   int      `xml:"level,attr"`
-	Loot    bool     `xml:"loot,attr"`
-	Damage  Damage   `xml:"damage"`
-	Reqs    Reqs     `xml:"reqs"`
-	Slots   string   `xml:"slots,attr"`
+	XMLName xml.Name   `xml:"weapon"`
+	ID      string     `xml:"id,attr"`
+	Serial  string     `xml:"serial,attr"`
+	Value   int        `xml:"value,attr"`
+	Level   int        `xml:"level,attr"`
+	Loot    bool       `xml:"loot,attr"`
+	Damage  Damage     `xml:"damage"`
+	Reqs    Reqs       `xml:"reqs"`
+	Slots   []ItemSlot `xml:"slots>slot"`
 }
 
 // UnmarshalWeaponsBase retrieves weapons data from specified XML data.
@@ -75,13 +75,9 @@ func UnmarshalWeapons(data io.Reader) ([]*res.WeaponData, error) {
 // buildXMLWeapon creates new weapon data from specified XML data.
 func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 	reqs := buildReqs(&xmlWeapon.Reqs)
-	slots, err := UnmarshalItemSlots(xmlWeapon.Slots)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal slot types: %v", err)
-	}
-	slotsID := make([]int, 0)
-	for _, s := range slots {
-		slotsID = append(slotsID, int(s))
+	slotsID := make([]string, 0)
+	for _, s := range xmlWeapon.Slots {
+		slotsID = append(slotsID, s.ID)
 	}
 	dmgType, err := UnmarshalElementType(xmlWeapon.Damage.Type)
 	if err != nil {

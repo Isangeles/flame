@@ -112,7 +112,7 @@ func newEquipmentSlot(sType EquipmentSlotType) *EquipmentSlot {
 // compatible slots.
 func (eq *Equipment) Equip(it item.Equiper) error {
 	if !eq.char.MeetReqs(it.EquipReqs()...) {
-		return fmt.Errorf("reqs_not_meet")
+		return fmt.Errorf("reqs not meet")
 	}
 	for _, s := range it.Slots() {
 		switch s {
@@ -129,6 +129,9 @@ func (eq *Equipment) Equip(it item.Equiper) error {
 				}
 			}
 		}
+	}
+	if !eq.Equiped(it) {
+		return fmt.Errorf("no compatible slots")
 	}
 	return nil
 }
