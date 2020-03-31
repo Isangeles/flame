@@ -46,7 +46,7 @@ type WeaponData struct {
 	Level      int
 	DMGMin     int
 	DMGMax     int
-	DMGType    int
+	DMGType    string
 	DMGEffects []EffectData
 	EQReqs     []ReqData
 	Slots      []string

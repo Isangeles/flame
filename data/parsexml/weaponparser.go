@@ -79,10 +79,6 @@ func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 	for _, s := range xmlWeapon.Slots {
 		slotsID = append(slotsID, s.ID)
 	}
-	dmgType, err := UnmarshalElementType(xmlWeapon.Damage.Type)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal damage type: %v", err)
-	}
 	hitEffects := make([]res.EffectData, 0)
 	for _, xmlEffect := range xmlWeapon.Damage.Effects {
 		eff := res.Effect(xmlEffect.ID)
@@ -99,7 +95,7 @@ func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 		Level:      xmlWeapon.Level,
 		DMGMin:     xmlWeapon.Damage.Min,
 		DMGMax:     xmlWeapon.Damage.Max,
-		DMGType:    int(dmgType),
+		DMGType:    xmlWeapon.Damage.Type,
 		DMGEffects: hitEffects,
 		EQReqs:     reqs,
 		Slots:      slotsID,

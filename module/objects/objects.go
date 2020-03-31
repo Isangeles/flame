@@ -100,13 +100,13 @@ type AreaObject interface {
 
 // Struct for object effect
 // types.
-type Element int
+type Element string
 
 const (
-	Element_none Element = iota
-	Element_fire
-	Element_frost
-	Element_nature
+	ElementNone Element = Element("elementNone")
+	ElementFire = Element("elementFire")
+	ElementFrost = Element("elementFrost")
+	ElementNature = Element("elementNature")
 )
 
 // Equals checks whether two specified objects

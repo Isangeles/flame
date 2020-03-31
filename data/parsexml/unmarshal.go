@@ -29,7 +29,6 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/module/character"
-	"github.com/isangeles/flame/module/objects"
 )
 
 var (
@@ -87,20 +86,4 @@ func UnmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 			fmt.Errorf("unable to parse wis attribute: %s", stats[4])
 	}
 	return character.Attributes{str, con, dex, inte, wis}, nil
-}
-
-// UnmarshalElementType parses specified string to element type.
-func UnmarshalElementType(s string) (objects.Element, error) {
-	switch s {
-	case "normal":
-		return objects.Element_none, nil
-	case "fire":
-		return objects.Element_fire, nil
-	case "frost":
-		return objects.Element_frost, nil
-	case "nature":
-		return objects.Element_nature, nil
-	default:
-		return -1, fmt.Errorf("unsupported hit type value: %s", s)
-	}
 }

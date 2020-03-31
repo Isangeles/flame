@@ -74,7 +74,7 @@ func (c *Character) DamageType() objects.Element {
 			w.DamageType()
 		}
 	}
-	return objects.Element_none
+	return objects.ElementNone
 }
 
 // DamageEffects returns character damage effects.
