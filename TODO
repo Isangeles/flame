@@ -26,12 +26,11 @@ MINOR:
   but other marshaling method should be applied for exporting character to use in different game
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for parsexml and data packages
-* Camelcase names for consts in: quest, skill
+* Camelcase names for consts in: quest
 * Remove stage modifiers from dialog, modifiers should be passed only through
   stage answers
 * XML: rename talker node in dialog to target
 * Item modifier
-* Change underlying type for equipment slots, item slots, skill range and elements from int to string
 * Area weather
 * In-game time
 DONE:

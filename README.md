@@ -11,7 +11,7 @@
 
   Flame modules are available for download [here](http://flame.isangeles.pl/mods).
 
-  Currently in a early development stage.
+  Currently in an early development stage.
 
   Flame as a project consists with many different repositories, some of them are independent and can be reused in other projects:
 
@@ -53,17 +53,17 @@ Description: specifies module from `data/modules` directory to load at start, mo
 Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
 
 ## Modules
-Modules contains all game data in form of textual files. Modules are divided into chapters, thats contains chapter-specific data.
+Modules contain all game data in the form of textual files. Modules are divided into chapters, that's contains chapter-specific data.
 
-Modules are stored by default in `data/modules` directory, different path to module can be specified in engine configuration file(`.flame`).
+Modules are stored by default in `data/modules` directory.
 
-Module data are available across all chapters, data files are placed subdirectories(`/items`, `/objects`, etc.) in module directory.
+Module data are available across all chapters, data files are placed in sub-directories(`/items`, `/objects`, etc.) in the module directory.
 
-Chapter data are available only when specific chapter is active, data files are placed in subdirectories(`/npc`, `/dialogs`, etc.) in chapter directory(in `[module]/chapters`).
+Chapter data are available only when a specific chapter is active, data files are placed in subdirectories(`/npc`, `/dialogs`, etc.) in chapter directory(in `[module]/chapters`).
 
 Translation files are placed in `/lang` directory both for modules and chapters.
 
-Example module is available [here](https://github.com/Isangeles/arena).
+The example module is available [here](https://github.com/Isangeles/arena).
 
 ## Documentation
 Source code documentation can be easily browsed with `go doc` command.
@@ -84,8 +84,8 @@ You are welcome to contribute to project development.
 
 If you looking for things to do, then check [TODO file](https://github.com/Isangeles/flame/blob/master/TODO) or contact me(dev@isangeles.pl).
 
-When you find something to do, create new branch for your feature.
-After you finish, open pull request to merge your changes with master branch.
+When you find something to do, create a new branch for your feature.
+After you finish, open a pull request to merge your changes with master branch.
 
 ## Contact
 * Isangeles <<dev@isangeles.pl>>
