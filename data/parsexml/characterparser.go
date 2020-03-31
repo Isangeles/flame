@@ -231,7 +231,7 @@ func xmlEquipment(eq *character.Equipment) *Equipment {
 		xmlEqItem := EquipmentItem{
 			ID:     s.Item().ID(),
 			Serial: s.Item().Serial(),
-			Slot:   MarshalEqSlot(s),
+			Slot:   string(s.Type()),
 		}
 		xmlEq.Items = append(xmlEq.Items, xmlEqItem)
 	}
@@ -330,16 +330,10 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	data.Inventory = buildInventory(xmlChar.Inventory)
 	// Equipment.
 	for _, xmlEqIt := range xmlChar.Equipment.Items {
-		slot, err := UnmarshalEqSlot(xmlEqIt.Slot)
-		if err != nil {
-			log.Err.Printf("xml: build character: %s: parse eq item: %s: unable to parse lslot: %v",
-				xmlChar.ID, xmlEqIt.ID, err)
-			continue
-		}
 		eqItData := res.EquipmentItemData{
 			ID:     xmlEqIt.ID,
 			Serial: xmlEqIt.Serial,
-			Slot:   int(slot),
+			Slot:   xmlEqIt.Slot,
 		}
 		data.Equipment.Items = append(data.Equipment.Items, eqItData)
 	}

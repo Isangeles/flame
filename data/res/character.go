@@ -77,7 +77,7 @@ type EquipmentData struct {
 type EquipmentItemData struct {
 	ID     string
 	Serial string
-	Slot   int
+	Slot   string
 }
 
 // Struct for attitude memory data.

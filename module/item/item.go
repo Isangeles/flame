@@ -74,25 +74,3 @@ func New(data res.ItemData) Item {
 		return nil
 	}
 }
-
-// ID returns slot ID.
-func (s Slot) ID() string {
-	switch s {
-	case Head:
-		return "slot_head"
-	case Neck:
-		return "slot_neck"
-	case Chest:
-		return "slot_chest"
-	case Hand:
-		return "slot_hand"
-	case Finger:
-		return "slot_finger"
-	case Legs:
-		return "slot_legs"
-	case Feet:
-		return "slot_feet"
-	default:
-		return "slot_none"
-	}
-}

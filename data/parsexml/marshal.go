@@ -25,36 +25,7 @@ package parsexml
 
 import (
 	"fmt"
-
-	"github.com/isangeles/flame/module/character"
 )
-
-// marshalEqSlot parses specified equipment slot to XML
-// attribute value.
-func MarshalEqSlot(eqSlot *character.EquipmentSlot) string {
-	switch eqSlot.Type() {
-	case character.Head:
-		return "head"
-	case character.Neck:
-		return "neck"
-	case character.Chest:
-		return "chest"
-	case character.Hand_right:
-		return "right_hand"
-	case character.Hand_left:
-		return "left_hand"
-	case character.Finger_right:
-		return "finger_right"
-	case character.Finger_left:
-		return "finger_left"
-	case character.Legs:
-		return "legs"		
-	case character.Feet:
-		return "feet"
-	default:
-		return "unknow"
-	}
-}
 
 // MarshalPosition parses specified XY position
 // to string.

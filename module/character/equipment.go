@@ -44,18 +44,18 @@ type EquipmentSlot struct {
 }
 
 // Type for equipment slot type.
-type EquipmentSlotType int
+type EquipmentSlotType string
 
 const (
-	Head EquipmentSlotType = iota
-	Neck
-	Chest
-	Hand_right
-	Hand_left
-	Finger_right
-	Finger_left
-	Legs
-	Feet
+	Head EquipmentSlotType = EquipmentSlotType("eqSlotHead")
+	Neck = EquipmentSlotType("eqSlotNeck")
+	Chest = EquipmentSlotType("eqSlotChest")
+	HandRight = EquipmentSlotType("eqSlotHandRight")
+	HandLeft = EquipmentSlotType("eqSlotHandLeft")
+	FingerRight = EquipmentSlotType("eqSlotFingerRight")
+	FingerLeft = EquipmentSlotType("eqSlotFingerLeft")
+	Legs = EquipmentSlotType("eqSlotLegs")
+	Feet = EquipmentSlotType("eqSlotFeet")
 )
 
 // newEquipment creates new equipment for
@@ -66,10 +66,10 @@ func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 	eq.slots = append(eq.slots, newEquipmentSlot(Head))
 	eq.slots = append(eq.slots, newEquipmentSlot(Neck))
 	eq.slots = append(eq.slots, newEquipmentSlot(Chest))
-	eq.slots = append(eq.slots, newEquipmentSlot(Hand_right))
-	eq.slots = append(eq.slots, newEquipmentSlot(Hand_left))
-	eq.slots = append(eq.slots, newEquipmentSlot(Finger_right))
-	eq.slots = append(eq.slots, newEquipmentSlot(Finger_left))
+	eq.slots = append(eq.slots, newEquipmentSlot(HandRight))
+	eq.slots = append(eq.slots, newEquipmentSlot(HandLeft))
+	eq.slots = append(eq.slots, newEquipmentSlot(FingerRight))
+	eq.slots = append(eq.slots, newEquipmentSlot(FingerLeft))
 	eq.slots = append(eq.slots, newEquipmentSlot(Legs))
 	eq.slots = append(eq.slots, newEquipmentSlot(Feet))
 	for _, itData := range data.Items {
@@ -118,7 +118,7 @@ func (eq *Equipment) Equip(it item.Equiper) error {
 		switch s {
 		case item.Hand:
 			for _, s := range eq.Slots() {
-				if s.Type() == Hand_right {
+				if s.Type() == HandRight {
 					s.SetItem(it)
 				}
 			}
@@ -194,31 +194,6 @@ func (eqSlot *EquipmentSlot) SetItem(it item.Equiper) {
 	eqSlot.item = it
 }
 
-// ID returns slot ID.
-func (eqSlot *EquipmentSlot) ID() string {
-	switch eqSlot.Type() {
-	case Head:
-		return "eq_slot_head"
-	case Neck:
-		return "eq_slot_neck"
-	case Chest:
-		return "eq_slot_chest"
-	case Hand_right:
-		return "eq_slot_hand_right"
-	case Hand_left:
-		return "eq_slot_hand_left"
-	case Finger_right:
-		return "eq_slot_finger_right"
-	case Finger_left:
-		return "eq_slot_finger_left"
-	case Legs:
-		return "eq_slot_legs"
-	case Feet:
-		return "eq_slot_feet"
-	}
-	return "eq_slot_unknown"
-}
-
 // compact checks whether equipment slot is compatible with
 // specified item slot.
 func (eqSlotType EquipmentSlotType) compact(itSlot item.Slot) bool {
@@ -229,9 +204,9 @@ func (eqSlotType EquipmentSlotType) compact(itSlot item.Slot) bool {
 		return itSlot == item.Neck
 	case Chest:
 		return itSlot == item.Chest
-	case Hand_right, Hand_left:
+	case HandRight, HandLeft:
 		return itSlot == item.Hand
-	case Finger_right, Finger_left:
+	case FingerRight, FingerLeft:
 		return itSlot == item.Finger
 	case Legs:
 		return itSlot == item.Legs

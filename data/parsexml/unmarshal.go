@@ -29,7 +29,6 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/module/character"
-	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
 )
 
@@ -88,37 +87,6 @@ func UnmarshalAttributes(attributesAttr string) (character.Attributes, error) {
 			fmt.Errorf("unable to parse wis attribute: %s", stats[4])
 	}
 	return character.Attributes{str, con, dex, inte, wis}, nil
-}
-
-// UnmarshalItemSlots parses specified slots attribute from XML doc
-// to item slot types.
-func UnmarshalItemSlots(slotsAttr string) ([]item.Slot, error) {
-	slots := make([]item.Slot, 0)
-	attrs := strings.Fields(slotsAttr)
-	for _, attr := range attrs {
-		switch attr {
-		case item.Hand.ID():
-			slots = append(slots, item.Hand)
-		case item.Chest.ID():
-			slots = append(slots, item.Chest)
-		default: // all slots IDs must be 'parsable'
-			return nil, fmt.Errorf("unable to parse slot type: %s", slotsAttr)
-		}
-	}
-	return slots, nil
-}
-
-// UnmarshalEqSlot parses specified slot XML attribute to
-// equipment slot type.
-func UnmarshalEqSlot(slot string) (character.EquipmentSlotType, error) {
-	switch slot {
-	case "right_hand":
-		return character.Hand_right, nil
-	case "chest":
-		return character.Chest, nil
-	default:
-		return -1, fmt.Errorf("unsupported eq slot type value: %s", slot)
-	}
 }
 
 // UnmarshalElementType parses specified string to element type.
