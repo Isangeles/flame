@@ -30,7 +30,6 @@ import (
 	"io/ioutil"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/log"
 )
 
 // Struct for XML area node.
@@ -46,15 +45,17 @@ type Area struct {
 type AreaObject struct {
 	XMLName  xml.Name `xml:"object"`
 	ID       string   `xml:"id,attr"`
-	Position string   `xml:"position,attr"`
+	X        float64  `xml:"x,attr"`
+	Y        float64  `xml:"y,attr"`
 }
 
 // Struct for XML area character node.
 type AreaCharacter struct {
 	XMLName  xml.Name `xml:"character"`
 	ID       string   `xml:"id,attr"`
-	Position string   `xml:"position,attr"`
 	AI       bool     `xml:"ai,attr"`
+	X        float64  `xml:"x,attr"`
+	Y        float64  `xml:"y,attr"`
 }
 
 // UnmarshalArea parses area from XML data to resource.
@@ -88,15 +89,17 @@ func xmlArea(data *res.AreaData) *Area {
 	for _, c := range data.Characters {
 		xmlChar := new(AreaCharacter)
 		xmlChar.ID = c.ID
-		xmlChar.Position = MarshalPosition(c.PosX, c.PosY)
 		xmlChar.AI = c.AI
+		xmlChar.X = c.PosX
+		xmlChar.Y = c.PosY
 		xmlData.Characters = append(xmlData.Characters, *xmlChar)
 	}
 	// Objects.
 	for _, o := range data.Objects {
 		xmlOb := new(AreaObject)
 		xmlOb.ID = o.ID
-		xmlOb.Position = MarshalPosition(o.PosX, o.PosY)
+		xmlOb.X = o.PosX
+		xmlOb.Y = o.PosY
 		xmlData.Objects = append(xmlData.Objects, *xmlOb)
 	}
 	// Subareas.
@@ -112,32 +115,20 @@ func buildAreaData(xmlArea *Area) *res.AreaData {
 	area := res.AreaData{ID: xmlArea.ID}
 	// Characters.
 	for _, xmlChar := range xmlArea.Characters {
-		x, y, err := UnmarshalPosition(xmlChar.Position)
-		if err != nil {
-			log.Err.Printf("xml: build area: %s: build char: %s: unable to parse position: %v",
-				xmlArea.ID, xmlChar.ID, err)
-			continue
-		}
 		char := res.AreaCharData{
 			ID:   xmlChar.ID,
-			PosX: x,
-			PosY: y,
 			AI:   xmlChar.AI,
+			PosX: xmlChar.X,
+			PosY: xmlChar.Y,
 		}
 		area.Characters = append(area.Characters, char)
 	}
 	// Objects.
 	for _, xmlOb := range xmlArea.Objects {
-		x, y, err := UnmarshalPosition(xmlOb.Position)
-		if err != nil {
-			log.Err.Printf("xml: build area: %s: build object: %s: unable to parse position: %v",
-				xmlArea.ID, xmlOb.ID, err)
-			continue
-		}
 		ob := res.AreaObjectData{
 			ID:   xmlOb.ID,
-			PosX: x,
-			PosY: y,
+			PosX: xmlOb.X,
+			PosY: xmlOb.Y,
 		}
 		area.Objects = append(area.Objects, ob)
 	}

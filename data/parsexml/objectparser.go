@@ -51,7 +51,8 @@ type Object struct {
 	Serial    string         `xml:"serial,attr"`
 	HP        int            `xml:"hp,attr"`
 	MaxHP     int            `xml:"max-hp,attr"`
-	Position  string         `xml:"position,value"`
+	PosX      float64        `xml:"position-x,attr"`
+	PosY      float64        `xml:"position-y,attr"`
 	Action    ObjectAction   `xml:"action"`
 	Inventory Inventory      `xml:"inventory"`
 	Effects   []ObjectEffect `xml:"effects>effect"`
@@ -142,8 +143,7 @@ func xmlObject(ob *object.Object) *Object {
 	xmlOb.Serial = ob.Serial()
 	xmlOb.HP = ob.Health()
 	xmlOb.MaxHP = ob.MaxHealth()
-	posX, posY := ob.Position()
-	xmlOb.Position = fmt.Sprintf("%fx%f", posX, posY)
+	xmlOb.PosX, xmlOb.PosY = ob.Position()
 	if ob.Action() != nil {
 		xmlOb.Action = xmlObjectAction(ob.Action())
 	}
@@ -237,13 +237,8 @@ func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
 	// Saved health.
 	data.SavedData.HP = xmlOb.HP
 	// Position.
-	if xmlOb.Position != "" {
-		posX, posY, err := UnmarshalPosition(xmlOb.Position)
-		if err != nil {
-			return nil, fmt.Errorf("unable to parse position: %v", err)
-		}
-		data.SavedData.PosX, data.SavedData.PosY = posX, posY
-	}
+	data.SavedData.PosX = xmlOb.PosX
+	data.SavedData.PosY = xmlOb.PosY
 	// Items.
 	data.Inventory = buildInventory(xmlOb.Inventory)
 	// Effects.

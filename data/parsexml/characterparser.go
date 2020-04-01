@@ -1,4 +1,4 @@
-/*
+ /*
  * characterparser.go
  *
  * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
@@ -58,8 +58,10 @@ type Character struct {
 	HP          int              `xml:"hp,attr"`
 	Mana        int              `xml:"mana,attr"`
 	Exp         int              `xml:"exp,attr"`
-	Position    string           `xml:"position,value"`
-	DefPosition string           `xml:"default-position,value"`
+	PosX        float64          `xml:"position-x,attr"`
+	PosY        float64          `xml:"position-y,attr"`
+	DefPosX     float64          `xml:"def-position-x,attr"`
+	DefPosY     float64          `xml:"def-position-y,attr"`
 	AI          bool             `xml:"ai,attr"`
 	Inventory   Inventory        `xml:"inventory"`
 	Equipment   Equipment        `xml:"equipment"`
@@ -190,10 +192,8 @@ func xmlCharacter(char *character.Character) *Character {
 	xmlChar.HP = char.Health()
 	xmlChar.Mana = char.Mana()
 	xmlChar.Exp = char.Experience()
-	posX, posY := char.Position()
-	xmlChar.Position = fmt.Sprintf("%fx%f", posX, posY)
-	defX, defY := char.DefaultPosition()
-	xmlChar.DefPosition = fmt.Sprintf("%fx%f", defX, defY)
+	xmlChar.PosX, xmlChar.PosY = char.Position()
+	xmlChar.DefPosX, xmlChar.DefPosY = char.DefaultPosition()
 	xmlChar.Inventory = *xmlInventory(char.Inventory())
 	xmlChar.Equipment = *xmlEquipment(char.Equipment())
 	xmlChar.Effects = xmlObjectEffects(char.Effects()...)
@@ -311,21 +311,10 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	data.SavedData.HP = xmlChar.HP
 	data.SavedData.Mana = xmlChar.Mana
 	data.SavedData.Exp = xmlChar.Exp
-	// Current & default position.
-	if xmlChar.Position != "" {
-		posX, posY, err := UnmarshalPosition(xmlChar.Position)
-		if err != nil {
-			return nil, fmt.Errorf("unable to parse position: %v", err)
-		}
-		data.SavedData.PosX, data.SavedData.PosY = posX, posY
-	}
-	if xmlChar.DefPosition != "" {
-		defX, defY, err := UnmarshalPosition(xmlChar.DefPosition)
-		if err != nil {
-			return nil, fmt.Errorf("unable to parse default position: %v", err)
-		}
-		data.SavedData.DefX, data.SavedData.DefY = defX, defY
-	}
+	data.SavedData.PosX = xmlChar.PosX
+	data.SavedData.PosY = xmlChar.PosY
+	data.SavedData.DefX = xmlChar.DefPosX
+	data.SavedData.DefY = xmlChar.DefPosY
 	// Items.
 	data.Inventory = buildInventory(xmlChar.Inventory)
 	// Equipment.
