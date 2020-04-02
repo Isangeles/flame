@@ -55,13 +55,13 @@ type Object struct {
 // specified data.
 func New(data res.ObjectData) *Object {
 	ob := Object{
-		id:     data.BasicData.ID,
-		name:   data.BasicData.Name,
-		maxHP:  data.BasicData.MaxHP,
+		id:     data.ID,
+		name:   data.Name,
+		maxHP:  data.MaxHP,
 	}
 	ob.SetHealth(ob.MaxHealth())
-	if len(data.BasicData.Action.SelfMods) > 0 || len(data.BasicData.Action.UserMods) > 0 {
-		ob.action = NewAction(data.BasicData.Action)
+	if len(data.Action.SelfMods) > 0 || len(data.Action.UserMods) > 0 {
+		ob.action = NewAction(data.Action)
 	}
 	ob.inventory = item.NewInventory(data.Inventory)
 	ob.inventory.SetCapacity(10)
@@ -77,7 +77,7 @@ func New(data res.ObjectData) *Object {
 	for _, data := range data.Effects {
 		effData := res.Effect(data.ID)
 		if effData == nil {
-			log.Err.Printf("object: %s: fail to retrieve effect data: %s",
+			log.Err.Printf("object: %s: unable to retrieve effect data: %s",
 				ob.ID(), data.ID)
 			continue
 		}

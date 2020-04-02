@@ -224,21 +224,19 @@ func xmlObjectAction(action *object.Action) ObjectAction {
 // buildObjectData creates object data from specified XML
 // data.
 func buildObjectData(xmlOb *Object) (*res.ObjectData, error) {
-	// Basic data.
-	baseData := res.ObjectBasicData{
+	data := res.ObjectData{
 		ID:     xmlOb.ID,
 		Serial: xmlOb.Serial,
 		MaxHP:  xmlOb.MaxHP,
 	}
 	// Action.
-	baseData.Action.SelfMods = buildModifiers(&xmlOb.Action.SelfMods)
-	baseData.Action.UserMods = buildModifiers(&xmlOb.Action.UserMods)
-	data := res.ObjectData{BasicData: baseData}
+	data.Action.SelfMods = buildModifiers(&xmlOb.Action.SelfMods)
+	data.Action.UserMods = buildModifiers(&xmlOb.Action.UserMods)
 	// Saved health.
-	data.SavedData.HP = xmlOb.HP
+	data.HP = xmlOb.HP
 	// Position.
-	data.SavedData.PosX = xmlOb.PosX
-	data.SavedData.PosY = xmlOb.PosY
+	data.PosX = xmlOb.PosX
+	data.PosY = xmlOb.PosY
 	// Items.
 	data.Inventory = buildInventory(xmlOb.Inventory)
 	// Effects.

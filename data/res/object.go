@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,25 +25,15 @@ package res
 
 // Struct for object data.
 type ObjectData struct {
-	BasicData ObjectBasicData
-	SavedData ObjectSavedData
-	Inventory InventoryData
-	Effects   []ObjectEffectData
-}
-
-// Struct for basic object data.
-type ObjectBasicData struct {
-	ID        string
-	Name      string
-	Serial    string
-	MaxHP     int
-	Action    ObjectActionData
-}
-
-// Struct for saved object data.
-type ObjectSavedData struct {
+	ID         string
+	Name       string
+	Serial     string
+	MaxHP      int
 	HP         int
 	PosX, PosY float64
+	Action     ObjectActionData
+	Inventory  InventoryData
+	Effects    []ObjectEffectData
 }
 
 // Struct for object action data.

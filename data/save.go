@@ -166,10 +166,10 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 		// Build object.
 		ob := object.New(obData)
 		// Restore serial.
-		ob.SetSerial(obData.BasicData.Serial)
+		ob.SetSerial(obData.Serial)
 		// Restore health & position.
-		ob.SetHealth(obData.SavedData.HP)
-		ob.SetPosition(obData.SavedData.PosX, obData.SavedData.PosY)
+		ob.SetHealth(obData.HP)
+		ob.SetPosition(obData.PosX, obData.PosY)
 		// Object to area.
 		area.AddObject(ob)
 	}

@@ -321,7 +321,7 @@ func SetCharactersData(data []*CharacterData) {
 func SetObjectsData(data []*ObjectData) {
 	objectsData = make(map[string]*ObjectData)
 	for _, od := range data {
-		objectsData[od.BasicData.ID] = od
+		objectsData[od.ID] = od
 	}
 }
 
