@@ -312,7 +312,7 @@ func SetMiscItemsData(data []*MiscItemData) {
 func SetCharactersData(data []*CharacterData) {
 	charsData = make(map[string]*CharacterData)
 	for _, cd := range data {
-		charsData[cd.BasicData.ID] = cd
+		charsData[cd.ID] = cd
 	}
 }
 

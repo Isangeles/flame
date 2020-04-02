@@ -59,7 +59,7 @@ func New(data res.AreaData) *Area {
 				a.ID(), areaCharData.ID)
 			continue
 		}
-		charData.BasicData.AI = areaCharData.AI
+		charData.AI = areaCharData.AI
 		char := character.New(*charData)
 		// Set position.
 		char.SetPosition(areaCharData.PosX, areaCharData.PosY)

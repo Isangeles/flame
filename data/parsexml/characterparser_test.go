@@ -77,15 +77,14 @@ func TestUnmarshalCharacters(t *testing.T) {
 		t.Errorf("Unmarshaled data is inavalid: len: %d != 1", len(data))
 	}
 	char := data[0]
-	if char.BasicData.ID != "char" {
-		t.Errorf("Unmarshaled data is inavalid: ID: %s != char", char.BasicData.ID)	
+	if char.ID != "char" {
+		t.Errorf("Unmarshaled data is inavalid: ID: %s != char", char.ID)
 	}
 }
 
 // Test for marshaling character data.
 func TestMarshalCharacter(t *testing.T) {
-	var data res.CharacterData
-	data.BasicData = res.CharacterBasicData{
+	data := res.CharacterData{
 		ID:        "char",
 		Name:      "charName",
 		AI:        true,
@@ -125,8 +124,7 @@ func TestMarshalCharacter(t *testing.T) {
 
 // Test for marshaling characters data.
 func TestMarshalCharacters(t *testing.T) {
-	var data res.CharacterData
-	data.BasicData = res.CharacterBasicData{
+	data := res.CharacterData{
 		ID:        "char1",
 		Name:      "charName",
 		AI:        true,
@@ -143,7 +141,7 @@ func TestMarshalCharacters(t *testing.T) {
 		Wis:       6,
 	}
 	char1 := character.New(data)
-	data.BasicData.ID = "char2"
+	data.ID = "char2"
 	char2 := character.New(data)
 	xmlChars, err := MarshalCharacters(char1, char2)
 	if err != nil {

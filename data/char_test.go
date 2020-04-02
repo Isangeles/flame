@@ -32,8 +32,7 @@ import (
 
 // Test for exporting characters to characters file.
 func TestExportCharacters(t *testing.T) {
-	var data res.CharacterData
-	data.BasicData = res.CharacterBasicData{
+	data := res.CharacterData{
 		ID:        "char1",
 		Name:      "charName",
 		AI:        true,
@@ -51,7 +50,7 @@ func TestExportCharacters(t *testing.T) {
 	}
 	chars := make([]*character.Character, 0)
 	chars = append(chars, character.New(data))
-	data.BasicData.ID = "char2"
+	data.ID = "char2"
 	chars = append(chars, character.New(data))
 	err := ExportCharacters("testchars", chars...)
 	if err != nil {

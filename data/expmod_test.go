@@ -47,8 +47,7 @@ func TestExportModule(t *testing.T) {
 	areaData := res.AreaData{
 		ID: "a1",
 	}
-	var charData res.CharacterData
-	charData.BasicData = res.CharacterBasicData{
+	charData := res.CharacterData{
 		ID:        "char1",
 		Name:      "charName",
 		AI:        true,
@@ -65,7 +64,7 @@ func TestExportModule(t *testing.T) {
 		Wis:       6,
 	}
 	res.SetCharactersData(append(res.Characters(), &charData))
-	areaCharData := res.AreaCharData{ID: charData.BasicData.ID}
+	areaCharData := res.AreaCharData{ID: charData.ID}
 	areaData.Characters = append(areaData.Characters, areaCharData)
 	area := area.New(areaData)
 	chapter.AddAreas(area)

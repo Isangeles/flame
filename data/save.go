@@ -150,14 +150,14 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	for _, charData := range data.Chars {
 		char := character.New(charData)
 		// Restore serial.
-		char.SetSerial(charData.BasicData.Serial)
+		char.SetSerial(charData.Serial)
 		// Restore HP, mana & exp.
-		char.SetHealth(charData.SavedData.HP)
-		char.SetMana(charData.SavedData.Mana)
-		char.SetExperience(charData.SavedData.Exp)
+		char.SetHealth(charData.HP)
+		char.SetMana(charData.Mana)
+		char.SetExperience(charData.Exp)
 		// Restore current and default position.
-		char.SetPosition(charData.SavedData.PosX, charData.SavedData.PosY)
-		char.SetDefaultPosition(charData.SavedData.DefX, charData.SavedData.DefY)
+		char.SetPosition(charData.PosX, charData.PosY)
+		char.SetDefaultPosition(charData.DefX, charData.DefY)
 		// Char to area.
 		area.AddCharacter(char)
 	}
@@ -184,10 +184,10 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 // restoreAreaEffects restores saved effects for characters and objects.
 func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
-		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
+		char := mod.Chapter().Character(charData.ID, charData.Serial)
 		if char == nil {
 			log.Err.Printf("data: save: restore effects: module char not found: %s#%s",
-				charData.BasicData.ID, charData.BasicData.Serial)
+				charData.ID, charData.Serial)
 			continue
 		}
 		for _, obEffectData := range charData.Effects {
@@ -218,10 +218,10 @@ func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 // restoreAreaMemory restores saved memory for characters.
 func restoreAreaMemory(mod *module.Module, data res.SavedAreaData) {
 	for _, charData := range data.Chars {
-		char := mod.Chapter().Character(charData.BasicData.ID, charData.BasicData.Serial)
+		char := mod.Chapter().Character(charData.ID, charData.Serial)
 		if char == nil {
 			log.Err.Printf("data: save: restore effects: module char not found: %s#%s",
-				charData.BasicData.ID, charData.BasicData.Serial)
+				charData.ID, charData.Serial)
 			continue
 		}
 		for _, memData := range charData.Memory {

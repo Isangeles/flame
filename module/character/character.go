@@ -92,19 +92,19 @@ const (
 // New creates new character from specified data.
 func New(data res.CharacterData) *Character {
 	c := Character{
-		id:        data.BasicData.ID,
-		name:      data.BasicData.Name,
-		ai:        data.BasicData.AI,
-		sex:       Gender(data.BasicData.Sex),
-		attitude:  Attitude(data.BasicData.Attitude),
-		alignment: Alignment(data.BasicData.Alignment),
+		id:        data.ID,
+		name:      data.Name,
+		ai:        data.AI,
+		sex:       Gender(data.Sex),
+		attitude:  Attitude(data.Attitude),
+		alignment: Alignment(data.Alignment),
 	}
 	c.attributes = Attributes{
-		Str: data.BasicData.Str,
-		Con: data.BasicData.Con,
-		Dex: data.BasicData.Dex,
-		Int: data.BasicData.Int,
-		Wis: data.BasicData.Wis,
+		Str: data.Str,
+		Con: data.Con,
+		Dex: data.Dex,
+		Int: data.Int,
+		Wis: data.Wis,
 	}
 	c.live = true
 	c.inventory = item.NewInventory(data.Inventory)
@@ -118,7 +118,7 @@ func New(data res.CharacterData) *Character {
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.flags = make(map[string]flag.Flag)
-	c.trainings = train.NewTrainings(data.BasicData.Trainings...)
+	c.trainings = train.NewTrainings(data.Trainings...)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	c.privlog = make(chan string, 3)
@@ -127,18 +127,18 @@ func New(data res.CharacterData) *Character {
 		c.SetName(lang.Text(c.ID()))
 	}
 	// Set Race.
-	raceData := res.Race(data.BasicData.Race)
+	raceData := res.Race(data.Race)
 	if raceData != nil {
 		c.race = NewRace(*raceData)
 	}
 	// Set level.
-	for i := 0; i < data.BasicData.Level; i++ {
+	for i := 0; i < data.Level; i++ {
 		oldMaxExp := c.MaxExperience()
 		c.levelup()
 		c.SetExperience(oldMaxExp)
 	}
 	// Add flags.
-	for _, fd := range data.BasicData.Flags {
+	for _, fd := range data.Flags {
 		f := flag.Flag(fd.ID)
 		c.flags[f.ID()] = f
 	}

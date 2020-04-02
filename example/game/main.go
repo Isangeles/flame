@@ -35,7 +35,7 @@ import (
 )
 var (
 	// Example pc data.
-	pcBasicData res.CharacterBasicData = res.CharacterBasicData{
+	pcData res.CharacterData = res.CharacterData{
 		ID:        "pc",
 		Name:      "PC",
 		Level:     1,
@@ -66,9 +66,6 @@ func main() {
 	// Create game.
 	game := flame.NewGame(mod)
 	// Create PC.
-	pcData := res.CharacterData{
-		BasicData: pcBasicData,
-	}
 	pc := character.New(pcData)
 	// Add PC to start area and set position.
 	chapterConf := game.Module().Chapter().Conf()

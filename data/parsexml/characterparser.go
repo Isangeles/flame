@@ -279,8 +279,7 @@ func xmlQuests(quests []*quest.Quest) (xmlQuests []CharacterQuest) {
 // buildCharacterData creates character resources from specified
 // XML data.
 func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
-	// Basic data.
-	baseData := res.CharacterBasicData{
+	data := res.CharacterData{
 		ID:     xmlChar.ID,
 		Serial: xmlChar.Serial,
 		Name:   xmlChar.Name,
@@ -288,33 +287,32 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 		Level:  xmlChar.Level,
 		Guild:  xmlChar.Guild,
 	}
-	data := res.CharacterData{BasicData: baseData}
-	data.BasicData.Sex = xmlChar.Gender
-	data.BasicData.Race = xmlChar.Race
-	data.BasicData.Attitude = xmlChar.Attitude
-	data.BasicData.Alignment = xmlChar.Alignment
+	data.Sex = xmlChar.Gender
+	data.Race = xmlChar.Race
+	data.Attitude = xmlChar.Attitude
+	data.Alignment = xmlChar.Alignment
 	// Attributes.
 	attrs := xmlChar.Attributes
-	data.BasicData.Str = attrs.Strenght
-	data.BasicData.Con = attrs.Constitution
-	data.BasicData.Dex = attrs.Dexterity
-	data.BasicData.Int = attrs.Intelligence
-	data.BasicData.Wis = attrs.Wisdom
+	data.Str = attrs.Strenght
+	data.Con = attrs.Constitution
+	data.Dex = attrs.Dexterity
+	data.Int = attrs.Intelligence
+	data.Wis = attrs.Wisdom
 	// Flags.
 	for _, xmlFlag := range xmlChar.Flags {
 		flagData := buildFlagData(xmlFlag)
-		data.BasicData.Flags = append(data.BasicData.Flags, flagData)
+		data.Flags = append(data.Flags, flagData)
 	}
 	// Trainings.
-	data.BasicData.Trainings = buildTrainings(&xmlChar.Trainings)
+	data.Trainings = buildTrainings(&xmlChar.Trainings)
 	// Save.
-	data.SavedData.HP = xmlChar.HP
-	data.SavedData.Mana = xmlChar.Mana
-	data.SavedData.Exp = xmlChar.Exp
-	data.SavedData.PosX = xmlChar.PosX
-	data.SavedData.PosY = xmlChar.PosY
-	data.SavedData.DefX = xmlChar.DefPosX
-	data.SavedData.DefY = xmlChar.DefPosY
+	data.HP = xmlChar.HP
+	data.Mana = xmlChar.Mana
+	data.Exp = xmlChar.Exp
+	data.PosX = xmlChar.PosX
+	data.PosY = xmlChar.PosY
+	data.DefX = xmlChar.DefPosX
+	data.DefY = xmlChar.DefPosY
 	// Items.
 	data.Inventory = buildInventory(xmlChar.Inventory)
 	// Equipment.
