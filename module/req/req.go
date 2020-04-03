@@ -33,6 +33,7 @@ import (
 type Requirement interface {
 	Meet() bool
 	SetMeet(meet bool)
+	Data() res.ReqData
 }
 
 // Interface for requirements targets.

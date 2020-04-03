@@ -54,3 +54,11 @@ func (gr *GenderReq) Meet() bool {
 func (gr *GenderReq) SetMeet(meet bool) {
 	gr.meet = meet
 }
+
+// Data returns data resource for requirement.
+func (gr *GenderReq) Data() res.ReqData {
+	data := res.GenderReqData{
+		Gender: gr.Gender(),
+	}
+	return data
+}

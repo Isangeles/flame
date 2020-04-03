@@ -61,3 +61,12 @@ func (ir *ItemReq) Meet() bool {
 func (ir *ItemReq) SetMeet(meet bool) {
 	ir.meet = meet
 }
+
+// Data returns data resource for requirement.
+func (ir *ItemReq) Data() res.ReqData {
+	data := res.ItemReqData{
+		ID:     ir.ItemID(),
+		Amount: ir.ItemAmount(),
+	}
+	return data
+}
