@@ -32,7 +32,7 @@ type SkillData struct {
 	Range    string
 	Melee    bool
 	Spell    bool
-	UseReqs  []ReqData
+	UseReqs  ReqsData
 	Effects  []EffectData
 }
 

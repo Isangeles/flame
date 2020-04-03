@@ -34,7 +34,7 @@ type ArmorData struct {
 	Level     int
 	Armor     int
 	EQEffects []EffectData
-	EQReqs    []ReqData
+	EQReqs    ReqsData
 	Slots     []string
 	Loot      bool
 }
@@ -48,7 +48,7 @@ type WeaponData struct {
 	DMGMax     int
 	DMGType    string
 	DMGEffects []EffectData
-	EQReqs     []ReqData
+	EQReqs     ReqsData
 	Slots      []string
 	Loot       bool
 }

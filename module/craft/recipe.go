@@ -50,7 +50,7 @@ func NewRecipe(data res.RecipeData) *Recipe {
 	r.id = data.ID
 	r.catID = data.Category
 	r.res = data.Results
-	r.reqs = req.NewRequirements(data.Reqs...)
+	r.reqs = req.NewRequirements(data.Reqs)
 	r.castTimeMax = data.Cast
 	nameInfo := lang.Texts(r.ID())
 	r.name = nameInfo[0]

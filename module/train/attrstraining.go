@@ -46,7 +46,7 @@ func NewAttrsTraining(data res.AttrsTrainingData) *AttrsTraining {
 		dexVal: data.Dex,
 		wisVal: data.Wis,
 		intVal: data.Int,
-		reqs:   req.NewRequirements(data.Reqs...),
+		reqs:   req.NewRequirements(data.Reqs),
 	}
 	return &at
 }
@@ -84,14 +84,12 @@ func (at *AttrsTraining) Reqs() []req.Requirement {
 // Data returns data resource for training.
 func (at *AttrsTraining) Data() res.TrainingData {
 	data := res.AttrsTrainingData{
-		Str: at.Strenght(),
-		Con: at.Constitution(),
-		Dex: at.Dexterity(),
-		Wis: at.Wisdom(),
-		Int: at.Intelligence(),
-	}
-	for _, r := range at.Reqs() {
-		data.Reqs = append(data.Reqs, r.Data())
+		Str:  at.Strenght(),
+		Con:  at.Constitution(),
+		Dex:  at.Dexterity(),
+		Wis:  at.Wisdom(),
+		Int:  at.Intelligence(),
+		Reqs: req.RequirementsData(at.Reqs()...),
 	}
 	return data
 }

@@ -42,7 +42,7 @@ type QuestStageData struct {
 type QuestObjectiveData struct {
 	ID       string
 	Finisher bool
-	Reqs     []ReqData
+	Reqs     ReqsData
 }
 
 // Struct for quest log data.

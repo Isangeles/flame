@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,14 @@
 
 package res
 
-// Interface for requirement data.
-type ReqData interface{}
+// Struct for reqs data.
+type ReqsData struct {
+	LevelReqs    []LevelReqData
+	GenderReqs   []GenderReqData
+	FlagReqs     []FlagReqData
+	ItemReqs     []ItemReqData
+	CurrencyReqs []CurrencyReqData
+}
 
 // Struct for level requirement data.
 type LevelReqData struct {

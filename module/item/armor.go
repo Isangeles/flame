@@ -57,7 +57,7 @@ func NewArmor(data res.ArmorData) *Armor {
 		armor:     data.Armor,
 		eqEffects: data.EQEffects,
 	}
-	a.eqReqs = req.NewRequirements(data.EQReqs...)
+	a.eqReqs = req.NewRequirements(data.EQReqs)
 	for _, sid := range data.Slots {
 		a.slots = append(a.slots, Slot(sid))
 

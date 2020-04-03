@@ -111,22 +111,21 @@ func xmlCurrencyReq(r *req.CurrencyReq) *CurrencyReq {
 
 // buildReqs creates requirements from specified
 // XML data.
-func buildReqs(xmlReqs *Reqs) []res.ReqData {
-	reqs := make([]res.ReqData, 0)
+func buildReqs(xmlReqs *Reqs) (data res.ReqsData) {
 	// Level reqs.
 	for _, xmlReq := range xmlReqs.LevelReqs {
 		req := res.LevelReqData{
 			Min: xmlReq.Min,
 			Max: xmlReq.Max,
 		}
-		reqs = append(reqs, req)
+		data.LevelReqs = append(data.LevelReqs, req)
 	}
 	// Gender reqs.
 	for _, xmlReq := range xmlReqs.GenderReqs {
 		req := res.GenderReqData{
 			Gender: xmlReq.Type,
 		}
-		reqs = append(reqs, req)
+		data.GenderReqs = append(data.GenderReqs, req)
 	}
 	// Flag reqs.
 	for _, xmlReq := range xmlReqs.FlagReqs {
@@ -134,7 +133,7 @@ func buildReqs(xmlReqs *Reqs) []res.ReqData {
 			ID:  xmlReq.ID,
 			Off: xmlReq.Off,
 		}
-		reqs = append(reqs, req)
+		data.FlagReqs = append(data.FlagReqs, req)
 	}
 	// Item reqs.
 	for _, xmlReq := range xmlReqs.ItemReqs {
@@ -143,7 +142,7 @@ func buildReqs(xmlReqs *Reqs) []res.ReqData {
 			Amount: xmlReq.Amount,
 			Charge: xmlReq.Charge,
 		}
-		reqs = append(reqs, req)
+		data.ItemReqs = append(data.ItemReqs, req)
 	}
 	// Currency reqs.
 	for _, xmlReq := range xmlReqs.CurrencyReqs {
@@ -151,7 +150,7 @@ func buildReqs(xmlReqs *Reqs) []res.ReqData {
 			Amount: xmlReq.Amount,
 			Charge: xmlReq.Charge,
 		}
-		reqs = append(reqs, req)
+		data.CurrencyReqs = append(data.CurrencyReqs, req)
 	}
-	return reqs
+	return
 }

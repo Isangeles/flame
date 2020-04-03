@@ -63,7 +63,7 @@ func (ir *ItemReq) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (ir *ItemReq) Data() res.ReqData {
+func (ir *ItemReq) Data() res.ItemReqData {
 	data := res.ItemReqData{
 		ID:     ir.ItemID(),
 		Amount: ir.ItemAmount(),

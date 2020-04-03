@@ -42,7 +42,7 @@ func NewObjective(data res.QuestObjectiveData) *Objective {
 	o := new(Objective)
 	o.id = data.ID
 	o.finisher = data.Finisher
-	o.reqs = req.NewRequirements(data.Reqs...)
+	o.reqs = req.NewRequirements(data.Reqs)
 	return o
 }
 

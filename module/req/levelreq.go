@@ -58,7 +58,7 @@ func (lr *LevelReq) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (lr *LevelReq) Data() res.ReqData {
+func (lr *LevelReq) Data() res.LevelReqData {
 	data := res.LevelReqData{
 		Min: lr.MinLevel(),
 	}

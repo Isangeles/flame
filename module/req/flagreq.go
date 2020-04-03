@@ -64,7 +64,7 @@ func (fr *FlagReq) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (cr *FlagReq) Data() res.ReqData {
+func (cr *FlagReq) Data() res.FlagReqData {
 	data := res.FlagReqData{
 		ID: cr.FlagID(),
 		Off: cr.FlagOff(),

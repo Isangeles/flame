@@ -50,7 +50,7 @@ func NewStage(dialog *Dialog, data *res.DialogStageData) *Stage {
 	s.id = data.ID
 	s.ordinalID = data.OrdinalID
 	s.start = data.Start
-	s.reqs = req.NewRequirements(data.Reqs...)
+	s.reqs = req.NewRequirements(data.Reqs)
 	s.talkerMods = effect.NewModifiers(data.TalkerMods...)
 	s.ownerMods = effect.NewModifiers(data.OwnerMods...)
 	for _, ad := range data.Answers {

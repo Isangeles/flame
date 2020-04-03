@@ -23,15 +23,11 @@
 
 package res
 
-import (
-	
-)
-
 // Interface for training data.
 type TrainingData interface{}
 
 // Struct for attributes training data.
 type AttrsTrainingData struct {
 	Str, Con, Dex, Wis, Int int
-	Reqs                    []ReqData
+	Reqs                    ReqsData
 }

@@ -27,7 +27,7 @@ package res
 type DialogData struct {
 	ID     string
 	Stages []*DialogStageData
-	Reqs   []ReqData
+	Reqs   ReqsData
 }
 
 // Dialog text data struct.
@@ -36,7 +36,7 @@ type DialogStageData struct {
 	OrdinalID  string
 	Start      bool
 	Answers    []*DialogAnswerData
-	Reqs       []ReqData
+	Reqs       ReqsData
 	TalkerMods []ModifierData
 	OwnerMods  []ModifierData
 }
@@ -48,7 +48,7 @@ type DialogAnswerData struct {
 	End        bool
 	Trade      bool
 	Training   bool
-	Reqs       []ReqData
+	Reqs       ReqsData
 	TalkerMods []ModifierData
 	OwnerMods  []ModifierData
 }

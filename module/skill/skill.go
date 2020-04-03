@@ -98,7 +98,7 @@ func New(data res.SkillData) *Skill {
 	s.effects = data.Effects
 	s.castTimeMax = data.Cast
 	s.cooldownMax = data.Cooldown
-	s.useReqs = req.NewRequirements(data.UseReqs...)
+	s.useReqs = req.NewRequirements(data.UseReqs)
 	if len(s.name) < 1 {
 		s.name = lang.Text(s.id)
 	}

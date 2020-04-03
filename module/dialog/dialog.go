@@ -66,7 +66,7 @@ type Talker interface {
 func New(data res.DialogData) *Dialog {
 	d := new(Dialog)
 	d.id = data.ID
-	d.reqs = req.NewRequirements(data.Reqs...)
+	d.reqs = req.NewRequirements(data.Reqs)
 	for _, sd := range data.Stages {
 		p := NewStage(d, sd)
 		d.stages = append(d.stages, p)

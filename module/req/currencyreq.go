@@ -64,7 +64,7 @@ func (cr *CurrencyReq) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (cr *CurrencyReq) Data() res.ReqData {
+func (cr *CurrencyReq) Data() res.CurrencyReqData {
 	data := res.CurrencyReqData{
 		Amount: cr.Amount(),
 		Charge: cr.Charge(),
