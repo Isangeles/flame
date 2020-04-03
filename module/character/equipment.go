@@ -179,6 +179,23 @@ func (eq *Equipment) Slots() []*EquipmentSlot {
 	return eq.slots
 }
 
+// Data creates data resource for equipment.
+func (eq *Equipment) Data() res.EquipmentData {
+	data := res.EquipmentData{}
+	for _, s := range eq.Slots() {
+		if s.Item() == nil {
+			continue
+		}
+		eqItemData := res.EquipmentItemData{
+			ID:     s.Item().ID(),
+			Serial: s.Item().Serial(),
+			Slot:   string(s.Type()),
+		}
+		data.Items = append(data.Items, eqItemData)
+	}
+	return data
+}
+
 // Type returns slot type.
 func (eqSlot *EquipmentSlot) Type() EquipmentSlotType {
 	return eqSlot.sType

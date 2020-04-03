@@ -139,3 +139,40 @@ func (inv *Inventory) SetCapacity(c int) {
 func (inv *Inventory) Capacity() int {
 	return inv.cap
 }
+
+// Data creates data resource for inventory.
+func (inv *Inventory) Data() res.InventoryData {
+	data := res.InventoryData{
+		Cap: inv.Capacity(),
+	}
+	for _, i := range inv.TradeItems() {
+		// Build trade item data.
+		invItemData := res.InventoryItemData{
+			ID:         i.ID(),
+			Serial:     i.Serial(),
+			Trade:      true,
+			TradeValue: i.Price,
+		}
+		data.Items = append(data.Items, invItemData)
+	}
+	for _, i := range inv.Items() {
+		// Check if item was already added as trade item.
+		prs := false
+		for _, id := range data.Items {
+			if i.ID() == id.ID && i.Serial() == id.Serial {
+				prs = true
+				break
+			}
+		}
+		if prs {
+			continue
+		}
+		// Build item data.
+		invItemData := res.InventoryItemData{
+			ID:     i.ID(),
+			Serial: i.Serial(),
+		}
+		data.Items = append(data.Items, invItemData)
+	}
+	return data
+}

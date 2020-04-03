@@ -142,3 +142,18 @@ func (j *Journal) checkStage(s *Stage) {
 		o.SetComplete(true)
 	}
 }
+
+// Data creates data resource for journal.
+func (j *Journal) Data() res.QuestLogData {
+	data := res.QuestLogData{}
+	for _, q := range j.Quests() {
+		questData := res.QuestLogQuestData{
+			ID:    q.ID(),
+		}
+		if q.ActiveStage() != nil {
+			questData.Stage = q.ActiveStage().ID()
+		}
+		data.Quests = append(data.Quests, questData)
+	}
+	return data
+}

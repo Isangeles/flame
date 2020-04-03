@@ -74,3 +74,13 @@ func (c *Crafting) AddRecipes(recipes ...*Recipe) {
 		c.recipes[r.ID()] = r
 	}
 }
+
+// Data creates data resource for crafting.
+func (c *Crafting) Data() res.CraftingData {
+	data := res.CraftingData{}
+	for _, r := range c.Recipes() {
+		recipeData := res.CraftingRecipeData{r.ID()}
+		data.Recipes = append(data.Recipes, recipeData)
+	}
+	return data
+}
