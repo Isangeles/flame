@@ -32,6 +32,7 @@ import (
 // Interface for trainings.
 type Training interface {
 	Reqs() []req.Requirement
+	Data() res.TrainingData
 }
 
 // Interface for object with trainings.

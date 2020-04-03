@@ -80,3 +80,18 @@ func (at *AttrsTraining) Intelligence() int {
 func (at *AttrsTraining) Reqs() []req.Requirement {
 	return at.reqs
 }
+
+// Data returns data resource for training.
+func (at *AttrsTraining) Data() res.TrainingData {
+	data := res.AttrsTrainingData{
+		Str: at.Strenght(),
+		Con: at.Constitution(),
+		Dex: at.Dexterity(),
+		Wis: at.Wisdom(),
+		Int: at.Intelligence(),
+	}
+	for _, r := range at.Reqs() {
+		data.Reqs = append(data.Reqs, r.Data())
+	}
+	return data
+}
