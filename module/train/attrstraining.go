@@ -82,7 +82,7 @@ func (at *AttrsTraining) Reqs() []req.Requirement {
 }
 
 // Data returns data resource for training.
-func (at *AttrsTraining) Data() res.TrainingData {
+func (at *AttrsTraining) Data() res.AttrsTrainingData {
 	data := res.AttrsTrainingData{
 		Str:  at.Strenght(),
 		Con:  at.Constitution(),

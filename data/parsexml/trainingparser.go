@@ -75,8 +75,7 @@ func xmlAttrsTraining(at *train.AttrsTraining) *AttrsTraining {
 }
 
 // buildTraining creates training from specified XML data.
-func buildTrainings(xmlTrainings *Trainings) []res.TrainingData {
-	train := make([]res.TrainingData, 0)
+func buildTrainings(xmlTrainings *Trainings) (data res.TrainingsData) {
 	for _, xmlTrain := range xmlTrainings.AttrsTrain {
 		atd := res.AttrsTrainingData{
 			Str:  xmlTrain.Str,
@@ -86,7 +85,7 @@ func buildTrainings(xmlTrainings *Trainings) []res.TrainingData {
 			Int:  xmlTrain.Int,
 			Reqs: buildReqs(&xmlTrain.Reqs),
 		}
-		train = append(train, atd)
+		data.AttrTrainings = append(data.AttrTrainings, atd)
 	}
-	return train
+	return
 }

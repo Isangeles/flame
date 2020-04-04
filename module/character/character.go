@@ -98,6 +98,8 @@ func New(data res.CharacterData) *Character {
 		sex:       Gender(data.Sex),
 		attitude:  Attitude(data.Attitude),
 		alignment: Alignment(data.Alignment),
+		inventory: item.NewInventory(data.Inventory),
+		trainings: train.NewTrainings(data.Trainings),
 	}
 	c.attributes = Attributes{
 		Str: data.Str,
@@ -106,19 +108,17 @@ func New(data res.CharacterData) *Character {
 		Int: data.Int,
 		Wis: data.Wis,
 	}
-	c.live = true
-	c.inventory = item.NewInventory(data.Inventory)
-	c.inventory.SetCapacity(c.Attributes().Lift())
 	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(data.QuestLog, &c)
 	c.crafting = craft.NewCrafting(data.Crafting, &c)
+	c.live = true
+	c.inventory.SetCapacity(c.Attributes().Lift())
 	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.flags = make(map[string]flag.Flag)
-	c.trainings = train.NewTrainings(data.Trainings...)
 	c.chatlog = make(chan string, 1)
 	c.combatlog = make(chan string, 3)
 	c.privlog = make(chan string, 3)

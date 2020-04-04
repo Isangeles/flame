@@ -32,7 +32,6 @@ import (
 // Interface for trainings.
 type Training interface {
 	Reqs() []req.Requirement
-	Data() res.TrainingData
 }
 
 // Interface for object with trainings.
@@ -42,12 +41,21 @@ type Trainer interface {
 }
 
 // NewTrainings creates new trainings from specified data.
-func NewTrainings(data ...res.TrainingData) (trainings []Training) {
-	for _, d := range data {
-		switch d := d.(type) {
-		case res.AttrsTrainingData:
-			atTrain := NewAttrsTraining(d)
-			trainings = append(trainings, atTrain)
+func NewTrainings(data res.TrainingsData) (trainings []Training) {
+	for _, d := range data.AttrTrainings {
+		atTrain := NewAttrsTraining(d)
+		trainings = append(trainings, atTrain)
+	}
+	return
+}
+
+// TrainingsData creates data resurce for trainings.
+func TrainingsData(trainings ...Training) (data res.TrainingsData) {
+	for _, t := range trainings {
+		switch t := t.(type) {
+		case *AttrsTraining:
+			d := t.Data()
+			data.AttrTrainings = append(data.AttrTrainings, d)
 		}
 	}
 	return
