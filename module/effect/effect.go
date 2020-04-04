@@ -46,7 +46,7 @@ type Effect struct {
 func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
-	e.name = data.Name
+	e.name = lang.Text(e.ID())
 	e.modifiers = NewModifiers(data.Modifiers)
 	e.duration = int64(data.Duration)
 	e.SetTime(data.Duration)
