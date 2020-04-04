@@ -293,11 +293,11 @@ func buildCharacterData(xmlChar *Character) (*res.CharacterData, error) {
 	data.Alignment = xmlChar.Alignment
 	// Attributes.
 	attrs := xmlChar.Attributes
-	data.Str = attrs.Strenght
-	data.Con = attrs.Constitution
-	data.Dex = attrs.Dexterity
-	data.Int = attrs.Intelligence
-	data.Wis = attrs.Wisdom
+	data.Attributes.Str = attrs.Strenght
+	data.Attributes.Con = attrs.Constitution
+	data.Attributes.Dex = attrs.Dexterity
+	data.Attributes.Int = attrs.Intelligence
+	data.Attributes.Wis = attrs.Wisdom
 	// Flags.
 	for _, xmlFlag := range xmlChar.Flags {
 		flagData := buildFlagData(xmlFlag)

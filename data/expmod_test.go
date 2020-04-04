@@ -57,6 +57,8 @@ func TestExportModule(t *testing.T) {
 		Attitude:  "attFriendly",
 		Guild:     "guildID",
 		Alignment: "aliTrueNeutral",
+	}
+	charData.Attributes = res.AttributesData{
 		Str:       2,
 		Con:       3,
 		Dex:       4,

@@ -102,11 +102,11 @@ func New(data res.CharacterData) *Character {
 		trainings: train.NewTrainings(data.Trainings),
 	}
 	c.attributes = Attributes{
-		Str: data.Str,
-		Con: data.Con,
-		Dex: data.Dex,
-		Int: data.Int,
-		Wis: data.Wis,
+		Str: data.Attributes.Str,
+		Con: data.Attributes.Con,
+		Dex: data.Attributes.Dex,
+		Int: data.Attributes.Int,
+		Wis: data.Attributes.Wis,
 	}
 	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(data.QuestLog, &c)

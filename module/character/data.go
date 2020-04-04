@@ -40,11 +40,6 @@ func (c *Character) Data() res.CharacterData {
 		Attitude:  string(c.Attitude()),
 		Alignment: string(c.Alignment()),
 		Guild:     c.Guild().ID(),
-		Str:       c.Attributes().Str,
-		Con:       c.Attributes().Con,
-		Dex:       c.Attributes().Dex,
-		Wis:       c.Attributes().Wis,
-		Int:       c.Attributes().Int,
 		HP:        c.Health(),
 		Mana:      c.Mana(),
 		Exp:       c.Experience(),
@@ -59,14 +54,21 @@ func (c *Character) Data() res.CharacterData {
 	}
 	data.PosX, data.PosY = c.Position()
 	data.DefX, data.DefY = c.DefaultPosition()
+	data.Attributes = res.AttributesData{
+		Str: c.Attributes().Str,
+		Con: c.Attributes().Con,
+		Dex: c.Attributes().Dex,
+		Wis: c.Attributes().Wis,
+		Int: c.Attributes().Int,
+	}
 	for _, f := range c.Flags() {
 		data.Flags = append(data.Flags, res.FlagData{string(f)})
 	}
 	for _, e := range c.Effects() {
 		effData := res.ObjectEffectData{
-			ID:       e.ID(),
-			Serial:   e.Serial(),
-			Time:     e.Time(),
+			ID:     e.ID(),
+			Serial: e.Serial(),
+			Time:   e.Time(),
 		}
 		if e.Source() != nil {
 			effData.SourceID = e.Source().ID()

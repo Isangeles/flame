@@ -42,6 +42,8 @@ func TestExportCharacters(t *testing.T) {
 		Attitude:  "attFriendly",
 		Guild:     "guildID",
 		Alignment: "aliTrueNeutral",
+	}
+	data.Attributes = res.AttributesData{
 		Str:       2,
 		Con:       3,
 		Dex:       4,

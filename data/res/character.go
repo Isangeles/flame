@@ -25,36 +25,43 @@ package res
 
 // Struct for character data resource.
 type CharacterData struct {
-	ID         string
-	Serial     string
-	Name       string
-	AI         bool
-	Level      int
-	Sex        string
-	Race       string
-	Attitude   string
-	Guild      string
-	Alignment  string
-	Str        int
-	Con        int
-	Dex        int
-	Int        int
-	Wis        int
-	PosX, PosY float64
-	DefX, DefY float64
-	HP         int
-	Mana       int
-	Exp        int
-	Inventory  InventoryData
-	Equipment  EquipmentData
-	QuestLog   QuestLogData
-	Crafting   CraftingData
-	Trainings  TrainingsData
-	Flags      []FlagData
-	Effects    []ObjectEffectData
-	Skills     []ObjectSkillData
-	Memory     []AttitudeMemoryData
-	Dialogs    []ObjectDialogData
+	ID        string
+	Serial    string
+	Name      string
+	AI        bool
+	Level     int
+	Sex       string
+	Race      string
+	Attitude  string
+	Guild     string
+	Alignment string
+	PosX      float64
+	PosY      float64
+	DefX      float64
+	DefY      float64
+	HP        int
+	Mana      int
+	Exp       int
+	Attributes AttributesData
+	Inventory InventoryData
+	Equipment EquipmentData
+	QuestLog  QuestLogData
+	Crafting  CraftingData
+	Trainings TrainingsData
+	Flags     []FlagData
+	Effects   []ObjectEffectData
+	Skills    []ObjectSkillData
+	Memory    []AttitudeMemoryData
+	Dialogs   []ObjectDialogData
+}
+
+// Struct for character attributes data.
+type AttributesData struct {
+	Str       int
+	Con       int
+	Dex       int
+	Int       int
+	Wis       int
 }
 
 // Struct for character equipement data.

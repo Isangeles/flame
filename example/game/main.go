@@ -33,23 +33,6 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/character"
 )
-var (
-	// Example pc data.
-	pcData res.CharacterData = res.CharacterData{
-		ID:        "pc",
-		Name:      "PC",
-		Level:     1,
-		Sex:       string(character.Male),
-		Race:      "rHuman",
-		Attitude:  string(character.Friendly),
-		Alignment: string(character.TrueNeutral),
-		Str:       1,
-		Con:       1,
-		Dex:       1,
-		Int:       1,
-		Wis:       1,
-	}
-)
 
 // Main function.
 func main() {
@@ -66,6 +49,23 @@ func main() {
 	// Create game.
 	game := flame.NewGame(mod)
 	// Create PC.
+	// Example pc data.
+	pcData := res.CharacterData{
+		ID:        "pc",
+		Name:      "PC",
+		Level:     1,
+		Sex:       string(character.Male),
+		Race:      "rHuman",
+		Attitude:  string(character.Friendly),
+		Alignment: string(character.TrueNeutral),
+	}
+	pcData.Attributes = res.AttributesData{
+		Str:       2,
+		Con:       3,
+		Dex:       4,
+		Int:       5,
+		Wis:       6,
+	}
 	pc := character.New(pcData)
 	// Add PC to start area and set position.
 	chapterConf := game.Module().Chapter().Conf()
