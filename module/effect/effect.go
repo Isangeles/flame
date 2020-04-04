@@ -131,3 +131,13 @@ func (e *Effect) SetSource(t Target) {
 func (e *Effect) SetTarget(t Target) {
 	e.target = t
 }
+
+// Data creates data resource for effect.
+func (e *Effect) Data() res.EffectData {
+	data := res.EffectData{
+		ID:        e.ID(),
+		Duration:  e.Duration(),
+		Modifiers: ModifiersData(e.modifiers...),
+	}
+	return data
+}
