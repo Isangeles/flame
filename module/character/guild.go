@@ -1,7 +1,7 @@
 /*
  * guild.go
  * 
- * Copyright 2018 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,8 +37,8 @@ func NewGuild(id string) Guild {
 	return Guild{id}
 }
 
-// Id return character ID.
-func (g Guild) Id() string {
+// ID return guild ID.
+func (g Guild) ID() string {
 	return g.id
 }
 
