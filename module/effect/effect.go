@@ -47,7 +47,7 @@ func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
 	e.name = data.Name
-	e.modifiers = NewModifiers(data.Modifiers...)
+	e.modifiers = NewModifiers(data.Modifiers)
 	e.duration = int64(data.Duration)
 	e.SetTime(data.Duration)
 	if len(e.name) < 1 {

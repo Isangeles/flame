@@ -35,10 +35,15 @@ type Action struct {
 }
 
 // NewAction creates new object action.
+// Returns nil if specified data does
+// not contain any data for modifiers.
 func NewAction(data res.ObjectActionData) *Action {
 	a := new(Action)
-	a.selfMods = effect.NewModifiers(data.SelfMods...)
-	a.userMods = effect.NewModifiers(data.UserMods...)
+	a.selfMods = effect.NewModifiers(data.SelfMods)
+	a.userMods = effect.NewModifiers(data.UserMods)
+	if len(a.SelfMods()) < 0 && len(a.UserMods()) < 0 {
+		return nil
+	}
 	return a
 }
 

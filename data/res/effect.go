@@ -28,11 +28,16 @@ type EffectData struct {
 	ID         string
 	Name       string
 	Duration   int64
-	Modifiers  []ModifierData
+	Modifiers  ModifiersData
 }
 
-// Interface for modifier data.
-type ModifierData interface{}
+// Struct for modifiers data resource.
+type ModifiersData struct {
+	HealthMods []HealthModData
+	FlagMods   []FlagModData
+	QuestMods  []QuestModData
+	AreaMods   []AreaModData
+}
 
 // Struct for health modifier
 // data.

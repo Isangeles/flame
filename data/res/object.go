@@ -38,8 +38,8 @@ type ObjectData struct {
 
 // Struct for object action data.
 type ObjectActionData struct {
-	SelfMods []ModifierData
-	UserMods []ModifierData
+	SelfMods ModifiersData
+	UserMods ModifiersData
 }
 
 // Struct for object effects data.

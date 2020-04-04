@@ -54,8 +54,8 @@ func NewAnswer(dialog *Dialog, data *res.DialogAnswerData) *Answer {
 	a.startsTrade = data.Trade
 	a.startsTraining = data.Training
 	a.reqs = req.NewRequirements(data.Reqs)
-	a.talkerMods = effect.NewModifiers(data.TalkerMods...)
-	a.ownerMods = effect.NewModifiers(data.OwnerMods...)
+	a.talkerMods = effect.NewModifiers(data.TalkerMods)
+	a.ownerMods = effect.NewModifiers(data.OwnerMods)
 	a.text = lang.Text(a.ID())
 	return a
 }

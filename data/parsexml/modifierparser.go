@@ -101,26 +101,26 @@ func xmlModifiers(mods ...effect.Modifier) Modifiers {
 }
 
 // buildModifiers creates modifiers from specified XML data.
-func buildModifiers(xmlModifiers *Modifiers) (mods []res.ModifierData) {
+func buildModifiers(xmlModifiers *Modifiers) (mods res.ModifiersData) {
 	// Health modifiers.
 	for _, xmlMod := range xmlModifiers.HealthMods {
 		mod := res.HealthModData{xmlMod.MinValue, xmlMod.MaxValue}
-		mods = append(mods, mod)
+		mods.HealthMods = append(mods.HealthMods, mod)
 	}
 	// Flag modifiers.
 	for _, xmlMod := range xmlModifiers.FlagMods {
 		mod := res.FlagModData{xmlMod.ID, xmlMod.Disable}
-		mods = append(mods, mod)
+		mods.FlagMods = append(mods.FlagMods, mod)
 	}
 	// Quest modifiers.
 	for _, xmlMod := range xmlModifiers.QuestMods {
 		mod := res.QuestModData{xmlMod.Start}
-		mods = append(mods, mod)
+		mods.QuestMods = append(mods.QuestMods, mod)
 	}
 	// Area modifiers.
 	for _, xmlMod := range xmlModifiers.AreaMods {
 		mod := res.AreaModData{xmlMod.ID, xmlMod.EnterPosX, xmlMod.EnterPosY}
-		mods = append(mods, mod)
+		mods.AreaMods = append(mods.AreaMods, mod)
 	}
 	return
 }

@@ -60,9 +60,7 @@ func New(data res.ObjectData) *Object {
 		maxHP:  data.MaxHP,
 	}
 	ob.SetHealth(ob.MaxHealth())
-	if len(data.Action.SelfMods) > 0 || len(data.Action.UserMods) > 0 {
-		ob.action = NewAction(data.Action)
-	}
+	ob.action = NewAction(data.Action)
 	ob.inventory = item.NewInventory(data.Inventory)
 	ob.inventory.SetCapacity(10)
 	ob.effects = make(map[string]*effect.Effect)

@@ -37,8 +37,8 @@ type DialogStageData struct {
 	Start      bool
 	Answers    []*DialogAnswerData
 	Reqs       ReqsData
-	TalkerMods []ModifierData
-	OwnerMods  []ModifierData
+	TalkerMods ModifiersData
+	OwnerMods  ModifiersData
 }
 
 // Dialog answer data struct.
@@ -49,6 +49,6 @@ type DialogAnswerData struct {
 	Trade      bool
 	Training   bool
 	Reqs       ReqsData
-	TalkerMods []ModifierData
-	OwnerMods  []ModifierData
+	TalkerMods ModifiersData
+	OwnerMods  ModifiersData
 }
