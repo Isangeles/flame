@@ -53,3 +53,13 @@ func (am *AreaMod) AreaID() string {
 func (am *AreaMod) EnterPosition() (float64, float64) {
 	return am.enterX, am.enterY
 }
+
+// Data creates data resource for modifier.
+func (am *AreaMod) Data() res.AreaModData {
+	data := res.AreaModData{
+		ID:     am.areaID,
+		EnterX: am.enterX,
+		EnterY: am.enterY,
+	}
+	return data
+}

@@ -50,3 +50,20 @@ func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 	}
 	return
 }
+
+// ModifiersData creates data resource for modifiers.
+func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
+	for _, m := range mods {
+		switch m := m.(type) {
+		case *HealthMod:
+			data.HealthMods = append(data.HealthMods, m.Data())
+		case *FlagMod:
+			data.FlagMods = append(data.FlagMods, m.Data())
+		case *QuestMod:
+			data.QuestMods = append(data.QuestMods, m.Data())
+		case *AreaMod:
+			data.AreaMods = append(data.AreaMods, m.Data())
+		}
+	}
+	return
+}

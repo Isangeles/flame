@@ -43,3 +43,11 @@ func NewQuestMod(data res.QuestModData) *QuestMod {
 func (qm *QuestMod) QuestID() string {
 	return qm.questID
 }
+
+// Data creates data resource for modifier.
+func (qm *QuestMod) Data() res.QuestModData {
+	data := res.QuestModData{
+		ID: qm.QuestID(),
+	}
+	return data
+}

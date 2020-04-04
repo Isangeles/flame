@@ -56,3 +56,12 @@ func (hm *HealthMod) Max() int {
 func (hm *HealthMod) RandomValue() int {
 	return rng.RollInt(hm.Min(), hm.Max())
 }
+
+// Data creates data resource for modifier.
+func (hm *HealthMod) Data() res.HealthModData {
+	data := res.HealthModData{
+		Min: hm.Min(),
+		Max: hm.Max(),
+	}
+	return data
+}

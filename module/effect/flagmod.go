@@ -52,3 +52,12 @@ func (fm *FlagMod) Flag() flag.Flag {
 func (fm *FlagMod) FlagOn() bool {
 	return fm.flagOn
 }
+
+// Data creates data resource for modifier.
+func (fm *FlagMod) Data() res.FlagModData {
+	data := res.FlagModData{
+		ID: string(fm.Flag()),
+		On: fm.FlagOn(),
+	}
+	return data
+}
