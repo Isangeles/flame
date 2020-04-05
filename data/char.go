@@ -136,7 +136,7 @@ func ExportCharacters(path string, chars ...*character.Character) error {
 	for _, c := range chars {
 		data.Characters = append(data.Characters, c.Data())
 	}
-	// Parse character data.
+	// Marshal character data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal characters: %v", err)

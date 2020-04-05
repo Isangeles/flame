@@ -29,74 +29,74 @@ import (
 
 // Struct for characters data resource.
 type CharactersData struct {
-	XMLName    xml.Name        `xml:"characters"`
-	Characters []CharacterData `xml:"char"`
+	XMLName    xml.Name        `xml:"characters" json:"-"`
+	Characters []CharacterData `xml:"char" json:"characters"`
 }
 
 // Struct for character data resource.
 type CharacterData struct {
-	XMLName    xml.Name             `xml:"char"`
-	ID         string               `xml:"id,attr"`
-	Serial     string               `xml:"serial,attr"`
-	Name       string               `xml:"name,attr"`
-	AI         bool                 `xml:"ai,attr"`
-	Level      int                  `xml:"level,attr"`
-	Sex        string               `xml:"gender,attr"`
-	Race       string               `xml:"race,attr"`
-	Attitude   string               `xml:"attitude,attr"`
-	Guild      string               `xml:"guild,attr"`
-	Alignment  string               `xml:"alignment,attr"`
-	PosX       float64              `xml:"position-x,attr"`
-	PosY       float64              `xml:"position-y,attr"`
-	DefX       float64              `xml:"def-position-x,attr"`
-	DefY       float64              `xml:"def-position-y,attr"`
-	HP         int                  `xml:"hp,attr"`
-	Mana       int                  `xml:"mana,attr"`
-	Exp        int                  `xml:"exp,attr"`
-	Attributes AttributesData       `xml:"attributes"`
-	Inventory  InventoryData        `xml:"inventory"`
-	Equipment  EquipmentData        `xml:"equipment"`
-	QuestLog   QuestLogData         `xml:"quests"`
-	Crafting   CraftingData         `xml:"crafting"`
-	Trainings  TrainingsData        `xml:"trainings"`
-	Flags      []FlagData           `xml:"flags>flag"`
-	Effects    []ObjectEffectData   `xml:"effects>effect"`
-	Skills     []ObjectSkillData    `xml:"skills>skill"`
-	Memory     []AttitudeMemoryData `xml:"memory>target"`
-	Dialogs    []ObjectDialogData   `xml:"dialogs>dialog"`
+	XMLName    xml.Name             `xml:"char" json:"-"`
+	ID         string               `xml:"id,attr" json:"id"`
+	Serial     string               `xml:"serial,attr" json:"serial"`
+	Name       string               `xml:"name,attr" json:"name"`
+	AI         bool                 `xml:"ai,attr" json:"ai"`
+	Level      int                  `xml:"level,attr" json:"level"`
+	Sex        string               `xml:"gender,attr" json:"sex"`
+	Race       string               `xml:"race,attr" json:"race"`
+	Attitude   string               `xml:"attitude,attr" json:"attitude"`
+	Guild      string               `xml:"guild,attr" json:"guild"`
+	Alignment  string               `xml:"alignment,attr" json:"alignment"`
+	PosX       float64              `xml:"position-x,attr" json:"pos-x"`
+	PosY       float64              `xml:"position-y,attr" json:"pos-y"`
+	DefX       float64              `xml:"def-position-x,attr" json:"def-pos-x"`
+	DefY       float64              `xml:"def-position-y,attr" json:"def-pos-y"`
+	HP         int                  `xml:"hp,attr" json:"hp"`
+	Mana       int                  `xml:"mana,attr" json:"mana"`
+	Exp        int                  `xml:"exp,attr" json:"exp"`
+	Attributes AttributesData       `xml:"attributes" json:"attributes"`
+	Inventory  InventoryData        `xml:"inventory" json:"inventory"`
+	Equipment  EquipmentData        `xml:"equipment" json:"equipment"`
+	QuestLog   QuestLogData         `xml:"quests" json:"quests"`
+	Crafting   CraftingData         `xml:"crafting" json:"crafting"`
+	Trainings  TrainingsData        `xml:"trainings" json:"trainings"`
+	Flags      []FlagData           `xml:"flags>flag" json:"flags"`
+	Effects    []ObjectEffectData   `xml:"effects>effect" json:"effects"`
+	Skills     []ObjectSkillData    `xml:"skills>skill" json:"skills"`
+	Memory     []AttitudeMemoryData `xml:"memory>target" json:"memory"`
+	Dialogs    []ObjectDialogData   `xml:"dialogs>dialog" json:"dialogs"`
 }
 
 // Struct for character attributes data.
 type AttributesData struct {
-	Str int `xml:"strenght.attr"`
-	Con int `xml:"constitution,attr"`
-	Dex int `xml:"dexterity,attr"`
-	Int int `xml:"inteligence,attr"`
-	Wis int `xml:"wisdom,attr"`
+	Str int `xml:"strenght.attr" json:"str"`
+	Con int `xml:"constitution,attr" json:"con"`
+	Dex int `xml:"dexterity,attr" json:"dex"`
+	Int int `xml:"inteligence,attr" json:"int"`
+	Wis int `xml:"wisdom,attr" json:"wis"`
 }
 
 // Struct for character equipement data.
 type EquipmentData struct {
-	Items []EquipmentItemData `xml:"item"`
+	Items []EquipmentItemData `xml:"item" json:"items"`
 }
 
 // Struct for equipment item data
 // resource.
 type EquipmentItemData struct {
-	ID     string `xml:"id,attr"`
-	Serial string `xml:"serial,attr"`
-	Slot   string `xml:"slot,attr"`
+	ID     string `xml:"id,attr" json:"id"`
+	Serial string `xml:"serial,attr" json:"serial"`
+	Slot   string `xml:"slot,attr" json:"slot"`
 }
 
 // Struct for attitude memory data.
 type AttitudeMemoryData struct {
-	ObjectID     string `xml:"id,attr"`
-	ObjectSerial string `xml:"serial,attr"`
-	Attitude     string `xml:"attitude,attr"`
+	ObjectID     string `xml:"id,attr" json:"id"`
+	ObjectSerial string `xml:"serial,attr" json:"serial"`
+	Attitude     string `xml:"attitude,attr" json:"attitude"`
 }
 
 // Struct for race data.
 type RaceData struct {
-	ID       string `xml:"id,attr"`
-	Playable bool   `xml:"playable,attr"`
+	ID       string `xml:"id,attr" json:"id"`
+	Playable bool   `xml:"playable,attr" json:"playable"`
 }

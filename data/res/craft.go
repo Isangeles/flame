@@ -41,10 +41,10 @@ type RecipeResultData struct {
 
 // Struct for crafting data.
 type CraftingData struct {
-	Recipes []CraftingRecipeData `xml:"recipe"`
+	Recipes []CraftingRecipeData `xml:"recipe" json:"recipes"`
 }
 
 // Struct for crafting recipe data.
 type CraftingRecipeData struct {
-	ID string `xml:"id,attr"`
+	ID string `xml:"id,attr" json:"id"`
 }

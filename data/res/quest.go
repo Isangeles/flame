@@ -1,7 +1,7 @@
 /*
  * quest.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,11 +47,11 @@ type QuestObjectiveData struct {
 
 // Struct for quest log data.
 type QuestLogData struct {
-	Quests []QuestLogQuestData `xml:"quest"`
+	Quests []QuestLogQuestData `xml:"quest" json:"quests"`
 }
 
 // Struct for quest data from quest log.
 type QuestLogQuestData struct {
-	ID    string `xml:"id,attr"`
-	Stage string `xml:"stage,attr"`
+	ID    string `xml:"id,attr" json:"id"`
+	Stage string `xml:"stage,attr" json:"stage"`
 }

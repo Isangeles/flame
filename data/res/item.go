@@ -69,16 +69,16 @@ type ItemSlotData struct {
 
 // Struct for inventory data.
 type InventoryData struct {
-	Cap   int                 `xml:"cap,attr"`
-	Items []InventoryItemData `xml:"item"`
+	Cap   int                 `xml:"cap,attr" json:"cap"`
+	Items []InventoryItemData `xml:"item" json:"items"`
 }
 
 // Struct for inventory item data
 // resource.
 type InventoryItemData struct {
-	ID         string  `xml:"id,attr"`
-	Serial     string  `xml:"serial,attr"`
-	Trade      bool    `xml:"trade,attr"`
-	TradeValue int     `xml:"trade-value,attr"`
-	Random     float64 `xml:"random,attr"`
+	ID         string  `xml:"id,attr" json:"id"`
+	Serial     string  `xml:"serial,attr" json:"serial"`
+	Trade      bool    `xml:"trade,attr" json:"trade"`
+	TradeValue int     `xml:"trade-value,attr" json:"trade-value"`
+	Random     float64 `xml:"random,attr" json:"random"`
 }
