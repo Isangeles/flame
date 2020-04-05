@@ -58,9 +58,8 @@ func NewArmor(data res.ArmorData) *Armor {
 		eqEffects: data.EQEffects,
 	}
 	a.eqReqs = req.NewRequirements(data.EQReqs)
-	for _, sid := range data.Slots {
-		a.slots = append(a.slots, Slot(sid))
-
+	for _, s := range data.Slots {
+		a.slots = append(a.slots, Slot(s.ID))
 	}
 	nameInfo := lang.Texts(a.ID())
 	a.name = nameInfo[0]

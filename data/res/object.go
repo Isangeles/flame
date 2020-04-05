@@ -44,26 +44,26 @@ type ObjectActionData struct {
 
 // Struct for object effects data.
 type ObjectEffectData struct {
-	ID           string
-	Serial       string
-	Time         int64
-	SourceID     string
-	SourceSerial string
+	ID           string `xml:"id,attr"`
+	Serial       string `xml:"serial,attr"`
+	Time         int64  `xml:"time,attr"`
+	SourceID     string `xml:"source-id,attr"`
+	SourceSerial string `xml:"source-serial,attr"`
 }
 
 // Struct for object skill data.
 type ObjectSkillData struct {
-	ID       string
-	Serial   string
-	Cooldown int64
+	ID       string `xml:"id,attr"`
+	Serial   string `xml:"serial,attr"`
+	Cooldown int64  `xml:"cooldown,attr"`
 }
 
 // Struct for object dialog data.
 type ObjectDialogData struct {
-	ID string
+	ID string `xml:"id,attr"`
 }
 
 // Struct for flag data.
 type FlagData struct {
-	ID string
+	ID string `xml:"id,attr"`
 }

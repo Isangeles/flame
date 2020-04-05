@@ -47,11 +47,11 @@ type QuestObjectiveData struct {
 
 // Struct for quest log data.
 type QuestLogData struct {
-	Quests []QuestLogQuestData
+	Quests []QuestLogQuestData `xml:"quest"`
 }
 
 // Struct for quest data from quest log.
 type QuestLogQuestData struct {
-	ID    string
-	Stage string
+	ID    string `xml:"id,attr"`
+	Stage string `xml:"stage,attr"`
 }

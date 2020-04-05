@@ -82,9 +82,9 @@ func UnmarshalArmors(data io.Reader) ([]*res.ArmorData, error) {
 // buildArmorData creates armor resource from specified armor node.
 func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
 	reqs := buildReqs(&xmlArmor.Reqs)
-	slotsID := make([]string, len(xmlArmor.Slots))
+	slots := make([]res.ItemSlotData, len(xmlArmor.Slots))
 	for _, s := range xmlArmor.Slots {
-		slotsID = append(slotsID, s.ID)
+		slots = append(slots, res.ItemSlotData{s.ID})
 	}
 	eqEffects := make([]res.EffectData, 0)
 	for _, xmlEffect := range xmlArmor.EQEffects {
@@ -103,7 +103,7 @@ func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
 		Armor:     xmlArmor.Armor,
 		EQEffects: eqEffects,
 		EQReqs:    reqs,
-		Slots:     slotsID,
+		Slots:     slots,
 		Loot:      xmlArmor.Loot,
 	}
 	return &ad, nil

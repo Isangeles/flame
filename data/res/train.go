@@ -25,11 +25,15 @@ package res
 
 // Struct for trainings data.
 type TrainingsData struct {
-	AttrTrainings []AttrsTrainingData
+	AttrTrainings []AttrsTrainingData `xml:"attrs-train"`
 }
 
 // Struct for attributes training data.
 type AttrsTrainingData struct {
-	Str, Con, Dex, Wis, Int int
-	Reqs                    ReqsData
+	Str  int      `xml:"str,attr"`
+	Con  int      `xml:"con,attr"`
+	Dex  int      `xml:"dex,attr"`
+	Wis  int      `xml:"wis,attr"`
+	Int  int      `xml:"int,attr"`
+	Reqs ReqsData `xml:"reqs"`
 }

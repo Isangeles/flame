@@ -35,7 +35,7 @@ type ArmorData struct {
 	Armor     int
 	EQEffects []EffectData
 	EQReqs    ReqsData
-	Slots     []string
+	Slots     []ItemSlotData
 	Loot      bool
 }
 
@@ -53,7 +53,7 @@ type WeaponData struct {
 	Loot       bool
 }
 
-// Struct for miscellaneous items.
+// Struct for miscellaneous items data.
 type MiscItemData struct {
 	ID       string
 	Value    int
@@ -62,18 +62,23 @@ type MiscItemData struct {
 	Currency bool
 }
 
+// Struct for item slot data.
+type ItemSlotData struct {
+	ID string
+}
+
 // Struct for inventory data.
 type InventoryData struct {
-	Cap   int
-	Items []InventoryItemData
+	Cap   int                 `xml:"cap,attr"`
+	Items []InventoryItemData `xml:"item"`
 }
 
 // Struct for inventory item data
 // resource.
 type InventoryItemData struct {
-	ID         string
-	Serial     string
-	Trade      bool
-	TradeValue int
-	Random     float64
+	ID         string  `xml:"id,attr"`
+	Serial     string  `xml:"serial,attr"`
+	Trade      bool    `xml:"trade,attr"`
+	TradeValue int     `xml:"trade-value,attr"`
+	Random     float64 `xml:"random,attr"`
 }

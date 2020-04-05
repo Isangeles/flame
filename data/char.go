@@ -25,13 +25,13 @@ package data
 
 import (
 	"bufio"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/log"
@@ -49,11 +49,20 @@ func ImportCharactersData(path string) ([]*res.CharacterData, error) {
 		return nil, fmt.Errorf("unable to open char base file: %v", err)
 	}
 	defer baseFile.Close()
-	chars, err := parsexml.UnmarshalCharacters(baseFile)
+	buf, err := ioutil.ReadAll(baseFile)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal chars base: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return chars, nil
+	data := new(res.CharactersData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal XML: %v", err)
+	}
+	charsData := make([]*res.CharacterData, 0)
+	for i, _ := range data.Characters {
+		charsData = append(charsData, &data.Characters[i])
+	}
+	return charsData, nil
 }
 
 // ImportCharactersDataDir imports all characters data from
@@ -83,14 +92,9 @@ func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
 // ImportCharacters imports characters from base file with
 // specified path.
 func ImportCharacters(path string) ([]*character.Character, error) {
-	charFile, err := os.Open(path)
-	if err != nil {
-		return nil, fmt.Errorf("unable to open char base file: %v", err)
-	}
-	defer charFile.Close()
-	charsData, err := parsexml.UnmarshalCharacters(charFile)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal chars base: %v", err)
+	charsData, err := ImportCharactersData(path)
+	if err != nil  {
+		return nil, fmt.Errorf("unable to import data: %v", err)
 	}
 	chars := make([]*character.Character, 0)
 	for _, charData := range charsData {
@@ -128,8 +132,12 @@ func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
 
 // ExportCharacters saves characters to new file with specified path.
 func ExportCharacters(path string, chars ...*character.Character) error {
+	data := new(res.CharactersData)
+	for _, c := range chars {
+		data.Characters = append(data.Characters, c.Data())
+	}
 	// Parse character data.
-	xml, err := parsexml.MarshalCharacters(chars...)
+	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal characters: %v", err)
 	}
@@ -149,7 +157,7 @@ func ExportCharacters(path string, chars ...*character.Character) error {
 	defer file.Close()
 	// Write data to file.
 	w := bufio.NewWriter(file)
-	w.WriteString(xml)
+	w.Write(xml)
 	w.Flush()
 	return nil
 }
