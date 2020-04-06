@@ -23,23 +23,35 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
+// Struct for objects data.
+type ObjectsData struct {
+	XMLName xml.Name     `xml:"objects" json:"-"`
+	Objects []ObjectData `xml:"object" json:"objects"`
+}
+
 // Struct for object data.
 type ObjectData struct {
-	ID         string
-	Name       string
-	Serial     string
-	MaxHP      int
-	HP         int
-	PosX, PosY float64
-	Action     ObjectActionData
-	Inventory  InventoryData
-	Effects    []ObjectEffectData
+	XMLName   xml.Name           `xml:"object" json:"-"`
+	ID        string             `xml:"id,attr" json:"id"`
+	Serial    string             `xml:"serial,attr" json:"serial"`
+	Name      string             `xml:"name,attr" json:"name"`
+	MaxHP     int                `xml:"max-hp,attr" json:"max-hp"`
+	HP        int                `xml:"hp,attr" json:"hp"`
+	PosX      float64            `xml:"pos-x,attr" json:"pos-x"`
+	PosY      float64            `xml:"pos-y,attr" json:"posy"`
+	Action    ObjectActionData   `xml:"action" json:"action"`
+	Inventory InventoryData      `xml:"inventory" json:"inventory"`
+	Effects   []ObjectEffectData `xml:"effects>effect" json:"effects"`
 }
 
 // Struct for object action data.
 type ObjectActionData struct {
-	SelfMods ModifiersData
-	UserMods ModifiersData
+	SelfMods ModifiersData `xml:"self>modifiers" json:"self-mods"`
+	UserMods ModifiersData `xml:"user>modifiers" json:"user-mods"`
 }
 
 // Struct for object effects data.
