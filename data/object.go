@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -42,16 +42,25 @@ const (
 // ImportObjectsData imports area objects data from base
 // file with specified path.
 func ImportObjects(path string) ([]*res.ObjectData, error) {
-	baseFile, err := os.Open(path)
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
-	defer baseFile.Close()
-	objects, err := parsexml.UnmarshalObjectsBase(baseFile)
+	defer file.Close()
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml base: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return objects, nil
+	data := new(res.ObjectsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal XML: %v", err)
+	}
+	objectsData := make([]*res.ObjectData, 0)
+	for i, _ := range data.Objects {
+		objectsData = append(objectsData, &data.Objects[i])
+	}
+	return objectsData, nil
 }
 
 // ImportObjectsDataDir import all area objects data from
@@ -69,7 +78,7 @@ func ImportObjectsDir(path string) ([]*res.ObjectData, error) {
 		basePath := filepath.FromSlash(path + "/" + finfo.Name())
 		impObjects, err := ImportObjects(basePath)
 		if err != nil {
-			log.Err.Printf("data: import objects dir: %s: fail to import objects file: %v",
+			log.Err.Printf("data: import objects dir: %s: unable to import objects file: %v",
 				basePath, err)
 			continue
 		}
