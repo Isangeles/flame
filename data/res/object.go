@@ -42,7 +42,7 @@ type ObjectData struct {
 	MaxHP     int                `xml:"max-hp,attr" json:"max-hp"`
 	HP        int                `xml:"hp,attr" json:"hp"`
 	PosX      float64            `xml:"pos-x,attr" json:"pos-x"`
-	PosY      float64            `xml:"pos-y,attr" json:"posy"`
+	PosY      float64            `xml:"pos-y,attr" json:"pos-y"`
 	Action    ObjectActionData   `xml:"action" json:"action"`
 	Inventory InventoryData      `xml:"inventory" json:"inventory"`
 	Effects   []ObjectEffectData `xml:"effects>effect" json:"effects"`

@@ -23,23 +23,28 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
 // Struct for game data.
 type GameData struct {
-	SavedChapter SavedChapterData
+	XMLName      xml.Name         `xml:"game" json:"-"`
+	SavedChapter SavedChapterData `xml:"chapter" json:"chapter"`
 }
 
 // Struct for game chapter
 // data.
 type SavedChapterData struct {
-	ID    string
-	Areas []SavedAreaData
+	ID    string          `xml:"id,attr" json:"id"`
+	Areas []SavedAreaData `xml:"area" json:"areas"`
 }
 
 // Struct for scenario area
 // data.
 type SavedAreaData struct {
-	ID       string
-	Chars    []CharacterData
-	Objects  []ObjectData
-	Subareas []SavedAreaData
+	ID       string          `xml:"id,attr" json:"id"`
+	Chars    []CharacterData `xml:"characters>char" json:"chars"`
+	Objects  []ObjectData    `xml:"objects>object" json:"objects"`
+	Subareas []SavedAreaData `xml:"subareas>area" json:"areas"`
 }
