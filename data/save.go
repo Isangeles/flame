@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -32,7 +33,6 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
@@ -48,7 +48,8 @@ var (
 
 // ExportGame saves specified game to savegame file in specified directory.
 func ExportGame(game *flame.Game, dirPath, saveName string) error {
-	xml, err := parsexml.MarshalGame(game)
+	data := gameData(game)
+	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal game: %v", err)
 	} 
@@ -66,7 +67,7 @@ func ExportGame(game *flame.Game, dirPath, saveName string) error {
 	defer f.Close()
 	// Write data to file.
 	w := bufio.NewWriter(f)
-	w.WriteString(xml)
+	w.Write(xml)
 	w.Flush()
 	log.Dbg.Printf("game saved in: %s", filePath)
 	return nil
@@ -83,7 +84,12 @@ func ImportGame(mod *module.Module, dirPath, fileName string) (*flame.Game, erro
 	if err != nil {
 		return nil, fmt.Errorf("unable to open savegame file: %v", err)
 	}
-	gameData, err := parsexml.UnmarshalGame(doc)
+	buf, err := ioutil.ReadAll(doc)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read save file: %v", err)
+	}
+	gameData := new(res.GameData)
+	err = xml.Unmarshal(buf, gameData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal savegame data: %v", err)
 	}
@@ -119,6 +125,32 @@ func ImportGamesDir(mod *module.Module, dirPath string) ([]*flame.Game, error) {
 		games = append(games, game)
 	}
 	return games, nil
+}
+
+// gameData creates data resource for game.
+func gameData(g *flame.Game) (data res.GameData) {
+	chapter := g.Module().Chapter()
+	chapterData := res.SavedChapterData{ID: chapter.ID()}
+	for _, a := range chapter.Areas() {
+		chapterData.Areas = append(chapterData.Areas, savedAreaData(a))
+	}
+	data.SavedChapter = chapterData
+	return
+}
+
+// savedAreaData creates area data resurce for game data.
+func savedAreaData(a *area.Area) (data res.SavedAreaData) {
+	data.ID = a.ID()
+	for _, c := range a.Characters() {
+		data.Chars = append(data.Chars, c.Data())
+	}
+	for _, o := range a.Objects() {
+		data.Objects = append(data.Objects, o.Data())
+	}
+	for _, sa := range a.Subareas() {
+		data.Subareas = append(data.Subareas, savedAreaData(sa))
+	}
+	return 
 }
 
 // buildSavedGame build saved game from specified data.
