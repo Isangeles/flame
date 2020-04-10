@@ -109,3 +109,9 @@ func buildQuestData(xmlQuest Quest) (*res.QuestData, error) {
 	}
 	return qd, nil
 }
+
+// buildFlagData builds flag data from specified XML data.
+func buildFlagData(xmlFlag Flag) res.FlagData {
+	flagData := res.FlagData{ID: xmlFlag.ID}
+	return flagData
+}
