@@ -180,29 +180,14 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	area := area.New(areaData)
 	// Characters.
 	for _, charData := range data.Chars {
+		charData.Restore = true
 		char := character.New(charData)
-		// Restore serial.
-		char.SetSerial(charData.Serial)
-		// Restore HP, mana & exp.
-		char.SetHealth(charData.HP)
-		char.SetMana(charData.Mana)
-		char.SetExperience(charData.Exp)
-		// Restore current and default position.
-		char.SetPosition(charData.PosX, charData.PosY)
-		char.SetDefaultPosition(charData.DefX, charData.DefY)
-		// Char to area.
 		area.AddCharacter(char)
 	}
 	// Objects.
 	for _, obData := range data.Objects {
-		// Build object.
+		obData.Restore = true
 		ob := object.New(obData)
-		// Restore serial.
-		ob.SetSerial(obData.Serial)
-		// Restore health & position.
-		ob.SetHealth(obData.HP)
-		ob.SetPosition(obData.PosX, obData.PosY)
-		// Object to area.
 		area.AddObject(ob)
 	}
 	// Subareas.

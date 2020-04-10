@@ -82,8 +82,17 @@ func New(data res.ObjectData) *Object {
 		eff := effect.New(*effData)
 		ob.AddEffect(eff)
 	}
+	// Restore.
+	if data.Restore {
+		ob.SetHealth(data.HP)
+		ob.SetPosition(data.PosX, data.PosY)
+	}
 	// Assign serial.
-	serial.AssignSerial(&ob)
+	if len(data.Serial) < 1 {
+		serial.AssignSerial(&ob)
+	} else {
+		ob.SetSerial(data.Serial)
+	}
 	return &ob
 }
 

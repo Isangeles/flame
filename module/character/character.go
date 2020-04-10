@@ -168,8 +168,20 @@ func New(data res.CharacterData) *Character {
 		dialog := dialog.New(*dialogData)
 		c.AddDialog(dialog)
 	}
+	// Restore
+	if data.Restore {
+		c.SetHealth(data.HP)
+		c.SetMana(data.Mana)
+		c.SetExperience(data.Exp)
+		c.SetPosition(data.PosX, data.PosY)
+		c.SetDefaultPosition(data.DefY, data.DefY)
+	}
 	// Assign serial.
-	serial.AssignSerial(&c)
+	if len(data.Serial) < 1 {
+		serial.AssignSerial(&c)
+	} else {
+		c.SetSerial(data.Serial)
+	}
 	return &c
 }
 
