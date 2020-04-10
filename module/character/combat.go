@@ -29,11 +29,11 @@ import (
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/skill"
-	"github.com/isangeles/flame/log"
 )
 
 // Damage retruns min and max damage value,
@@ -158,8 +158,9 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	c.AddEffect(e)
 	// Memorize source as hostile.
 	mem := TargetMemory{
-		Target:   e.Source(),
-		Attitude: Hostile,
+		TargetID:     e.Source().ID(),
+		TargetSerial: e.Source().Serial(),
+		Attitude:     Hostile,
 	}
 	c.MemorizeTarget(&mem)
 	// Send combat message.

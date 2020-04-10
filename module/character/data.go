@@ -86,8 +86,8 @@ func (c *Character) Data() res.CharacterData {
 	}
 	for _, m := range c.Memory() {
 		memData := res.AttitudeMemoryData{
-			ObjectID:     m.Target.ID(),
-			ObjectSerial: m.Target.Serial(),
+			ObjectID:     m.TargetID,
+			ObjectSerial: m.TargetSerial,
 			Attitude:     string(m.Attitude),
 		}
 		data.Memory = append(data.Memory, memData)

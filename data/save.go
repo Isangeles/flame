@@ -34,12 +34,12 @@ import (
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/object"
-	"github.com/isangeles/flame/log"
 )
 
 var (
@@ -52,7 +52,7 @@ func ExportGame(game *flame.Game, dirPath, saveName string) error {
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal game: %v", err)
-	} 
+	}
 	// Create savegame file.
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
@@ -150,7 +150,7 @@ func savedAreaData(a *area.Area) (data res.SavedAreaData) {
 	for _, sa := range a.Subareas() {
 		data.Subareas = append(data.Subareas, savedAreaData(sa))
 	}
-	return 
+	return
 }
 
 // buildSavedGame build saved game from specified data.
@@ -165,7 +165,6 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*flame.Game, er
 	// Restore objects effects and memory.
 	for _, areaData := range chapterData.Areas {
 		restoreAreaEffects(mod, areaData)
-		restoreAreaMemory(mod, areaData)
 	}
 	// Create game from saved data.
 	game := flame.NewGame(mod)
@@ -229,34 +228,5 @@ func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
 	}
 	for _, subareaData := range data.Subareas {
 		restoreAreaEffects(mod, subareaData)
-	}
-}
-
-// restoreAreaMemory restores saved memory for characters.
-func restoreAreaMemory(mod *module.Module, data res.SavedAreaData) {
-	for _, charData := range data.Chars {
-		char := mod.Chapter().Character(charData.ID, charData.Serial)
-		if char == nil {
-			log.Err.Printf("data: save: restore effects: module char not found: %s#%s",
-				charData.ID, charData.Serial)
-			continue
-		}
-		for _, memData := range charData.Memory {
-			tar := mod.Target(memData.ObjectID, memData.ObjectSerial)
-			if tar == nil {
-				log.Err.Printf("data: char: %s: restore memory: att target not found: %s#%s",
-					char.ID(), memData.ObjectID, memData.ObjectSerial)
-				continue
-			}
-			att := character.Attitude(memData.Attitude)
-			mem := character.TargetMemory{
-				Target:   tar,
-				Attitude: att,
-			}
-			char.MemorizeTarget(&mem)
-		}
-	}
-	for _, subareaData := range data.Subareas {
-		restoreAreaMemory(mod, subareaData)
 	}
 }

@@ -168,6 +168,16 @@ func New(data res.CharacterData) *Character {
 		dialog := dialog.New(*dialogData)
 		c.AddDialog(dialog)
 	}
+	// Memory.
+	for _, memData := range data.Memory {
+		att := Attitude(memData.Attitude)
+		mem := TargetMemory{
+			TargetID:     memData.ObjectID,
+			TargetSerial: memData.ObjectSerial,
+			Attitude:     att,
+		}
+		c.MemorizeTarget(&mem)
+	}
 	// Restore
 	if data.Restore {
 		c.SetHealth(data.HP)
