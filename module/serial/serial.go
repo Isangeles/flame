@@ -1,7 +1,7 @@
 /*
  * serial.go
  *
- * Copyright 2018-2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
  *
  */
 
+// Package for generating unique serial values
+// for game objects.
 package serial
 
 import (
@@ -55,35 +57,48 @@ func AssignSerial(s Serialer) {
 	// Get all objects with same ID.
 	serialers := base[s.ID()]
 	// Check whether this is first object with such ID.
-	if serialers == nil {
+	if len(serialers) < 1 {
 		if len(s.Serial()) < 1 {
 			s.SetSerial("0")
 		}
 		regSerial(s)
 		return
 	}
-	// Check whether object has unique serial value already.
+	// Check whether object already has unique serial value.
 	if s.Serial() != "" && unique(serialers, s.Serial()) {
 		regSerial(s)
 		return
 	}
 	// Generate & assign unique serial.
-	s.SetSerial(UniqueSerial(serialers))
+	s.SetSerial(uniqueSerial(serialers))
 	// Save to base.
 	base[s.ID()] = append(serialers, s)
 	return
 }
 
-// FullSerial retruns full serial ID string
-// with specified ID and serial value.
-func FullSerial(id, serial string) string {
-	return fmt.Sprintf("%s_%s", id, serial)
+// Object returns object with specified ID and
+// serial value or nil if no such object was
+// found among registered serial objects.
+func Object(id, serial string) Serialer {
+	objects := base[id]
+	for _, o := range objects {
+		if o.Serial() == serial {
+			return o
+		}
+	}
+	return nil
 }
 
-// UinqueSerial generates unique serial value accross
+// Reset removes all registered objects from
+// base.
+func Reset() {
+	base = make(map[string][]Serialer)
+}
+
+// uinqueSerial generates unique serial value accross
 // specified group of objects with serial value.
-func UniqueSerial(group []Serialer) string {
-	// Choose serial value unique accross chars.
+func uniqueSerial(group []Serialer) string {
+	// Choose unique serial value.
 	serial := fmt.Sprintf("%d", len(group))
 	// Ensure serial value uniqueness.
 	for i := len(group); !unique(group, serial); i++ {
