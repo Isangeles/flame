@@ -23,44 +23,56 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
+type EffectsData struct {
+	XMLName xml.Name     `xml:"effects" json:"-"`
+	Effects []EffectData `xml:"effect" json:"effects"`
+}
+
 // Struct for effect data resource.
 type EffectData struct {
-	ID         string
-	Duration   int64
-	Modifiers  ModifiersData
+	XMLName   xml.Name      `xml:"effect" json:"-"`
+	ID        string        `xml:"id,attr" json:"id"`
+	Duration  int64         `xml:"duration,attr" json:"duration"`
+	Modifiers ModifiersData `xml:"modifiers" json:"modifiers"`
 }
 
 // Struct for modifiers data resource.
 type ModifiersData struct {
-	HealthMods []HealthModData
-	FlagMods   []FlagModData
-	QuestMods  []QuestModData
-	AreaMods   []AreaModData
+	XMLName    xml.Name        `xml:"modifiers" json:"-"`
+	HealthMods []HealthModData `xml:"health-mod" json:"health-mods"`
+	FlagMods   []FlagModData   `xml:"flag-mod" json:"flag-mods"`
+	QuestMods  []QuestModData  `xml:"quest-mod" json:"quest-mods"`
+	AreaMods   []AreaModData   `xml:"area-mod" json:"area-mods"`
 }
 
 // Struct for health modifier
 // data.
 type HealthModData struct {
-	Min, Max int
+	Min int `xml:"min,attr" json:"min"`
+	Max int `xml:"max,attr" json:"max"`
 }
 
 // Struct for flag modifier
 // data.
 type FlagModData struct {
-	ID string
-	On bool
+	ID string `xml:"id,attr" json:"id"`
+	On bool   `xml:"disable,attr" json:"on"`
 }
 
 // Struct for quest modifier
 // data.
 type QuestModData struct {
-	ID string
+	ID string `xml:"start,attr" json:"id"`
 }
 
 // Struct for area modifier
 // data.
 type AreaModData struct {
-	ID     string
-	EnterX float64
-	EnterY float64
+	ID     string  `xml:"id,attr" json:"id"`
+	EnterX float64 `xml:"enter-pos-x,attr" json:"enter-pos-x"`
+	EnterY float64 `xml:"enter-pos-y,attr" json:"enter-pos-y"`
 }
