@@ -35,6 +35,7 @@ import (
 )
 
 // TakeModifiers handles all specified modifiers.
+// Source can be nil.
 func (c *Character) TakeModifiers(source objects.Object, mods ...effect.Modifier) {
 	for _, m := range mods {
 		c.takeModifier(source, m)
@@ -42,6 +43,7 @@ func (c *Character) TakeModifiers(source objects.Object, mods ...effect.Modifier
 }
 
 // takeModifier handles specified modifier.
+// Source can be nil.
 func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 	switch m := m.(type) {
 	case *effect.AreaMod:
@@ -57,18 +59,21 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		if c.onHealthMod != nil {
 			c.onHealthMod(val)
 		}
+		cmbMsg := fmt.Sprintf("%s: %s: %d", c.Name(),
+			lang.Text("ob_health"), val)
+		c.SendCombat(cmbMsg)
+		if s == nil {
+			break
+		}
 		if s, ok := s.(objects.Experiencer); ok && lived && !c.Live() {
 			exp := 100 * c.Level()
 			s.SetExperience(s.Experience() + exp)
 		}
-		cmbMsg := fmt.Sprintf("%s: %s: %d", c.Name(),
-			lang.Text("ob_health"), val)
-		c.SendCombat(cmbMsg)
 	case *effect.QuestMod:
 		data := res.Quest(m.QuestID())
 		if data == nil {
 			log.Err.Printf("char: %s#%s: quest mod: data not found:%s", m.QuestID())
-			return
+			break
 		}
 		q := quest.New(*data)
 		c.Journal().AddQuest(q)

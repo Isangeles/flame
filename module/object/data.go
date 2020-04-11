@@ -44,10 +44,7 @@ func (o *Object) Data() res.ObjectData {
 			Serial: e.Serial(),
 			Time:   e.Time(),
 		}
-		if e.Source() != nil {
-			effData.SourceID = e.Source().ID()
-			effData.SourceSerial = e.Source().Serial()
-		}
+		effData.SourceID, effData.SourceSerial = e.Source()
 		data.Effects = append(data.Effects, effData)
 	}
 	return data

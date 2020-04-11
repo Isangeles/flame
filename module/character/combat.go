@@ -29,7 +29,6 @@ import (
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
-	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
@@ -148,20 +147,14 @@ func (c *Character) UseSkill(s *skill.Skill) {
 
 // takeEffects adds specified effects
 func (c *Character) TakeEffect(e *effect.Effect) {
-	if e.Source() == nil {
-		log.Err.Printf("char combat: %s_%s: fail to take effect: %s_%s: no source",
-			c.ID(), c.Serial(), e.ID(), e.Serial())
-		return
-	}
 	// TODO: handle resists
 	// Add effect.
 	c.AddEffect(e)
 	// Memorize source as hostile.
 	mem := TargetMemory{
-		TargetID:     e.Source().ID(),
-		TargetSerial: e.Source().Serial(),
 		Attitude:     Hostile,
 	}
+	mem.TargetID, mem.TargetSerial = e.Source()
 	c.MemorizeTarget(&mem)
 	// Send combat message.
 	msg := fmt.Sprintf("%s: %s: %s", c.Name(), lang.Text("ob_effect"), e.Name())

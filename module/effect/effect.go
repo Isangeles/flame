@@ -32,17 +32,17 @@ import (
 
 // Struct for effects.
 type Effect struct {
-	id, serial string
-	name       string
-	source     Target
-	target     Target
-	modifiers  []Modifier
-	duration   int64
-	time       int64
-	sec_timer  int64
+	id, serial       string
+	name             string
+	srcID, srcSerial string
+	tarID, tarSerial string
+	modifiers        []Modifier
+	duration         int64
+	time             int64
+	secTimer         int64
 }
 
-// NewEffect creates new effect.
+// New creates new effect.
 func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
@@ -59,13 +59,19 @@ func New(data res.EffectData) *Effect {
 
 // Update updates effect.
 func (e *Effect) Update(delta int64) {
-	if e.target == nil || e.Time() <= 0 {
+	object := serial.Object(e.tarID, e.tarSerial)
+	if object == nil || e.Time() <= 0 {
 		return
 	}
-	e.sec_timer += delta
-	if  e.time == e.duration || e.sec_timer >= 1000 { // at start and every second after that
-		e.target.TakeModifiers(e.source, e.modifiers...)
-		e.sec_timer = 0
+	target, ok := object.(Target)
+	if !ok {
+		return
+	}
+	source := serial.Object(e.srcID, e.srcSerial)
+	e.secTimer += delta
+	if e.time == e.duration || e.secTimer >= 1000 { // at start and every second after that
+		target.TakeModifiers(source, e.modifiers...)
+		e.secTimer = 0
 	}
 	e.time -= delta
 }
@@ -97,9 +103,10 @@ func (e *Effect) Time() int64 {
 	return e.time
 }
 
-// Source returns effect source object.
-func (e *Effect) Source() Target {
-	return e.source
+// Source returns ID and serial value of effect
+// source object.
+func (e *Effect) Source() (string, string) {
+	return e.srcID, e.srcSerial
 }
 
 // SetSerial sets specified value as
@@ -123,13 +130,13 @@ func (e *Effect) SetTime(time int64) {
 // SetSource sets specified targetable object
 // as effect source.
 func (e *Effect) SetSource(t Target) {
-	e.source = t
+	e.srcID, e.srcSerial = t.ID(), t.Serial()
 }
 
 // SetTarget sets specified targertable object
 // as effect target.
 func (e *Effect) SetTarget(t Target) {
-	e.target = t
+	e.tarID, e.tarSerial = t.ID(), t.Serial()
 }
 
 // Data creates data resource for effect.
