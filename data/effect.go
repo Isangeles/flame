@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"os"
 	"io/ioutil"
 	"strings"
 	"path/filepath"
 	
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -41,17 +41,26 @@ const (
 
 // ImportEffects imports all XML effects data from effects base
 // with specified path.
-func ImportEffects(basePath string) ([]*res.EffectData, error) {
-	doc, err := os.Open(basePath)
+func ImportEffects(path string) ([]*res.EffectData, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open effects base file: %v", err)
+		return nil, fmt.Errorf("unable to open effects data file: %v", err)
 	}
-	defer doc.Close()
-	effects, err := parsexml.UnmarshalEffects(doc)
+	defer file.Close()
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal effects base: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return effects, nil
+	data := new(res.EffectsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal effects base: %v", err)
+	}
+	effectsData := make([]*res.EffectData, 0)
+	for i, _ := range data.Effects {
+		effectsData = append(effectsData, &data.Effects[i])
+	}
+	return effectsData, nil
 }
 
 // ImportEffectsDir imports all effects from files in
@@ -59,7 +68,7 @@ func ImportEffects(basePath string) ([]*res.EffectData, error) {
 func ImportEffectsDir(dirPath string) ([]*res.EffectData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	effects := make([]*res.EffectData, 0)
 	for _, finfo := range files {
@@ -69,7 +78,7 @@ func ImportEffectsDir(dirPath string) ([]*res.EffectData, error) {
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		effs, err := ImportEffects(basePath)
 		if err != nil {
-			log.Err.Printf("data: effects import: %s: fail to import base: %v",
+			log.Err.Printf("data: effects import: %s: unable to import base: %v",
 				basePath, err)
 			continue
 		}
