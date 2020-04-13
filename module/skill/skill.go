@@ -102,7 +102,7 @@ func New(data res.SkillData) *Skill {
 	if len(s.name) < 1 {
 		s.name = lang.Text(s.id)
 	}
-	serial.AssignSerial(s)
+	serial.Register(s)
 	return s
 }
 
@@ -278,7 +278,6 @@ func (s *Skill) buildEffects(effectsData []res.EffectData) []*effect.Effect {
 	for _, ed := range effectsData {
 		e := effect.New(ed)
 		e.SetSource(s.user)
-		serial.AssignSerial(e)
 		effects = append(effects, e)
 	}
 	return effects

@@ -180,18 +180,15 @@ func New(data res.CharacterData) *Character {
 	}
 	// Restore
 	if data.Restore {
+		c.SetSerial(data.Serial)
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
 		c.SetExperience(data.Exp)
 		c.SetPosition(data.PosX, data.PosY)
 		c.SetDefaultPosition(data.DefY, data.DefY)
 	}
-	// Assign serial.
-	if len(data.Serial) < 1 {
-		serial.AssignSerial(&c)
-	} else {
-		c.SetSerial(data.Serial)
-	}
+	// Register serial.
+	serial.Register(&c)
 	return &c
 }
 
@@ -738,7 +735,6 @@ func (c *Character) buildEffects(effectsData ...res.EffectData) []*effect.Effect
 	for _, ed := range effectsData {
 		e := effect.New(ed)
 		e.SetSource(c)
-		serial.AssignSerial(e)
 		effects = append(effects, e)
 	}
 	return effects

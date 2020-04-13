@@ -28,6 +28,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/log"
 )
 
 // Struct for effects.
@@ -53,7 +54,7 @@ func New(data res.EffectData) *Effect {
 	if len(e.name) < 1 {
 		e.name = lang.Text(e.id)
 	}
-	serial.AssignSerial(e)
+	serial.Register(e)
 	return e
 }
 
@@ -61,10 +62,14 @@ func New(data res.EffectData) *Effect {
 func (e *Effect) Update(delta int64) {
 	object := serial.Object(e.tarID, e.tarSerial)
 	if object == nil || e.Time() <= 0 {
+		log.Err.Printf("effect: %s#%s: target not found: %s#%s",
+			e.ID(), e.Serial(), e.tarID, e.tarSerial)
 		return
 	}
 	target, ok := object.(Target)
 	if !ok {
+		log.Err.Printf("effect: %s#%s: target is invalid: %s#%s",
+			e.ID(), e.Serial(), e.tarID, e.tarSerial)
 		return
 	}
 	source := serial.Object(e.srcID, e.srcSerial)

@@ -84,15 +84,12 @@ func New(data res.ObjectData) *Object {
 	}
 	// Restore.
 	if data.Restore {
+		ob.SetSerial(data.Serial)
 		ob.SetHealth(data.HP)
 		ob.SetPosition(data.PosX, data.PosY)
 	}
-	// Assign serial.
-	if len(data.Serial) < 1 {
-		serial.AssignSerial(&ob)
-	} else {
-		ob.SetSerial(data.Serial)
-	}
+	// Register serial.
+	serial.Register(&ob)
 	return &ob
 }
 

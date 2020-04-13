@@ -46,14 +46,14 @@ func init() {
 	base = make(map[string][]Serialer)
 }
 
-// AssignSerial assigns and registers unique serial value to
+// Register assigns and registers unique serial value to
 // specified object among all previously registered objects with
 // same ID, or only registers serial if object already has unique
 // serial value.
 // Assigns new serial if specified object has serial
 // value but its not unique among previously
 // registered objects.
-func AssignSerial(s Serialer) {
+func Register(s Serialer) {
 	// Get all objects with same ID.
 	serialers := base[s.ID()]
 	// Check whether this is first object with such ID.

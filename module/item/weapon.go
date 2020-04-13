@@ -68,7 +68,7 @@ func NewWeapon(data res.WeaponData) *Weapon {
 	if len(nameInfo) > 1 {
 		w.info = nameInfo[1]
 	}
-	serial.AssignSerial(&w)
+	serial.Register(&w)
 	return &w
 }
 

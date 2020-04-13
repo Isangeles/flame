@@ -66,7 +66,7 @@ func NewArmor(data res.ArmorData) *Armor {
 	if len(nameInfo) > 1 {
 		a.info = nameInfo[1]
 	}
-	serial.AssignSerial(&a)
+	serial.Register(&a)
 	return &a
 }
 

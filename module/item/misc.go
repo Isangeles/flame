@@ -53,7 +53,7 @@ func NewMisc(data res.MiscItemData) *Misc {
 	if len(nameInfo) > 1 {
 		m.info = nameInfo[1]
 	}
-	serial.AssignSerial(&m)
+	serial.Register(&m)
 	return &m
 }
 

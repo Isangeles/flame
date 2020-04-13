@@ -33,12 +33,12 @@ type testObject struct {
 
 // Tests function for assiging unique
 // serial values
-func TestAssignSerial(t *testing.T) {
+func TestRegister(t *testing.T) {
 	ob1 := new(testObject)
 	ob2 := new(testObject)
 	ob1.id, ob2.id = "test", "test"
-	AssignSerial(ob1)
-	AssignSerial(ob2)
+	Register(ob1)
+	Register(ob2)
 	if ob1.Serial() == ob2.Serial() {
 		t.Errorf("Not unique serial values: %s == %s",
 			ob1.Serial(), ob2.Serial())
@@ -51,8 +51,8 @@ func TestObject(t *testing.T) {
 	ob1 := new(testObject)
 	ob2 := new(testObject)
 	ob1.id, ob2.id = "test", "test"
-	AssignSerial(ob1)
-	AssignSerial(ob2)
+	Register(ob1)
+	Register(ob2)
 	serialer := Object(ob1.ID(), ob1.Serial())
 	if serialer == nil {
 		t.Errorf("Object object not found after assignment: %s %s",
@@ -64,11 +64,11 @@ func TestObject(t *testing.T) {
 func TestReset(t *testing.T) {
 	ob1 := new(testObject)
 	ob1.id = "test"
-	AssignSerial(ob1)
+	Register(ob1)
 	Reset()
 	ob2 := new(testObject)
 	ob2.id = ob1.id
-	AssignSerial(ob2)
+	Register(ob2)
 	if ob2.Serial() != "0" {
 		t.Errorf("Not first value assigned after reset: %s != 0",
 			ob2.Serial())

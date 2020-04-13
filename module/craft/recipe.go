@@ -28,7 +28,6 @@ import (
 	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/req"
-	"github.com/isangeles/flame/module/serial"
 )
 
 // Struct for recipes.
@@ -80,11 +79,9 @@ func (r *Recipe) Make() []item.Item {
 		switch d := resData.Item.(type) {
 		case res.WeaponData:
 			it := item.NewWeapon(d)
-			serial.AssignSerial(it)
 			items = append(items, it)
 		case res.MiscItemData:
 			it := item.NewMisc(d)
-			serial.AssignSerial(it)
 			items = append(items, it)
 		}
 	}
