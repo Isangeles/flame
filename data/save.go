@@ -179,13 +179,11 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	area := area.New(areaData)
 	// Characters.
 	for _, charData := range data.Chars {
-		charData.Restore = true
 		char := character.New(charData)
 		area.AddCharacter(char)
 	}
 	// Objects.
 	for _, obData := range data.Objects {
-		obData.Restore = true
 		ob := object.New(obData)
 		area.AddObject(ob)
 	}

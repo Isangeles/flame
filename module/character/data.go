@@ -48,6 +48,7 @@ func (c *Character) Data() res.CharacterData {
 		QuestLog:  c.Journal().Data(),
 		Crafting:  c.Crafting().Data(),
 		Trainings: train.TrainingsData(c.Trainings()...),
+		Restore:   true,
 	}
 	if c.Race() != nil {
 		data.Race = c.Race().ID()
