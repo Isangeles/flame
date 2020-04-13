@@ -40,6 +40,7 @@ import (
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/object"
+	"github.com/isangeles/flame/module/serial"
 )
 
 var (
@@ -93,6 +94,8 @@ func ImportGame(mod *module.Module, dirPath, fileName string) (*flame.Game, erro
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal savegame data: %v", err)
 	}
+	// Reset serial objects base.
+	serial.Reset()
 	// Load chapter with ID from save.
 	err = LoadChapter(mod, gameData.SavedChapter.ID)
 	if err != nil {
