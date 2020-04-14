@@ -38,7 +38,6 @@ import (
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
 	"github.com/isangeles/flame/module/character"
-	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/serial"
 )
@@ -165,10 +164,6 @@ func buildSavedGame(mod *module.Module, gameData *res.GameData) (*flame.Game, er
 		area := buildSavedArea(mod, areaData)
 		mod.Chapter().AddAreas(area)
 	}
-	// Restore objects effects and memory.
-	for _, areaData := range chapterData.Areas {
-		restoreAreaEffects(mod, areaData)
-	}
 	// Create game from saved data.
 	game := flame.NewGame(mod)
 	return game, nil
@@ -196,38 +191,4 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 		area.AddSubarea(subarea)
 	}
 	return area
-}
-
-// restoreAreaEffects restores saved effects for characters and objects.
-func restoreAreaEffects(mod *module.Module, data res.SavedAreaData) {
-	for _, charData := range data.Chars {
-		char := mod.Chapter().Character(charData.ID, charData.Serial)
-		if char == nil {
-			log.Err.Printf("data: save: restore effects: module char not found: %s#%s",
-				charData.ID, charData.Serial)
-			continue
-		}
-		for _, obEffectData := range charData.Effects {
-			effectData := res.Effect(obEffectData.ID)
-			if effectData == nil {
-				log.Err.Printf("data: char: %s: restore effects: unable to create effect: %s",
-					char.ID(), obEffectData.ID)
-				continue
-			}
-			effect := effect.New(*effectData)
-			effect.SetSerial(obEffectData.Serial)
-			effect.SetTime(obEffectData.Time)
-			// Restore effect source.
-			source := mod.Target(obEffectData.SourceID, obEffectData.SourceSerial)
-			if source == nil {
-				log.Err.Printf("data: char: %s: restore effects: unable to find source: %s#%s",
-					char.ID(), obEffectData.SourceID, obEffectData.SourceSerial)
-			}
-			effect.SetSource(source)
-			char.AddEffect(effect)
-		}
-	}
-	for _, subareaData := range data.Subareas {
-		restoreAreaEffects(mod, subareaData)
-	}
 }

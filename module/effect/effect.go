@@ -132,10 +132,10 @@ func (e *Effect) SetTime(time int64) {
 	e.time = time
 }
 
-// SetSource sets specified targetable object
-// as effect source.
-func (e *Effect) SetSource(t Target) {
-	e.srcID, e.srcSerial = t.ID(), t.Serial()
+// SetSource sets targetable object with specified ID
+// and serial value as effect source.
+func (e *Effect) SetSource(id, serial string) {
+	e.srcID, e.srcSerial = id, serial
 }
 
 // SetTarget sets specified targertable object

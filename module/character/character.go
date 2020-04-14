@@ -126,6 +126,17 @@ func New(data res.CharacterData) *Character {
 	if len(c.Name()) < 1 {
 		c.SetName(lang.Text(c.ID()))
 	}
+	// Restore
+	if data.Restore {
+		c.SetSerial(data.Serial)
+		c.SetHealth(data.HP)
+		c.SetMana(data.Mana)
+		c.SetExperience(data.Exp)
+		c.SetPosition(data.PosX, data.PosY)
+		c.SetDefaultPosition(data.DefY, data.DefY)
+	}
+	// Register serial.
+	serial.Register(&c)
 	// Set Race.
 	raceData := res.Race(data.Race)
 	if raceData != nil {
@@ -146,7 +157,7 @@ func New(data res.CharacterData) *Character {
 	for _, charSkillData := range data.Skills {
 		skillData := res.Skill(charSkillData.ID)
 		if skillData == nil {
-			log.Err.Printf("new character: %s: fail to retrieve skill data: %v",
+			log.Err.Printf("new character: %s: skill data not found: %v",
 				c.ID(), charSkillData.ID)
 			continue
 		}
@@ -161,14 +172,28 @@ func New(data res.CharacterData) *Character {
 	for _, charDialogData := range data.Dialogs {
 		dialogData := res.Dialog(charDialogData.ID)
 		if dialogData == nil {
-			log.Err.Printf("new character: %s: fail to retrieve dialog data: %s",
+			log.Err.Printf("new character: %s: dialog data not fund: %s",
 				c.ID(), charDialogData.ID)
 			continue
 		}
 		dialog := dialog.New(*dialogData)
 		c.AddDialog(dialog)
 	}
-	// Memory.
+	// Effects.
+	for _, charEffectData := range data.Effects {
+		effectData := res.Effect(charEffectData.ID)
+		if effectData == nil {
+			log.Err.Printf("new character: %s: effect data not fund: %s",
+				c.ID(), charEffectData.ID)
+			continue
+		}
+		effect := effect.New(*effectData)
+		effect.SetSerial(charEffectData.Serial)
+		effect.SetTime(charEffectData.Time)
+		effect.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
+		c.AddEffect(effect)
+	}
+	// Memory. 
 	for _, memData := range data.Memory {
 		att := Attitude(memData.Attitude)
 		mem := TargetMemory{
@@ -178,17 +203,6 @@ func New(data res.CharacterData) *Character {
 		}
 		c.MemorizeTarget(&mem)
 	}
-	// Restore
-	if data.Restore {
-		c.SetSerial(data.Serial)
-		c.SetHealth(data.HP)
-		c.SetMana(data.Mana)
-		c.SetExperience(data.Exp)
-		c.SetPosition(data.PosX, data.PosY)
-		c.SetDefaultPosition(data.DefY, data.DefY)
-	}
-	// Register serial.
-	serial.Register(&c)
 	return &c
 }
 
@@ -734,7 +748,7 @@ func (c *Character) buildEffects(effectsData ...res.EffectData) []*effect.Effect
 	effects := make([]*effect.Effect, 0)
 	for _, ed := range effectsData {
 		e := effect.New(ed)
-		e.SetSource(c)
+		e.SetSource(c.ID(), c.Serial())
 		effects = append(effects, e)
 	}
 	return effects

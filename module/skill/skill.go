@@ -277,7 +277,7 @@ func (s *Skill) buildEffects(effectsData []res.EffectData) []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
 	for _, ed := range effectsData {
 		e := effect.New(ed)
-		e.SetSource(s.user)
+		e.SetSource(s.user.ID(), s.user.Serial())
 		effects = append(effects, e)
 	}
 	return effects

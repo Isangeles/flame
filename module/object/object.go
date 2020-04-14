@@ -71,17 +71,6 @@ func New(data res.ObjectData) *Object {
 	if len(ob.Name()) < 1 {
 		ob.SetName(lang.Text(ob.ID()))
 	}
-	// Add effects.
-	for _, data := range data.Effects {
-		effData := res.Effect(data.ID)
-		if effData == nil {
-			log.Err.Printf("object: %s: unable to retrieve effect data: %s",
-				ob.ID(), data.ID)
-			continue
-		}
-		eff := effect.New(*effData)
-		ob.AddEffect(eff)
-	}
 	// Restore.
 	if data.Restore {
 		ob.SetSerial(data.Serial)
@@ -90,6 +79,20 @@ func New(data res.ObjectData) *Object {
 	}
 	// Register serial.
 	serial.Register(&ob)
+	// Add effects.
+	for _, data := range data.Effects {
+		effData := res.Effect(data.ID)
+		if effData == nil {
+			log.Err.Printf("object: %s: effect data not found: %s",
+				ob.ID(), data.ID)
+			continue
+		}
+		eff := effect.New(*effData)
+		eff.SetSerial(data.Serial)
+		eff.SetTime(data.Time)
+		eff.SetSource(data.SourceID, data.SourceSerial)
+		ob.AddEffect(eff)
+	}
 	return &ob
 }
 
