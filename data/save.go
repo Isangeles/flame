@@ -47,20 +47,18 @@ var (
 )
 
 // ExportGame saves specified game to savegame file in specified directory.
-func ExportGame(game *flame.Game, dirPath, saveName string) error {
+func ExportGame(game *flame.Game, path string) error {
 	data := gameData(game)
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal game: %v", err)
 	}
 	// Create savegame file.
-	err = os.MkdirAll(dirPath, 0755)
+	err = os.MkdirAll(filepath.Dir(path), 0755)
 	if err != nil {
 		return fmt.Errorf("unable to create savegames dir: %v", err)
 	}
-	filePath := filepath.FromSlash(dirPath + "/" + saveName +
-		SavegameFileExt)
-	f, err := os.Create(filePath)
+	f, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("unable to write savegame file: %v", err)
 	}
@@ -69,18 +67,14 @@ func ExportGame(game *flame.Game, dirPath, saveName string) error {
 	w := bufio.NewWriter(f)
 	w.Write(xml)
 	w.Flush()
-	log.Dbg.Printf("game saved in: %s", filePath)
+	log.Dbg.Printf("game saved in: %s", path)
 	return nil
 }
 
 // ImportGame imports saved game from save file with specified name in
 // specified dir.
-func ImportGame(mod *module.Module, dirPath, fileName string) (*flame.Game, error) {
-	filePath := filepath.FromSlash(dirPath + "/" + fileName)
-	if !strings.HasSuffix(filePath, SavegameFileExt) {
-		filePath = filePath + SavegameFileExt
-	}
-	doc, err := os.Open(filePath)
+func ImportGame(mod *module.Module, path string) (*flame.Game, error) {
+	doc, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open savegame file: %v", err)
 	}
@@ -119,7 +113,7 @@ func ImportGamesDir(mod *module.Module, dirPath string) ([]*flame.Game, error) {
 		if !strings.HasSuffix(fInfo.Name(), SavegameFileExt) {
 			continue
 		}
-		game, err := ImportGame(mod, dirPath, fInfo.Name())
+		game, err := ImportGame(mod, filepath.Join(dirPath, fInfo.Name()))
 		if err != nil {
 			log.Err.Printf("data savegame load: unable to import saved game: %v", err)
 			continue
