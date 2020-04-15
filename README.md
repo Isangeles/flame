@@ -5,11 +5,11 @@
   
   Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
 
-  Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or modify existing one(like [Arena](https://github.com/Isangeles/arena)).
-
-  The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
+  Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or use some existing one.
 
   Flame modules are available for download [here](http://flame.isangeles.pl/mods).
+
+  The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
   Currently in an early development stage.
 
@@ -18,7 +18,7 @@
   * [Flame](https://github.com/Isangeles/flame) - engine core
   * [Burn](https://github.com/Isangeles/burn) - commands interpreter with it's own scripting language [Ash](https://github.com/Isangeles/burn/tree/master/ash) for creating cutscenes etc.
   * [Burnsh](https://github.com/Isangeles/burnsh) - textual fronted(CLI)
-  * [Mural](https://github.com/Isangeles/mural) - graphical fronted(2d GUI)
+  * [Mural](https://github.com/Isangeles/mural) - graphical fronted(2D GUI)
   * [MTK](https://github.com/Isangeles/mtk) - simple graphical toolkit
   * [Stone](https://github.com/Isangeles/stone) - simple library to render [Tiled](https://www.mapeditor.org) maps
   * [Arena](https://github.com/Isangeles/arena) - example Flame module
@@ -40,7 +40,7 @@ Configuration values are loaded from `.flame` file in Flame executable directory
 ```
   lang:[language ID]
 ```
-Description: specifies game language, language ID is name of directory with translation files in lang directories(e.g. `data/lang` or `data/modules/[mod]/lang`).
+Description: specifies game language, language ID is name of directory with translation files in lang directories(e.g. `data/lang` or `data/modules/[module ID]/lang`).
 
 ```
   module:[module ID]
@@ -59,7 +59,7 @@ Modules are stored by default in `data/modules` directory.
 
 Module data are available across all chapters, data files are placed in sub-directories(`/items`, `/objects`, etc.) in the module directory.
 
-Chapter data are available only when a specific chapter is active, data files are placed in subdirectories(`/npc`, `/dialogs`, etc.) in chapter directory(in `[module]/chapters`).
+Chapter data are available only when a specific chapter is active, data files are placed in sub-directories(`/characters`, `/dialogs`, etc.) in chapter directory(in `[module]/chapters`).
 
 Translation files are placed in `/lang` directory both for modules and chapters.
 
