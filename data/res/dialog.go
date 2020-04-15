@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,32 +23,43 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
+// Struct for dialogs data.
+type DialogsData struct {
+	XMLName xml.Name     `xml:"dialogs" json:"-"`
+	Dialogs []DialogData `xml:"dialog" json:"dialogs'`
+}
+
 // Dialog data struct.
 type DialogData struct {
-	ID     string
-	Stages []*DialogStageData
-	Reqs   ReqsData
+	XMLName xml.Name          `xml:"dialog" json:"-"`
+	ID      string            `xml:"id,attr" json:"id"`
+	Stages  []DialogStageData `xml:"stage" json:"sages"`
+	Reqs    ReqsData          `xml:"reqs" json:"reqs"`
 }
 
 // Dialog text data struct.
 type DialogStageData struct {
-	ID         string
-	OrdinalID  string
-	Start      bool
-	Answers    []*DialogAnswerData
-	Reqs       ReqsData
-	TalkerMods ModifiersData
-	OwnerMods  ModifiersData
+	ID         string             `xml:"id,attr" json:"id"`
+	OrdinalID  string             `xml:"ordianl,attr" json:"ordinal"`
+	Start      bool               `xml:"start,attr" json:"start"`
+	Answers    []DialogAnswerData `xml:"answer" json:"answers"`
+	Reqs       ReqsData           `xml:"reqs" json:"reqs"`
+	TalkerMods ModifiersData      `xml:"talker>modifiers" json:"talker-mods"`
+	OwnerMods  ModifiersData      `xml:"owner>modifiers" json:"owner-mods`
 }
 
 // Dialog answer data struct.
 type DialogAnswerData struct {
-	ID         string
-	To         string
-	End        bool
-	Trade      bool
-	Training   bool
-	Reqs       ReqsData
-	TalkerMods ModifiersData
-	OwnerMods  ModifiersData
+	ID         string        `xml:"id,attr" json:"id"`
+	To         string        `xml:"to,attr" json:"to"`
+	End        bool          `xml:"end,attr" json:"end"`
+	Trade      bool          `xml:"trade,attr" json:"trade"`
+	Training   bool          `xml:"training,attr" json:"training"`
+	Reqs       ReqsData      `xml:"reqs" json:"reqs"`
+	TalkerMods ModifiersData `xml:"talker>modifiers" json:"talker-mods"`
+	OwnerMods  ModifiersData `xml:"owner>modifiers" json:"owner-mods"`
 }
