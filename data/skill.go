@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -41,17 +41,22 @@ const (
 
 // ImportSkills imports all XML skills data from skills base
 // with specified path.
-func ImportSkills(basePath string) ([]res.SkillData, error) {
-	doc, err := os.Open(basePath)
+func ImportSkills(path string) ([]res.SkillData, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open skills base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
-	defer doc.Close()
-	skills, err := parsexml.UnmarshalSkills(doc)
+	defer file.Close()
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal skills base: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return skills, nil
+	data := new(res.SkillsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+	}
+	return data.Skills, nil
 }
 
 // ImportSkillsDir imports all skills from files in
@@ -59,7 +64,7 @@ func ImportSkills(basePath string) ([]res.SkillData, error) {
 func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	skills := make([]res.SkillData, 0)
 	for _, finfo := range files {
@@ -69,7 +74,7 @@ func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		impSkills, err := ImportSkills(basePath)
 		if err != nil {
-			log.Err.Printf("data: skills import: %s: fail to import base: %v",
+			log.Err.Printf("data: skills import: %s: unable to import base: %v",
 				basePath, err)
 			continue
 		}
