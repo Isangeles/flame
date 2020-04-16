@@ -60,14 +60,14 @@ type ItemSlot struct {
 }
 
 // UnmarshalArmors retrieves armor data from specified XML data.
-func UnmarshalArmors(data io.Reader) ([]*res.ArmorData, error) {
+func UnmarshalArmors(data io.Reader) ([]res.ArmorData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(Armors)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
-	armors := make([]*res.ArmorData, 0)
+	armors := make([]res.ArmorData, 0)
 	for _, xmlArmor := range xmlBase.Armors {
 		armorData, err := buildArmorData(xmlArmor)
 		if err != nil {
@@ -80,7 +80,7 @@ func UnmarshalArmors(data io.Reader) ([]*res.ArmorData, error) {
 }
 
 // buildArmorData creates armor resource from specified armor node.
-func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
+func buildArmorData(xmlArmor Armor) (res.ArmorData, error) {
 	reqs := buildReqs(&xmlArmor.Reqs)
 	slots := make([]res.ItemSlotData, len(xmlArmor.Slots))
 	for _, s := range xmlArmor.Slots {
@@ -106,5 +106,5 @@ func buildArmorData(xmlArmor Armor) (*res.ArmorData, error) {
 		Slots:     slots,
 		Loot:      xmlArmor.Loot,
 	}
-	return &ad, nil
+	return ad, nil
 }

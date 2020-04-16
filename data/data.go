@@ -73,7 +73,7 @@ func LoadArea(mod *module.Module, id string) error {
 		return fmt.Errorf("unable to import area: %v", err)
 	}
 	// Build mainarea.
-	mainarea := area.New(*areaData)
+	mainarea := area.New(areaData)
 	// Add area to active module chapter.
 	chap.AddAreas(mainarea)
 	return nil

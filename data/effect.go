@@ -41,7 +41,7 @@ const (
 
 // ImportEffects imports all XML effects data from effects base
 // with specified path.
-func ImportEffects(path string) ([]*res.EffectData, error) {
+func ImportEffects(path string) ([]res.EffectData, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open effects data file: %v", err)
@@ -56,21 +56,17 @@ func ImportEffects(path string) ([]*res.EffectData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal effects base: %v", err)
 	}
-	effectsData := make([]*res.EffectData, 0)
-	for i, _ := range data.Effects {
-		effectsData = append(effectsData, &data.Effects[i])
-	}
-	return effectsData, nil
+	return data.Effects, nil
 }
 
 // ImportEffectsDir imports all effects from files in
 // specified directory.
-func ImportEffectsDir(dirPath string) ([]*res.EffectData, error) {
+func ImportEffectsDir(dirPath string) ([]res.EffectData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
-	effects := make([]*res.EffectData, 0)
+	effects := make([]res.EffectData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), EffectsFileExt) {
 			continue

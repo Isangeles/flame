@@ -53,14 +53,14 @@ type Weapon struct {
 }
 
 // UnmarshalWeaponsBase retrieves weapons data from specified XML data.
-func UnmarshalWeapons(data io.Reader) ([]*res.WeaponData, error) {
+func UnmarshalWeapons(data io.Reader) ([]res.WeaponData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(Weapons)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
-	weapons := make([]*res.WeaponData, 0)
+	weapons := make([]res.WeaponData, 0)
 	for _, xmlWeapon := range xmlBase.Items {
 		weapon, err := buildWeaponData(xmlWeapon)
 		if err != nil {
@@ -73,7 +73,7 @@ func UnmarshalWeapons(data io.Reader) ([]*res.WeaponData, error) {
 }
 
 // buildXMLWeapon creates new weapon data from specified XML data.
-func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
+func buildWeaponData(xmlWeapon Weapon) (res.WeaponData, error) {
 	reqs := buildReqs(&xmlWeapon.Reqs)
 	slotsID := make([]string, 0)
 	for _, s := range xmlWeapon.Slots {
@@ -101,5 +101,5 @@ func buildWeaponData(xmlWeapon Weapon) (*res.WeaponData, error) {
 		Slots:      slotsID,
 		Loot:       xmlWeapon.Loot,
 	}
-	return &w, nil
+	return w, nil
 }

@@ -31,17 +31,17 @@ import (
 
 // UnmarshalLangData retrives all translation data from
 // specified source.
-func UnmarshalLangData(data io.Reader) []*res.TranslationData {
+func UnmarshalLangData(data io.Reader) []res.TranslationData {
 	values := UnmarshalConfig(data)
 	return buildTranslationData(values)
 }
 
 // buildTranslationData creates translation data from specified
 // key-texts map.
-func buildTranslationData(values map[string][]string) (data []*res.TranslationData) {
+func buildTranslationData(values map[string][]string) (data []res.TranslationData) {
 	for k, v := range values {
 		td := res.TranslationData{k, v}
-		data = append(data, &td)
+		data = append(data, td)
 	}
 	return
 }

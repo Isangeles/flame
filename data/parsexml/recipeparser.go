@@ -58,14 +58,14 @@ type RecipeResult struct {
 
 // UnmarshalRecipes retieves all recipes data from specified
 // XML data.
-func UnmarshalRecipes(data io.Reader) ([]*res.RecipeData, error) {
+func UnmarshalRecipes(data io.Reader) ([]res.RecipeData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(Recipes)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
-	recipes := make([]*res.RecipeData, 0)
+	recipes := make([]res.RecipeData, 0)
 	for _, xmlRecipe := range xmlBase.Recipes {
 		recipe, err := buildRecipeData(xmlRecipe)
 		if err != nil {
@@ -77,15 +77,16 @@ func UnmarshalRecipes(data io.Reader) ([]*res.RecipeData, error) {
 }
 
 // buildRecipeData creates new recipe data from specified XML data.
-func buildRecipeData(xmlRecipe Recipe) (*res.RecipeData, error) {
-	rd := new(res.RecipeData)
-	rd.ID = xmlRecipe.ID
-	rd.Category = xmlRecipe.Category
-	rd.Cast = int64(xmlRecipe.CastSec * 1000)
+func buildRecipeData(xmlRecipe Recipe) (res.RecipeData, error) {
+	rd := res.RecipeData{
+		ID:       xmlRecipe.ID,
+		Category: xmlRecipe.Category,
+		Cast:     int64(xmlRecipe.CastSec * 1000),
+	}
 	for _, r := range xmlRecipe.Results {
 		itd := itemRes(r.ID)
 		if itd == nil {
-			return nil, fmt.Errorf("result item data not found")
+			return rd, fmt.Errorf("result item data not found")
 		}
 		rrd := res.RecipeResultData{
 			ID:     r.ID,

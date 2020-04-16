@@ -46,14 +46,14 @@ type Race struct {
 }
 
 // UnmarshalRaces retrieves races from specified XML data.
-func UnmarshalRaces(data io.Reader) ([]*res.RaceData, error) {
+func UnmarshalRaces(data io.Reader) ([]res.RaceData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlRaces := new(Races)
 	err := xml.Unmarshal(doc, xmlRaces)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
-	races := make([]*res.RaceData, 0)
+	races := make([]res.RaceData, 0)
 	for _, xmlRace := range xmlRaces.Races {
 		rd := buildRaceData(xmlRace)
 		races = append(races, rd)
@@ -62,10 +62,10 @@ func UnmarshalRaces(data io.Reader) ([]*res.RaceData, error) {
 }
 
 // buildRaceData creates race resource data from specified XML data.
-func buildRaceData(xmlRace Race) *res.RaceData {
+func buildRaceData(xmlRace Race) res.RaceData {
 	rd := res.RaceData{
 		ID:       xmlRace.ID,
 		Playable: xmlRace.Playable,
 	}
-	return &rd
+	return rd
 }

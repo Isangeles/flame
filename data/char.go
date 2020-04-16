@@ -43,7 +43,7 @@ const (
 
 // ImportCharactersData import characters data from base file
 // with specified path.
-func ImportCharactersData(path string) ([]*res.CharacterData, error) {
+func ImportCharactersData(path string) ([]res.CharacterData, error) {
 	baseFile, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open char base file: %v", err)
@@ -58,21 +58,17 @@ func ImportCharactersData(path string) ([]*res.CharacterData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal XML: %v", err)
 	}
-	charsData := make([]*res.CharacterData, 0)
-	for i, _ := range data.Characters {
-		charsData = append(charsData, &data.Characters[i])
-	}
-	return charsData, nil
+	return data.Characters, nil
 }
 
 // ImportCharactersDataDir imports all characters data from
 // files in directory with specified path.
-func ImportCharactersDataDir(path string) ([]*res.CharacterData, error) {
+func ImportCharactersDataDir(path string) ([]res.CharacterData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
-	chars := make([]*res.CharacterData, 0)
+	chars := make([]res.CharacterData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), CharsFileExt) {
 			continue
@@ -98,7 +94,7 @@ func ImportCharacters(path string) ([]*character.Character, error) {
 	}
 	chars := make([]*character.Character, 0)
 	for _, charData := range charsData {
-		char := character.New(*charData)
+		char := character.New(charData)
 		chars = append(chars, char)
 	}
 	return chars, nil

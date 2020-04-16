@@ -41,7 +41,7 @@ const (
 
 // ImportRecipes imports all recipes from base file with
 // specified path.
-func ImportRecipes(path string) ([]*res.RecipeData, error) {
+func ImportRecipes(path string) ([]res.RecipeData, error) {
 	doc, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to open base file: %v", err)
@@ -56,12 +56,12 @@ func ImportRecipes(path string) ([]*res.RecipeData, error) {
 
 // ImportRecipesDir imports all recipes from base files in
 // directory with specified path.
-func ImportRecipesDir(path string) ([]*res.RecipeData, error) {
+func ImportRecipesDir(path string) ([]res.RecipeData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
-	recipes := make([]*res.RecipeData, 0)
+	recipes := make([]res.RecipeData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), RecipesFileExt) {
 			continue

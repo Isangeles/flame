@@ -41,7 +41,7 @@ const (
 
 // ImportQuests imports all auests from base file with
 // specified path.
-func ImportQuests(basePath string) ([]*res.QuestData, error) {
+func ImportQuests(basePath string) ([]res.QuestData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to open base file: %v", err)
@@ -56,12 +56,12 @@ func ImportQuests(basePath string) ([]*res.QuestData, error) {
 
 // ImportQuestsDir imports all quests from base files in
 // directory with specified path.
-func ImportQuestsDir(dirPath string) ([]*res.QuestData, error) {
+func ImportQuestsDir(dirPath string) ([]res.QuestData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
-	quests := make([]*res.QuestData, 0)
+	quests := make([]res.QuestData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), QuestsFileExt) {
 			continue

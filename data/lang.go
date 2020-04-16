@@ -41,7 +41,7 @@ const (
 
 // ImportLang imports all translation data from file with
 // specified path.
-func ImportLang(path string) ([]*res.TranslationData, error) {
+func ImportLang(path string) ([]res.TranslationData, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to open file: %v", err)
@@ -53,12 +53,12 @@ func ImportLang(path string) ([]*res.TranslationData, error) {
 
 // ImportLangDir imports all translation data from lang
 // files in directory with specified path.
-func ImportLangDir(path string) ([]*res.TranslationData, error) {
+func ImportLangDir(path string) ([]res.TranslationData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
-	data := make([]*res.TranslationData, 0)
+	data := make([]res.TranslationData, 0)
 	for _, fileInfo := range files {
 		if !strings.HasSuffix(fileInfo.Name(), LangFileExt) {
 			continue

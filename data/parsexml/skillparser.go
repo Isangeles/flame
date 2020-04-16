@@ -53,14 +53,14 @@ type Skill struct {
 }
 
 // UnmarshalSkills retrieves skills data from specified XML data.
-func UnmarshalSkills(data io.Reader) ([]*res.SkillData, error) {
+func UnmarshalSkills(data io.Reader) ([]res.SkillData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(Skills)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
-	skills := make([]*res.SkillData, 0)
+	skills := make([]res.SkillData, 0)
 	for _, xmlSkill := range xmlBase.Skills {
 		skill, err := buildSkillData(xmlSkill)
 		if err != nil {
@@ -73,7 +73,7 @@ func UnmarshalSkills(data io.Reader) ([]*res.SkillData, error) {
 }
 
 // buildSkillData builds skill from XML data.
-func buildSkillData(xmlSkill Skill) (*res.SkillData, error) {
+func buildSkillData(xmlSkill Skill) (res.SkillData, error) {
 	reqs := buildReqs(&xmlSkill.Reqs)
 	effects := make([]res.EffectData, 0)
 	for _, xmlEffect := range xmlSkill.Effects {
@@ -95,5 +95,5 @@ func buildSkillData(xmlSkill Skill) (*res.SkillData, error) {
 		Effects:  effects,
 		UseReqs:  reqs,
 	}
-	return &data, nil
+	return data, nil
 }

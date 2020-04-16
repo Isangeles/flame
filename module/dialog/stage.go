@@ -44,7 +44,7 @@ type Stage struct {
 }
 
 // NewStage creates new dialog stage.
-func NewStage(dialog *Dialog, data *res.DialogStageData) *Stage {
+func NewStage(dialog *Dialog, data res.DialogStageData) *Stage {
 	s := new(Stage)
 	s.dialog = dialog
 	s.id = data.ID

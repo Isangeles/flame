@@ -59,12 +59,12 @@ type AreaCharacter struct {
 }
 
 // UnmarshalArea parses area from XML data to resource.
-func UnmarshalArea(data io.Reader) (*res.AreaData, error) {
+func UnmarshalArea(data io.Reader) (res.AreaData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlArea := new(Area)
 	err := xml.Unmarshal(doc, xmlArea)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal xml: %v", err)
+		return res.AreaData{}, fmt.Errorf("unable to unmarshal xml: %v", err)
 	}
 	areaData := buildAreaData(xmlArea)
 	return areaData, nil
@@ -111,7 +111,7 @@ func xmlArea(data *res.AreaData) *Area {
 }
 
 // buildAreaData creates area data from specified XML data.
-func buildAreaData(xmlArea *Area) *res.AreaData {
+func buildAreaData(xmlArea *Area) res.AreaData {
 	area := res.AreaData{ID: xmlArea.ID}
 	// Characters.
 	for _, xmlChar := range xmlArea.Characters {
@@ -135,7 +135,7 @@ func buildAreaData(xmlArea *Area) *res.AreaData {
 	// Subareas.
 	for _, xmlSubarea := range xmlArea.Subareas {
 		subarea := buildAreaData(&xmlSubarea)
-		area.Subareas = append(area.Subareas, *subarea)
+		area.Subareas = append(area.Subareas, subarea)
 	}
-	return &area
+	return area
 }

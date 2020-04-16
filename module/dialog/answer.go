@@ -45,7 +45,7 @@ type Answer struct {
 }
 
 // NewAnswer creates new dialog answer.
-func NewAnswer(dialog *Dialog, data *res.DialogAnswerData) *Answer {
+func NewAnswer(dialog *Dialog, data res.DialogAnswerData) *Answer {
 	a := new(Answer)
 	a.dialog = dialog
 	a.id = data.ID

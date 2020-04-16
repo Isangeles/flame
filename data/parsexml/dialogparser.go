@@ -69,14 +69,14 @@ type Answer struct {
 }
 
 // UnmarshalDialogs retrieves dialogs data from specified XML data.
-func UnmarshalDialogs(data io.Reader) ([]*res.DialogData, error) {
+func UnmarshalDialogs(data io.Reader) ([]res.DialogData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(Dialogs)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
-	dialogs := make([]*res.DialogData, 0)
+	dialogs := make([]res.DialogData, 0)
 	for _, xmlDialog := range xmlBase.Dialogs {
 		dialog, err := buildDialogData(xmlDialog)
 		if err != nil {
@@ -89,9 +89,8 @@ func UnmarshalDialogs(data io.Reader) ([]*res.DialogData, error) {
 }
 
 // buildDialogData creates new dialog data from specified XML data.
-func buildDialogData(xmlDialog Dialog) (*res.DialogData, error) {
-	dd := new(res.DialogData)
-	dd.ID = xmlDialog.ID
+func buildDialogData(xmlDialog Dialog) (res.DialogData, error) {
+	dd := res.DialogData{ID: xmlDialog.ID}
 	for _, xmlStage := range xmlDialog.Stages {
 		dtd := new(res.DialogStageData)
 		dtd.ID = xmlStage.ID
@@ -107,12 +106,12 @@ func buildDialogData(xmlDialog Dialog) (*res.DialogData, error) {
 			dad.Reqs = buildReqs(&xmlAnswer.Reqs)
 			dad.TalkerMods = buildModifiers(&xmlAnswer.TalkerMods)
 			dad.OwnerMods = buildModifiers(&xmlAnswer.OwnerMods)
-			dtd.Answers = append(dtd.Answers, dad)
+			dtd.Answers = append(dtd.Answers, *dad)
 		}
 		dtd.Reqs = buildReqs(&xmlStage.Reqs)
 		dtd.TalkerMods = buildModifiers(&xmlStage.TalkerMods)
 		dtd.OwnerMods = buildModifiers(&xmlStage.OwnerMods)
-		dd.Stages = append(dd.Stages, dtd)
+		dd.Stages = append(dd.Stages, *dtd)
 	}
 	return dd, nil
 }

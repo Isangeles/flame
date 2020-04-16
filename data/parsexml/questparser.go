@@ -65,7 +65,7 @@ type QuestObjective struct {
 }
 
 // UnmarashalQuests retrieves quests data from specified XML data.
-func UnmarshalQuests(data io.Reader) ([]*res.QuestData, error) {
+func UnmarshalQuests(data io.Reader) ([]res.QuestData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(QuestsBase)
 	err := xml.Unmarshal(doc, xmlBase)
@@ -73,7 +73,7 @@ func UnmarshalQuests(data io.Reader) ([]*res.QuestData, error) {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v",
 			err)
 	}
-	quests := make([]*res.QuestData, 0)
+	quests := make([]res.QuestData, 0)
 	for _, xmlQuest := range xmlBase.Quests {
 		quest, err := buildQuestData(xmlQuest)
 		if err != nil {
@@ -86,9 +86,8 @@ func UnmarshalQuests(data io.Reader) ([]*res.QuestData, error) {
 }
 
 // buildQuestData creates new quest data from specified XML data.
-func buildQuestData(xmlQuest Quest) (*res.QuestData, error) {
-	qd := new(res.QuestData)
-	qd.ID = xmlQuest.ID
+func buildQuestData(xmlQuest Quest) (res.QuestData, error) {
+	qd := res.QuestData{ID: xmlQuest.ID}
 	for _, xmlStage := range xmlQuest.Stages {
 		qsd := res.QuestStageData{}
 		qsd.ID = xmlStage.ID

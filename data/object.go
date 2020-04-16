@@ -41,7 +41,7 @@ const (
 
 // ImportObjectsData imports area objects data from base
 // file with specified path.
-func ImportObjects(path string) ([]*res.ObjectData, error) {
+func ImportObjects(path string) ([]res.ObjectData, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
@@ -56,21 +56,17 @@ func ImportObjects(path string) ([]*res.ObjectData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal XML: %v", err)
 	}
-	objectsData := make([]*res.ObjectData, 0)
-	for i, _ := range data.Objects {
-		objectsData = append(objectsData, &data.Objects[i])
-	}
-	return objectsData, nil
+	return data.Objects, nil
 }
 
 // ImportObjectsDataDir import all area objects data from
 // files in directory with specified path.
-func ImportObjectsDir(path string) ([]*res.ObjectData, error) {
+func ImportObjectsDir(path string) ([]res.ObjectData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
-	objects := make([]*res.ObjectData, 0)
+	objects := make([]res.ObjectData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), ObjectsFileExt) {
 			continue

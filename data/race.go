@@ -40,7 +40,7 @@ const (
 )
 
 // ImportRaces imports all reces from file with specified path.
-func ImportRaces(path string) ([]*res.RaceData, error) {
+func ImportRaces(path string) ([]res.RaceData, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open races data file: %v", err)
@@ -55,12 +55,12 @@ func ImportRaces(path string) ([]*res.RaceData, error) {
 
 // ImportRacesDir imports all races from data files from
 // directory with specified path.
-func ImportRacesDir(path string) ([]*res.RaceData, error) {
+func ImportRacesDir(path string) ([]res.RaceData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
-	races := make([]*res.RaceData, 0)
+	races := make([]res.RaceData, 0)
 	for _, f := range files {
 		if !strings.HasSuffix(f.Name(), RacesFileExt) {
 			continue

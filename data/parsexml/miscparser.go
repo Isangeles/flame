@@ -50,14 +50,14 @@ type Misc struct {
 }
 
 // UnmarshalMiscItems retrieves misc items data from specified XML data.
-func UnmarshalMiscItems(data io.Reader) ([]*res.MiscItemData, error) {
+func UnmarshalMiscItems(data io.Reader) ([]res.MiscItemData, error) {
 	doc, _ := ioutil.ReadAll(data)
 	xmlBase := new(Miscs)
 	err := xml.Unmarshal(doc, xmlBase)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
 	}
-	miscs := make([]*res.MiscItemData, 0)
+	miscs := make([]res.MiscItemData, 0)
 	for _, xmlMisc := range xmlBase.Items {
 		misc, err := buildMiscData(xmlMisc)
 		if err != nil {
@@ -70,7 +70,7 @@ func UnmarshalMiscItems(data io.Reader) ([]*res.MiscItemData, error) {
 }
 
 // buildMiscData creates new misc data from specified XML data.
-func buildMiscData(xmlMisc Misc) (*res.MiscItemData, error) {
+func buildMiscData(xmlMisc Misc) (res.MiscItemData, error) {
 	m := res.MiscItemData{
 		ID:       xmlMisc.ID,
 		Value:    xmlMisc.Value,
@@ -78,5 +78,5 @@ func buildMiscData(xmlMisc Misc) (*res.MiscItemData, error) {
 		Loot:     xmlMisc.Loot,
 		Currency: xmlMisc.Currency,
 	}
-	return &m, nil
+	return m, nil
 }

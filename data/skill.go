@@ -41,7 +41,7 @@ const (
 
 // ImportSkills imports all XML skills data from skills base
 // with specified path.
-func ImportSkills(basePath string) ([]*res.SkillData, error) {
+func ImportSkills(basePath string) ([]res.SkillData, error) {
 	doc, err := os.Open(basePath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to open skills base file: %v", err)
@@ -56,12 +56,12 @@ func ImportSkills(basePath string) ([]*res.SkillData, error) {
 
 // ImportSkillsDir imports all skills from files in
 // specified directory.
-func ImportSkillsDir(dirPath string) ([]*res.SkillData, error) {
+func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
-	skills := make([]*res.SkillData, 0)
+	skills := make([]res.SkillData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), SkillsFileExt) {
 			continue

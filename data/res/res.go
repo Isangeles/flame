@@ -24,43 +24,47 @@
 package res
 
 var (
-	effectsData map[string]*EffectData
-	skillsData  map[string]*SkillData
-	armorsData  map[string]*ArmorData
-	weaponsData map[string]*WeaponData
-	miscsData   map[string]*MiscItemData
-	charsData   map[string]*CharacterData
-	objectsData map[string]*ObjectData
-	dialogsData map[string]*DialogData
-	questsData  map[string]*QuestData
-	recipesData map[string]*RecipeData
-	areasData   map[string]*AreaData
-	racesData   map[string]*RaceData
-	langData    map[string]*TranslationData
+	effectsData map[string]EffectData
+	skillsData  map[string]SkillData
+	armorsData  map[string]ArmorData
+	weaponsData map[string]WeaponData
+	miscsData   map[string]MiscItemData
+	charsData   map[string]CharacterData
+	objectsData map[string]ObjectData
+	dialogsData map[string]DialogData
+	questsData  map[string]QuestData
+	recipesData map[string]RecipeData
+	areasData   map[string]AreaData
+	racesData   map[string]RaceData
+	langData    map[string]TranslationData
 )
 
 // On init.
 func init() {
-	effectsData = make(map[string]*EffectData)
-	skillsData = make(map[string]*SkillData)
-	armorsData = make(map[string]*ArmorData)
-	weaponsData = make(map[string]*WeaponData)
-	miscsData = make(map[string]*MiscItemData)
-	charsData = make(map[string]*CharacterData)
-	objectsData = make(map[string]*ObjectData)
-	dialogsData = make(map[string]*DialogData)
-	questsData = make(map[string]*QuestData)
-	recipesData = make(map[string]*RecipeData)
-	areasData = make(map[string]*AreaData)
-	racesData = make(map[string]*RaceData)
-	langData = make(map[string]*TranslationData)
+	effectsData = make(map[string]EffectData)
+	skillsData = make(map[string]SkillData)
+	armorsData = make(map[string]ArmorData)
+	weaponsData = make(map[string]WeaponData)
+	miscsData = make(map[string]MiscItemData)
+	charsData = make(map[string]CharacterData)
+	objectsData = make(map[string]ObjectData)
+	dialogsData = make(map[string]DialogData)
+	questsData = make(map[string]QuestData)
+	recipesData = make(map[string]RecipeData)
+	areasData = make(map[string]AreaData)
+	racesData = make(map[string]RaceData)
+	langData = make(map[string]TranslationData)
 }
 
 // Effect returns resources for effect
 // with specified ID or nil if data for
 // specified effect ID was not found.
 func Effect(id string) *EffectData {
-	return effectsData[id]
+	ed := effectsData[id]
+	if len(ed.ID) < 1 {
+		return nil
+	}
+	return &ed
 }
 
 // Skill returns resources for skill
@@ -68,28 +72,44 @@ func Effect(id string) *EffectData {
 // struct if data for specified skill ID
 // was not found.
 func Skill(id string) *SkillData {
-	return skillsData[id]
+	sd := skillsData[id]
+	if len(sd.ID) < 1 {
+		return nil
+	}
+	return &sd
 }
 
 // Armor returns resource for armor
 // with specified ID or nil if data
 // for specified ID was not found.
 func Armor(id string) *ArmorData {
-	return armorsData[id]
+	ad := armorsData[id]
+	if len(ad.ID) < 1 {
+		return nil
+	}
+	return &ad
 }
 
 // Weapon returns weapon resource data
 // for weapon with specified ID or nil if
 // data for specified ID was not found.
 func Weapon(id string) *WeaponData {
-	return weaponsData[id]
+	wd := weaponsData[id]
+	if len(wd.ID) < 1 {
+		return nil
+	}
+	return &wd
 }
 
 // Misc returns misc item resource data
 // for miscellaneous item with specified ID or
 // nil if data for specified ID was not found.
 func MiscItem(id string) *MiscItemData {
-	return miscsData[id]
+	md := miscsData[id]
+	if len(md.ID) < 1 {
+		return nil
+	}
+	return &md
 }
 
 // Item returns item resource data for item
@@ -104,66 +124,102 @@ func Item(id string) ItemData {
 	if weapon != nil {
 		return weapon
 	}
-	return miscsData[id]
+	misc := miscsData[id]
+	if len(misc.ID) < 1 {
+		return nil
+	}
+	return &misc
 }
 
 // Character returns character resource data
 // for character with specified ID or nil
 // if data for specified ID was not found.
 func Character(id string) *CharacterData {
-	return charsData[id]
+	cd := charsData[id]
+	if len(cd.ID) < 1 {
+		return nil
+	}
+	return &cd
 }
 
 // Object returns object resource data
 // for object with specified ID or nil
 // if data for specified ID was not found.
 func Object(id string) *ObjectData {
-	return objectsData[id]
+	od := objectsData[id]
+	if len(od.ID) < 1 {
+		return nil
+	}
+	return &od
 }
 
 // Dialog returns dialog resource data
 // for dialog with specified ID or nil
 // if data for specified ID was not found.
 func Dialog(id string) *DialogData {
-	return dialogsData[id]
+	dd := dialogsData[id]
+	if len(dd.ID) < 1 {
+		return nil
+	}
+	return &dd
 }
 
 // Quest returns quest resource data
 // for quest with specified ID or nil
 // if data for specified ID was not found.
 func Quest(id string) *QuestData {
-	return questsData[id]
+	qd := questsData[id]
+	if len(qd.ID) < 1 {
+		return nil
+	}
+	return &qd
 }
 
 // Recipe returns recipe resource data
 // for recipe with specified ID or nil
 // if data for specified ID was not found.
 func Recipe(id string) *RecipeData {
-	return recipesData[id]
+	rd := recipesData[id]
+	if len(rd.ID) < 1 {
+		return nil
+	}
+	return &rd
 }
 
 // Area returns area resource data
 // for area with specified ID or nil
 // if data for specified ID was not found.
 func Area(id string) *AreaData {
-	return areasData[id]
+	ad := areasData[id]
+	if len(ad.ID) < 1 {
+		return nil
+	}
+	return &ad
 }
 
 // Race returns area resource data
 // for race with specified ID or nil
 // if data for specified ID was not found.
 func Race(id string) *RaceData {
-	return racesData[id]
+	rd := racesData[id]
+	if len(rd.ID) < 1 {
+		return nil
+	}
+	return &rd
 }
 
 // Translation returns translation data
 // texts for specified ID.
 func Translation(id string) *TranslationData {
-	return langData[id]
+	ld := langData[id]
+	if len(ld.ID) < 1 {
+		return nil
+	}
+	return &ld
 }
 
 // Effects returns all effects resources.
-func Effects() (d []*EffectData) {
+func Effects() (d []EffectData) {
 	for _, ed := range effectsData {
 		d = append(d, ed)
 	}
@@ -172,7 +228,7 @@ func Effects() (d []*EffectData) {
 
 // Characters returns all characters
 // resources.
-func Characters() (d []*CharacterData) {
+func Characters() (d []CharacterData) {
 	for _, cd := range charsData {
 		d = append(d, cd)
 	}
@@ -181,7 +237,7 @@ func Characters() (d []*CharacterData) {
 
 // Armors returns all  armors
 // resources.
-func Armors() (d []*ArmorData) {
+func Armors() (d []ArmorData) {
 	for _, ad := range armorsData {
 		d = append(d, ad)
 	}
@@ -190,7 +246,7 @@ func Armors() (d []*ArmorData) {
 
 // Weapons returns all weapons
 // resources.
-func Weapons() (d []*WeaponData) {
+func Weapons() (d []WeaponData) {
 	for _, wd := range weaponsData {
 		d = append(d, wd)
 	}
@@ -199,7 +255,7 @@ func Weapons() (d []*WeaponData) {
 
 // MiscItems returns all misc items
 // resources.
-func MiscItems() (d []*MiscItemData) {
+func MiscItems() (d []MiscItemData) {
 	for _, md := range miscsData {
 		d = append(d, md)
 	}
@@ -207,7 +263,7 @@ func MiscItems() (d []*MiscItemData) {
 }
 
 // Objects returns all objects resources.
-func Objects() (d []*ObjectData) {
+func Objects() (d []ObjectData) {
 	for _, od := range objectsData {
 		d = append(d, od)
 	}
@@ -215,7 +271,7 @@ func Objects() (d []*ObjectData) {
 }
 
 // Dialogs returns all dialogs resources.
-func Dialogs() (d []*DialogData) {
+func Dialogs() (d []DialogData) {
 	for _, dd := range dialogsData {
 		d = append(d, dd)
 	}
@@ -223,7 +279,7 @@ func Dialogs() (d []*DialogData) {
 }
 
 // Quests returns all quests resources.
-func Quests() (d []*QuestData) {
+func Quests() (d []QuestData) {
 	for _, qd := range questsData {
 		d = append(d, qd)
 	}
@@ -231,7 +287,7 @@ func Quests() (d []*QuestData) {
 }
 
 // Recipes returns all recipes resources.
-func Recipes() (r []*RecipeData) {
+func Recipes() (r []RecipeData) {
 	for _, rd := range recipesData {
 		r = append(r, rd)
 	}
@@ -239,7 +295,7 @@ func Recipes() (r []*RecipeData) {
 }
 
 // Areas returns all areas resources.
-func Areas() (a []*AreaData) {
+func Areas() (a []AreaData) {
 	for _, ad := range areasData {
 		a = append(a, ad)
 	}
@@ -247,7 +303,7 @@ func Areas() (a []*AreaData) {
 }
 
 // Races returns all races resources.
-func Races() (r []*RaceData) {
+func Races() (r []RaceData) {
 	for _, rd := range racesData {
 		r = append(r, rd)
 	}
@@ -255,7 +311,7 @@ func Races() (r []*RaceData) {
 }
 
 // Translations returns all translation resources.
-func Translations() (t []*TranslationData) {
+func Translations() (t []TranslationData) {
 	for _, td := range langData {
 		t = append(t, td)
 	}
@@ -264,8 +320,8 @@ func Translations() (t []*TranslationData) {
 
 // SetEffectsData sets specified effects data
 // as effects resources.
-func SetEffectsData(data []*EffectData) {
-	effectsData = make(map[string]*EffectData)
+func SetEffectsData(data []EffectData) {
+	effectsData = make(map[string]EffectData)
 	for _, ed := range data {
 		effectsData[ed.ID] = ed
 	}
@@ -273,8 +329,8 @@ func SetEffectsData(data []*EffectData) {
 
 // SetSkillsData sets specified skills data
 // as skills resources.
-func SetSkillsData(data []*SkillData) {
-	skillsData = make(map[string]*SkillData)
+func SetSkillsData(data []SkillData) {
+	skillsData = make(map[string]SkillData)
 	for _, sd := range data {
 		skillsData[sd.ID] = sd
 	}
@@ -282,8 +338,8 @@ func SetSkillsData(data []*SkillData) {
 
 // SetArmorsData sets specified armors data as
 // armors resources.
-func SetArmorsData(data []*ArmorData) {
-	armorsData = make(map[string]*ArmorData)
+func SetArmorsData(data []ArmorData) {
+	armorsData = make(map[string]ArmorData)
 	for _, ad := range data {
 		armorsData[ad.ID] = ad
 	}
@@ -291,8 +347,8 @@ func SetArmorsData(data []*ArmorData) {
 
 // SetWeaponsData sets specified weapons data as
 // weapons resources.
-func SetWeaponsData(data []*WeaponData) {
-	weaponsData = make(map[string]*WeaponData)
+func SetWeaponsData(data []WeaponData) {
+	weaponsData = make(map[string]WeaponData)
 	for _, wd := range data {
 		weaponsData[wd.ID] = wd
 	}
@@ -300,8 +356,8 @@ func SetWeaponsData(data []*WeaponData) {
 
 // SetMiscItemsData sets specified misc items data as
 // misc items resources.
-func SetMiscItemsData(data []*MiscItemData) {
-	miscsData = make(map[string]*MiscItemData)
+func SetMiscItemsData(data []MiscItemData) {
+	miscsData = make(map[string]MiscItemData)
 	for _, md := range data {
 		miscsData[md.ID] = md
 	}
@@ -309,8 +365,8 @@ func SetMiscItemsData(data []*MiscItemData) {
 
 // SetCharactersData sets specified characters data as
 // characters resources.
-func SetCharactersData(data []*CharacterData) {
-	charsData = make(map[string]*CharacterData)
+func SetCharactersData(data []CharacterData) {
+	charsData = make(map[string]CharacterData)
 	for _, cd := range data {
 		charsData[cd.ID] = cd
 	}
@@ -318,8 +374,8 @@ func SetCharactersData(data []*CharacterData) {
 
 // SetObjectsData sets specified objects data as
 // objects resources.
-func SetObjectsData(data []*ObjectData) {
-	objectsData = make(map[string]*ObjectData)
+func SetObjectsData(data []ObjectData) {
+	objectsData = make(map[string]ObjectData)
 	for _, od := range data {
 		objectsData[od.ID] = od
 	}
@@ -327,8 +383,8 @@ func SetObjectsData(data []*ObjectData) {
 
 // SetDialogsData sets specified dialogs data as
 // dialogs resources.
-func SetDialogsData(data []*DialogData) {
-	dialogsData = make(map[string]*DialogData)
+func SetDialogsData(data []DialogData) {
+	dialogsData = make(map[string]DialogData)
 	for _, dd := range data {
 		dialogsData[dd.ID] = dd
 	}
@@ -336,8 +392,8 @@ func SetDialogsData(data []*DialogData) {
 
 // SetQuestsData sets specified quests data as
 // quests resources.
-func SetQuestsData(data []*QuestData) {
-	questsData = make(map[string]*QuestData)
+func SetQuestsData(data []QuestData) {
+	questsData = make(map[string]QuestData)
 	for _, qd := range data {
 		questsData[qd.ID] = qd
 	}
@@ -345,8 +401,8 @@ func SetQuestsData(data []*QuestData) {
 
 // SetRecipesData sets specified recipes data as
 // recipes resources.
-func SetRecipesData(data []*RecipeData) {
-	recipesData = make(map[string]*RecipeData)
+func SetRecipesData(data []RecipeData) {
+	recipesData = make(map[string]RecipeData)
 	for _, rd := range data {
 		recipesData[rd.ID] = rd
 	}
@@ -354,8 +410,8 @@ func SetRecipesData(data []*RecipeData) {
 
 // SetAreasData sets specified data as
 // areas resources.
-func SetAreasData(data []*AreaData) {
-	areasData = make(map[string]*AreaData)
+func SetAreasData(data []AreaData) {
+	areasData = make(map[string]AreaData)
 	for _, ad := range data {
 		areasData[ad.ID] = ad
 	}
@@ -363,8 +419,8 @@ func SetAreasData(data []*AreaData) {
 
 // SetRacesData sets specified data as
 // races resources.
-func SetRacesData(data []*RaceData) {
-	racesData = make(map[string]*RaceData)
+func SetRacesData(data []RaceData) {
+	racesData = make(map[string]RaceData)
 	for _, rd := range data {
 		racesData[rd.ID] = rd
 	}
@@ -372,8 +428,8 @@ func SetRacesData(data []*RaceData) {
 
 // SetTranslationData sets specified data as
 // translation resources.
-func SetTranslationData(data []*TranslationData) {
-	langData = make(map[string]*TranslationData)
+func SetTranslationData(data []TranslationData) {
+	langData = make(map[string]TranslationData)
 	for _, td := range data {
 		langData[td.ID] = td
 	}

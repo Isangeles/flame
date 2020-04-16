@@ -39,30 +39,30 @@ const (
 )
 
 // ImportArea imports area from area dir with specified path.
-func ImportArea(path string) (*res.AreaData, error) {
+func ImportArea(path string) (res.AreaData, error) {
 	mainFilePath := filepath.FromSlash(fmt.Sprintf("%s/main%s",
 		path, AreaFileExt))
 	// Open area file.
 	file, err := os.Open(mainFilePath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open area file: %v", err)
+		return res.AreaData{}, fmt.Errorf("fail to open area file: %v", err)
 	}
 	defer file.Close()
 	// Unmarshal area file.
 	areaData, err := parsexml.UnmarshalArea(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to parse area data: %v", err)
+		return areaData, fmt.Errorf("fail to parse area data: %v", err)
 	}
 	return areaData, nil
 }
 
 // ImportAreaDir imports all areas from directory with specified path.
-func ImportAreasDir(path string) ([]*res.AreaData, error) {
+func ImportAreasDir(path string) ([]res.AreaData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}
-	areas := make([]*res.AreaData, 0)
+	areas := make([]res.AreaData, 0)
 	for _, file := range files {
 		areaPath := filepath.FromSlash(path + "/" + file.Name())
 		area, err := ImportArea(areaPath)
