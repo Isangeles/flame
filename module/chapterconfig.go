@@ -32,7 +32,6 @@ import (
 type ChapterConfig struct {
 	ID          string
 	Path        string
-	ModulePath  string
 	StartArea   string
 	StartPosX   float64
 	StartPosY   float64

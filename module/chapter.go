@@ -46,7 +46,7 @@ type Chapter struct {
 func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
-	c.conf = ChapterConfig{ModulePath: mod.Conf().Path}
+	c.conf = ChapterConfig{}
 	if len(data.Config["id"]) > 0 {
 		c.conf.ID = data.Config["id"][0]
 	}
