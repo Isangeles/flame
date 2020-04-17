@@ -216,6 +216,7 @@ func loadChapterData(chapter *module.Chapter) error {
 // setModuleResources sets resources from specified module
 func setModuleResources(mod *module.Module) {
 	chars := mod.Res.Characters
+	races := mod.Res.Races
 	objects := mod.Res.Objects
 	effects := mod.Res.Effects
 	skills := mod.Res.Skills
@@ -229,6 +230,7 @@ func setModuleResources(mod *module.Module) {
 	translations := append(res.Translations(), mod.Res.Translations...)
 	if mod.Chapter() != nil {
 		chars = append(chars, mod.Chapter().Res.Characters...)
+		races = append(races, mod.Chapter().Res.Races...)
 		objects = append(objects, mod.Chapter().Res.Objects...)
 		effects = append(effects, mod.Chapter().Res.Effects...)
 		skills = append(skills, mod.Chapter().Res.Skills...)
@@ -242,6 +244,7 @@ func setModuleResources(mod *module.Module) {
 		translations = append(translations, mod.Chapter().Res.Translations...)
 	}
 	res.SetCharactersData(chars)
+	res.SetRacesData(races)
 	res.SetObjectsData(objects)
 	res.SetEffectsData(effects)
 	res.SetSkillsData(skills)
