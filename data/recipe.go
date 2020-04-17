@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -42,16 +42,21 @@ const (
 // ImportRecipes imports all recipes from base file with
 // specified path.
 func ImportRecipes(path string) ([]res.RecipeData, error) {
-	doc, err := os.Open(path)
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
-	defer doc.Close()
-	recipes, err := parsexml.UnmarshalRecipes(doc)
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal recipes base: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return recipes, nil
+	defer file.Close()
+	data := new(res.RecipesData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+	}
+	return data.Recipes, nil
 }
 
 // ImportRecipesDir imports all recipes from base files in
@@ -59,7 +64,7 @@ func ImportRecipes(path string) ([]res.RecipeData, error) {
 func ImportRecipesDir(path string) ([]res.RecipeData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	recipes := make([]res.RecipeData, 0)
 	for _, finfo := range files {
@@ -69,7 +74,7 @@ func ImportRecipesDir(path string) ([]res.RecipeData, error) {
 		basePath := filepath.FromSlash(path + "/" + finfo.Name())
 		rd, err := ImportRecipes(basePath)
 		if err != nil {
-			log.Err.Printf("data recipes import: %s: fail to import base: %v",
+			log.Err.Printf("data recipes import: %s: unable to import base: %v",
 				basePath, err)
 		}
 		for _, r := range rd {

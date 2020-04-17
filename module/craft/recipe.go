@@ -76,7 +76,8 @@ func (r *Recipe) Make() []item.Item {
 	r.casted = false
 	items := make([]item.Item, 0)
 	for _, resData := range r.res {
-		switch d := resData.Item.(type) {
+		itemData := res.Item(resData.ID)
+		switch d := itemData.(type) {
 		case res.WeaponData:
 			it := item.NewWeapon(d)
 			items = append(items, it)

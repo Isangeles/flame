@@ -23,20 +23,29 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
+// Struct for recipes data.
+type RecipesData struct {
+	XMLName xml.Name     `xml:"recipes" json:"-"`
+	Recipes []RecipeData `xml:"recipe" json:"recipes"`
+}
+
 // Struct for recipe data.
 type RecipeData struct {
-	ID       string
-	Category string
-	Results  []RecipeResultData
-	Reqs     ReqsData
-	Cast     int64
+	ID       string             `xml:"id,attr" json:"id"`
+	Category string             `xml:"category,attr" json:"category"`
+	Cast     int64              `xml:"cast,attr" json:"cast"`
+	Results  []RecipeResultData `xml:"results>result" json:"results"`
+	Reqs     ReqsData           `xml:"reqs" json:"reqs"`
 }
 
 // Struct for recipe result data.
 type RecipeResultData struct {
-	ID     string
-	Amount int
-	Item   ItemData
+	ID     string `xml:"id,attr" json:"id"`
+	Amount int    `xml:"amount,attr" json:"amount"`
 }
 
 // Struct for crafting data.
