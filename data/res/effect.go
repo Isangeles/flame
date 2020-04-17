@@ -27,6 +27,7 @@ import (
 	"encoding/xml"
 )
 
+// Struct for effects data.
 type EffectsData struct {
 	XMLName xml.Name     `xml:"effects" json:"-"`
 	Effects []EffectData `xml:"effect" json:"effects"`

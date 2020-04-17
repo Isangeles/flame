@@ -23,48 +23,75 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
 // Empty interface for item data
 // structs.
 type ItemData interface{}
 
+// Struct for armors data.
+type ArmorsData struct {
+	XMLName xml.Name    `xml:"armors" json:"-"`
+	Armors  []ArmorData `xml:"armor" json:"armors"`
+}
+
 // Struct for armor resource data.
 type ArmorData struct {
-	ID        string
-	Value     int
-	Level     int
-	Armor     int
-	EQEffects []EffectData
-	EQReqs    ReqsData
-	Slots     []ItemSlotData
-	Loot      bool
+	ID        string         `xml:"id,attr" json:"id"`
+	Value     int            `xml:"value,attr" json:"value"`
+	Level     int            `xml:"level,attr" json:"level"`
+	Armor     int            `xml:"armor,attr" json:"armor"`
+	Loot      bool           `xml:"loot,attr" json:"loot"`
+	EQEffects []EffectData   `xml:"eq>effects>effect" json:"eq-effects"`
+	EQReqs    ReqsData       `xml:"eq>reqs" json:"eq-reqs"`
+	Slots     []ItemSlotData `xml:"slots>slot" json:"slots"`
+}
+
+// Struct for weapons data.
+type WeaponsData struct {
+	XMLName xml.Name     `xml:"weapons" json:"-"`
+	Weapons []WeaponData `xml:"weapon" json:"weapons"`
 }
 
 // Struct for weapon resource data.
 type WeaponData struct {
-	ID         string
-	Value      int
-	Level      int
-	DMGMin     int
-	DMGMax     int
-	DMGType    string
-	DMGEffects []EffectData
-	EQReqs     ReqsData
-	Slots      []string
-	Loot       bool
+	ID     string         `xml:"id,attr" json:"id"`
+	Value  int            `xml:"value,attr" json:"value"`
+	Level  int            `xml:"level,attr" json:"level"`
+	Damage DamageData     `xml:"damage" json:"damage"`
+	EQReqs ReqsData       `xml:"reqs" json:"eq-reqs"`
+	Loot   bool           `xml:"loot,attr" json:"loot"`
+	Slots  []ItemSlotData `xml:"slots>slot" json:"slots"`
+}
+
+// Struct for damage data.
+type DamageData struct {
+	Type    string             `xml:"type,attr" json:"type"`
+	Min     int                `xml:"min,attr" json:"min"`
+	Max     int                `xml:"max,attr" json:"max"`
+	Effects []ObjectEffectData `xml:"effects>effect" json:"effects"`
+}
+
+// Struct for misc items data.
+type MiscItemsData struct {
+	XMLName xml.Name       `xml:"miscs" json:"-"`
+	Miscs   []MiscItemData `xml:"misc" json:"miscs"`
 }
 
 // Struct for miscellaneous items data.
 type MiscItemData struct {
-	ID       string
-	Value    int
-	Level    int
-	Loot     bool
-	Currency bool
+	ID       string `xml:"id,attr" json:"id"`
+	Value    int    `xml:"value,attr" json:"value"`
+	Level    int    `xml:"level,attr" json:"level"`
+	Loot     bool   `xml:"loot,attr" json:"loot"`
+	Currency bool   `xml:"currency,attr" json:"currency"`
 }
 
 // Struct for item slot data.
 type ItemSlotData struct {
-	ID string
+	ID string `xml:"id,attr" json:"id"`
 }
 
 // Struct for inventory data.

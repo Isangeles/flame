@@ -54,20 +54,27 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		value:      data.Value,
 		level:      data.Level,
 		loot:       data.Loot,
-		dmgMin:     data.DMGMin,
-		dmgMax:     data.DMGMax,
-		dmgType:    objects.Element(data.DMGType),
-		dmgEffects: data.DMGEffects,
+		dmgMin:     data.Damage.Min,
+		dmgMax:     data.Damage.Max,
+		dmgType:    objects.Element(data.Damage.Type),
 	}
-	w.equipReqs = req.NewRequirements(data.EQReqs)
-	for _, sid := range data.Slots {
-		w.slots = append(w.slots, Slot(sid))
-	}
+	// Name & info.
 	nameInfo := lang.Texts(w.ID())
 	w.name = nameInfo[0]
 	if len(nameInfo) > 1 {
 		w.info = nameInfo[1]
 	}
+	// Effects.
+	for _, ed := range data.Damage.Effects {
+		data := res.Effect(ed.ID)
+		w.dmgEffects = append(w.dmgEffects, *data)
+	}
+	// Requirements.
+	w.equipReqs = req.NewRequirements(data.EQReqs)
+	for _, sd := range data.Slots {
+		w.slots = append(w.slots, Slot(sd.ID))
+	}
+	// Serial.
 	serial.Register(&w)
 	return &w
 }

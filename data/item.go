@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -42,24 +42,29 @@ const (
 )
 
 // ImportArmors imports all XML armors from file with specified path.
-func ImportArmors(basePath string) ([]res.ArmorData, error) {
-	file, err := os.Open(basePath)
+func ImportArmors(path string) ([]res.ArmorData, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	armors, err := parsexml.UnmarshalArmors(file)
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return armors, nil
+	data := new(res.ArmorsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
+	}
+	return data.Armors, nil
 }
 
 // ImportArmorsDir imports all armors data from files 
 func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	armors := make([]res.ArmorData, 0)
 	for _, finfo := range files {
@@ -69,7 +74,7 @@ func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
 		baseFilePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		impArmors, err := ImportArmors(baseFilePath)
 		if err != nil {
-			log.Err.Printf("data armors import: %s: fail to import base: %v",
+			log.Err.Printf("data armors import: %s: unable to import base: %v",
 				baseFilePath, err)
 			continue
 		}
@@ -80,17 +85,22 @@ func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
 
 // ImportWeapons imports all XML weapons from file with specified
 // path.
-func ImportWeapons(basePath string) ([]res.WeaponData, error) {
-	file, err := os.Open(basePath)
+func ImportWeapons(path string) ([]res.WeaponData, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	weapons, err := parsexml.UnmarshalWeapons(file)
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return weapons, nil
+	data := new(res.WeaponsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
+	}
+	return data.Weapons, nil
 }
 
 // ImportWeaponsDir imports all weapons from files
@@ -98,7 +108,7 @@ func ImportWeapons(basePath string) ([]res.WeaponData, error) {
 func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	weapons := make([]res.WeaponData, 0)
 	for _, finfo := range files {
@@ -108,7 +118,7 @@ func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
 		baseFilePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		impWeapons, err := ImportWeapons(baseFilePath)
 		if err != nil {
-			log.Err.Printf("data weapons import: %s: fail to import base: %v",
+			log.Err.Printf("data weapons import: %s: unable to import base: %v",
 				baseFilePath, err)
 			continue
 		}
@@ -119,17 +129,22 @@ func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
 
 // ImportMiscItems imports all XML miscellaneous items from file
 // with specified path.
-func ImportMiscItems(basePath string) ([]res.MiscItemData, error) {
-	file, err := os.Open(basePath)
+func ImportMiscItems(path string) ([]res.MiscItemData, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	miscs, err := parsexml.UnmarshalMiscItems(file)
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return miscs, nil
+	data := new(res.MiscItemsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
+	}
+	return data.Miscs, nil
 }
 
 // ImportMiscItemsDir imports all miscellaneous items from files
@@ -137,7 +152,7 @@ func ImportMiscItems(basePath string) ([]res.MiscItemData, error) {
 func ImportMiscItemsDir(dirPath string) ([]res.MiscItemData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	miscs := make([]res.MiscItemData, 0)
 	for _, finfo := range files {
@@ -147,7 +162,7 @@ func ImportMiscItemsDir(dirPath string) ([]res.MiscItemData, error) {
 		baseFilePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		impMiscs, err := ImportMiscItems(baseFilePath)
 		if err != nil {
-			log.Err.Printf("data misc items import: %s: fail to import base: %v",
+			log.Err.Printf("data misc items import: %s: unable to import base: %v",
 				baseFilePath, err)
 			continue
 		}

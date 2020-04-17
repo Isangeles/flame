@@ -75,30 +75,11 @@ func UnmarshalWeapons(data io.Reader) ([]res.WeaponData, error) {
 // buildXMLWeapon creates new weapon data from specified XML data.
 func buildWeaponData(xmlWeapon Weapon) (res.WeaponData, error) {
 	reqs := buildReqs(&xmlWeapon.Reqs)
-	slotsID := make([]string, 0)
-	for _, s := range xmlWeapon.Slots {
-		slotsID = append(slotsID, s.ID)
-	}
-	hitEffects := make([]res.EffectData, 0)
-	for _, xmlEffect := range xmlWeapon.Damage.Effects {
-		eff := res.Effect(xmlEffect.ID)
-		if eff == nil {
-			log.Err.Printf("xml: build weapon: hit effect not found: %s",
-				xmlEffect.ID)
-			continue
-		}
-		hitEffects = append(hitEffects, *eff)
-	}
 	w := res.WeaponData{
 		ID:         xmlWeapon.ID,
 		Value:      xmlWeapon.Value,
 		Level:      xmlWeapon.Level,
-		DMGMin:     xmlWeapon.Damage.Min,
-		DMGMax:     xmlWeapon.Damage.Max,
-		DMGType:    xmlWeapon.Damage.Type,
-		DMGEffects: hitEffects,
 		EQReqs:     reqs,
-		Slots:      slotsID,
 		Loot:       xmlWeapon.Loot,
 	}
 	return w, nil
