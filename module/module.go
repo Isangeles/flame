@@ -25,22 +25,33 @@
 package module
 
 import (
+	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/objects"
 )
 
 // Module struct represents engine module.
 type Module struct {
-	conf    *Config
-	chapter *Chapter
+	Res              res.ResourcesData
+	conf             *Config
+	chapter          *Chapter
 	onChapterChanged func(c *Chapter)
 }
 
 // New creates new instance of module with specified
 // configuration and data.
-func New(conf Config) *Module {
+func New(data res.ModuleData) *Module {
 	m := new(Module)
-	m.conf = &conf
+	m.conf = new(Config)
+	if len(data.Config["id"]) > 0 {
+		m.conf.ID = data.Config["id"][0]
+	}
+	if len(data.Config["path"]) > 0 {
+		m.conf.Path = data.Config["path"][0]
+	}
+	if len(data.Config["chapter"]) > 0 {
+		m.conf.Chapter = data.Config["chapter"][0]
+	}
 	return m
 }
 
@@ -93,4 +104,15 @@ func (m *Module) Object(id, serial string) objects.Object {
 // SetOnChapterChangedFunc sets function triggered on chapter change.
 func (m *Module) SetOnChapterChangedFunc(f func(c *Chapter)) {
 	m.onChapterChanged = f
+}
+
+// Data creates data resource for module.
+func (m *Module) Data() res.ModuleData {
+	data := res.ModuleData{ID: m.Conf().ID}
+	data.Config = make(map[string][]string)
+	data.Config["id"] = []string{m.Conf().ID}
+	data.Config["path"] = []string{m.Conf().Path}
+	data.Config["chapter"] = []string{m.Chapter().Conf().ID}
+	data.Chapter = m.Chapter().Data()
+	return data
 }

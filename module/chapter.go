@@ -24,25 +24,42 @@
 package module
 
 import (
+	"strconv"
+	
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/area"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/object"
+	"github.com/isangeles/flame/module/objects"
 )
 
 // Chapter struct represents module chapter.
 type Chapter struct {
+	Res         res.ResourcesData
 	conf        ChapterConfig
 	mod         *Module
 	loadedAreas map[string]*area.Area
 	onAreaAdded func(s *area.Area)
 }
 
-// NewChapters creates new instance of module chapter.
-func NewChapter(mod *Module, conf ChapterConfig) *Chapter {
+// NewChapter creates new instance of module chapter.
+func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
-	c.conf = conf
+	c.conf = ChapterConfig{ModulePath: mod.Conf().Path}
+	if len(data.Config["id"]) > 0 {
+		c.conf.ID = data.Config["id"][0]
+	}
+	if len(data.Config["path"]) > 0 {
+		c.conf.Path = data.Config["path"][0]
+	}
+	if len(data.Config["start-area"]) > 0 {
+		c.conf.StartArea = data.Config["start-area"][0]
+	}
+	if len(data.Config["start-pos"]) > 1 {
+		c.conf.StartPosX, _ = strconv.ParseFloat(data.Config["start-pos"][0], 64)
+		c.conf.StartPosY, _ = strconv.ParseFloat(data.Config["start-pos"][1], 64)
+	}
 	c.loadedAreas = make(map[string]*area.Area)
 	return c
 }
@@ -121,19 +138,6 @@ func (c *Chapter) AreaObjects() (objects []*object.Object) {
 	return
 }
 
-// CharactersWithID returns all existing characters with
-// specified ID.
-func (c *Chapter) CharactersWithID(id string) (chars []*character.Character) {
-	for _, a := range c.loadedAreas {
-		for _, c := range a.AllCharacters() {
-			if c.ID() == id {
-				chars = append(chars, c)
-			}
-		}
-	}
-	return
-}
-
 // Character returns existing game character with specified
 // serial ID or nil if no character with specified ID exists.
 func (c *Chapter) Character(id, serial string) *character.Character {
@@ -156,6 +160,20 @@ func (c *Chapter) AreaObject(id, serial string) *object.Object {
 				return o
 			}
 		}
+	}
+	return nil
+}
+
+// Object returns game object with specified ID and serial
+// or nil if no such object was found.
+func (c *Chapter) Object(id, serial string) objects.Object {
+	char := c.Character(id, serial)
+	if char != nil {
+		return char
+	}
+	ob := c.AreaObject(id, serial)
+	if ob != nil {
+		return ob
 	}
 	return nil
 }
@@ -185,4 +203,16 @@ func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 // new area to chapter.
 func (c *Chapter) SetOnAreaAddedFunc(f func(s *area.Area)) {
 	c.onAreaAdded = f
+}
+
+// Data creates data resource for chapter.
+func (c *Chapter) Data() res.ChapterData {
+	data := res.ChapterData{ID: c.Conf().ID}
+	data.Config = make(map[string][]string)
+	data.Config["id"] = []string{c.Conf().ID}
+	data.Config["path"] = []string{c.Conf().Path}
+	for _, a := range c.Areas() {
+		data.Areas = append(data.Areas, a.Data())
+	}
+	return data
 }
