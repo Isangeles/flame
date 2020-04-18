@@ -90,10 +90,13 @@ func ImportGame(mod *module.Module, path string) (*flame.Game, error) {
 	// Reset serial objects base.
 	serial.Reset()
 	// Load chapter with ID from save.
-	err = LoadChapter(mod, gameData.SavedChapter.ID)
+	chapterPath := filepath.Join(mod.Conf().ChaptersPath(), gameData.SavedChapter.ID)
+	chapterData, err := ImportChapter(chapterPath)
 	if err != nil {
-		return nil, fmt.Errorf("unable to load chapter: %v", err)
+		return nil, fmt.Errorf("unable to import chapter: %v", err)
 	}
+	chapter := module.NewChapter(mod, chapterData)
+	mod.SetChapter(chapter)
 	game, err := buildSavedGame(mod, gameData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to build game from saved data: %v", err)

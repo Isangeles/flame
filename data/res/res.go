@@ -310,6 +310,14 @@ func Races() (r []RaceData) {
 	return
 }
 
+// Skills returns all skills resources.
+func Skills() (r []SkillData) {
+	for _, sd := range skillsData {
+		r = append(r, sd)
+	}
+	return
+}
+
 // Translations returns all translation resources.
 func Translations() (t []TranslationData) {
 	for _, td := range langData {
@@ -435,3 +443,50 @@ func SetTranslationData(data []TranslationData) {
 	}
 }
 
+// SetModuleData sets resources from specified module data.
+func SetModuleData(mod ModuleData) {
+	chars := append(mod.Resources.Characters, mod.Chapter.Resources.Characters...)
+	SetCharactersData(chars)
+	races := append(mod.Resources.Races, mod.Chapter.Resources.Races...)
+	SetRacesData(races)
+	objects := append(mod.Resources.Objects, mod.Chapter.Resources.Objects...)
+	SetObjectsData(objects)
+	effects := append(mod.Resources.Effects, mod.Chapter.Resources.Effects...)
+	SetEffectsData(effects)
+	skills := append(mod.Resources.Skills, mod.Chapter.Resources.Skills...)
+	SetSkillsData(skills)
+	armors := append(mod.Resources.Armors, mod.Chapter.Resources.Armors...)
+	SetArmorsData(armors)
+	weapons := append(mod.Resources.Weapons, mod.Chapter.Resources.Weapons...)
+	SetWeaponsData(weapons)
+	miscs := append(mod.Resources.Miscs, mod.Chapter.Resources.Miscs...)
+	SetMiscItemsData(miscs)
+	dialogs := append(mod.Resources.Dialogs, mod.Chapter.Resources.Dialogs...)
+	SetDialogsData(dialogs)
+	quests := append(mod.Resources.Quests, mod.Chapter.Resources.Quests...)
+	SetQuestsData(quests)
+	recipes := append(mod.Resources.Recipes, mod.Chapter.Resources.Recipes...)
+	SetRecipesData(recipes)
+	areas := append(mod.Resources.Areas, mod.Chapter.Resources.Areas...)
+	SetAreasData(areas)
+	translations := append(Translations(), mod.Resources.Translations...)
+	translations = append(translations, mod.Chapter.Resources.Translations...)
+	SetTranslationData(translations)
+}
+
+// SetModuleData sets resources from specified module data.
+func AddResources(r ResourcesData) {
+	SetCharactersData(append(Characters(), r.Characters...))
+	SetRacesData(append(Races(), r.Races...))
+	SetObjectsData(append(Objects(), r.Objects...))
+	SetEffectsData(append(Effects(), r.Effects...))
+	SetSkillsData(append(Skills(), r.Skills...))
+	SetArmorsData(append(Armors(), r.Armors...))
+	SetWeaponsData(append(Weapons(), r.Weapons...))
+	SetMiscItemsData(append(MiscItems(), r.Miscs...))
+	SetDialogsData(append(Dialogs(), r.Dialogs...))
+	SetQuestsData(append(Quests(), r.Quests...))
+	SetRecipesData(append(Recipes(), r.Recipes...))
+	SetAreasData(append(Areas(), r.Areas...))
+	SetTranslationData(append(Translations(), r.Translations...))
+}

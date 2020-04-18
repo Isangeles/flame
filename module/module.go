@@ -38,8 +38,8 @@ type Module struct {
 	onChapterChanged func(c *Chapter)
 }
 
-// New creates new instance of module with specified
-// configuration and data.
+// New creates new instance of module from specified data, adds
+// module resources to resources base in res package.
 func New(data res.ModuleData) *Module {
 	m := new(Module)
 	m.conf = new(Config)
@@ -52,6 +52,10 @@ func New(data res.ModuleData) *Module {
 	if len(data.Config["chapter"]) > 0 {
 		m.conf.Chapter = data.Config["chapter"][0]
 	}
+	m.Res = data.Resources
+	res.AddResources(m.Res)
+	chapter := NewChapter(m, data.Chapter)
+	m.SetChapter(chapter)
 	return m
 }
 

@@ -42,7 +42,9 @@ type Chapter struct {
 	onAreaAdded func(s *area.Area)
 }
 
-// NewChapter creates new instance of module chapter.
+// NewChapter creates new instance of module chapter
+// from specified data, adds chapter resources to
+// resources base in res package.
 func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
@@ -60,6 +62,8 @@ func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 		c.conf.StartPosX, _ = strconv.ParseFloat(data.Config["start-pos"][0], 64)
 		c.conf.StartPosY, _ = strconv.ParseFloat(data.Config["start-pos"][1], 64)
 	}
+	c.Res = data.Resources
+	res.AddResources(c.Res)
 	c.loadedAreas = make(map[string]*area.Area)
 	return c
 }

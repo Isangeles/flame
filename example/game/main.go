@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/data"
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/character"
 )
 
@@ -42,10 +43,11 @@ func main() {
 		panic(fmt.Errorf("Unable to load config: %v", err))
 	}
 	// Import module from config.
-	mod, err := data.ImportModule(config.ModulePath())
+	modData, err := data.ImportModule(config.ModulePath())
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
+	mod := module.New(modData)
 	// Create game.
 	game := flame.NewGame(mod)
 	// Create PC.
