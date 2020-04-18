@@ -24,12 +24,12 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -45,29 +45,34 @@ func ImportArea(path string) (res.AreaData, error) {
 	// Open area file.
 	file, err := os.Open(mainFilePath)
 	if err != nil {
-		return res.AreaData{}, fmt.Errorf("fail to open area file: %v", err)
+		return res.AreaData{}, fmt.Errorf("unable to open area file: %v", err)
 	}
 	defer file.Close()
 	// Unmarshal area file.
-	areaData, err := parsexml.UnmarshalArea(file)
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return areaData, fmt.Errorf("fail to parse area data: %v", err)
+		return res.AreaData{}, fmt.Errorf("unable to read area file: %v", err)
 	}
-	return areaData, nil
+	data := res.AreaData{}
+	err = xml.Unmarshal(buf, &data)
+	if err != nil {
+		return data, fmt.Errorf("unable to unmarshal XML data: %v", err)
+	}
+	return data, nil
 }
 
 // ImportAreaDir imports all areas from directory with specified path.
 func ImportAreasDir(path string) ([]res.AreaData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	areas := make([]res.AreaData, 0)
 	for _, file := range files {
 		areaPath := filepath.FromSlash(path + "/" + file.Name())
 		area, err := ImportArea(areaPath)
 		if err != nil {
-			log.Err.Printf("data: areas import: %s: fail to import area: %v",
+			log.Err.Printf("data: areas import: %s: unable to import area: %v",
 				areaPath, err)
 			continue
 		}

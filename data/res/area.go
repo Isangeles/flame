@@ -23,23 +23,30 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
 // Struct for area data.
 type AreaData struct {
-	ID         string
-	Characters []AreaCharData
-	Objects    []AreaObjectData
-	Subareas   []AreaData
+	XMLName    xml.Name         `xml:"area" json:"area"`
+	ID         string           `xml:"id,attr" json:"id"`
+	Characters []AreaCharData   `xml:"characters>character" json:"character"`
+	Objects    []AreaObjectData `xml:"objects>object" json:"objects"`
+	Subareas   []AreaData       `xml:"subareas>area" json:"subareas"`
 }
 
 // Struct for area character data.
 type AreaCharData struct {
-	ID         string
-	PosX, PosY float64
-	AI         bool
+	ID   string  `xml:"id,attr" json:"id"`
+	PosX float64 `xml:"x,attr" json:"pos-x"`
+	PosY float64 `xml:"y,attr" json:"pos-y"`
+	AI   bool    `xml:"ai,attr" json:"ai"`
 }
 
 // Struct for area object data.
 type AreaObjectData struct {
-	ID         string
-	PosX, PosY float64
+	ID   string  `xml:"id,attr" json:"id"`
+	PosX float64 `xml:"x,attr" json:"pos-x"`
+	PosY float64 `xml:"y,attr" json:"pos-y"`
 }
