@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -39,37 +39,42 @@ const (
 	DialogsFileExt = ".dialogs"
 )
 
-// ImportDialogs imports all dialogs from base file with
+// ImportDialogs imports all dialogs from data file with
 // specified path.
-func ImportDialogs(basePath string) ([]res.DialogData, error) {
-	doc, err := os.Open(basePath)
+func ImportDialogs(path string) ([]res.DialogData, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
-	defer doc.Close()
-	dialogs, err := parsexml.UnmarshalDialogs(doc)
+	defer file.Close()
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal dialogs base: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return dialogs, nil
+	data := new(res.DialogsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+	}
+	return data.Dialogs, nil
 }
 
-// ImportDialogsDir imports all dialogs from base files in
+// ImportDialogsDir imports all dialogs from data files in
 // directory with specified path.
-func ImportDialogsDir(dirPath string) ([]res.DialogData, error) {
-	files, err := ioutil.ReadDir(dirPath)
+func ImportDialogsDir(path string) ([]res.DialogData, error) {
+	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	dialogs := make([]res.DialogData, 0)
 	for _, finfo := range files {
 		if !strings.HasSuffix(finfo.Name(), DialogsFileExt) {
 			continue
 		}
-		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
+		basePath := filepath.FromSlash(path + "/" + finfo.Name())
 		dd, err := ImportDialogs(basePath)
 		if err != nil {
-			log.Err.Printf("data dialogs import: %s: fail to import base: %v",
+			log.Err.Printf("data dialogs import: %s: unable to import base: %v",
 				basePath, err)
 		}
 		for _, d := range dd {

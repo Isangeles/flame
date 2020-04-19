@@ -44,7 +44,7 @@ type DialogData struct {
 // Dialog text data struct.
 type DialogStageData struct {
 	ID         string             `xml:"id,attr" json:"id"`
-	OrdinalID  string             `xml:"ordianl,attr" json:"ordinal"`
+	OrdinalID  string             `xml:"ordinal,attr" json:"ordinal"`
 	Start      bool               `xml:"start,attr" json:"start"`
 	Answers    []DialogAnswerData `xml:"answer" json:"answers"`
 	Reqs       ReqsData           `xml:"reqs" json:"reqs"`
@@ -58,7 +58,7 @@ type DialogAnswerData struct {
 	To         string        `xml:"to,attr" json:"to"`
 	End        bool          `xml:"end,attr" json:"end"`
 	Trade      bool          `xml:"trade,attr" json:"trade"`
-	Training   bool          `xml:"training,attr" json:"training"`
+	Training   bool          `xml:"train,attr" json:"training"`
 	Reqs       ReqsData      `xml:"reqs" json:"reqs"`
 	TalkerMods ModifiersData `xml:"talker>modifiers" json:"talker-mods"`
 	OwnerMods  ModifiersData `xml:"owner>modifiers" json:"owner-mods"`
