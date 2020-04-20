@@ -21,9 +21,10 @@
  *
  */
 
-package parsetxt
+package text
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/isangeles/flame/data/res"
@@ -31,17 +32,15 @@ import (
 
 // UnmarshalLangData retrives all translation data from
 // specified source.
-func UnmarshalLangData(data io.Reader) []res.TranslationData {
-	values := UnmarshalConfig(data)
-	return buildTranslationData(values)
-}
-
-// buildTranslationData creates translation data from specified
-// key-texts map.
-func buildTranslationData(values map[string][]string) (data []res.TranslationData) {
+func UnmarshalLangData(data io.Reader) ([]res.TranslationData, error) {
+	values, err := UnmarshalConfig(data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal config data: %v", err)
+	}
+	translations := make([]res.TranslationData, 0)
 	for k, v := range values {
 		td := res.TranslationData{k, v}
-		data = append(data, td)
+		translations = append(translations, td)
 	}
-	return
+	return translations, nil
 }

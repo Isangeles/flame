@@ -21,7 +21,7 @@
  *
  */
 
-package parsetxt
+package text
 
 import (
 	"testing"

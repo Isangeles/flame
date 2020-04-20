@@ -29,7 +29,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/isangeles/flame/data/parsetxt"
+	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
@@ -116,7 +116,7 @@ func exportModuleConfig(path string, conf module.Config) error {
 	confValues["id"] = []string{conf.ID}
 	confValues["path"] = []string{conf.Path}
 	confValues["chapter"] = []string{conf.Chapter}
-	config := parsetxt.MarshalConfig(confValues)
+	config := text.MarshalConfig(confValues)
 	file, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("unable to create config file: %v", err)
@@ -134,7 +134,7 @@ func exportChapterConfig(path string, conf module.ChapterConfig) error {
 	confValues := make(map[string][]string)
 	confValues["id"] = []string{conf.ID}
 	confValues["start-area"] = []string{conf.StartArea}
-	config := parsetxt.MarshalConfig(confValues)
+	config := text.MarshalConfig(confValues)
 	file, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("unable to create config file: %v", err)

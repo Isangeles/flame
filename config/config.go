@@ -29,7 +29,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/isangeles/flame/data/parsetxt"
+	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/log"
 )
 
@@ -52,7 +52,10 @@ func LoadConfig() error {
 		SaveConfig() // save default config
 		return fmt.Errorf("unable to open config file: %v", err)
 	}
-	values := parsetxt.UnmarshalConfig(file)
+	values, err := text.UnmarshalConfig(file)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal config file: %v", err)
+	}
 	// Set values.
 	if len(values["lang"]) > 0 {
 		Lang = values["lang"][0]
@@ -80,7 +83,7 @@ func SaveConfig() error {
 	conf["lang"] = []string{Lang}
 	conf["module"] = []string{Module}
 	conf["debug"] = []string{fmt.Sprintf("%v", Debug)}
-	confText := parsetxt.MarshalConfig(conf)
+	confText := text.MarshalConfig(conf)
 	// Write config text to file.
 	w := bufio.NewWriter(file)
 	w.WriteString(confText)

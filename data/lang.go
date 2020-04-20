@@ -31,7 +31,7 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/parsetxt"
+	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/log"
 )
 
@@ -44,10 +44,13 @@ const (
 func ImportLang(path string) ([]res.TranslationData, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open file: %v", err)
+		return nil, fmt.Errorf("unable to open file: %v", err)
 	}
 	defer file.Close()
-	data := parsetxt.UnmarshalLangData(file)
+	data, err := text.UnmarshalLangData(file)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal lang file: %v", err)
+	}
 	return data, nil
 }
 
@@ -56,7 +59,7 @@ func ImportLang(path string) ([]res.TranslationData, error) {
 func ImportLangDir(path string) ([]res.TranslationData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	data := make([]res.TranslationData, 0)
 	for _, fileInfo := range files {
@@ -66,7 +69,7 @@ func ImportLangDir(path string) ([]res.TranslationData, error) {
 		filePath := filepath.FromSlash(path + "/" + fileInfo.Name())
 		impData, err := ImportLang(filePath)
 		if err != nil {
-			log.Err.Printf("data: import lang dir: %s: fail to import lang file: %v",
+			log.Err.Printf("data: import lang dir: %s: unable to import lang file: %v",
 				filePath, err)
 			continue
 		}

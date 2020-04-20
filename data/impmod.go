@@ -28,7 +28,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/isangeles/flame/data/parsetxt"
+	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/data/res"
 )
 
@@ -45,7 +45,10 @@ func ImportModule(path string) (data res.ModuleData, err error) {
 		return data, fmt.Errorf("unable to open config file: %v", err)
 	}
 	defer file.Close()
-	data.Config = parsetxt.UnmarshalConfig(file)
+	data.Config, err = text.UnmarshalConfig(file)
+	if err != nil {
+		return data, fmt.Errorf("unable to unmarshal config file: %v", err)
+	}
 	data.Config["id"] = []string{filepath.Base(path)}
 	data.Config["path"] = []string{path}
 	// Characters.
@@ -113,7 +116,10 @@ func ImportChapter(path string) (data res.ChapterData, err error) {
 		return data, fmt.Errorf("unable to open config file: %v", err)
 	}
 	defer file.Close()
-	data.Config = parsetxt.UnmarshalConfig(file)
+	data.Config, err = text.UnmarshalConfig(file)
+	if err != nil {
+		return data, fmt.Errorf("unable to unmarshal config file: %v", err)
+	}
 	data.Config["id"] = []string{filepath.Base(path)}
 	data.Config["path"] = []string{path}
 	// Characters.

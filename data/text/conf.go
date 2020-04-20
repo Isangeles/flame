@@ -21,7 +21,7 @@
  *
  */
 
-package parsetxt
+package text
 
 import (
 	"fmt"
@@ -37,11 +37,14 @@ const (
 )
 
 // UnmarshalConfig retrieves key-values from specified data.
-func UnmarshalConfig(data io.Reader) map[string][]string {
+func UnmarshalConfig(data io.Reader) (map[string][]string, error) {
 	texts := make(map[string][]string)
-	scann := bufio.NewScanner(data)
-	for scann.Scan() {
-		line := scann.Text()
+	scan := bufio.NewScanner(data)
+	for scan.Scan() {
+		if scan.Err() != nil {
+			return nil, fmt.Errorf("unable to read data: %v", scan.Err())
+		}
+		line := scan.Text()
 		if strings.HasPrefix(line, commentPrefix) {
 			continue
 		}
@@ -52,7 +55,7 @@ func UnmarshalConfig(data io.Reader) map[string][]string {
 			texts[lineID] = append(texts[lineID], strings.Split(t, valuesSep)...)
 		}
 	}
-	return texts
+	return texts, nil
 }
 
 // MarshalConfig parses specified key-values map to
