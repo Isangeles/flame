@@ -44,12 +44,12 @@ var (
 	Module = ""
 )
 
-// LoadConfig loads engine configuration file.
-func LoadConfig() error {
+// Load loads engine configuration file.
+func Load() error {
 	// Load config file.
 	file, err := os.Open(ConfigFileName)
 	if err != nil {
-		SaveConfig() // save default config
+		Save() // save default config
 		return fmt.Errorf("unable to open config file: %v", err)
 	}
 	values, err := text.UnmarshalConfig(file)
@@ -70,8 +70,8 @@ func LoadConfig() error {
 	return nil
 }
 
-// SaveConfig saves engine configuration in file.
-func SaveConfig() error {
+// Save saves engine configuration in file.
+func Save() error {
 	// Create file.
 	file, err := os.Create(ConfigFileName)
 	if err != nil {
