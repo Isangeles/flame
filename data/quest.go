@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -41,17 +41,22 @@ const (
 
 // ImportQuests imports all auests from base file with
 // specified path.
-func ImportQuests(basePath string) ([]res.QuestData, error) {
-	doc, err := os.Open(basePath)
+func ImportQuests(path string) ([]res.QuestData, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to open base file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
-	defer doc.Close()
-	quests, err := parsexml.UnmarshalQuests(doc)
+	defer file.Close()
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("fail to unmarshal quests base: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return quests, nil
+	data := new(res.QuestsData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+	}
+	return data.Quests, nil
 }
 
 // ImportQuestsDir imports all quests from base files in
@@ -59,7 +64,7 @@ func ImportQuests(basePath string) ([]res.QuestData, error) {
 func ImportQuestsDir(dirPath string) ([]res.QuestData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	quests := make([]res.QuestData, 0)
 	for _, finfo := range files {
@@ -69,7 +74,7 @@ func ImportQuestsDir(dirPath string) ([]res.QuestData, error) {
 		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
 		impQuests, err := ImportQuests(basePath)
 		if err != nil {
-			log.Err.Printf("data quests import: %s: fail to import base: %v",
+			log.Err.Printf("data quests import: %s: unable to import base: %v",
 				basePath, err)
 		}
 		for _, q := range impQuests {
