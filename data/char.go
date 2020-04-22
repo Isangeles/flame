@@ -85,47 +85,6 @@ func ImportCharactersDataDir(path string) ([]res.CharacterData, error) {
 	return chars, nil
 }
 
-// ImportCharacters imports characters from base file with
-// specified path.
-func ImportCharacters(path string) ([]*character.Character, error) {
-	charsData, err := ImportCharactersData(path)
-	if err != nil  {
-		return nil, fmt.Errorf("unable to import data: %v", err)
-	}
-	chars := make([]*character.Character, 0)
-	for _, charData := range charsData {
-		char := character.New(charData)
-		chars = append(chars, char)
-	}
-	return chars, nil
-}
-
-// ImportCharactersDir imports all characters files from directory
-// with specified path.
-func ImportCharactersDir(dirPath string) ([]*character.Character, error) {
-	chars := make([]*character.Character, 0)
-	files, err := ioutil.ReadDir(dirPath)
-	if err != nil {
-		return chars, fmt.Errorf("unable to read dir: %v", err)
-	}
-	for _, fInfo := range files {
-		if !strings.HasSuffix(fInfo.Name(), CharsFileExt) {
-			continue
-		}
-		charFilePath := filepath.FromSlash(dirPath + "/" + fInfo.Name())
-		impChars, err := ImportCharacters(charFilePath)
-		if err != nil {
-			log.Err.Printf("data char import: %s: unable to parse char file: %v",
-				charFilePath, err)
-			continue
-		}
-		for _, c := range impChars {
-			chars = append(chars, c)
-		}
-	}
-	return chars, nil
-}
-
 // ExportCharacters saves characters to new file with specified path.
 func ExportCharacters(path string, chars ...*character.Character) error {
 	data := new(res.CharactersData)
