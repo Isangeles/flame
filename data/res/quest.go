@@ -23,26 +23,36 @@
 
 package res
 
+import (
+	"encoding/xml"
+)
+
+// Struct for quests data.
+type QuestsData struct {
+	XMLName xml.Name    `xml:"quests" json:"-"`
+	Quests  []QuestData `xml:"quest" json:"quests"`
+}
+
 // Struct for quest data.
 type QuestData struct {
-	ID     string
-	Stages []QuestStageData
+	ID     string           `xml:"id,attr" json:"id"`
+	Stages []QuestStageData `xml:"stage" json:"stages"`
 }
 
 // Struct for quest stage data.
 type QuestStageData struct {
-	ID            string
-	Ordinal       int
-	Next          string
-	Objectives    []QuestObjectiveData
-	CompleteFlags []FlagData
+	ID            string               `xml:"id,attr" json:"attr"`
+	Ordinal       int                  `xml:"ordinal,attr" json:"ordinal"`
+	Next          string               `xml:"next,attr" json:"next"`
+	Objectives    []QuestObjectiveData `xml:"objectives>objective" json:"objectives"`
+	CompleteFlags []FlagData           `xml:"on-complete>flags>flag" json:"complete-flags"`
 }
 
 // Struct for quest objective data.
 type QuestObjectiveData struct {
-	ID       string
-	Finisher bool
-	Reqs     ReqsData
+	ID       string   `xml:"id,attr" json:"id"`
+	Finisher bool     `xml:"finisher,attr" json:"finisher"`
+	Reqs     ReqsData `xml:"reqs" json:"reqs"`
 }
 
 // Struct for quest log data.
