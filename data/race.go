@@ -24,13 +24,13 @@
 package data
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -43,14 +43,19 @@ const (
 func ImportRaces(path string) ([]res.RaceData, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open races data file: %v", err)
+		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	races, err := parsexml.UnmarshalRaces(file)
+	buf, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal races data file: %v", err)
+		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
-	return races, nil
+	data := new(res.RacesData)
+	err = xml.Unmarshal(buf, data)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+	}
+	return data.Races, nil
 }
 
 // ImportRacesDir imports all races from data files from
