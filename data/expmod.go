@@ -25,12 +25,12 @@ package data
 
 import (
 	"bufio"
+	"encoding/xml"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/isangeles/flame/data/text"
-	"github.com/isangeles/flame/data/parsexml"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
 )
@@ -93,7 +93,7 @@ func exportArea(path string, area *area.Area) error {
 		return fmt.Errorf("unable to create area dir: %v", err)
 	}
 	areaData := area.Data()
-	xmlArea, err := parsexml.MarshalArea(&areaData)
+	xmlData, err := xml.Marshal(&areaData)
 	if err != nil {
 		return fmt.Errorf("unable to marshal area data: %v", err)
 	}
@@ -104,7 +104,7 @@ func exportArea(path string, area *area.Area) error {
 	}
 	defer areaFile.Close()
 	w := bufio.NewWriter(areaFile)
-	w.WriteString(xmlArea)
+	w.Write(xmlData)
 	w.Flush()
 	return nil
 }
