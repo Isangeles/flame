@@ -52,7 +52,7 @@ func ImportModule(path string) (data res.ModuleData, err error) {
 	data.Config["id"] = []string{filepath.Base(path)}
 	data.Config["path"] = []string{path}
 	// Characters.
-	data.Resources.Characters, err = ImportCharactersDataDir(filepath.Join(path, "characters"))
+	data.Resources.Characters, err = ImportCharactersDir(filepath.Join(path, "characters"))
 	if err != nil {
 		return data, fmt.Errorf("unable to import characters: %v", err)
 	}
@@ -123,7 +123,7 @@ func ImportChapter(path string) (data res.ChapterData, err error) {
 	data.Config["id"] = []string{filepath.Base(path)}
 	data.Config["path"] = []string{path}
 	// Characters.
-	data.Resources.Characters, err = ImportCharactersDataDir(filepath.Join(path, "characters"))
+	data.Resources.Characters, err = ImportCharactersDir(filepath.Join(path, "characters"))
 	if err != nil {
 		return data, fmt.Errorf("unable to import characters: %v", err)
 	}

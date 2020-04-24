@@ -41,9 +41,9 @@ const (
 	CharsFileExt = ".characters"
 )
 
-// ImportCharactersData import characters data from base file
+// ImportCharacters import characters data from base file
 // with specified path.
-func ImportCharactersData(path string) ([]res.CharacterData, error) {
+func ImportCharacters(path string) ([]res.CharacterData, error) {
 	baseFile, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open char base file: %v", err)
@@ -61,9 +61,9 @@ func ImportCharactersData(path string) ([]res.CharacterData, error) {
 	return data.Characters, nil
 }
 
-// ImportCharactersDataDir imports all characters data from
+// ImportCharactersDir imports all characters data from
 // files in directory with specified path.
-func ImportCharactersDataDir(path string) ([]res.CharacterData, error) {
+func ImportCharactersDir(path string) ([]res.CharacterData, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
@@ -74,7 +74,7 @@ func ImportCharactersDataDir(path string) ([]res.CharacterData, error) {
 			continue
 		}
 		basePath := filepath.FromSlash(path + "/" + finfo.Name())
-		impChars, err := ImportCharactersData(basePath)
+		impChars, err := ImportCharacters(basePath)
 		if err != nil {
 			log.Err.Printf("data: import chars dir: %s: unable to parse char file: %v",
 				basePath, err)
