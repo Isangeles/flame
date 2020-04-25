@@ -1,0 +1,15 @@
+.TH Skills_dir
+.SH NAME
+skills \- directory with skills data files
+.SH DESCRIPTION
+Skills directory stores data files for skills.
+.br
+Following skills directories are handled by engine: data/modules/[module]/skills
+.SH FILES & SUBDIRECTORIES
+Files handled inside directory: *\[char46]skills
+.SH EXAMPLE
+.nf
+/skills
+	main.skills
+.SH SEE ALSO
+data/file/xml/.skills

@@ -1,0 +1,19 @@
+.TH Objects_dir
+.SH NAME
+objects \- directory with area objects
+.SH DESCRIPTION
+Objects directory stores objects data files.
+.br
+Objects directory inside module main directory stores module objects.
+.br
+Objects directory inside chapter main directory stores chapter-specific objects.
+.SH FILES & SUBDIRECTORIES
+Files: .objects data files.
+.br
+Sub-directories: -
+.SH EXAMPLE
+.nf
+/objects
+	main.objects
+.SH SEE ALSO
+data/dir/chapter, data/dir/module, data/file/xml/.objects

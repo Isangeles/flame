@@ -5,8 +5,7 @@ MAJOR:
 * Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
 * Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
-* Documentation for directories: data, savegames, module/objects, chapter/objects, recipes, areas,
-  effects, skills, areas, area
+* Documentation for directories: data, savegames, area, areas, area
 * Switch to JSON format for data files
 * Respawning area mobs
 * Ability to place items on the ground

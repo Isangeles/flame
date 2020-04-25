@@ -6,7 +6,7 @@ Dialogs directory stores data files for object dialogs.
 .br
 Following dialogs directories are handled by engine: data/modules/[module]/chapters/[chapter]/dialogs
 .SH FILES & SUBDIRECTORIES
-Files handles inside directory: *\[char46]dialogs
+Files handled inside directory: *\[char46]dialogs
 .SH EXAMPLE
 .nf
 /dialogs

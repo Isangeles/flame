@@ -7,8 +7,12 @@ This file contains chapter configuration values.
 File needs to be placed in chapter main directory.
 .SH VALUES
 start-area \- ID of start area for chapter
+.br
+start-pos \- XY position for new characters, first
+value is used for X and second for Y position.
 .SH EXAMPLE
 .nf
 start-area:area1
+start-pos;10;20
 .SH SEE ALSO
 data/dir/chapters, data/file/conf/conf

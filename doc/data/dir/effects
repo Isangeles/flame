@@ -1,0 +1,15 @@
+.TH Effects_dir
+.SH NAME
+effects \- directory with effects data files
+.SH DESCRIPTION
+Effects directory stores data files for effects.
+.br
+Following effect directories are handled by engine: data/modules/[module]/effects
+.SH FILES & SUBDIRECTORIES
+Files handled inside directory: *\[char46]effects
+.SH EXAMPLE
+.nf
+/effects
+	main.effects
+.SH SEE ALSO
+data/file/xml/.effects

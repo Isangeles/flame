@@ -1,0 +1,15 @@
+.TH Recipes_dir
+.SH NAME
+recipes \- directory with recipes data files
+.SH DESCRIPTION
+Recipes directory stores data files for crafting recipes.
+.br
+Following recipes directories are handled by engine: data/modules/[module]/recipes
+.SH FILES & SUBDIRECTORIES
+Files handled inside directory: *\[char46]recipes
+.SH EXAMPLE
+.nf
+/recipes
+	main.recipes
+.SH SEE ALSO
+data/file/xml/.recipes
