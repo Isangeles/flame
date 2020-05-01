@@ -35,7 +35,9 @@ type ChapterConfig struct {
 	StartArea   string
 	StartPosX   float64
 	StartPosY   float64
-	NextChapter string
+	StartItems  []string
+	StartSkills []string
+	StartAttrs  int
 }
 
 // FullPath returns path to chapter directory.

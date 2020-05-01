@@ -1,18 +1,40 @@
 .TH .chapter
 .SH NAME
-.chapter \- chapter configuration file
+\[char46]chapter \- chapter configuration file
 .SH DESCRIPTION
 .b mod.conf
 This file contains chapter configuration values.
-File needs to be placed in chapter main directory.
-.SH VALUES
-start-area \- ID of start area for chapter
 .br
-start-pos \- XY position for new characters, first
-value is used for X and second for Y position.
+The file needs to be placed in chapter main directory.
+.SH VALUES
+.P
+* start-area
+.br
+ID of start area for new a characters.
+.P
+* start-pos
+.br
+XY position for new a characters.
+.br
+First value is used for X and second for Y position.
+.P
+* start-items
+.br
+Value with IDs of items for a new character.
+.P
+* start-skills
+.br
+Value with IDs of skills for a new character.
+.P
+* start-attrs
+.br
+Value with the amount of attributes points for a new character.
 .SH EXAMPLE
 .nf
 start-area:area1
 start-pos;10;20
+start-items:ironSword1;shirt1
+start-skills:melee1;fireball1
+start-attrs:10
 .SH SEE ALSO
 data/dir/chapters, data/file/conf/conf

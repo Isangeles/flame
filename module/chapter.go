@@ -62,6 +62,11 @@ func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 		c.conf.StartPosX, _ = strconv.ParseFloat(data.Config["start-pos"][0], 64)
 		c.conf.StartPosY, _ = strconv.ParseFloat(data.Config["start-pos"][1], 64)
 	}
+	if len(data.Config["start-attrs"]) > 0 {
+		c.conf.StartAttrs, _ = strconv.Atoi(data.Config["start-attrs"][0])
+	}
+	c.conf.StartItems = data.Config["start-items"]
+	c.conf.StartSkills = data.Config["start-skills"]
 	c.Res = data.Resources
 	res.AddResources(c.Res)
 	c.loadedAreas = make(map[string]*area.Area)
