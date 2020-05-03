@@ -38,7 +38,7 @@ import (
 // Main function.
 func main() {
 	// Load flame config.
-	err := config.LoadConfig()
+	err := config.Load()
 	if err != nil {
 		panic(fmt.Errorf("Unable to load config: %v", err))
 	}
