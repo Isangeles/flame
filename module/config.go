@@ -85,3 +85,8 @@ func (c Config) RacesPath() string {
 func (c Config) LangPath() string {
 	return filepath.Join(c.Path, "lang")
 }
+
+// SavesPath returns path to saves directory.
+func (c Config) SavesPath() string {
+	return filepath.Join(c.Path, "saves")
+}
