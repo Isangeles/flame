@@ -23,89 +23,10 @@
 
 package config
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"path/filepath"
-
-	"github.com/isangeles/flame/data/text"
-	"github.com/isangeles/flame/log"
-)
-
 const (
 	Name, Version  = "Flame Engine", "0.0.0"
-	ConfigFileName = ".flame"
 )
 
 var (
-	Lang   = "english" // default eng
 	Debug  = false
-	Module = ""
 )
-
-// Load loads engine configuration file.
-func Load() error {
-	// Load config file.
-	file, err := os.Open(ConfigFileName)
-	if err != nil {
-		Save() // save default config
-		return fmt.Errorf("unable to open config file: %v", err)
-	}
-	values, err := text.UnmarshalConfig(file)
-	if err != nil {
-		return fmt.Errorf("unable to unmarshal config file: %v", err)
-	}
-	// Set values.
-	if len(values["lang"]) > 0 {
-		Lang = values["lang"][0]
-	}
-	if len(values["debug"]) > 0 {
-		Debug = values["debug"][0] == "true"
-	}
-	if len(values["module"]) > 0 {
-		Module = values["module"][0]
-	}
-	log.Dbg.Print("Config file loaded")
-	return nil
-}
-
-// Save saves engine configuration in file.
-func Save() error {
-	// Create file.
-	file, err := os.Create(ConfigFileName)
-	if err != nil {
-		return fmt.Errorf("unable to create conf file: %v", err)
-	}
-	defer file.Close()
-	// Marshal config.
-	conf := make(map[string][]string)
-	conf["lang"] = []string{Lang}
-	conf["module"] = []string{Module}
-	conf["debug"] = []string{fmt.Sprintf("%v", Debug)}
-	confText := text.MarshalConfig(conf)
-	// Write config text to file.
-	w := bufio.NewWriter(file)
-	w.WriteString(confText)
-	w.Flush()
-	log.Dbg.Print("Config file saved")
-	return nil
-}
-
-// SavegamesPath returns current path
-// to savegames directory or errror
-// if no module is loaded.
-func ModuleSavegamesPath() string {
-	return filepath.Join("savegames", Module)
-}
-
-// LangPath returns path to current lang
-// directory.
-func LangPath() string {
-	return filepath.Join("data/lang", Lang)
-}
-
-// ModulePath returns path to current module.
-func ModulePath() string {
-	return filepath.Join("data/modules", Module)
-}
