@@ -32,26 +32,7 @@
   Download: [Linux](https://my.opendesktop.org/s/xmxszBXyMQCK5xB), [Windows](https://my.opendesktop.org/s/gcKQmFRdTj8sBdp)
 
 ## Usage
-  You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/example) package.
-
-## Configuration
-Configuration values are loaded from `.flame` file in Flame executable directory.
-
-### Configuration values:
-```
-  lang:[language ID]
-```
-Description: specifies game language, language ID is name of directory with translation files in lang directories(e.g. `data/lang` or `data/modules/[module ID]/lang`).
-
-```
-  module:[module ID]
-```
-Description: specifies module from `data/modules` directory to load at start, module ID is ID specified in `.module` file inside main module directory.
-
-```
-  debug:[true/false]
-```
-Description: enables engine debug mode(shows debug messages in engine log), 'true' enables mode, everything else sets mode disabled.
+You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/example) package.
 
 ## Modules
 Modules contain all game data in the form of textual files. Modules are divided into chapters, that's contains chapter-specific data.
