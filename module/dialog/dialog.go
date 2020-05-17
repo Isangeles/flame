@@ -93,6 +93,17 @@ func (d *Dialog) Restart() {
 	d.finished = false
 }
 
+// Stages returns all stages of the dialog.
+func (d *Dialog) Stages() []*Stage {
+	return d.stages
+}
+
+// SetStage sets specified stage as a active
+// stage of the dialog.
+func (d *Dialog) SetStage(s *Stage) {
+	d.activeStage = s
+}
+
 // Stage returns active stage.
 func (d *Dialog) Stage() *Stage {
 	return d.activeStage
@@ -166,7 +177,9 @@ func (d *Dialog) Owner() Talker {
 // SetTarget sets dialog target.
 func (d *Dialog) SetTarget(t Talker) {
 	d.target = t
-	d.activeStage = talkerStage(d.Target(), d.activeStages)
+	if d.activeStage == nil {
+		d.activeStage = talkerStage(d.Target(), d.activeStages)
+	}
 }
 
 // Target returns dialog target.

@@ -94,6 +94,9 @@ func (c *Character) Data() res.CharacterData {
 		dialogData := res.ObjectDialogData{
 			ID: d.ID(),
 		}
+		if d.Stage() != nil {
+			dialogData.Stage = d.Stage().ID()
+		}
 		data.Dialogs = append(data.Dialogs, dialogData)
 	}
 	return data

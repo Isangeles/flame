@@ -71,6 +71,8 @@ Allowed only under <dialogs> subnode.
 Attributes:
 .br
 id \- dialog ID
+.br
+stage \- ID of active stage
 .P
 Allowed Subnodes: -
 .SS <skills>

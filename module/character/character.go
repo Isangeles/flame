@@ -172,18 +172,23 @@ func New(data res.CharacterData) *Character {
 	for _, charDialogData := range data.Dialogs {
 		dialogData := res.Dialog(charDialogData.ID)
 		if dialogData == nil {
-			log.Err.Printf("new character: %s: dialog data not fund: %s",
+			log.Err.Printf("new character: %s: dialog data not found: %s",
 				c.ID(), charDialogData.ID)
 			continue
 		}
-		dialog := dialog.New(*dialogData)
-		c.AddDialog(dialog)
+		d := dialog.New(*dialogData)
+		for _, s := range d.Stages() {
+			if s.ID() == charDialogData.Stage {
+				d.SetStage(s)
+			}
+		}
+		c.AddDialog(d)
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
 		effectData := res.Effect(charEffectData.ID)
 		if effectData == nil {
-			log.Err.Printf("new character: %s: effect data not fund: %s",
+			log.Err.Printf("new character: %s: effect data not found: %s",
 				c.ID(), charEffectData.ID)
 			continue
 		}

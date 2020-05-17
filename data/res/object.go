@@ -73,7 +73,8 @@ type ObjectSkillData struct {
 
 // Struct for object dialog data.
 type ObjectDialogData struct {
-	ID string `xml:"id,attr" json:"id"`
+	ID    string `xml:"id,attr" json:"id"`
+	Stage string `xml:"stage,attr", json:"stage"`
 }
 
 // Struct for flag data.
