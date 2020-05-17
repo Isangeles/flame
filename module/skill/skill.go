@@ -171,7 +171,7 @@ func (s *Skill) SetName(name string) {
 
 // Cast starts skill casting with specified targetable object
 // as skill user.
-func (s *Skill) Cast(user effect.Target, target effect.Target) error {
+func (s *Skill) Cast(user User, target effect.Target) error {
 	if !s.Ready() {
 		return NotReady
 	}
@@ -186,7 +186,7 @@ func (s *Skill) Cast(user effect.Target, target effect.Target) error {
 		user.ID()+user.Serial() != target.ID()+target.Serial() {
 		return SelfTargetOnly
 	}
-	if userTargetRange(user, target) > s.castRange.Value() {
+	if objects.Range(user, target) > s.castRange.Value() {
 		return TooFar
 	}
 	s.user = user
@@ -281,19 +281,4 @@ func (s *Skill) buildEffects(effectsData []res.EffectData) []*effect.Effect {
 		effects = append(effects, e)
 	}
 	return effects
-}
-
-// userTargetRange returns range between user and target.
-// Returns 0, if at least one of targets does't have
-// position.
-func userTargetRange(u, t effect.Target) float64 {
-	posA, ok := u.(objects.Positioner)
-	if !ok {
-		return 0.0
-	}
-	posB, ok := t.(objects.Positioner)
-	if !ok {
-		return 0.0
-	}
-	return objects.Range(posA, posB)
 }

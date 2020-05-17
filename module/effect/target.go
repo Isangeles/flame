@@ -29,8 +29,7 @@ import (
 
 // Interfece for effect targets.
 type Target interface {
-	ID() string
-	Serial() string
+	objects.Positioner
 	Effects() []*Effect
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)

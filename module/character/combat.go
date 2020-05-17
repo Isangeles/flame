@@ -131,9 +131,7 @@ func (c *Character) UseSkill(s *skill.Skill) {
 		if err != nil {
 			// Move to target if is too far.
 			if err == skill.TooFar {
-				if tarPos, ok := tar.(objects.Positioner); ok {
-					c.SetDestPoint(tarPos.Position())
-				}
+				c.SetDestPoint(tar.Position())
 			}
 			msg := fmt.Sprintf("%s: %s: %v", c.Name(), s.Name(), err)
 			c.SendPrivate(msg)

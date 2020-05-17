@@ -27,12 +27,12 @@ package craft
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/module/objects"
 )
 
 // Interface for objects with crafting.
 type Crafter interface {
-	ID() string
-	Serial() string
+	objects.Object
 	Crafting() *Crafting
 }
 
@@ -50,7 +50,7 @@ func NewCrafting(data res.CraftingData, object Crafter) *Crafting {
 	for _, craftRecipeData := range data.Recipes {
 		recipeData := res.Recipe(craftRecipeData.ID)
 		if recipeData == nil {
-			log.Err.Printf("crafting: %s#%s: fail to retrieve recipe: %s",
+			log.Err.Printf("crafting: %s#%s: unable to retrieve recipe: %s",
 				c.owner.ID(), c.owner.Serial(), craftRecipeData.ID)
 			continue
 		}

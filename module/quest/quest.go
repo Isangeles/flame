@@ -26,6 +26,7 @@ package quest
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
+	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
 )
 
@@ -40,8 +41,7 @@ type Quest struct {
 
 // Interface for objects with quests.
 type Quester interface {
-	ID() string
-	Serial() string
+	objects.Object
 	Journal() *Journal
 	MeetReqs(reqs ...req.Requirement) bool
 }

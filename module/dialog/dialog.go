@@ -53,10 +53,7 @@ type Dialog struct {
 
 // Interface for objects with dialogs.
 type Talker interface {
-	ID() string
-	Serial() string
-	Name() string
-	SendChat(t string)
+	objects.Logger
 	Dialogs() []*Dialog
 	MeetReqs(reqs ...req.Requirement) bool
 	TakeModifiers(s objects.Object, mods ...effect.Modifier)

@@ -1,7 +1,7 @@
 /*
  * objects.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  *
  */
 
-// Package for module objects utils.
+// Package with utils for module objects.
 package objects
 
 import (
@@ -37,14 +37,14 @@ type Object interface {
 // Interface for useable game
 // objects.
 type UseObject interface {
-	ID() string
-	Serial() string
+	Object
 	Activate()
 }
 
 // Interface for all object with
 // position on game world map.
 type Positioner interface {
+	Object
 	SetPosition(x, y float64)
 	Position() (x, y float64)
 }
@@ -52,6 +52,7 @@ type Positioner interface {
 // Interface for objects with
 // health points.
 type Killable interface {
+	Object
 	SetHealth(v int)
 	SetMaxHealth(v int)
 	Health() int
@@ -62,6 +63,7 @@ type Killable interface {
 // Interfece for objects with
 // experience points.
 type Experiencer interface {
+	Killable
 	SetExperience(v int)
 	SetMaxExperience(v int)
 	Experience() int
@@ -72,6 +74,7 @@ type Experiencer interface {
 // Interface for objects with
 // mana points.
 type Magician interface {
+	Killable
 	SetMana(v int)
 	SetMaxMana(v int)
 	Mana() int
@@ -81,6 +84,7 @@ type Magician interface {
 // Interface for objects with log
 // channels.
 type Logger interface {
+	Object
 	Name() string
 	CombatLog() chan string
 	ChatLog() chan string
@@ -92,6 +96,7 @@ type Logger interface {
 
 // Interface for area objects.
 type AreaObject interface {
+	Positioner
 	AreaID() string
 	SetAreaID(s string)
 	Position() (x, y float64)
