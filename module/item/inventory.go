@@ -27,8 +27,9 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/rng"
 	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/rng"
 )
 
 // Struct for container with items.
@@ -40,6 +41,7 @@ type Inventory struct {
 
 // Interface for objects with inventory.
 type Container interface {
+	objects.Object
 	Inventory() *Inventory
 }
 
