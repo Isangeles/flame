@@ -53,14 +53,14 @@ func New(data res.AreaData) *Area {
 	// Characters.
 	for _, areaCharData := range data.Characters {
 		// Retireve char data.
-		charData := res.Character(areaCharData.ID)
-		if charData == nil {
+		charData, ok := res.Characters[areaCharData.ID]
+		if !ok {
 			log.Err.Printf("area: %s: npc data not found: %s",
 				a.ID(), areaCharData.ID)
 			continue
 		}
 		charData.AI = areaCharData.AI
-		char := character.New(*charData)
+		char := character.New(charData)
 		// Set position.
 		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
 		char.SetDefaultPosition(areaCharData.PosX, areaCharData.PosY)
@@ -70,13 +70,13 @@ func New(data res.AreaData) *Area {
 	// Objects.
 	for _, areaObData := range data.Objects {
 		// Retrieve object data.
-		obData := res.Object(areaObData.ID)
-		if obData == nil {
+		obData, ok := res.Objects[areaObData.ID]
+		if !ok {
 			log.Err.Printf("area %s: object data not found: %s",
 				a.ID(), areaObData.ID)
 			continue
 		}
-		ob := object.New(*obData)
+		ob := object.New(obData)
 		// Set position.
 		ob.SetPosition(areaObData.PosX, areaObData.PosY)
 		// Object to area.

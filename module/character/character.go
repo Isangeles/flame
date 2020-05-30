@@ -155,13 +155,13 @@ func New(data res.CharacterData) *Character {
 	}
 	// Add skills.
 	for _, charSkillData := range data.Skills {
-		skillData := res.Skill(charSkillData.ID)
-		if skillData == nil {
+		skillData, ok := res.Skills[charSkillData.ID]
+		if !ok {
 			log.Err.Printf("new character: %s: skill data not found: %v",
 				c.ID(), charSkillData.ID)
 			continue
 		}
-		skill := skill.New(*skillData)
+		skill := skill.New(skillData)
 		if len(charSkillData.Serial) > 0 {
 			skill.SetSerial(charSkillData.Serial)
 		}
@@ -170,13 +170,13 @@ func New(data res.CharacterData) *Character {
 	}
 	// Add dialogs.
 	for _, charDialogData := range data.Dialogs {
-		dialogData := res.Dialog(charDialogData.ID)
-		if dialogData == nil {
+		dialogData, ok := res.Dialogs[charDialogData.ID]
+		if !ok {
 			log.Err.Printf("new character: %s: dialog data not found: %s",
 				c.ID(), charDialogData.ID)
 			continue
 		}
-		d := dialog.New(*dialogData)
+		d := dialog.New(dialogData)
 		for _, s := range d.Stages() {
 			if s.ID() == charDialogData.Stage {
 				d.SetStage(s)

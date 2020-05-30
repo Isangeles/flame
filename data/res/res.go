@@ -24,14 +24,14 @@
 package res
 
 var (
-	Effects map[string]EffectData
-	skillsData  map[string]SkillData
-	armorsData  map[string]ArmorData
-	weaponsData map[string]WeaponData
-	miscsData   map[string]MiscItemData
-	charsData   map[string]CharacterData
-	objectsData map[string]ObjectData
-	dialogsData map[string]DialogData
+	Effects      map[string]EffectData
+	Skills       map[string]SkillData
+	Armors       map[string]ArmorData
+	Weapons      map[string]WeaponData
+	Miscs        map[string]MiscItemData
+	Characters   map[string]CharacterData
+	Objects      map[string]ObjectData
+	Dialogs      map[string]DialogData
 	questsData  map[string]QuestData
 	recipesData map[string]RecipeData
 	areasData   map[string]AreaData
@@ -42,13 +42,13 @@ var (
 // On init.
 func init() {
 	Effects = make(map[string]EffectData)
-	skillsData = make(map[string]SkillData)
-	armorsData = make(map[string]ArmorData)
-	weaponsData = make(map[string]WeaponData)
-	miscsData = make(map[string]MiscItemData)
-	charsData = make(map[string]CharacterData)
-	objectsData = make(map[string]ObjectData)
-	dialogsData = make(map[string]DialogData)
+	Skills = make(map[string]SkillData)
+	Armors = make(map[string]ArmorData)
+	Weapons = make(map[string]WeaponData)
+	Miscs = make(map[string]MiscItemData)
+	Characters = make(map[string]CharacterData)
+	Objects = make(map[string]ObjectData)
+	Dialogs = make(map[string]DialogData)
 	questsData = make(map[string]QuestData)
 	recipesData = make(map[string]RecipeData)
 	areasData = make(map[string]AreaData)
@@ -56,101 +56,23 @@ func init() {
 	langData = make(map[string]TranslationData)
 }
 
-// Skill returns resources for skill
-// with specified ID or empty resource
-// struct if data for specified skill ID
-// was not found.
-func Skill(id string) *SkillData {
-	sd := skillsData[id]
-	if len(sd.ID) < 1 {
-		return nil
-	}
-	return &sd
-}
-
-// Armor returns resource for armor
-// with specified ID or nil if data
-// for specified ID was not found.
-func Armor(id string) *ArmorData {
-	ad := armorsData[id]
-	if len(ad.ID) < 1 {
-		return nil
-	}
-	return &ad
-}
-
-// Weapon returns weapon resource data
-// for weapon with specified ID or nil if
-// data for specified ID was not found.
-func Weapon(id string) *WeaponData {
-	wd := weaponsData[id]
-	if len(wd.ID) < 1 {
-		return nil
-	}
-	return &wd
-}
-
-// Misc returns misc item resource data
-// for miscellaneous item with specified ID or
-// nil if data for specified ID was not found.
-func MiscItem(id string) *MiscItemData {
-	md := miscsData[id]
-	if len(md.ID) < 1 {
-		return nil
-	}
-	return &md
-}
-
 // Item returns item resource data for item
 // with specified ID or nil if data for
 // specified ID was not found.
 func Item(id string) ItemData {
-	armor := Armor(id)
-	if armor != nil {
+	armor, ok := Armors[id]
+	if ok {
 		return armor
 	}
-	weapon := Weapon(id)
-	if weapon != nil {
+	weapon, ok := Weapons[id]
+	if ok {
 		return weapon
 	}
-	misc := miscsData[id]
-	if len(misc.ID) < 1 {
-		return nil
+	misc, ok := Miscs[id]
+	if ok {
+		return misc
 	}
-	return &misc
-}
-
-// Character returns character resource data
-// for character with specified ID or nil
-// if data for specified ID was not found.
-func Character(id string) *CharacterData {
-	cd := charsData[id]
-	if len(cd.ID) < 1 {
-		return nil
-	}
-	return &cd
-}
-
-// Object returns object resource data
-// for object with specified ID or nil
-// if data for specified ID was not found.
-func Object(id string) *ObjectData {
-	od := objectsData[id]
-	if len(od.ID) < 1 {
-		return nil
-	}
-	return &od
-}
-
-// Dialog returns dialog resource data
-// for dialog with specified ID or nil
-// if data for specified ID was not found.
-func Dialog(id string) *DialogData {
-	dd := dialogsData[id]
-	if len(dd.ID) < 1 {
-		return nil
-	}
-	return &dd
+	return nil
 }
 
 // Quest returns quest resource data
@@ -207,58 +129,6 @@ func Translation(id string) *TranslationData {
 	return &ld
 }
 
-// Characters returns all characters
-// resources.
-func Characters() (d []CharacterData) {
-	for _, cd := range charsData {
-		d = append(d, cd)
-	}
-	return
-}
-
-// Armors returns all  armors
-// resources.
-func Armors() (d []ArmorData) {
-	for _, ad := range armorsData {
-		d = append(d, ad)
-	}
-	return
-}
-
-// Weapons returns all weapons
-// resources.
-func Weapons() (d []WeaponData) {
-	for _, wd := range weaponsData {
-		d = append(d, wd)
-	}
-	return
-}
-
-// MiscItems returns all misc items
-// resources.
-func MiscItems() (d []MiscItemData) {
-	for _, md := range miscsData {
-		d = append(d, md)
-	}
-	return
-}
-
-// Objects returns all objects resources.
-func Objects() (d []ObjectData) {
-	for _, od := range objectsData {
-		d = append(d, od)
-	}
-	return
-}
-
-// Dialogs returns all dialogs resources.
-func Dialogs() (d []DialogData) {
-	for _, dd := range dialogsData {
-		d = append(d, dd)
-	}
-	return
-}
-
 // Quests returns all quests resources.
 func Quests() (d []QuestData) {
 	for _, qd := range questsData {
@@ -291,83 +161,12 @@ func Races() (r []RaceData) {
 	return
 }
 
-// Skills returns all skills resources.
-func Skills() (r []SkillData) {
-	for _, sd := range skillsData {
-		r = append(r, sd)
-	}
-	return
-}
-
 // Translations returns all translation resources.
 func Translations() (t []TranslationData) {
 	for _, td := range langData {
 		t = append(t, td)
 	}
 	return
-}
-
-// SetSkillsData sets specified skills data
-// as skills resources.
-func SetSkillsData(data []SkillData) {
-	skillsData = make(map[string]SkillData)
-	for _, sd := range data {
-		skillsData[sd.ID] = sd
-	}
-}
-
-// SetArmorsData sets specified armors data as
-// armors resources.
-func SetArmorsData(data []ArmorData) {
-	armorsData = make(map[string]ArmorData)
-	for _, ad := range data {
-		armorsData[ad.ID] = ad
-	}
-}
-
-// SetWeaponsData sets specified weapons data as
-// weapons resources.
-func SetWeaponsData(data []WeaponData) {
-	weaponsData = make(map[string]WeaponData)
-	for _, wd := range data {
-		weaponsData[wd.ID] = wd
-	}
-}
-
-// SetMiscItemsData sets specified misc items data as
-// misc items resources.
-func SetMiscItemsData(data []MiscItemData) {
-	miscsData = make(map[string]MiscItemData)
-	for _, md := range data {
-		miscsData[md.ID] = md
-	}
-}
-
-// SetCharactersData sets specified characters data as
-// characters resources.
-func SetCharactersData(data []CharacterData) {
-	charsData = make(map[string]CharacterData)
-	for _, cd := range data {
-		charsData[cd.ID] = cd
-	}
-}
-
-// SetObjectsData sets specified objects data as
-// objects resources.
-func SetObjectsData(data []ObjectData) {
-	objectsData = make(map[string]ObjectData)
-	for _, od := range data {
-		objectsData[od.ID] = od
-	}
-}
-
-// SetDialogsData sets specified dialogs data as
-// dialogs resources.
-func SetDialogsData(data []DialogData) {
-	dialogsData = make(map[string]DialogData)
-	for _, dd := range data {
-		dialogsData[dd.ID] = dd
-	}
 }
 
 // SetQuestsData sets specified quests data as
@@ -418,25 +217,39 @@ func SetTranslationData(data []TranslationData) {
 // SetModuleData sets resources from specified module data.
 func SetModuleData(mod ModuleData) {
 	chars := append(mod.Resources.Characters, mod.Chapter.Resources.Characters...)
-	SetCharactersData(chars)
+	for _, c := range chars {
+		Characters[c.ID] = c
+	}
 	races := append(mod.Resources.Races, mod.Chapter.Resources.Races...)
 	SetRacesData(races)
 	objects := append(mod.Resources.Objects, mod.Chapter.Resources.Objects...)
-	SetObjectsData(objects)
+	for _, o := range objects {
+		Objects[o.ID] = o
+	}
 	effects := append(mod.Resources.Effects, mod.Chapter.Resources.Effects...)
 	for _, e := range effects {
 		Effects[e.ID] = e
 	}
 	skills := append(mod.Resources.Skills, mod.Chapter.Resources.Skills...)
-	SetSkillsData(skills)
+	for _, s := range skills {
+		Skills[s.ID] = s
+	}
 	armors := append(mod.Resources.Armors, mod.Chapter.Resources.Armors...)
-	SetArmorsData(armors)
+	for _, a := range armors {
+		Armors[a.ID] = a
+	}
 	weapons := append(mod.Resources.Weapons, mod.Chapter.Resources.Weapons...)
-	SetWeaponsData(weapons)
+	for _, w := range weapons {
+		Weapons[w.ID] = w
+	}
 	miscs := append(mod.Resources.Miscs, mod.Chapter.Resources.Miscs...)
-	SetMiscItemsData(miscs)
+	for _, m := range miscs {
+		Miscs[m.ID] = m
+	}
 	dialogs := append(mod.Resources.Dialogs, mod.Chapter.Resources.Dialogs...)
-	SetDialogsData(dialogs)
+	for _, d := range dialogs {
+		Dialogs[d.ID] = d
+	}
 	quests := append(mod.Resources.Quests, mod.Chapter.Resources.Quests...)
 	SetQuestsData(quests)
 	recipes := append(mod.Resources.Recipes, mod.Chapter.Resources.Recipes...)
@@ -450,17 +263,31 @@ func SetModuleData(mod ModuleData) {
 
 // SetModuleData sets resources from specified module data.
 func AddResources(r ResourcesData) {
-	SetCharactersData(append(Characters(), r.Characters...))
+	for _, c := range r.Characters {
+		Characters[c.ID] = c
+	}
 	SetRacesData(append(Races(), r.Races...))
-	SetObjectsData(append(Objects(), r.Objects...))
+	for _, o := range r.Objects {
+		Objects[o.ID] = o
+	}
 	for _, e := range r.Effects {
 		Effects[e.ID] = e
 	}
-	SetSkillsData(append(Skills(), r.Skills...))
-	SetArmorsData(append(Armors(), r.Armors...))
-	SetWeaponsData(append(Weapons(), r.Weapons...))
-	SetMiscItemsData(append(MiscItems(), r.Miscs...))
-	SetDialogsData(append(Dialogs(), r.Dialogs...))
+	for _, s := range r.Skills {
+		Skills[s.ID] = s
+	}
+	for _, a := range r.Armors {
+		Armors[a.ID] = a
+	}
+	for _, w := range r.Weapons {
+		Weapons[w.ID] = w
+	}
+	for _, m := range r.Miscs {
+		Miscs[m.ID] = m
+	}
+	for _, d := range r.Dialogs {
+		Dialogs[d.ID] = d
+	}
 	SetQuestsData(append(Quests(), r.Quests...))
 	SetRecipesData(append(Recipes(), r.Recipes...))
 	SetAreasData(append(Areas(), r.Areas...))
