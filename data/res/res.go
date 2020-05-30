@@ -24,7 +24,7 @@
 package res
 
 var (
-	effectsData map[string]EffectData
+	Effects map[string]EffectData
 	skillsData  map[string]SkillData
 	armorsData  map[string]ArmorData
 	weaponsData map[string]WeaponData
@@ -41,7 +41,7 @@ var (
 
 // On init.
 func init() {
-	effectsData = make(map[string]EffectData)
+	Effects = make(map[string]EffectData)
 	skillsData = make(map[string]SkillData)
 	armorsData = make(map[string]ArmorData)
 	weaponsData = make(map[string]WeaponData)
@@ -54,17 +54,6 @@ func init() {
 	areasData = make(map[string]AreaData)
 	racesData = make(map[string]RaceData)
 	langData = make(map[string]TranslationData)
-}
-
-// Effect returns resources for effect
-// with specified ID or nil if data for
-// specified effect ID was not found.
-func Effect(id string) *EffectData {
-	ed := effectsData[id]
-	if len(ed.ID) < 1 {
-		return nil
-	}
-	return &ed
 }
 
 // Skill returns resources for skill
@@ -218,14 +207,6 @@ func Translation(id string) *TranslationData {
 	return &ld
 }
 
-// Effects returns all effects resources.
-func Effects() (d []EffectData) {
-	for _, ed := range effectsData {
-		d = append(d, ed)
-	}
-	return
-}
-
 // Characters returns all characters
 // resources.
 func Characters() (d []CharacterData) {
@@ -324,15 +305,6 @@ func Translations() (t []TranslationData) {
 		t = append(t, td)
 	}
 	return
-}
-
-// SetEffectsData sets specified effects data
-// as effects resources.
-func SetEffectsData(data []EffectData) {
-	effectsData = make(map[string]EffectData)
-	for _, ed := range data {
-		effectsData[ed.ID] = ed
-	}
 }
 
 // SetSkillsData sets specified skills data
@@ -452,7 +424,9 @@ func SetModuleData(mod ModuleData) {
 	objects := append(mod.Resources.Objects, mod.Chapter.Resources.Objects...)
 	SetObjectsData(objects)
 	effects := append(mod.Resources.Effects, mod.Chapter.Resources.Effects...)
-	SetEffectsData(effects)
+	for _, e := range effects {
+		Effects[e.ID] = e
+	}
 	skills := append(mod.Resources.Skills, mod.Chapter.Resources.Skills...)
 	SetSkillsData(skills)
 	armors := append(mod.Resources.Armors, mod.Chapter.Resources.Armors...)
@@ -479,7 +453,9 @@ func AddResources(r ResourcesData) {
 	SetCharactersData(append(Characters(), r.Characters...))
 	SetRacesData(append(Races(), r.Races...))
 	SetObjectsData(append(Objects(), r.Objects...))
-	SetEffectsData(append(Effects(), r.Effects...))
+	for _, e := range r.Effects {
+		Effects[e.ID] = e
+	}
 	SetSkillsData(append(Skills(), r.Skills...))
 	SetArmorsData(append(Armors(), r.Armors...))
 	SetWeaponsData(append(Weapons(), r.Weapons...))

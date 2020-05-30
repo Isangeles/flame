@@ -186,13 +186,13 @@ func New(data res.CharacterData) *Character {
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
-		effectData := res.Effect(charEffectData.ID)
-		if effectData == nil {
+		effectData, ok := res.Effects[charEffectData.ID]
+		if !ok {
 			log.Err.Printf("new character: %s: effect data not found: %s",
 				c.ID(), charEffectData.ID)
 			continue
 		}
-		effect := effect.New(*effectData)
+		effect := effect.New(effectData)
 		effect.SetSerial(charEffectData.Serial)
 		effect.SetTime(charEffectData.Time)
 		effect.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
