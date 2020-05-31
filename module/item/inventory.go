@@ -50,25 +50,28 @@ type Container interface {
 func NewInventory(data res.InventoryData) *Inventory {
 	inv := new(Inventory)
 	inv.items = make(map[string]Item)
-	for _, itData := range data.Items {
-		if itData.Random > 0 && !rng.RollChance(itData.Random) {
+	for _, invItData := range data.Items {
+		if invItData.Random > 0 && !rng.RollChance(invItData.Random) {
 			continue
 		}
-		dat := res.Item(itData.ID)
-		it := New(dat)
+		itData := res.Item(invItData.ID)
+		if itData == nil {
+			log.Err.Printf("NewInventory: item: %s: data not found", invItData.ID)
+		}
+		it := New(itData)
 		if it == nil {
-			log.Err.Printf("build inv: item: %s: fail to create item from data",
-				itData.ID)
+			log.Err.Printf("NewInventory: item: %s: unable to create item from data",
+				invItData.ID)
 			continue
 		}
-		if len(itData.Serial) > 0 {
-			it.SetSerial(itData.Serial)
+		if len(invItData.Serial) > 0 {
+			it.SetSerial(invItData.Serial)
 		}
 		inv.items[it.ID()+it.Serial()] = it
-		if itData.Trade {
+		if invItData.Trade {
 			ti := TradeItem{
 				Item:  it,
-				Price: itData.TradeValue,
+				Price: invItData.TradeValue,
 			}
 			inv.AddTradeItem(&ti)
 		}

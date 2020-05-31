@@ -64,12 +64,12 @@ const (
 // armor, weapon, or misc item data.
 func New(data res.ItemData) Item {
 	switch d := data.(type) {
-	case *res.ArmorData:
-		return NewArmor(*d)
-	case *res.WeaponData:
-		return NewWeapon(*d)
-	case *res.MiscItemData:
-		return NewMisc(*d)
+	case res.ArmorData:
+		return NewArmor(d)
+	case res.WeaponData:
+		return NewWeapon(d)
+	case res.MiscItemData:
+		return NewMisc(d)
 	default:
 		return nil
 	}
