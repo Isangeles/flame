@@ -24,18 +24,18 @@
 package res
 
 var (
-	Effects      map[string]EffectData
-	Skills       map[string]SkillData
-	Armors       map[string]ArmorData
-	Weapons      map[string]WeaponData
-	Miscs        map[string]MiscItemData
-	Characters   map[string]CharacterData
-	Objects      map[string]ObjectData
-	Dialogs      map[string]DialogData
-	questsData  map[string]QuestData
-	recipesData map[string]RecipeData
-	areasData   map[string]AreaData
-	racesData   map[string]RaceData
+	Effects    map[string]EffectData
+	Skills     map[string]SkillData
+	Armors     map[string]ArmorData
+	Weapons    map[string]WeaponData
+	Miscs      map[string]MiscItemData
+	Characters map[string]CharacterData
+	Objects    map[string]ObjectData
+	Dialogs    map[string]DialogData
+	Quests     map[string]QuestData
+	Recipes    map[string]RecipeData
+	Areas      map[string]AreaData
+	Races      map[string]RaceData
 	langData    map[string]TranslationData
 )
 
@@ -49,10 +49,10 @@ func init() {
 	Characters = make(map[string]CharacterData)
 	Objects = make(map[string]ObjectData)
 	Dialogs = make(map[string]DialogData)
-	questsData = make(map[string]QuestData)
-	recipesData = make(map[string]RecipeData)
-	areasData = make(map[string]AreaData)
-	racesData = make(map[string]RaceData)
+	Quests = make(map[string]QuestData)
+	Recipes = make(map[string]RecipeData)
+	Areas = make(map[string]AreaData)
+	Races = make(map[string]RaceData)
 	langData = make(map[string]TranslationData)
 }
 
@@ -75,50 +75,6 @@ func Item(id string) ItemData {
 	return nil
 }
 
-// Quest returns quest resource data
-// for quest with specified ID or nil
-// if data for specified ID was not found.
-func Quest(id string) *QuestData {
-	qd := questsData[id]
-	if len(qd.ID) < 1 {
-		return nil
-	}
-	return &qd
-}
-
-// Recipe returns recipe resource data
-// for recipe with specified ID or nil
-// if data for specified ID was not found.
-func Recipe(id string) *RecipeData {
-	rd := recipesData[id]
-	if len(rd.ID) < 1 {
-		return nil
-	}
-	return &rd
-}
-
-// Area returns area resource data
-// for area with specified ID or nil
-// if data for specified ID was not found.
-func Area(id string) *AreaData {
-	ad := areasData[id]
-	if len(ad.ID) < 1 {
-		return nil
-	}
-	return &ad
-}
-
-// Race returns area resource data
-// for race with specified ID or nil
-// if data for specified ID was not found.
-func Race(id string) *RaceData {
-	rd := racesData[id]
-	if len(rd.ID) < 1 {
-		return nil
-	}
-	return &rd
-}
-
 // Translation returns translation data
 // texts for specified ID.
 func Translation(id string) *TranslationData {
@@ -129,80 +85,12 @@ func Translation(id string) *TranslationData {
 	return &ld
 }
 
-// Quests returns all quests resources.
-func Quests() (d []QuestData) {
-	for _, qd := range questsData {
-		d = append(d, qd)
-	}
-	return
-}
-
-// Recipes returns all recipes resources.
-func Recipes() (r []RecipeData) {
-	for _, rd := range recipesData {
-		r = append(r, rd)
-	}
-	return
-}
-
-// Areas returns all areas resources.
-func Areas() (a []AreaData) {
-	for _, ad := range areasData {
-		a = append(a, ad)
-	}
-	return
-}
-
-// Races returns all races resources.
-func Races() (r []RaceData) {
-	for _, rd := range racesData {
-		r = append(r, rd)
-	}
-	return
-}
-
 // Translations returns all translation resources.
 func Translations() (t []TranslationData) {
 	for _, td := range langData {
 		t = append(t, td)
 	}
 	return
-}
-
-// SetQuestsData sets specified quests data as
-// quests resources.
-func SetQuestsData(data []QuestData) {
-	questsData = make(map[string]QuestData)
-	for _, qd := range data {
-		questsData[qd.ID] = qd
-	}
-}
-
-// SetRecipesData sets specified recipes data as
-// recipes resources.
-func SetRecipesData(data []RecipeData) {
-	recipesData = make(map[string]RecipeData)
-	for _, rd := range data {
-		recipesData[rd.ID] = rd
-	}
-}
-
-// SetAreasData sets specified data as
-// areas resources.
-func SetAreasData(data []AreaData) {
-	areasData = make(map[string]AreaData)
-	for _, ad := range data {
-		areasData[ad.ID] = ad
-	}
-}
-
-// SetRacesData sets specified data as
-// races resources.
-func SetRacesData(data []RaceData) {
-	racesData = make(map[string]RaceData)
-	for _, rd := range data {
-		racesData[rd.ID] = rd
-	}
 }
 
 // SetTranslationData sets specified data as
@@ -221,7 +109,9 @@ func SetModuleData(mod ModuleData) {
 		Characters[c.ID] = c
 	}
 	races := append(mod.Resources.Races, mod.Chapter.Resources.Races...)
-	SetRacesData(races)
+	for _, r := range races {
+		Races[r.ID] = r
+	}
 	objects := append(mod.Resources.Objects, mod.Chapter.Resources.Objects...)
 	for _, o := range objects {
 		Objects[o.ID] = o
@@ -251,11 +141,17 @@ func SetModuleData(mod ModuleData) {
 		Dialogs[d.ID] = d
 	}
 	quests := append(mod.Resources.Quests, mod.Chapter.Resources.Quests...)
-	SetQuestsData(quests)
+	for _, q := range quests {
+		Quests[q.ID] = q
+	}
 	recipes := append(mod.Resources.Recipes, mod.Chapter.Resources.Recipes...)
-	SetRecipesData(recipes)
+	for _, r := range recipes {
+		Recipes[r.ID] = r
+	}
 	areas := append(mod.Resources.Areas, mod.Chapter.Resources.Areas...)
-	SetAreasData(areas)
+	for _, a := range areas {
+		Areas[a.ID] = a
+	}
 	translations := append(Translations(), mod.Resources.Translations...)
 	translations = append(translations, mod.Chapter.Resources.Translations...)
 	SetTranslationData(translations)
@@ -266,7 +162,9 @@ func AddResources(r ResourcesData) {
 	for _, c := range r.Characters {
 		Characters[c.ID] = c
 	}
-	SetRacesData(append(Races(), r.Races...))
+	for _, r := range r.Races {
+		Races[r.ID] = r
+	}
 	for _, o := range r.Objects {
 		Objects[o.ID] = o
 	}
@@ -288,8 +186,14 @@ func AddResources(r ResourcesData) {
 	for _, d := range r.Dialogs {
 		Dialogs[d.ID] = d
 	}
-	SetQuestsData(append(Quests(), r.Quests...))
-	SetRecipesData(append(Recipes(), r.Recipes...))
-	SetAreasData(append(Areas(), r.Areas...))
+	for _, q := range r.Quests {
+		Quests[q.ID] = q
+	}
+	for _, r := range r.Recipes {
+		Recipes[r.ID] = r
+	}
+	for _, a := range r.Areas {
+		Areas[a.ID] = a
+	}
 	SetTranslationData(append(Translations(), r.Translations...))
 }

@@ -41,14 +41,14 @@ func NewJournal(data res.QuestLogData, quester Quester) *Journal {
 	j.owner = quester
 	j.quests = make(map[string]*Quest)
 	for _, logQuestData := range data.Quests {
-		questData := res.Quest(logQuestData.ID)
-		if questData == nil {
+		questData, ok := res.Quests[logQuestData.ID]
+		if !ok {
 			log.Err.Printf("build quest log: %s#%s: fail to retrieve quest data: %s",
 				j.owner.ID(), j.owner.Serial(), logQuestData.ID)
 			continue
 		}
 		// Restore quest stage.
-		quest := New(*questData)
+		quest := New(questData)
 		for _, s := range quest.Stages() {
 			if s.ID() == logQuestData.Stage {
 				quest.SetActiveStage(s)

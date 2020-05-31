@@ -138,9 +138,9 @@ func New(data res.CharacterData) *Character {
 	// Register serial.
 	serial.Register(&c)
 	// Set Race.
-	raceData := res.Race(data.Race)
-	if raceData != nil {
-		c.race = NewRace(*raceData)
+	raceData, ok := res.Races[data.Race]
+	if ok {
+		c.race = NewRace(raceData)
 	}
 	// Set level.
 	for i := 0; i < data.Level; i++ {

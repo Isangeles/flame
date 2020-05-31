@@ -92,11 +92,11 @@ func (c *Chapter) Area(areaID string) *area.Area {
 	if a != nil {
 		return a
 	}
-	areaData := res.Area(areaID)
-	if areaData == nil {
+	areaData, ok := res.Areas[areaID]
+	if !ok {
 		return nil
 	}
-	a = area.New(*areaData)
+	a = area.New(areaData)
 	c.AddAreas(a)
 	return a
 }
