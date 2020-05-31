@@ -24,19 +24,19 @@
 package res
 
 var (
-	Effects    map[string]EffectData
-	Skills     map[string]SkillData
-	Armors     map[string]ArmorData
-	Weapons    map[string]WeaponData
-	Miscs      map[string]MiscItemData
-	Characters map[string]CharacterData
-	Objects    map[string]ObjectData
-	Dialogs    map[string]DialogData
-	Quests     map[string]QuestData
-	Recipes    map[string]RecipeData
-	Areas      map[string]AreaData
-	Races      map[string]RaceData
-	langData    map[string]TranslationData
+	Effects      map[string]EffectData
+	Skills       map[string]SkillData
+	Armors       map[string]ArmorData
+	Weapons      map[string]WeaponData
+	Miscs        map[string]MiscItemData
+	Characters   map[string]CharacterData
+	Objects      map[string]ObjectData
+	Dialogs      map[string]DialogData
+	Quests       map[string]QuestData
+	Recipes      map[string]RecipeData
+	Areas        map[string]AreaData
+	Races        map[string]RaceData
+	Translations map[string]TranslationData
 )
 
 // On init.
@@ -53,7 +53,7 @@ func init() {
 	Recipes = make(map[string]RecipeData)
 	Areas = make(map[string]AreaData)
 	Races = make(map[string]RaceData)
-	langData = make(map[string]TranslationData)
+	Translations = make(map[string]TranslationData)
 }
 
 // Item returns item resource data for item
@@ -73,33 +73,6 @@ func Item(id string) ItemData {
 		return misc
 	}
 	return nil
-}
-
-// Translation returns translation data
-// texts for specified ID.
-func Translation(id string) *TranslationData {
-	ld := langData[id]
-	if len(ld.ID) < 1 {
-		return nil
-	}
-	return &ld
-}
-
-// Translations returns all translation resources.
-func Translations() (t []TranslationData) {
-	for _, td := range langData {
-		t = append(t, td)
-	}
-	return
-}
-
-// SetTranslationData sets specified data as
-// translation resources.
-func SetTranslationData(data []TranslationData) {
-	langData = make(map[string]TranslationData)
-	for _, td := range data {
-		langData[td.ID] = td
-	}
 }
 
 // SetModuleData sets resources from specified module data.
@@ -152,9 +125,10 @@ func SetModuleData(mod ModuleData) {
 	for _, a := range areas {
 		Areas[a.ID] = a
 	}
-	translations := append(Translations(), mod.Resources.Translations...)
-	translations = append(translations, mod.Chapter.Resources.Translations...)
-	SetTranslationData(translations)
+	translations := append(mod.Resources.Translations, mod.Chapter.Resources.Translations...)
+	for _, t := range translations {
+		Translations[t.ID] = t
+	}
 }
 
 // SetModuleData sets resources from specified module data.
@@ -195,5 +169,7 @@ func AddResources(r ResourcesData) {
 	for _, a := range r.Areas {
 		Areas[a.ID] = a
 	}
-	SetTranslationData(append(Translations(), r.Translations...))
+	for _, t := range r.Translations {
+		Translations[t.ID] = t
+	}
 }

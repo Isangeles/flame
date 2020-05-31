@@ -34,8 +34,8 @@ import (
 // Returns error text if translation data for
 // specified ID was not found.
 func Text(id string) string {
-	data := res.Translation(id)
-	if data == nil {
+	data, ok := res.Translations[id]
+	if !ok {
 		return fmt.Sprintf("translation not found: %s", id)
 	}
 	return data.Texts[0]
@@ -46,8 +46,8 @@ func Text(id string) string {
 // if transaltion data for specified ID was
 // not found.
 func Texts(id string) []string {
-	data := res.Translation(id)
-	if data == nil {
+	data, ok := res.Translations[id]
+	if !ok {
 		return []string{fmt.Sprintf("translation not found: %s", id)}
 	}
 	return data.Texts

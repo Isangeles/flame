@@ -57,6 +57,7 @@ func NewInventory(data res.InventoryData) *Inventory {
 		itData := res.Item(invItData.ID)
 		if itData == nil {
 			log.Err.Printf("NewInventory: item: %s: data not found", invItData.ID)
+			continue
 		}
 		it := New(itData)
 		if it == nil {
