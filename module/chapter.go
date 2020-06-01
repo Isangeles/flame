@@ -68,7 +68,7 @@ func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c.conf.StartItems = data.Config["start-items"]
 	c.conf.StartSkills = data.Config["start-skills"]
 	c.Res = data.Resources
-	res.AddResources(c.Res)
+	res.Add(c.Res)
 	c.loadedAreas = make(map[string]*area.Area)
 	return c
 }

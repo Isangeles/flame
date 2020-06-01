@@ -53,7 +53,7 @@ func New(data res.ModuleData) *Module {
 		m.conf.Chapter = data.Config["chapter"][0]
 	}
 	m.Res = data.Resources
-	res.AddResources(m.Res)
+	res.Add(m.Res)
 	chapter := NewChapter(m, data.Chapter)
 	m.SetChapter(chapter)
 	return m

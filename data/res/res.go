@@ -41,19 +41,7 @@ var (
 
 // On init.
 func init() {
-	Effects = make(map[string]EffectData)
-	Skills = make(map[string]SkillData)
-	Armors = make(map[string]ArmorData)
-	Weapons = make(map[string]WeaponData)
-	Miscs = make(map[string]MiscItemData)
-	Characters = make(map[string]CharacterData)
-	Objects = make(map[string]ObjectData)
-	Dialogs = make(map[string]DialogData)
-	Quests = make(map[string]QuestData)
-	Recipes = make(map[string]RecipeData)
-	Areas = make(map[string]AreaData)
-	Races = make(map[string]RaceData)
-	Translations = make(map[string]TranslationData)
+	Clear()
 }
 
 // Item returns item resource data for item
@@ -75,64 +63,26 @@ func Item(id string) ItemData {
 	return nil
 }
 
-// SetModuleData sets resources from specified module data.
-func SetModuleData(mod ModuleData) {
-	chars := append(mod.Resources.Characters, mod.Chapter.Resources.Characters...)
-	for _, c := range chars {
-		Characters[c.ID] = c
-	}
-	races := append(mod.Resources.Races, mod.Chapter.Resources.Races...)
-	for _, r := range races {
-		Races[r.ID] = r
-	}
-	objects := append(mod.Resources.Objects, mod.Chapter.Resources.Objects...)
-	for _, o := range objects {
-		Objects[o.ID] = o
-	}
-	effects := append(mod.Resources.Effects, mod.Chapter.Resources.Effects...)
-	for _, e := range effects {
-		Effects[e.ID] = e
-	}
-	skills := append(mod.Resources.Skills, mod.Chapter.Resources.Skills...)
-	for _, s := range skills {
-		Skills[s.ID] = s
-	}
-	armors := append(mod.Resources.Armors, mod.Chapter.Resources.Armors...)
-	for _, a := range armors {
-		Armors[a.ID] = a
-	}
-	weapons := append(mod.Resources.Weapons, mod.Chapter.Resources.Weapons...)
-	for _, w := range weapons {
-		Weapons[w.ID] = w
-	}
-	miscs := append(mod.Resources.Miscs, mod.Chapter.Resources.Miscs...)
-	for _, m := range miscs {
-		Miscs[m.ID] = m
-	}
-	dialogs := append(mod.Resources.Dialogs, mod.Chapter.Resources.Dialogs...)
-	for _, d := range dialogs {
-		Dialogs[d.ID] = d
-	}
-	quests := append(mod.Resources.Quests, mod.Chapter.Resources.Quests...)
-	for _, q := range quests {
-		Quests[q.ID] = q
-	}
-	recipes := append(mod.Resources.Recipes, mod.Chapter.Resources.Recipes...)
-	for _, r := range recipes {
-		Recipes[r.ID] = r
-	}
-	areas := append(mod.Resources.Areas, mod.Chapter.Resources.Areas...)
-	for _, a := range areas {
-		Areas[a.ID] = a
-	}
-	translations := append(mod.Resources.Translations, mod.Chapter.Resources.Translations...)
-	for _, t := range translations {
-		Translations[t.ID] = t
-	}
+// Clear removes all resources from base.
+func Clear() {
+	Effects = make(map[string]EffectData)
+	Skills = make(map[string]SkillData)
+	Armors = make(map[string]ArmorData)
+	Weapons = make(map[string]WeaponData)
+	Miscs = make(map[string]MiscItemData)
+	Characters = make(map[string]CharacterData)
+	Objects = make(map[string]ObjectData)
+	Dialogs = make(map[string]DialogData)
+	Quests = make(map[string]QuestData)
+	Recipes = make(map[string]RecipeData)
+	Areas = make(map[string]AreaData)
+	Races = make(map[string]RaceData)
+	Translations = make(map[string]TranslationData)
 }
 
-// SetModuleData sets resources from specified module data.
-func AddResources(r ResourcesData) {
+// Add adds resources from specified module data
+// to resources base.
+func Add(r ResourcesData) {
 	for _, c := range r.Characters {
 		Characters[c.ID] = c
 	}
