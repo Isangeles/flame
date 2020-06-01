@@ -60,8 +60,6 @@ func LoadTranslationData(path string) error {
 	if err != nil {
 		return fmt.Errorf("unable to import lang dir: %v", err)
 	}
-	for _, td := range langData {
-		res.Translations[td.ID] = td
-	}
+	res.Translations = append(res.Translations, langData...)
 	return nil
 }

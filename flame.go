@@ -120,14 +120,14 @@ func (g *Game) updateObjectsArea() {
 		}
 		if newArea == nil {
 			// Search for area data in res package.
-			areaData, ok := res.Areas[c.AreaID()]
-			if !ok {
+			areaData := res.Area(c.AreaID())
+			if areaData == nil {
 				log.Err.Printf("area update: %s#%s: area not found: %s\n",
 					c.ID(), c.Serial(), c.AreaID())
 				c.SetAreaID(currentArea.ID())
 				return
 			}
-			newArea = area.New(areaData)
+			newArea = area.New(*areaData)
 			chapter.AddAreas(newArea)
 		}
 		newArea.AddCharacter(c)

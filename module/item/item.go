@@ -70,6 +70,12 @@ func New(data res.ItemData) Item {
 		return NewWeapon(d)
 	case res.MiscItemData:
 		return NewMisc(d)
+	case *res.ArmorData:
+		return NewArmor(*d)
+	case *res.WeaponData:
+		return NewWeapon(*d)
+	case *res.MiscItemData:
+		return NewMisc(*d)
 	default:
 		return nil
 	}

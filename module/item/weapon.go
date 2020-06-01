@@ -66,9 +66,9 @@ func NewWeapon(data res.WeaponData) *Weapon {
 	}
 	// Effects.
 	for _, ed := range data.Damage.Effects {
-		data, ok := res.Effects[ed.ID]
-		if ok {
-			w.dmgEffects = append(w.dmgEffects, data)
+		data := res.Effect(ed.ID)
+		if data != nil {
+			w.dmgEffects = append(w.dmgEffects, *data)
 		}
 	}
 	// Requirements.

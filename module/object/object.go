@@ -81,13 +81,13 @@ func New(data res.ObjectData) *Object {
 	serial.Register(&ob)
 	// Add effects.
 	for _, data := range data.Effects {
-		effData, ok := res.Effects[data.ID]
-		if !ok {
+		effData := res.Effect(data.ID)
+		if effData == nil {
 			log.Err.Printf("object: %s: effect data not found: %s",
 				ob.ID(), data.ID)
 			continue
 		}
-		eff := effect.New(effData)
+		eff := effect.New(*effData)
 		eff.SetSerial(data.Serial)
 		eff.SetTime(data.Time)
 		eff.SetSource(data.SourceID, data.SourceSerial)

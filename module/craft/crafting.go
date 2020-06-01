@@ -48,13 +48,13 @@ func NewCrafting(data res.CraftingData, object Crafter) *Crafting {
 	c.owner = object
 	c.recipes = make(map[string]*Recipe)
 	for _, craftRecipeData := range data.Recipes {
-		recipeData, ok := res.Recipes[craftRecipeData.ID]
-		if !ok {
+		recipeData := res.Recipe(craftRecipeData.ID)
+		if recipeData == nil {
 			log.Err.Printf("crafting: %s#%s: unable to retrieve recipe: %s",
 				c.owner.ID(), c.owner.Serial(), craftRecipeData.ID)
 			continue
 		}
-		recipe := NewRecipe(recipeData)
+		recipe := NewRecipe(*recipeData)
 		c.AddRecipes(recipe)
 	}
 	return c

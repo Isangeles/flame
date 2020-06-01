@@ -24,102 +24,203 @@
 package res
 
 var (
-	Effects      map[string]EffectData
-	Skills       map[string]SkillData
-	Armors       map[string]ArmorData
-	Weapons      map[string]WeaponData
-	Miscs        map[string]MiscItemData
-	Characters   map[string]CharacterData
-	Objects      map[string]ObjectData
-	Dialogs      map[string]DialogData
-	Quests       map[string]QuestData
-	Recipes      map[string]RecipeData
-	Areas        map[string]AreaData
-	Races        map[string]RaceData
-	Translations map[string]TranslationData
+	Effects      []EffectData
+	Skills       []SkillData
+	Armors       []ArmorData
+	Weapons      []WeaponData
+	Miscs        []MiscItemData
+	Characters   []CharacterData
+	Objects      []ObjectData
+	Dialogs      []DialogData
+	Quests       []QuestData
+	Recipes      []RecipeData
+	Areas        []AreaData
+	Races        []RaceData
+	Translations []TranslationData
 )
-
-// On init.
-func init() {
-	Clear()
-}
 
 // Item returns item resource data for item
 // with specified ID or nil if data for
 // specified ID was not found.
 func Item(id string) ItemData {
-	armor, ok := Armors[id]
-	if ok {
+	armor := Armor(id)
+	if armor != nil {
 		return armor
 	}
-	weapon, ok := Weapons[id]
-	if ok {
+	weapon := Weapon(id)
+	if weapon != nil {
 		return weapon
 	}
-	misc, ok := Miscs[id]
-	if ok {
+	misc := Misc(id)
+	if misc != nil {
 		return misc
+	}
+	return nil
+}
+
+// Effect returns effect data for specified ID.
+func Effect(id string) *EffectData {
+	for _, d := range Effects {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Skill returns skill data for specified ID.
+func Skill(id string) *SkillData {
+	for _, d := range Skills {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Armor returns armor data for specified ID.
+func Armor(id string) *ArmorData {
+	for _, d := range Armors {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Weapon returns weapon data for specified ID.
+func Weapon(id string) *WeaponData {
+	for _, d := range Weapons {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Misc returns misc data for specified ID.
+func Misc(id string) *MiscItemData {
+	for _, d := range Miscs {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Character returns character data for specified ID
+// and serial value.
+func Character(id, serial string) *CharacterData {
+	for _, d := range Characters {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Object returns skill data for specified ID and
+// serial value.
+func Object(id, serial string) *ObjectData {
+	for _, d := range Objects {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Dialog returns dialog data for specified ID.
+func Dialog(id string) *DialogData {
+	for _, d := range Dialogs {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Quest returns quest data for specified ID.
+func Quest(id string) *QuestData {
+	for _, d := range Quests {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Recipe returns recipe data for specified ID.
+func Recipe(id string) *RecipeData {
+	for _, d := range Recipes {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Area returns area data for specified ID.
+func Area(id string) *AreaData {
+	for _, d := range Areas {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Race returns race data for specified ID.
+func Race(id string) *RaceData {
+	for _, d := range Races {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
+// Translation returns translation data for specified ID.
+func Translation(id string) *TranslationData {
+	for _, d := range Translations {
+		if d.ID == id {
+			return &d
+		}
 	}
 	return nil
 }
 
 // Clear removes all resources from base.
 func Clear() {
-	Effects = make(map[string]EffectData)
-	Skills = make(map[string]SkillData)
-	Armors = make(map[string]ArmorData)
-	Weapons = make(map[string]WeaponData)
-	Miscs = make(map[string]MiscItemData)
-	Characters = make(map[string]CharacterData)
-	Objects = make(map[string]ObjectData)
-	Dialogs = make(map[string]DialogData)
-	Quests = make(map[string]QuestData)
-	Recipes = make(map[string]RecipeData)
-	Areas = make(map[string]AreaData)
-	Races = make(map[string]RaceData)
-	Translations = make(map[string]TranslationData)
+	Effects = make([]EffectData, 0)
+	Skills = make([]SkillData, 0)
+	Armors = make([]ArmorData, 0)
+	Weapons = make([]WeaponData, 0)
+	Miscs = make([]MiscItemData, 0)
+	Characters = make([]CharacterData, 0)
+	Objects = make([]ObjectData, 0)
+	Dialogs = make([]DialogData, 0)
+	Quests = make([]QuestData, 0)
+	Recipes = make([]RecipeData, 0)
+	Areas = make([]AreaData, 0)
+	Races = make([]RaceData, 0)
+	Translations = make([]TranslationData, 0)
 }
 
 // Add adds resources from specified module data
 // to resources base.
 func Add(r ResourcesData) {
-	for _, c := range r.Characters {
-		Characters[c.ID] = c
-	}
-	for _, r := range r.Races {
-		Races[r.ID] = r
-	}
-	for _, o := range r.Objects {
-		Objects[o.ID] = o
-	}
-	for _, e := range r.Effects {
-		Effects[e.ID] = e
-	}
-	for _, s := range r.Skills {
-		Skills[s.ID] = s
-	}
-	for _, a := range r.Armors {
-		Armors[a.ID] = a
-	}
-	for _, w := range r.Weapons {
-		Weapons[w.ID] = w
-	}
-	for _, m := range r.Miscs {
-		Miscs[m.ID] = m
-	}
-	for _, d := range r.Dialogs {
-		Dialogs[d.ID] = d
-	}
-	for _, q := range r.Quests {
-		Quests[q.ID] = q
-	}
-	for _, r := range r.Recipes {
-		Recipes[r.ID] = r
-	}
-	for _, a := range r.Areas {
-		Areas[a.ID] = a
-	}
-	for _, t := range r.Translations {
-		Translations[t.ID] = t
-	}
+	Characters = append(Characters, r.Characters...)
+	Races = append(Races, r.Races...)
+	Objects = append(Objects, r.Objects...)
+	Effects = append(Effects, r.Effects...)
+	Skills = append(Skills, r.Skills...)
+	Armors = append(Armors, r.Armors...)
+	Weapons = append(Weapons, r.Weapons...)
+	Miscs = append(Miscs, r.Miscs...)
+	Dialogs = append(Dialogs, r.Dialogs...)
+	Quests = append(Quests, r.Quests...)
+	Recipes = append(Recipes, r.Recipes...)
+	Areas = append(Areas, r.Areas...)
+	Translations = append(Translations, r.Translations...)
 }

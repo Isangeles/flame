@@ -70,12 +70,12 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 			s.SetExperience(s.Experience() + exp)
 		}
 	case *effect.QuestMod:
-		data, ok := res.Quests[m.QuestID()]
-		if !ok {
+		data := res.Quest(m.QuestID())
+		if data == nil {
 			log.Err.Printf("char: %s#%s: quest mod: data not found:%s", m.QuestID())
 			break
 		}
-		q := quest.New(data)
+		q := quest.New(*data)
 		c.Journal().AddQuest(q)
 	}
 }

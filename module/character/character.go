@@ -138,9 +138,9 @@ func New(data res.CharacterData) *Character {
 	// Register serial.
 	serial.Register(&c)
 	// Set Race.
-	raceData, ok := res.Races[data.Race]
-	if ok {
-		c.race = NewRace(raceData)
+	raceData := res.Race(data.Race)
+	if raceData != nil {
+		c.race = NewRace(*raceData)
 	}
 	// Set level.
 	for i := 0; i < data.Level; i++ {
@@ -155,13 +155,13 @@ func New(data res.CharacterData) *Character {
 	}
 	// Add skills.
 	for _, charSkillData := range data.Skills {
-		skillData, ok := res.Skills[charSkillData.ID]
-		if !ok {
+		skillData := res.Skill(charSkillData.ID)
+		if skillData == nil {
 			log.Err.Printf("new character: %s: skill data not found: %v",
 				c.ID(), charSkillData.ID)
 			continue
 		}
-		skill := skill.New(skillData)
+		skill := skill.New(*skillData)
 		if len(charSkillData.Serial) > 0 {
 			skill.SetSerial(charSkillData.Serial)
 		}
@@ -170,13 +170,13 @@ func New(data res.CharacterData) *Character {
 	}
 	// Add dialogs.
 	for _, charDialogData := range data.Dialogs {
-		dialogData, ok := res.Dialogs[charDialogData.ID]
-		if !ok {
+		dialogData := res.Dialog(charDialogData.ID)
+		if dialogData == nil {
 			log.Err.Printf("new character: %s: dialog data not found: %s",
 				c.ID(), charDialogData.ID)
 			continue
 		}
-		d := dialog.New(dialogData)
+		d := dialog.New(*dialogData)
 		for _, s := range d.Stages() {
 			if s.ID() == charDialogData.Stage {
 				d.SetStage(s)
@@ -186,13 +186,13 @@ func New(data res.CharacterData) *Character {
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
-		effectData, ok := res.Effects[charEffectData.ID]
-		if !ok {
+		effectData := res.Effect(charEffectData.ID)
+		if effectData == nil {
 			log.Err.Printf("new character: %s: effect data not found: %s",
 				c.ID(), charEffectData.ID)
 			continue
 		}
-		effect := effect.New(effectData)
+		effect := effect.New(*effectData)
 		effect.SetSerial(charEffectData.Serial)
 		effect.SetTime(charEffectData.Time)
 		effect.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
