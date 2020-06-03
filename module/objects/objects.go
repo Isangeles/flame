@@ -99,8 +99,6 @@ type AreaObject interface {
 	Positioner
 	AreaID() string
 	SetAreaID(s string)
-	Position() (x, y float64)
-	SetPosition(x, y float64)
 }
 
 // Struct for object effect
