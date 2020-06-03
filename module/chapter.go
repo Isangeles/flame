@@ -25,7 +25,7 @@ package module
 
 import (
 	"strconv"
-	
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/area"
 	"github.com/isangeles/flame/module/character"
@@ -223,5 +223,6 @@ func (c *Chapter) Data() res.ChapterData {
 	for _, a := range c.Areas() {
 		data.Areas = append(data.Areas, a.Data())
 	}
+	data.Resources = c.Res
 	return data
 }

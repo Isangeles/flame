@@ -118,5 +118,6 @@ func (m *Module) Data() res.ModuleData {
 	data.Config["path"] = []string{m.Conf().Path}
 	data.Config["chapter"] = []string{m.Chapter().Conf().ID}
 	data.Chapter = m.Chapter().Data()
+	data.Resources = m.Res
 	return data
 }
