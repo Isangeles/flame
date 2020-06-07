@@ -82,6 +82,7 @@ func (d *Dialog) ID() string {
 // Restart moves dialog to starting phase.
 func (d *Dialog) Restart() {
 	d.activeStages = make([]*Stage, 0)
+	d.activeStage = nil
 	for _, p := range d.stages {
 		if p.start {
 			d.activeStages = append(d.activeStages, p)
