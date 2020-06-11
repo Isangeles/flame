@@ -77,7 +77,6 @@ func (c *Character) Data() res.CharacterData {
 	for _, s := range c.Skills() {
 		skillData := res.ObjectSkillData{
 			ID:       s.ID(),
-			Serial:   s.Serial(),
 			Cooldown: s.Cooldown(),
 		}
 		data.Skills = append(data.Skills, skillData)

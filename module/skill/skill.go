@@ -32,14 +32,13 @@ import (
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
-	"github.com/isangeles/flame/module/serial"
 )
 
-// Interface for skills.
+// Struct for skills.
 // All times(cast time, cooldown, etc.)
 // are in milliseconds.
 type Skill struct {
-	id, serial  string
+	id          string
 	name        string
 	useReqs     []req.Requirement
 	effects     []res.EffectData
@@ -102,7 +101,6 @@ func New(data res.SkillData) *Skill {
 	if len(s.name) < 1 {
 		s.name = lang.Text(s.id)
 	}
-	serial.Register(s)
 	return s
 }
 
@@ -145,17 +143,6 @@ func (s *Skill) Activate() {
 // ID returns skill ID.
 func (s *Skill) ID() string {
 	return s.id
-}
-
-// Serial returns skill serial
-// value.
-func (s *Skill) Serial() string {
-	return s.serial
-}
-
-// SetSerial sets skill serial value.
-func (s *Skill) SetSerial(serial string) {
-	s.serial = serial
 }
 
 // Name returns skill name.

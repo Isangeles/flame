@@ -67,7 +67,6 @@ type ObjectEffectData struct {
 // Struct for object skill data.
 type ObjectSkillData struct {
 	ID       string `xml:"id,attr" json:"id"`
-	Serial   string `xml:"serial,attr" json:"serial"`
 	Cooldown int64  `xml:"cooldown,attr" json:"cooldown"`
 }
 

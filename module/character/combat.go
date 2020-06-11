@@ -124,7 +124,7 @@ func (c *Character) UseSkill(s *skill.Skill) {
 		c.SendPrivate(msg)
 		return
 	}
-	charSkill := c.skills[s.ID()+s.Serial()]
+	charSkill := c.skills[s.ID()]
 	if charSkill == s {
 		tar := c.Targets()[0]
 		err := s.Cast(c, tar)

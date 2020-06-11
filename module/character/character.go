@@ -162,9 +162,6 @@ func New(data res.CharacterData) *Character {
 			continue
 		}
 		skill := skill.New(*skillData)
-		if len(charSkillData.Serial) > 0 {
-			skill.SetSerial(charSkillData.Serial)
-		}
 		skill.SetCooldown(charSkillData.Cooldown)
 		c.AddSkill(skill)
 	}
@@ -527,12 +524,12 @@ func (c *Character) Skills() []*skill.Skill {
 // AddSkill adds specified skill to characters
 // skills.
 func (c *Character) AddSkill(s *skill.Skill) {
-	c.skills[s.ID()+s.Serial()] = s
+	c.skills[s.ID()] = s
 }
 
 // RemoveSkill removes specified skill.
 func (c *Character) RemoveSkill(s *skill.Skill) {
-	delete(c.skills, s.ID()+s.Serial())
+	delete(c.skills, s.ID())
 }
 
 // Targets returns character targets.
