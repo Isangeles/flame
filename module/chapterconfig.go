@@ -38,6 +38,7 @@ type ChapterConfig struct {
 	StartItems  []string
 	StartSkills []string
 	StartAttrs  int
+	StartLevel  int
 }
 
 // FullPath returns path to chapter directory.

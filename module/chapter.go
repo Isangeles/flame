@@ -65,6 +65,9 @@ func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	if len(data.Config["start-attrs"]) > 0 {
 		c.conf.StartAttrs, _ = strconv.Atoi(data.Config["start-attrs"][0])
 	}
+	if len(data.Config["start-level"]) > 0 {
+		c.conf.StartLevel, _ = strconv.Atoi(data.Config["start-level"][0])
+	}
 	c.conf.StartItems = data.Config["start-items"]
 	c.conf.StartSkills = data.Config["start-skills"]
 	c.Res = data.Resources
