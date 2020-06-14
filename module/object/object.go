@@ -276,3 +276,9 @@ func (ob *Object) ChatLog() chan string {
 func (ob *Object) PrivateLog() chan string {
 	return ob.privatelog
 }
+
+// Use activates object action for specified user.
+func (ob *Object) Use(user effect.Target) {
+	user.TakeModifiers(user, ob.Action().UserMods()...)
+	ob.TakeModifiers(ob, ob.Action().SelfMods()...)
+}
