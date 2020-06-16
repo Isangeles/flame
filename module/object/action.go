@@ -41,7 +41,7 @@ func NewAction(data res.ObjectActionData) *Action {
 	a := new(Action)
 	a.selfMods = effect.NewModifiers(data.SelfMods)
 	a.userMods = effect.NewModifiers(data.UserMods)
-	if len(a.SelfMods()) < 0 && len(a.UserMods()) < 0 {
+	if len(a.SelfMods()) < 1 && len(a.UserMods()) < 1 {
 		return nil
 	}
 	return a
