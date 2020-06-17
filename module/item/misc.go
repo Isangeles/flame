@@ -26,6 +26,7 @@ package item
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
+	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/serial"
 )
 
@@ -38,21 +39,35 @@ type Misc struct {
 	level      int
 	loot       bool
 	currency   bool
+	consumable bool
+	useEffects []res.EffectData
+	useMods    []effect.Modifier
 }
 
 // NewMisc creates new misc item.
 func NewMisc(data res.MiscItemData) *Misc {
 	m := Misc{
-		id:       data.ID,
-		value:    data.Value,
-		loot:     data.Loot,
-		currency: data.Currency,
+		id:         data.ID,
+		value:      data.Value,
+		loot:       data.Loot,
+		currency:   data.Currency,
+		consumable: data.Consumable,
+		useMods:    effect.NewModifiers(data.UseMods),
 	}
+	// Name & info.
 	nameInfo := lang.Texts(m.ID())
 	m.name = nameInfo[0]
 	if len(nameInfo) > 1 {
 		m.info = nameInfo[1]
 	}
+	// Use effects.
+	for _, ed := range data.UseEffects {
+		data := res.Effect(ed.ID)
+		if data != nil {
+			m.useEffects = append(m.useEffects, *data)
+		}
+	}
+	// Serial.
 	serial.Register(&m)
 	return &m
 }
@@ -101,4 +116,21 @@ func (m *Misc) Loot() bool {
 // used as currency.
 func (m *Misc) Currency() bool {
 	return m.currency
+}
+
+// Consumable checks if item should be
+// deleted after use.
+func (m *Misc) Consumable() bool {
+	return m.consumable
+}
+
+// Use applies item use modifiers on specified
+// user.
+func (m *Misc) Use(user effect.Target) {
+	for _, ed := range m.useEffects {
+		e := effect.New(ed)
+		e.SetSource(m.ID(), m.Serial())
+		user.TakeEffect(e)
+	}
+	user.TakeModifiers(nil, m.useMods...)
 }

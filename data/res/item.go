@@ -82,11 +82,14 @@ type MiscItemsData struct {
 
 // Struct for miscellaneous items data.
 type MiscItemData struct {
-	ID       string `xml:"id,attr" json:"id"`
-	Value    int    `xml:"value,attr" json:"value"`
-	Level    int    `xml:"level,attr" json:"level"`
-	Loot     bool   `xml:"loot,attr" json:"loot"`
-	Currency bool   `xml:"currency,attr" json:"currency"`
+	ID         string             `xml:"id,attr" json:"id"`
+	Value      int                `xml:"value,attr" json:"value"`
+	Level      int                `xml:"level,attr" json:"level"`
+	Loot       bool               `xml:"loot,attr" json:"loot"`
+	Currency   bool               `xml:"currency,attr" json:"currency"`
+	Consumable bool               `xml:"consumable,attr" json:"consumable"`
+	UseMods    ModifiersData      `xml:"use>modifiers" json:"use-mods"`
+	UseEffects []ObjectEffectData `xml:"use>effects>effect" json:"use-effects"`
 }
 
 // Struct for item slot data.
