@@ -60,8 +60,13 @@ func New(data res.EffectData) *Effect {
 
 // Update updates effect.
 func (e *Effect) Update(delta int64) {
+	if e.Time() <= 0 {
+		log.Err.Printf("effect: %s#%s: no time left", e.ID(),
+			e.Serial(), e.duration)
+		return
+	}
 	object := serial.Object(e.tarID, e.tarSerial)
-	if object == nil || e.Time() <= 0 {
+	if object == nil {
 		log.Err.Printf("effect: %s#%s: target not found: %s#%s",
 			e.ID(), e.Serial(), e.tarID, e.tarSerial)
 		return
