@@ -28,6 +28,7 @@ import (
 	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for miscellaneous items.
@@ -40,6 +41,7 @@ type Misc struct {
 	loot       bool
 	currency   bool
 	consumable bool
+	useAction  *useaction.UseAction
 	useEffects []res.EffectData
 	useMods    []effect.Modifier
 }
@@ -52,7 +54,6 @@ func NewMisc(data res.MiscItemData) *Misc {
 		loot:       data.Loot,
 		currency:   data.Currency,
 		consumable: data.Consumable,
-		useMods:    effect.NewModifiers(data.UseMods),
 	}
 	// Name & info.
 	nameInfo := lang.Texts(m.ID())
@@ -60,13 +61,8 @@ func NewMisc(data res.MiscItemData) *Misc {
 	if len(nameInfo) > 1 {
 		m.info = nameInfo[1]
 	}
-	// Use effects.
-	for _, ed := range data.UseEffects {
-		data := res.Effect(ed.ID)
-		if data != nil {
-			m.useEffects = append(m.useEffects, *data)
-		}
-	}
+	// Use action.
+	m.useAction = useaction.New(&m, data.UseAction)
 	// Serial.
 	serial.Register(&m)
 	return &m
@@ -122,6 +118,11 @@ func (m *Misc) Currency() bool {
 // deleted after use.
 func (m *Misc) Consumable() bool {
 	return m.consumable
+}
+
+// UseAction returns items use action.
+func (m *Misc) UseAction() *useaction.UseAction {
+	return m.useAction
 }
 
 // Use applies item use modifiers on specified

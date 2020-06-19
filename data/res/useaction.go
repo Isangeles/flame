@@ -27,6 +27,6 @@ package res
 type UseActionData struct {
 	UserMods      ModifiersData      `xml:"user>modifiers" json:"user-mods"`
 	ObjectMods    ModifiersData      `xml:"object>modifiers" json:"object-mods"`
-	UserEffects   []ObjectEffectData `xml:"user>effect" json:"user-effects"`
-	ObjectEffects []ObjectEffectData `xml:"object>effect" json:"object-effects"`
+	UserEffects   []ObjectEffectData `xml:"user>effects>effect" json:"user-effects"`
+	ObjectEffects []ObjectEffectData `xml:"object>effects>effect" json:"object-effects"`
 }
