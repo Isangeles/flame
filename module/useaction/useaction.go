@@ -34,7 +34,7 @@ import (
 // Interface for usable game objects.
 type Usable interface {
 	objects.Object
-	UseAction() UseAction
+	UseAction() *UseAction
 }
 
 // Struct for use action of usable object.

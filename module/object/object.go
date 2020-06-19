@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/module/useaction"
 	"github.com/isangeles/flame/log"
 )
 
@@ -42,7 +43,7 @@ type Object struct {
 	hp, maxHP  int
 	resilience objects.Resilience
 	posX, posY float64
-	action     *Action
+	action     *useaction.UseAction
 	inventory  *item.Inventory
 	effects    map[string]*effect.Effect
 	flags      map[string]flag.Flag
@@ -60,7 +61,7 @@ func New(data res.ObjectData) *Object {
 		maxHP:  data.MaxHP,
 	}
 	ob.SetHealth(ob.MaxHealth())
-	ob.action = NewAction(data.Action)
+	ob.action = useaction.New(&ob, data.Action)
 	ob.inventory = item.NewInventory(data.Inventory)
 	ob.inventory.SetCapacity(10)
 	ob.effects = make(map[string]*effect.Effect)
@@ -209,8 +210,8 @@ func (ob *Object) Experience() int {
 func (ob *Object) SetExperience(v int) {
 }
 
-// Action returns object action struct.
-func (ob *Object) Action() *Action {
+// UseAction returns object use action.
+func (ob *Object) UseAction() *useaction.UseAction {
 	return ob.action
 }
 
@@ -275,10 +276,4 @@ func (ob *Object) ChatLog() chan string {
 // PrivateLog returns object private log channel.
 func (ob *Object) PrivateLog() chan string {
 	return ob.privatelog
-}
-
-// Use activates object action for specified user.
-func (ob *Object) Use(user effect.Target) {
-	user.TakeModifiers(user, ob.Action().UserMods()...)
-	ob.TakeModifiers(ob, ob.Action().SelfMods()...)
 }

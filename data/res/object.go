@@ -44,15 +44,9 @@ type ObjectData struct {
 	PosX      float64            `xml:"pos-x,attr" json:"pos-x"`
 	PosY      float64            `xml:"pos-y,attr" json:"pos-y"`
 	Restore   bool               `xml:"restore,attr" json:"restore"`
-	Action    ObjectActionData   `xml:"action" json:"action"`
+	Action    UseActionData      `xml:"action" json:"action"`
 	Inventory InventoryData      `xml:"inventory" json:"inventory"`
 	Effects   []ObjectEffectData `xml:"effects>effect" json:"effects"`
-}
-
-// Struct for object action data.
-type ObjectActionData struct {
-	SelfMods ModifiersData `xml:"self>modifiers" json:"self-mods"`
-	UserMods ModifiersData `xml:"user>modifiers" json:"user-mods"`
 }
 
 // Struct for object effects data.

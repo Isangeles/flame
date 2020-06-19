@@ -34,13 +34,6 @@ type Object interface {
 	Serial() string
 }
 
-// Interface for useable game
-// objects.
-type UseObject interface {
-	Object
-	Activate()
-}
-
 // Interface for all object with
 // position on game world map.
 type Positioner interface {
