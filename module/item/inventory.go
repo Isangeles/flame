@@ -35,6 +35,7 @@ import (
 // Struct for container with items.
 type Inventory struct {
 	items      map[string]Item
+	lootItems  []Item
 	tradeItems []*TradeItem
 	cap        int
 }
@@ -74,7 +75,18 @@ func NewInventory(data res.InventoryData) *Inventory {
 				Item:  it,
 				Price: invItData.TradeValue,
 			}
-			inv.AddTradeItem(&ti)
+			err := inv.AddTradeItem(&ti)
+			if err != nil {
+				log.Err.Printf("NewInventory: item: %s: unable to add trade item: %v",
+					invItData.ID, err)
+			}
+		}
+		if invItData.Loot {
+			err := inv.AddLootItem(it)
+			if err != nil {
+				log.Err.Printf("NewInventory: item: %s: unable to add loot item: %v",
+					invItData.ID, err)
+			}
 		}
 	}
 	inv.cap = data.Cap
@@ -126,6 +138,22 @@ func (inv *Inventory) AddTradeItem(i *TradeItem) error {
 		return err
 	}
 	inv.tradeItems = append(inv.tradeItems, i)
+	return nil
+}
+
+// LootItems returns all 'lootable' items from inventory.
+func (inv *Inventory) LootItems() []Item {
+	return inv.lootItems
+}
+
+// AddLootItem adds specified 'lootable' item to
+// the inventory.
+func (inv *Inventory) AddLootItem(i Item) error {
+	err := inv.AddItem(i)
+	if err != nil {
+		return err
+	}
+	inv.lootItems = append(inv.lootItems, i)
 	return nil
 }
 

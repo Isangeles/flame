@@ -103,11 +103,6 @@ func (m *Misc) Level() int {
 	return m.level
 }
 
-// Loot checks if item is 'lootable'.
-func (m *Misc) Loot() bool {
-	return m.loot
-}
-
 // Currency check if item can be
 // used as currency.
 func (m *Misc) Currency() bool {

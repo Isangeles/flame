@@ -35,7 +35,6 @@ type Item interface {
 	SetSerial(serial string)
 	Value() int
 	Level() int
-	Loot() bool
 }
 
 // Interface for 'equipable' items.

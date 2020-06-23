@@ -143,8 +143,3 @@ func (w *Weapon) EquipReqs() []req.Requirement {
 func (w *Weapon) Slots() []Slot {
 	return w.slots
 }
-
-// Loot checks whether weapon is 'lootable'.
-func (w *Weapon) Loot() bool {
-	return w.loot
-}

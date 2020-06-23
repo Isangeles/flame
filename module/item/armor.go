@@ -131,8 +131,3 @@ func (a *Armor) EquipReqs() []req.Requirement {
 func (a *Armor) Slots() []Slot {
 	return a.slots
 }
-
-// Loot checks if armor is 'lootable'.
-func (a *Armor) Loot() bool {
-	return a.loot
-}
