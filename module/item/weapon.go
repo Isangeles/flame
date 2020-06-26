@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
 	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for weapons.
@@ -50,13 +51,13 @@ type Weapon struct {
 // specified parameters.
 func NewWeapon(data res.WeaponData) *Weapon {
 	w := Weapon{
-		id:         data.ID,
-		value:      data.Value,
-		level:      data.Level,
-		loot:       data.Loot,
-		dmgMin:     data.Damage.Min,
-		dmgMax:     data.Damage.Max,
-		dmgType:    objects.Element(data.Damage.Type),
+		id:      data.ID,
+		value:   data.Value,
+		level:   data.Level,
+		loot:    data.Loot,
+		dmgMin:  data.Damage.Min,
+		dmgMax:  data.Damage.Max,
+		dmgType: objects.Element(data.Damage.Type),
 	}
 	// Name & info.
 	nameInfo := lang.Texts(w.ID())
@@ -142,4 +143,9 @@ func (w *Weapon) EquipReqs() []req.Requirement {
 // by this weapon after equipping.
 func (w *Weapon) Slots() []Slot {
 	return w.slots
+}
+
+// UseAction returns use action.
+func (w *Weapon) UseAction() *useaction.UseAction {
+	return nil
 }

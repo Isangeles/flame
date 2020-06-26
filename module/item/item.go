@@ -26,15 +26,16 @@ package item
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/req"
+	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/module/useaction"
 )
 
 // Interface for items.
 type Item interface {
-	ID() string
-	Serial() string
-	SetSerial(serial string)
+	serial.Serialer
 	Value() int
 	Level() int
+	UseAction() *useaction.UseAction
 }
 
 // Interface for 'equipable' items.
@@ -49,13 +50,13 @@ type Equiper interface {
 type Slot string
 
 const (
-	Head = Slot("itSlotHead")
-	Neck = Slot("itSlotNeck")
-	Chest = Slot("itSlotChest")
-	Hand = Slot("itSlotHand")
+	Head   = Slot("itSlotHead")
+	Neck   = Slot("itSlotNeck")
+	Chest  = Slot("itSlotChest")
+	Hand   = Slot("itSlotHand")
 	Finger = Slot("itSlotFinger")
-	Legs = Slot("itSlotLegs")
-	Feet = Slot("itSlotFeet")
+	Legs   = Slot("itSlotLegs")
+	Feet   = Slot("itSlotFeet")
 )
 
 // New creates item from specified data.

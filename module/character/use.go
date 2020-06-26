@@ -30,6 +30,9 @@ import (
 
 // Use uses specified usable object.
 func (c *Character) Use(ob useaction.Usable) {
+	if ob.UseAction() == nil {
+		return
+	}
 	c.TakeModifiers(ob, ob.UseAction().UserMods()...)
 	for _, e := range ob.UseAction().UserEffects() {
 		c.TakeEffect(e)

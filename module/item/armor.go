@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/req"
 	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for armor items.
@@ -130,4 +131,9 @@ func (a *Armor) EquipReqs() []req.Requirement {
 // by this armor after equipping.
 func (a *Armor) Slots() []Slot {
 	return a.slots
+}
+
+// UseAction returns use action.
+func (a *Armor) UseAction() *useaction.UseAction {
+	return nil
 }

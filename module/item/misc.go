@@ -119,14 +119,3 @@ func (m *Misc) Consumable() bool {
 func (m *Misc) UseAction() *useaction.UseAction {
 	return m.useAction
 }
-
-// Use applies item use modifiers on specified
-// user.
-func (m *Misc) Use(user effect.Target) {
-	for _, ed := range m.useEffects {
-		e := effect.New(ed)
-		e.SetSource(m.ID(), m.Serial())
-		user.TakeEffect(e)
-	}
-	user.TakeModifiers(nil, m.useMods...)
-}
