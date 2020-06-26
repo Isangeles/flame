@@ -1,7 +1,6 @@
 MAJOR:
 * Switching chapters
 * Item materials
-* Useable items
 * Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
 * Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
@@ -31,6 +30,7 @@ MINOR:
 * Item modifier
 * Area weather
 * In-game time
+* Use action for armors and weapons
 DONE:
 * Generating unique serial values for game objects
 * Save/load game mechanism
