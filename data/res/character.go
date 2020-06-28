@@ -69,7 +69,7 @@ type CharacterData struct {
 
 // Struct for character attributes data.
 type AttributesData struct {
-	Str int `xml:"strenght.attr" json:"str"`
+	Str int `xml:"strenght,attr" json:"str"`
 	Con int `xml:"constitution,attr" json:"con"`
 	Dex int `xml:"dexterity,attr" json:"dex"`
 	Int int `xml:"inteligence,attr" json:"int"`
