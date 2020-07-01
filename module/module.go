@@ -26,7 +26,6 @@ package module
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/objects"
 )
 
@@ -75,20 +74,6 @@ func (m *Module) Chapter() *Chapter {
 // Conf returns module configuration.
 func (m *Module) Conf() *Config {
 	return m.conf
-}
-
-// Target returns 'targetable' game object with specified
-// serial ID or nil if on object with such ID was found.
-func (m *Module) Target(id, serial string) effect.Target {
-	char := m.Chapter().Character(id, serial)
-	if char != nil {
-		return char
-	}
-	ob := m.Chapter().AreaObject(id, serial)
-	if ob != nil {
-		return ob
-	}
-	return nil
 }
 
 // Object returns game object with specified ID and serial

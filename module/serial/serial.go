@@ -23,6 +23,7 @@
 
 // Package for generating unique serial values
 // for game objects.
+// This package also stores all registered objects.
 package serial
 
 import (
