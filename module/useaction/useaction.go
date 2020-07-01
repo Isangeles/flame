@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/req"
 )
 
 // Interface for usable game objects.
@@ -44,20 +45,22 @@ type UseAction struct {
 	objectMods    []effect.Modifier
 	userEffects   []res.EffectData
 	objectEffects []res.EffectData
+	requirements  []req.Requirement
 }
 
 // New creates new use action.
 func New(ob Usable, data res.UseActionData) *UseAction {
 	ua := UseAction{
-		object:     ob,
-		userMods:   effect.NewModifiers(data.UserMods),
-		objectMods: effect.NewModifiers(data.ObjectMods),
+		object:       ob,
+		userMods:     effect.NewModifiers(data.UserMods),
+		objectMods:   effect.NewModifiers(data.ObjectMods),
+		requirements: req.NewRequirements(data.Requirements),
 	}
 	for _, ed := range data.UserEffects {
 		data := res.Effect(ed.ID)
 		if data == nil {
-			log.Err.Printf("Use action: effect not found: %s",
-				ed.ID)
+			log.Err.Printf("%s %s: use action: effect not found: %s",
+				ua.object.ID(), ua.object.Serial(), ed.ID)
 			continue
 		}
 		ua.userEffects = append(ua.userEffects, *data)
@@ -65,8 +68,8 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 	for _, ed := range data.ObjectEffects {
 		data := res.Effect(ed.ID)
 		if data == nil {
-			log.Err.Printf("Use action: effect not found: %s",
-				ed.ID)
+			log.Err.Printf("%s %s: use action: effect not found: %s",
+				ua.object.ID(), ua.object.Serial(), ed.ID)
 			continue
 		}
 		ua.objectEffects = append(ua.objectEffects, *data)
@@ -92,6 +95,11 @@ func (ua *UseAction) UserEffects() (effects []*effect.Effect) {
 		effects = append(effects, e)
 	}
 	return
+}
+
+// Requirements returns use action requirements.
+func (ua *UseAction) Requirements() []req.Requirement {
+	return ua.requirements
 }
 
 // ObjectEffects returns use effects for object(use action source).

@@ -24,6 +24,7 @@
 package character
 
 import (
+	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/useaction"
 )
@@ -33,6 +34,12 @@ func (c *Character) Use(ob useaction.Usable) {
 	if ob.UseAction() == nil {
 		return
 	}
+	// Check requirements.
+	if !c.MeetReqs(ob.UseAction().Requirements()...) {
+		c.SendPrivate(lang.Text("cant_do_right_now"))
+		return
+	}
+	// Apply effect and modifiers.
 	c.TakeModifiers(ob, ob.UseAction().UserMods()...)
 	for _, e := range ob.UseAction().UserEffects() {
 		c.TakeEffect(e)

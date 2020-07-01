@@ -29,4 +29,5 @@ type UseActionData struct {
 	ObjectMods    ModifiersData      `xml:"object>modifiers" json:"object-mods"`
 	UserEffects   []ObjectEffectData `xml:"user>effects>effect" json:"user-effects"`
 	ObjectEffects []ObjectEffectData `xml:"object>effects>effect" json:"object-effects"`
+	Requirements  ReqsData           `xml:"reqs" json:"reqs"`
 }
