@@ -39,7 +39,7 @@ func (c *Character) Use(ob useaction.Usable) {
 		c.SendPrivate(lang.Text("cant_do_right_now"))
 		return
 	}
-	// Apply effect and modifiers.
+	// Apply effects and modifiers.
 	c.TakeModifiers(ob, ob.UseAction().UserMods()...)
 	for _, e := range ob.UseAction().UserEffects() {
 		c.TakeEffect(e)
@@ -47,6 +47,13 @@ func (c *Character) Use(ob useaction.Usable) {
 	if tar, ok := ob.(effect.Target); ok {
 		tar.TakeModifiers(ob, ob.UseAction().UserMods()...)
 		for _, e := range ob.UseAction().UserEffects() {
+			tar.TakeEffect(e)
+		}
+	}
+	if len(c.Targets()) > 0 {
+		tar := c.Targets()[0]
+		tar.TakeModifiers(tar, ob.UseAction().TargetMods()...)
+		for _, e := range ob.UseAction().TargetEffects() {
 			tar.TakeEffect(e)
 		}
 	}
