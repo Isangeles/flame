@@ -24,12 +24,12 @@
   * [Stone](https://github.com/Isangeles/stone) - simple library to render [Tiled](https://www.mapeditor.org) maps
   * [Arena](https://github.com/Isangeles/arena) - example Flame module
 
-  ### Games that use Flame:
+  ### Example games:
   #### Arena ####
 
   Description: simple demo game based on [Arena](https://github.com/isangeles/arena) module with [Mural GUI](https://github.com/isangeles/mural) support.
 
-  Download: [Linux](https://my.opendesktop.org/s/xmxszBXyMQCK5xB), [Windows](https://my.opendesktop.org/s/gcKQmFRdTj8sBdp)
+  Download: [Linux](https://my.opendesktop.org/s/xmxszBXyMQCK5xB), [Windows](https://my.opendesktop.org/s/gcKQmFRdTj8sBdp), [macOS](https://my.opendesktop.org/s/5omoYQYMHGLXkfJ)
 
 ## Usage
 You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/example) package.
