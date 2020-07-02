@@ -24,6 +24,7 @@
 package serial
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -73,6 +74,26 @@ func TestReset(t *testing.T) {
 		t.Errorf("Not first value assigned after reset: %s != 0",
 			ob2.Serial())
 	}
+}
+
+// Tests concurrent calls on Register and Object functions.
+func TestConcurrentAccess(t *testing.T) {
+	add := func (){
+		for i := 0; i < 1000; i ++ {
+			ob := testObject{"test", ""}
+			Register(&ob)
+		}
+	}
+	retrieve := func (){
+		for i := 1000; i > 0; i -- {
+			Object("test", fmt.Sprintf("%d", i))
+		}
+	}
+	go add()
+	go retrieve()
+	go add()
+	go retrieve()
+	retrieve()
 }
 
 // Returns id.

@@ -28,10 +28,11 @@ package serial
 
 import (
 	"fmt"
+	"sync"
 )
 
 var (
-	base map[string][]Serialer
+	objects *sync.Map
 )
 
 // Interface for all game objects with
@@ -44,7 +45,7 @@ type Serialer interface {
 
 // On init.
 func init() {
-	base = make(map[string][]Serialer)
+	Reset()
 }
 
 // Register assigns and registers unique serial value to
@@ -56,24 +57,25 @@ func init() {
 // registered objects.
 func Register(s Serialer) {
 	// Get all objects with same ID.
-	serialers := base[s.ID()]
+	obs, _ := objects.Load(s.ID())
+	serialers, _ := obs.([]Serialer)
 	// Check whether this is first object with such ID.
 	if len(serialers) < 1 {
 		if len(s.Serial()) < 1 {
 			s.SetSerial("0")
 		}
-		regSerial(s)
+		objects.Store(s.ID(), append(serialers, s))
 		return
 	}
 	// Check whether object already has unique serial value.
 	if s.Serial() != "" && unique(serialers, s.Serial()) {
-		regSerial(s)
+		objects.Store(s.ID(), append(serialers, s))
 		return
 	}
 	// Generate & assign unique serial.
 	s.SetSerial(uniqueSerial(serialers))
 	// Save to base.
-	base[s.ID()] = append(serialers, s)
+	objects.Store(s.ID(), append(serialers, s))
 	return
 }
 
@@ -81,10 +83,11 @@ func Register(s Serialer) {
 // serial value or nil if no such object was
 // found among registered serial objects.
 func Object(id, serial string) Serialer {
-	objects := base[id]
-	for _, o := range objects {
-		if o.Serial() == serial {
-			return o
+	obs, _ := objects.Load(id)
+	serialers, _ := obs.([]Serialer)
+	for _, s := range serialers {
+		if s.ID() == id && s.Serial() == serial {
+			return s
 		}
 	}
 	return nil
@@ -93,19 +96,18 @@ func Object(id, serial string) Serialer {
 // Reset removes all registered objects from
 // base.
 func Reset() {
-	base = make(map[string][]Serialer)
+	objects = new(sync.Map)
 }
 
 // uinqueSerial generates unique serial value accross
 // specified group of objects with serial value.
 func uniqueSerial(group []Serialer) string {
 	// Choose unique serial value.
-	serial := fmt.Sprintf("%d", len(group))
-	// Ensure serial value uniqueness.
-	for i := len(group); !unique(group, serial); i++ {
-		serial = fmt.Sprintf("%d", i)
+	serial := len(group)
+	for i := serial; !unique(group, fmt.Sprintf("%d", i)); i++ {
+		serial = i
 	}
-	return serial
+	return fmt.Sprintf("%d", serial)
 }
 
 // serialUnique checks whether specified serial value
@@ -117,14 +119,4 @@ func unique(group []Serialer, serial string) bool {
 		}
 	}
 	return true
-}
-
-// regSerial registers specified object
-// in base with object with serial values.
-func regSerial(s Serialer) {
-	serialers := base[s.ID()]
-	if serialers == nil {
-		serialers = make([]Serialer, 0)
-	}
-	base[s.ID()] = append(serialers, s)
 }
