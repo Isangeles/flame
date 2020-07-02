@@ -1,5 +1,5 @@
 /*
- * genderreq.go
+ * item.go
  *
  * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -27,38 +27,46 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-// Struct for gender requirement.
-type GenderReq struct {
-	gender string
+// Struct for item requirement.
+type ItemReq struct {
+	itemID string
+	amount int
 	meet   bool
 }
 
-// NewGenderReq creates new gender requirement.
-func NewGenderReq(data res.GenderReqData) *GenderReq {
-	gr := new(GenderReq)
-	gr.gender = data.Gender
-	return gr
+// NewItemReq creates new item requirement.
+func NewItemReq(data res.ItemReqData) *ItemReq {
+	ir := new(ItemReq)
+	ir.itemID = data.ID
+	ir.amount = data.Amount
+	return ir
 }
 
-// Type returns ID of required gender type.
-func (gr *GenderReq) Gender() string {
-	return gr.gender
+// ItemID returns ID of required item.
+func (ir *ItemReq) ItemID() string {
+	return ir.itemID
+}
+
+// ItemAmount returns amount of required items.
+func (ir *ItemReq) ItemAmount() int {
+	return ir.amount
 }
 
 // Meet checks wheter requirement is set as meet.
-func (gr *GenderReq) Meet() bool {
-	return gr.meet 
+func (ir *ItemReq) Meet() bool {
+	return ir.meet 
 }
 
 // SetMeet sets requirement as meet/not meet.
-func (gr *GenderReq) SetMeet(meet bool) {
-	gr.meet = meet
+func (ir *ItemReq) SetMeet(meet bool) {
+	ir.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (gr *GenderReq) Data() res.GenderReqData {
-	data := res.GenderReqData{
-		Gender: gr.Gender(),
+func (ir *ItemReq) Data() res.ItemReqData {
+	data := res.ItemReqData{
+		ID:     ir.ItemID(),
+		Amount: ir.ItemAmount(),
 	}
 	return data
 }

@@ -1,5 +1,5 @@
 /*
- * itemreq.go
+ * flag.go
  *
  * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -27,46 +27,47 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-// Struct for item requirement.
-type ItemReq struct {
-	itemID string
-	amount int
-	meet   bool
+// Struct for flag requirement.
+type FlagReq struct {
+	flagID  string
+	flagOff bool
+	meet    bool
 }
 
-// NewItemReq creates new item requirement.
-func NewItemReq(data res.ItemReqData) *ItemReq {
-	ir := new(ItemReq)
-	ir.itemID = data.ID
-	ir.amount = data.Amount
-	return ir
+// NewFlagReq creates new flag requirement.
+func NewFlagReq(data res.FlagReqData) *FlagReq {
+	fr := new(FlagReq)
+	fr.flagID = data.ID
+	fr.flagOff = data.Off
+	return fr
 }
 
-// ItemID returns ID of required item.
-func (ir *ItemReq) ItemID() string {
-	return ir.itemID
+// FlagID returns ID of required flag.
+func (fr *FlagReq) FlagID() string {
+	return fr.flagID
 }
 
-// ItemAmount returns amount of required items.
-func (ir *ItemReq) ItemAmount() int {
-	return ir.amount
+// FlagOff checks if flag should be present
+// or not.
+func (fr *FlagReq) FlagOff() bool {
+	return fr.flagOff
 }
 
 // Meet checks wheter requirement is set as meet.
-func (ir *ItemReq) Meet() bool {
-	return ir.meet 
+func (fr *FlagReq) Meet() bool {
+	return fr.meet
 }
 
 // SetMeet sets requirement as meet/not meet.
-func (ir *ItemReq) SetMeet(meet bool) {
-	ir.meet = meet
+func (fr *FlagReq) SetMeet(meet bool) {
+	fr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (ir *ItemReq) Data() res.ItemReqData {
-	data := res.ItemReqData{
-		ID:     ir.ItemID(),
-		Amount: ir.ItemAmount(),
+func (cr *FlagReq) Data() res.FlagReqData {
+	data := res.FlagReqData{
+		ID: cr.FlagID(),
+		Off: cr.FlagOff(),
 	}
 	return data
 }

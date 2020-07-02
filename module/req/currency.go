@@ -1,5 +1,5 @@
 /*
- * currencyreq.go
+ * currency.go
  *
  * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *

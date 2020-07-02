@@ -1,5 +1,5 @@
 /*
- * flagreq.go
+ * gender.go
  *
  * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -27,47 +27,38 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-// Struct for flag requirement.
-type FlagReq struct {
-	flagID  string
-	flagOff bool
-	meet    bool
+// Struct for gender requirement.
+type GenderReq struct {
+	gender string
+	meet   bool
 }
 
-// NewFlagReq creates new flag requirement.
-func NewFlagReq(data res.FlagReqData) *FlagReq {
-	fr := new(FlagReq)
-	fr.flagID = data.ID
-	fr.flagOff = data.Off
-	return fr
+// NewGenderReq creates new gender requirement.
+func NewGenderReq(data res.GenderReqData) *GenderReq {
+	gr := new(GenderReq)
+	gr.gender = data.Gender
+	return gr
 }
 
-// FlagID returns ID of required flag.
-func (fr *FlagReq) FlagID() string {
-	return fr.flagID
-}
-
-// FlagOff checks if flag should be present
-// or not.
-func (fr *FlagReq) FlagOff() bool {
-	return fr.flagOff
+// Type returns ID of required gender type.
+func (gr *GenderReq) Gender() string {
+	return gr.gender
 }
 
 // Meet checks wheter requirement is set as meet.
-func (fr *FlagReq) Meet() bool {
-	return fr.meet
+func (gr *GenderReq) Meet() bool {
+	return gr.meet 
 }
 
 // SetMeet sets requirement as meet/not meet.
-func (fr *FlagReq) SetMeet(meet bool) {
-	fr.meet = meet
+func (gr *GenderReq) SetMeet(meet bool) {
+	gr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (cr *FlagReq) Data() res.FlagReqData {
-	data := res.FlagReqData{
-		ID: cr.FlagID(),
-		Off: cr.FlagOff(),
+func (gr *GenderReq) Data() res.GenderReqData {
+	data := res.GenderReqData{
+		Gender: gr.Gender(),
 	}
 	return data
 }
