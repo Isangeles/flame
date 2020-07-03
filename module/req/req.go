@@ -45,23 +45,23 @@ type RequirementsTarget interface {
 // specified data.
 func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 	for _, d := range data.LevelReqs {
-		lreq := NewLevelReq(d)
+		lreq := NewLevel(d)
 		reqs = append(reqs, lreq)
 	}
 	for _, d := range data.GenderReqs {
-		greq := NewGenderReq(d)
+		greq := NewGender(d)
 		reqs = append(reqs, greq)
 	}
 	for _, d := range data.FlagReqs {
-		freq := NewFlagReq(d)
+		freq := NewFlag(d)
 		reqs = append(reqs, freq)
 	}
 	for _, d := range data.ItemReqs {
-		ireq := NewItemReq(d)
+		ireq := NewItem(d)
 		reqs = append(reqs, ireq)
 	}
 	for _, d := range data.CurrencyReqs {
-		creq := NewCurrencyReq(d)
+		creq := NewCurrency(d)
 		reqs = append(reqs, creq)
 	}
 	return
@@ -71,19 +71,19 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 	for _, r := range reqs {
 		switch r := r.(type) {
-		case *LevelReq:
+		case *Level:
 			d := r.Data()
 			data.LevelReqs = append(data.LevelReqs, d)
-		case *GenderReq:
+		case *Gender:
 			d := r.Data()
 			data.GenderReqs = append(data.GenderReqs, d)
-		case *FlagReq:
+		case *Flag:
 			d := r.Data()
 			data.FlagReqs = append(data.FlagReqs, d)
-		case *ItemReq:
+		case *Item:
 			d := r.Data()
 			data.ItemReqs = append(data.ItemReqs, d)
-		case *CurrencyReq:
+		case *Currency:
 			d := r.Data()
 			data.CurrencyReqs = append(data.CurrencyReqs, d)
 		}

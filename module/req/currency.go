@@ -28,43 +28,43 @@ import (
 )
 
 // Struct for currency requirement.
-type CurrencyReq struct {
+type Currency struct {
 	amount int
 	charge bool
 	meet   bool
 }
 
-// NewCurrencyReq creates new currency requirement.
-func NewCurrencyReq(data res.CurrencyReqData) *CurrencyReq {
-	cr := new(CurrencyReq)
+// NewCurrency creates new currency requirement.
+func NewCurrency(data res.CurrencyReqData) *Currency {
+	cr := new(Currency)
 	cr.amount = data.Amount
 	cr.charge = data.Charge
 	return cr
 }
 
 // Amount returns amount of required currency.
-func (cr *CurrencyReq) Amount() int {
+func (cr *Currency) Amount() int {
 	return cr.amount
 }
 
 // Charge checks is required amount should
 // be taken from requirement target.
-func (cr *CurrencyReq) Charge() bool {
+func (cr *Currency) Charge() bool {
 	return cr.charge
 }
 
 // Meet checks if requirement is set as met.
-func (cr *CurrencyReq) Meet() bool {
+func (cr *Currency) Meet() bool {
 	return cr.meet
 }
 
 // SetMeet sets requirements as meet/not meet.
-func (cr *CurrencyReq) SetMeet(meet bool) {
+func (cr *Currency) SetMeet(meet bool) {
 	cr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (cr *CurrencyReq) Data() res.CurrencyReqData {
+func (cr *Currency) Data() res.CurrencyReqData {
 	data := res.CurrencyReqData{
 		Amount: cr.Amount(),
 		Charge: cr.Charge(),

@@ -28,35 +28,35 @@ import (
 )
 
 // Struct for gender requirement.
-type GenderReq struct {
+type Gender struct {
 	gender string
 	meet   bool
 }
 
-// NewGenderReq creates new gender requirement.
-func NewGenderReq(data res.GenderReqData) *GenderReq {
-	gr := new(GenderReq)
+// NewGender creates new gender requirement.
+func NewGender(data res.GenderReqData) *Gender {
+	gr := new(Gender)
 	gr.gender = data.Gender
 	return gr
 }
 
 // Type returns ID of required gender type.
-func (gr *GenderReq) Gender() string {
+func (gr *Gender) Gender() string {
 	return gr.gender
 }
 
 // Meet checks wheter requirement is set as meet.
-func (gr *GenderReq) Meet() bool {
+func (gr *Gender) Meet() bool {
 	return gr.meet 
 }
 
 // SetMeet sets requirement as meet/not meet.
-func (gr *GenderReq) SetMeet(meet bool) {
+func (gr *Gender) SetMeet(meet bool) {
 	gr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (gr *GenderReq) Data() res.GenderReqData {
+func (gr *Gender) Data() res.GenderReqData {
 	data := res.GenderReqData{
 		Gender: gr.Gender(),
 	}

@@ -51,17 +51,17 @@ func (c *Character) ChargeReqs(reqs ...req.Requirement) {
 // specified requirement.
 func (char *Character) MeetReq(r req.Requirement) bool {
 	switch r := r.(type) {
-	case *req.LevelReq:
+	case *req.Level:
 		return char.Level() >= r.MinLevel()
-	case *req.GenderReq:
+	case *req.Gender:
 		return string(char.Gender()) == r.Gender()
-	case *req.FlagReq:
+	case *req.Flag:
 		f := char.flags[r.FlagID()]
 		if r.FlagOff() {
 			return len(f.ID()) == 0
 		}
 		return len(f.ID()) > 0
-	case *req.ItemReq:
+	case *req.Item:
 		count := 0
 		for _, i := range char.Inventory().Items() {
 			if i.ID() == r.ItemID() {
@@ -69,7 +69,7 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 			}
 		}
 		return count >= r.ItemAmount()
-	case *req.CurrencyReq:
+	case *req.Currency:
 		// TODO: currency check.
 		val := 0
 		for _, it := range char.Inventory().Items() {
@@ -97,7 +97,7 @@ func (c *Character) ChargeReq(r req.Requirement) {
 		return
 	}
 	switch r := r.(type) {
-	case *req.ItemReq:
+	case *req.Item:
 		for i := 0; i < r.ItemAmount(); i ++ {
 			for _, i := range c.Inventory().Items() {
 				if i.ID() != r.ItemID() {
@@ -106,7 +106,7 @@ func (c *Character) ChargeReq(r req.Requirement) {
 				c.Inventory().RemoveItem(i)
 			}
 		}
-	case *req.CurrencyReq:
+	case *req.Currency:
 		// TODO: charge currency items.
 	}
 }

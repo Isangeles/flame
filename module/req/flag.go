@@ -28,43 +28,43 @@ import (
 )
 
 // Struct for flag requirement.
-type FlagReq struct {
+type Flag struct {
 	flagID  string
 	flagOff bool
 	meet    bool
 }
 
-// NewFlagReq creates new flag requirement.
-func NewFlagReq(data res.FlagReqData) *FlagReq {
-	fr := new(FlagReq)
+// NewFlag creates new flag requirement.
+func NewFlag(data res.FlagReqData) *Flag {
+	fr := new(Flag)
 	fr.flagID = data.ID
 	fr.flagOff = data.Off
 	return fr
 }
 
 // FlagID returns ID of required flag.
-func (fr *FlagReq) FlagID() string {
+func (fr *Flag) FlagID() string {
 	return fr.flagID
 }
 
 // FlagOff checks if flag should be present
 // or not.
-func (fr *FlagReq) FlagOff() bool {
+func (fr *Flag) FlagOff() bool {
 	return fr.flagOff
 }
 
 // Meet checks wheter requirement is set as meet.
-func (fr *FlagReq) Meet() bool {
+func (fr *Flag) Meet() bool {
 	return fr.meet
 }
 
 // SetMeet sets requirement as meet/not meet.
-func (fr *FlagReq) SetMeet(meet bool) {
+func (fr *Flag) SetMeet(meet bool) {
 	fr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (cr *FlagReq) Data() res.FlagReqData {
+func (cr *Flag) Data() res.FlagReqData {
 	data := res.FlagReqData{
 		ID: cr.FlagID(),
 		Off: cr.FlagOff(),

@@ -28,37 +28,37 @@ import (
 )
 
 // Struct for level requirement.
-type LevelReq struct {
+type Level struct {
 	min  int
 	meet bool
 }
 
-// NewLevelReq creates new level requirement
+// NewLevel creates new level requirement
 // with specified level value.
-func NewLevelReq(data res.LevelReqData) *LevelReq {
-	req := new(LevelReq)
+func NewLevel(data res.LevelReqData) *Level {
+	req := new(Level)
 	req.min = data.Min
 	return req
 }
 
 // MinLevel returns minimal required level.
-func (lr *LevelReq) MinLevel() int {
+func (lr *Level) MinLevel() int {
 	return lr.min
 }
 
 // Meet checks whether requirements
 // was set as meet.
-func (lr *LevelReq) Meet() bool {
+func (lr *Level) Meet() bool {
 	return lr.meet
 }
 
 // SetMeet sets requirement as meet or not meet.
-func (lr *LevelReq) SetMeet(meet bool) {
+func (lr *Level) SetMeet(meet bool) {
 	lr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (lr *LevelReq) Data() res.LevelReqData {
+func (lr *Level) Data() res.LevelReqData {
 	data := res.LevelReqData{
 		Min: lr.MinLevel(),
 	}
