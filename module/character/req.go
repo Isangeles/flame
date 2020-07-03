@@ -26,13 +26,14 @@ package character
 import (
 	"github.com/isangeles/flame/module/req"
 	"github.com/isangeles/flame/module/item"
+	"github.com/isangeles/flame/module/objects"
 )
 
 // ReqsMeet checks whether all specified requirements
 // are meet by character.
-func (char *Character) MeetReqs(reqs ...req.Requirement) bool {
+func (c *Character) MeetReqs(reqs ...req.Requirement) bool {
 	for _, r := range reqs {
-		if !char.MeetReq(r) {
+		if !c.MeetReq(r) {
 			return false
 		}
 	}
@@ -49,21 +50,21 @@ func (c *Character) ChargeReqs(reqs ...req.Requirement) {
 
 // ReqMeet checks whether character meets
 // specified requirement.
-func (char *Character) MeetReq(r req.Requirement) bool {
+func (c *Character) MeetReq(r req.Requirement) bool {
 	switch r := r.(type) {
 	case *req.Level:
-		return char.Level() >= r.MinLevel()
+		return c.Level() >= r.MinLevel()
 	case *req.Gender:
-		return string(char.Gender()) == r.Gender()
+		return string(c.Gender()) == r.Gender()
 	case *req.Flag:
-		f := char.flags[r.FlagID()]
+		f := c.flags[r.FlagID()]
 		if r.FlagOff() {
 			return len(f.ID()) == 0
 		}
 		return len(f.ID()) > 0
 	case *req.Item:
 		count := 0
-		for _, i := range char.Inventory().Items() {
+		for _, i := range c.Inventory().Items() {
 			if i.ID() == r.ItemID() {
 				count++
 			}
@@ -72,7 +73,7 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 	case *req.Currency:
 		// TODO: currency check.
 		val := 0
-		for _, it := range char.Inventory().Items() {
+		for _, it := range c.Inventory().Items() {
 			misc, ok := it.(*item.Misc)
 			if ! ok {
 				continue
@@ -83,6 +84,12 @@ func (char *Character) MeetReq(r req.Requirement) bool {
 			val += misc.Value()
 		}
 		return val >= r.Amount()
+	case *req.TargetRange:
+		if len(c.Targets()) < 1 {
+			return true
+		}
+		tar := c.Targets()[0]
+		return objects.Range(c, tar) <= r.MinRange()
 	default:
 		return true
 	}

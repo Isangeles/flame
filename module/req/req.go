@@ -64,6 +64,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		creq := NewCurrency(d)
 		reqs = append(reqs, creq)
 	}
+	for _, d := range data.TargetRangeReqs {
+		trreq := NewTargetRange(d)
+		reqs = append(reqs, trreq)
+	}
 	return
 }
 
@@ -86,6 +90,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Currency:
 			d := r.Data()
 			data.CurrencyReqs = append(data.CurrencyReqs, d)
+		case *TargetRange:
+			d := r.Data()
+			data.TargetRangeReqs = append(data.TargetRangeReqs, d)
 		}
 	}
 	return

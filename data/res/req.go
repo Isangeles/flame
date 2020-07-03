@@ -29,12 +29,13 @@ import (
 
 // Struct for reqs data.
 type ReqsData struct {
-	XMLName      xml.Name          `xml:"reqs" json:"-"`
-	LevelReqs    []LevelReqData    `xml:"level-req" json:"level-reqs"`
-	GenderReqs   []GenderReqData   `xml:"gender-req" json:"gender-reqs"`
-	FlagReqs     []FlagReqData     `xml:"flag-req" json:"flag-reqs"`
-	ItemReqs     []ItemReqData     `xml:"item-req" json:"item-reqs"`
-	CurrencyReqs []CurrencyReqData `xml:"currency-req" json:"currency-req"`
+	XMLName         xml.Name             `xml:"reqs" json:"-"`
+	LevelReqs       []LevelReqData       `xml:"level-req" json:"level-reqs"`
+	GenderReqs      []GenderReqData      `xml:"gender-req" json:"gender-reqs"`
+	FlagReqs        []FlagReqData        `xml:"flag-req" json:"flag-reqs"`
+	ItemReqs        []ItemReqData        `xml:"item-req" json:"item-reqs"`
+	CurrencyReqs    []CurrencyReqData    `xml:"currency-req" json:"currency-req"`
+	TargetRangeReqs []TargetRangeReqData `xml:"target-range-req" json:"target-range-req"`
 }
 
 // Struct for level requirement data.
@@ -65,4 +66,9 @@ type ItemReqData struct {
 type CurrencyReqData struct {
 	Amount int  `xml:"amount,attr" json:"amount"`
 	Charge bool `xml:"charge,attr" json:"charge"`
+}
+
+// Struct for target requirement data.
+type TargetRangeReqData struct {
+	MinRange float64 `xml:"min-range,attr" json:"min-range"`
 }
