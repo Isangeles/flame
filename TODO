@@ -22,7 +22,7 @@ MINOR:
 * Exporting character exports also quests, effects, items, etc., its desirable for save game,
   but other marshaling method should be applied for exporting character to use in different game
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
-* Tests for parsexml and data packages
+* Tests for data package
 * Camelcase names for consts in: quest
 * Remove stage modifiers from dialog, modifiers should be passed only through
   stage answers
@@ -31,6 +31,7 @@ MINOR:
 * Area weather
 * In-game time
 * Use action for armors and weapons
+* Character: remove currency items in ChargeReq function
 DONE:
 * Generating unique serial values for game objects
 * Save/load game mechanism
