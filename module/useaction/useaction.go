@@ -138,3 +138,26 @@ func (ua *UseAction) TargetEffects() (effects []*effect.Effect) {
 func (ua *UseAction) Requirements() []req.Requirement {
 	return ua.requirements
 }
+
+// Data creates data resource for use action.
+func (ua *UseAction) Data() res.UseActionData {
+	data := res.UseActionData{
+		UserMods:     effect.ModifiersData(ua.UserMods()...),
+		ObjectMods:   effect.ModifiersData(ua.ObjectMods()...),
+		TargetMods:   effect.ModifiersData(ua.TargetMods()...),
+		Requirements: req.RequirementsData(ua.Requirements()...),
+	}
+	for _, e := range ua.UserEffects() {
+		ed := res.UseActionEffectData{e.ID()}
+		data.UserEffects = append(data.UserEffects, ed)
+	}
+	for _, e := range ua.ObjectEffects() {
+		ed := res.UseActionEffectData{e.ID()}
+		data.ObjectEffects = append(data.ObjectEffects, ed)
+	}
+	for _, e := range ua.TargetEffects() {
+		ed := res.UseActionEffectData{e.ID()}
+		data.TargetEffects = append(data.TargetEffects, ed)
+	}
+	return data
+}
