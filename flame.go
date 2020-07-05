@@ -32,8 +32,7 @@ import (
 	"github.com/isangeles/flame/log"
 )
 
-// Struct for game, contains game
-// module and PCs.
+// Struct for game, a wrapper for the game module.
 type Game struct {
 	mod    *module.Module
 	npcAI  *ai.AI

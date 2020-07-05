@@ -36,6 +36,7 @@ func (o *Object) Data() res.ObjectData {
 		MaxHP:     o.MaxHealth(),
 		HP:        o.Health(),
 		Inventory: o.Inventory().Data(),
+		UseAction: o.UseAction().Data(),
 		Restore:   true,
 	}
 	data.PosX, data.PosY = o.Position()

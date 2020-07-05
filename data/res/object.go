@@ -44,7 +44,7 @@ type ObjectData struct {
 	PosX      float64            `xml:"pos-x,attr" json:"pos-x"`
 	PosY      float64            `xml:"pos-y,attr" json:"pos-y"`
 	Restore   bool               `xml:"restore,attr" json:"restore"`
-	Action    UseActionData      `xml:"action" json:"action"`
+	UseAction UseActionData      `xml:"action" json:"use-action"`
 	Inventory InventoryData      `xml:"inventory" json:"inventory"`
 	Effects   []ObjectEffectData `xml:"effects>effect" json:"effects"`
 }

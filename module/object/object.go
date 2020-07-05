@@ -61,7 +61,7 @@ func New(data res.ObjectData) *Object {
 		maxHP:  data.MaxHP,
 	}
 	ob.SetHealth(ob.MaxHealth())
-	ob.action = useaction.New(&ob, data.Action)
+	ob.action = useaction.New(&ob, data.UseAction)
 	ob.inventory = item.NewInventory(data.Inventory)
 	ob.inventory.SetCapacity(10)
 	ob.effects = make(map[string]*effect.Effect)
