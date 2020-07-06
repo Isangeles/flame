@@ -30,17 +30,18 @@ import (
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
-	"github.com/isangeles/flame/module/flag"
-	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/craft"
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/effect"
+	"github.com/isangeles/flame/module/flag"
 	"github.com/isangeles/flame/module/item"
+	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/quest"
-	"github.com/isangeles/flame/module/skill"
 	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/module/skill"
 	"github.com/isangeles/flame/module/train"
-	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/module/useaction"
 )
 
 // Character struct represents game character.
@@ -76,6 +77,7 @@ type Character struct {
 	dialogs          map[string]*dialog.Dialog
 	flags            map[string]flag.Flag
 	trainings        []train.Training
+	casted           useaction.Usable
 	chatlog          chan string
 	combatlog        chan string
 	privlog          chan string
@@ -195,7 +197,7 @@ func New(data res.CharacterData) *Character {
 		effect.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
 		c.AddEffect(effect)
 	}
-	// Memory. 
+	// Memory.
 	for _, memData := range data.Memory {
 		att := Attitude(memData.Attitude)
 		mem := TargetMemory{
@@ -280,6 +282,15 @@ func (c *Character) Update(delta int64) {
 		res := r.Make()
 		for _, i := range res {
 			c.Inventory().AddItem(i)
+		}
+	}
+	// Casting action.
+	if c.Casted() != nil {
+		time := c.Casted().UseAction().Cast() + delta
+		c.Casted().UseAction().SetCast(time)
+		if time >= c.Casted().UseAction().CastMax() {
+			c.useCasted(c.Casted())
+			c.casted = nil
 		}
 	}
 }
@@ -565,7 +576,7 @@ func (c *Character) Casting() bool {
 			return true
 		}
 	}
-	return false
+	return c.Casted() != nil
 }
 
 // Fighting checks if character is in combat.
@@ -728,6 +739,11 @@ func (c *Character) AreaID() string {
 // character area ID.
 func (c *Character) SetAreaID(areaID string) {
 	c.areaID = areaID
+}
+
+// Casted returns casted action.
+func (c *Character) Casted() useaction.Usable {
+	return c.casted
 }
 
 // levelup promotes character to next level.

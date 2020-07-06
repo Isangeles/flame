@@ -29,7 +29,8 @@ import (
 	"github.com/isangeles/flame/module/useaction"
 )
 
-// Use uses specified usable object.
+// Use checks requirements and starts cast action for
+// specified usable object.
 func (c *Character) Use(ob useaction.Usable) {
 	if ob.UseAction() == nil {
 		return
@@ -39,6 +40,12 @@ func (c *Character) Use(ob useaction.Usable) {
 		c.SendPrivate(lang.Text("cant_do_right_now"))
 		return
 	}
+	c.casted = ob
+}
+
+// useCasted applies modifiers and effects from specified
+// usable object on use action owner, user and user target.
+func (c *Character) useCasted(ob useaction.Usable) {
 	// Apply effects and modifiers.
 	c.TakeModifiers(ob, ob.UseAction().UserMods()...)
 	for _, e := range ob.UseAction().UserEffects() {

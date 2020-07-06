@@ -41,6 +41,8 @@ type Usable interface {
 // Struct for use action of usable object.
 type UseAction struct {
 	object        Usable
+	castMax       int64
+	cast          int64
 	userMods      []effect.Modifier
 	objectMods    []effect.Modifier
 	targetMods    []effect.Modifier
@@ -54,6 +56,7 @@ type UseAction struct {
 func New(ob Usable, data res.UseActionData) *UseAction {
 	ua := UseAction{
 		object:       ob,
+		castMax:      data.CastMax,
 		userMods:     effect.NewModifiers(data.UserMods),
 		objectMods:   effect.NewModifiers(data.ObjectMods),
 		targetMods:   effect.NewModifiers(data.TargetMods),
@@ -87,6 +90,21 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 		ua.targetEffects = append(ua.targetEffects, *data)
 	}
 	return &ua
+}
+
+// CastMax returns maxinal cast time in milliseconds.
+func (ua *UseAction) CastMax() int64 {
+	return ua.castMax
+}
+
+// Cast returns cast time in milliseconds.
+func (ua *UseAction) Cast() int64 {
+	return ua.cast
+}
+
+// SetCast sets current cast time.
+func (ua *UseAction) SetCast(cast int64) {
+	ua.cast = cast
 }
 
 // UserMods returns use modifiers for user.
@@ -142,6 +160,8 @@ func (ua *UseAction) Requirements() []req.Requirement {
 // Data creates data resource for use action.
 func (ua *UseAction) Data() res.UseActionData {
 	data := res.UseActionData{
+		CastMax:      ua.CastMax(),
+		Cast:         ua.Cast(),
 		UserMods:     effect.ModifiersData(ua.UserMods()...),
 		ObjectMods:   effect.ModifiersData(ua.ObjectMods()...),
 		TargetMods:   effect.ModifiersData(ua.TargetMods()...),

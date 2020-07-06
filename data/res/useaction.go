@@ -25,6 +25,8 @@ package res
 
 // Struct for use action data.
 type UseActionData struct {
+	CastMax       int64                 `xml:"cast-max,attr" json:"cast-max"`
+	Cast          int64                 `xml:"cast,attr" json:"cast"`
 	UserMods      ModifiersData         `xml:"user>modifiers" json:"user-mods"`
 	ObjectMods    ModifiersData         `xml:"object>modifiers" json:"object-mods"`
 	TargetMods    ModifiersData         `xml:"target>modifiers" json:"target-mods"`
