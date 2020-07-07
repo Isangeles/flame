@@ -40,27 +40,30 @@ type Usable interface {
 
 // Struct for use action of usable object.
 type UseAction struct {
-	object        Usable
-	castMax       int64
-	cast          int64
-	userMods      []effect.Modifier
-	objectMods    []effect.Modifier
-	targetMods    []effect.Modifier
-	userEffects   []res.EffectData
-	objectEffects []res.EffectData
-	targetEffects []res.EffectData
-	requirements  []req.Requirement
+	object            Usable
+	castMax           int64
+	cast              int64
+	userMods          []effect.Modifier
+	objectMods        []effect.Modifier
+	targetMods        []effect.Modifier
+	targetUserMods    []effect.Modifier
+	userEffects       []res.EffectData
+	objectEffects     []res.EffectData
+	targetEffects     []res.EffectData
+	targetUserEffects []res.EffectData
+	requirements      []req.Requirement
 }
 
 // New creates new use action.
 func New(ob Usable, data res.UseActionData) *UseAction {
 	ua := UseAction{
-		object:       ob,
-		castMax:      data.CastMax,
-		userMods:     effect.NewModifiers(data.UserMods),
-		objectMods:   effect.NewModifiers(data.ObjectMods),
-		targetMods:   effect.NewModifiers(data.TargetMods),
-		requirements: req.NewRequirements(data.Requirements),
+		object:         ob,
+		castMax:        data.CastMax,
+		userMods:       effect.NewModifiers(data.UserMods),
+		objectMods:     effect.NewModifiers(data.ObjectMods),
+		targetMods:     effect.NewModifiers(data.TargetMods),
+		targetUserMods: effect.NewModifiers(data.TargetUserMods),
+		requirements:   req.NewRequirements(data.Requirements),
 	}
 	for _, ed := range data.UserEffects {
 		data := res.Effect(ed.ID)
@@ -88,6 +91,15 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 			continue
 		}
 		ua.targetEffects = append(ua.targetEffects, *data)
+	}
+	for _, ed := range data.TargetUserEffects {
+		data := res.Effect(ed.ID)
+		if data == nil {
+			log.Err.Printf("%s %s: use action: effect not found: %s",
+				ua.object.ID(), ua.object.Serial(), ed.ID)
+			continue
+		}
+		ua.targetUserEffects = append(ua.targetUserEffects, *data)
 	}
 	return &ua
 }
@@ -122,6 +134,11 @@ func (ua *UseAction) TargetMods() []effect.Modifier {
 	return ua.targetMods
 }
 
+// TargetUserMods returns modifiers for user target or user.
+func (ua *UseAction) TargetUserMods() []effect.Modifier {
+	return ua.targetUserMods
+}
+
 // UserEffects returns use effects for user.
 func (ua *UseAction) UserEffects() (effects []*effect.Effect) {
 	for _, ed := range ua.userEffects {
@@ -145,6 +162,16 @@ func (ua *UseAction) ObjectEffects() (effects []*effect.Effect) {
 // TargetEffects returns use effects for user target.
 func (ua *UseAction) TargetEffects() (effects []*effect.Effect) {
 	for _, ed := range ua.targetEffects {
+		e := effect.New(ed)
+		e.SetSource(ua.object.ID(), ua.object.Serial())
+		effects = append(effects, e)
+	}
+	return
+}
+
+// TargetUserEffects returns use effects for user target or user.
+func (ua *UseAction) TargetUserEffects() (effects []*effect.Effect) {
+	for _, ed := range ua.targetUserEffects {
 		e := effect.New(ed)
 		e.SetSource(ua.object.ID(), ua.object.Serial())
 		effects = append(effects, e)
@@ -178,6 +205,10 @@ func (ua *UseAction) Data() res.UseActionData {
 	for _, e := range ua.TargetEffects() {
 		ed := res.UseActionEffectData{e.ID()}
 		data.TargetEffects = append(data.TargetEffects, ed)
+	}
+	for _, e := range ua.TargetUserEffects() {
+		ed := res.UseActionEffectData{e.ID()}
+		data.TargetUserEffects = append(data.TargetUserEffects, ed)
 	}
 	return data
 }

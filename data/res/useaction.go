@@ -25,15 +25,17 @@ package res
 
 // Struct for use action data.
 type UseActionData struct {
-	CastMax       int64                 `xml:"cast-max,attr" json:"cast-max"`
-	Cast          int64                 `xml:"cast,attr" json:"cast"`
-	UserMods      ModifiersData         `xml:"user>modifiers" json:"user-mods"`
-	ObjectMods    ModifiersData         `xml:"object>modifiers" json:"object-mods"`
-	TargetMods    ModifiersData         `xml:"target>modifiers" json:"target-mods"`
-	UserEffects   []UseActionEffectData `xml:"user>effects>effect" json:"user-effects"`
-	ObjectEffects []UseActionEffectData `xml:"object>effects>effect" json:"object-effects"`
-	TargetEffects []UseActionEffectData `xml:"target>effects>effect" json:"target-effects"`
-	Requirements  ReqsData              `xml:"reqs" json:"reqs"`
+	CastMax           int64                 `xml:"cast-max,attr" json:"cast-max"`
+	Cast              int64                 `xml:"cast,attr" json:"cast"`
+	UserMods          ModifiersData         `xml:"user>modifiers" json:"user-mods"`
+	ObjectMods        ModifiersData         `xml:"object>modifiers" json:"object-mods"`
+	TargetMods        ModifiersData         `xml:"target>modifiers" json:"target-mods"`
+	TargetUserMods    ModifiersData         `xml:"target-user>modifiers" json:"target-user-mods"`
+	UserEffects       []UseActionEffectData `xml:"user>effects>effect" json:"user-effects"`
+	ObjectEffects     []UseActionEffectData `xml:"object>effects>effect" json:"object-effects"`
+	TargetEffects     []UseActionEffectData `xml:"target>effects>effect" json:"target-effects"`
+	TargetUserEffects []UseActionEffectData `xml:"target-user>effects>effect" json:"target-user-effects"`
+	Requirements      ReqsData              `xml:"reqs" json:"reqs"`
 }
 
 // Struct for use action effect data.

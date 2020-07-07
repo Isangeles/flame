@@ -57,11 +57,20 @@ func (c *Character) useCasted(ob useaction.Usable) {
 			tar.TakeEffect(e)
 		}
 	}
-	if len(c.Targets()) > 0 {
+	if len(c.Targets()) > 0 && c.Targets()[0] != nil {
 		tar := c.Targets()[0]
 		tar.TakeModifiers(tar, ob.UseAction().TargetMods()...)
 		for _, e := range ob.UseAction().TargetEffects() {
 			tar.TakeEffect(e)
+		}
+		tar.TakeModifiers(tar, ob.UseAction().TargetUserMods()...)
+		for _, e := range ob.UseAction().TargetUserEffects() {
+			tar.TakeEffect(e)
+		}
+	} else {
+		c.TakeModifiers(ob, ob.UseAction().TargetUserMods()...)
+		for _, e := range ob.UseAction().TargetUserEffects() {
+			c.TakeEffect(e)
 		}
 	}
 }
