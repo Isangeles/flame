@@ -107,6 +107,10 @@ func (ob *Object) Update(delta int64) {
 			delete(ob.effects, serial)
 		}
 	}
+	// Use action.
+	if ob.UseAction() != nil {
+		ob.UseAction().Update(delta)
+	}
 }
 
 // ID returns object ID.
