@@ -68,6 +68,13 @@ func NewMisc(data res.MiscItemData) *Misc {
 	return &m
 }
 
+// Update updates item.
+func (m *Misc) Update(delta int64) {
+	if m.UseAction() != nil {
+		m.UseAction().Update(delta)
+	}
+}
+
 // ID returns item ID.
 func (m *Misc) ID() string {
 	return m.id

@@ -250,8 +250,9 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
-	// Journal.
+	// Journal && inventory.
 	c.Journal().Update(delta)
+	c.Inventory().Update(delta)
 	// Effects.
 	for serial, e := range c.effects {
 		e.Update(delta)

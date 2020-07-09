@@ -36,6 +36,7 @@ type Item interface {
 	Value() int
 	Level() int
 	UseAction() *useaction.UseAction
+	Update(d int64)
 }
 
 // Interface for 'equipable' items.

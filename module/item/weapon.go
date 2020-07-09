@@ -82,6 +82,13 @@ func NewWeapon(data res.WeaponData) *Weapon {
 	return &w
 }
 
+// Update updates item.
+func (w *Weapon) Update(delta int64) {
+	if w.UseAction() != nil {
+		w.UseAction().Update(delta)
+	}
+}
+
 // ID returns weapon ID.
 func (w *Weapon) ID() string {
 	return w.id

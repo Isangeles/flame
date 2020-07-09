@@ -93,6 +93,13 @@ func NewInventory(data res.InventoryData) *Inventory {
 	return inv
 }
 
+// Update updates all items in the inventory.
+func (inv *Inventory) Update(delta int64) {
+	for _, i := range inv.Items() {
+		i.Update(delta)
+	}
+}
+
 // Items returns all items in inventory.
 func (inv *Inventory) Items() (items []Item) {
 	for _, i := range inv.items {

@@ -71,6 +71,13 @@ func NewArmor(data res.ArmorData) *Armor {
 	return &a
 }
 
+// Update updates item.
+func (a *Armor) Update(delta int64) {
+	if a.UseAction() != nil {
+		a.UseAction().Update(delta)
+	}
+}
+
 // ID returns armor ID.
 func (a *Armor) ID() string {
 	return a.id
