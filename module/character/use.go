@@ -35,8 +35,9 @@ func (c *Character) Use(ob useaction.Usable) {
 	if ob.UseAction() == nil {
 		return
 	}
-	// Check requirements.
-	if !c.MeetReqs(ob.UseAction().Requirements()...) {
+	// Check requirements and cooldown.
+	if !c.MeetReqs(ob.UseAction().Requirements()...) ||
+		ob.UseAction().Cooldown() > 0 {
 		c.SendPrivate(lang.Text("cant_do_right_now"))
 		return
 	}
@@ -73,4 +74,6 @@ func (c *Character) useCasted(ob useaction.Usable) {
 			c.TakeEffect(e)
 		}
 	}
+	ob.UseAction().SetCast(0)
+	ob.UseAction().SetCooldown(ob.UseAction().CooldownMax())
 }

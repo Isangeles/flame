@@ -27,6 +27,8 @@ package res
 type UseActionData struct {
 	CastMax           int64                 `xml:"cast-max,attr" json:"cast-max"`
 	Cast              int64                 `xml:"cast,attr" json:"cast"`
+	CooldownMax       int64                 `xml:"cooldown-max,attr" json:"cooldown-max"`
+	Cooldown          int64                 `xml:"cooldown,attr" json:"cooldown"`
 	UserMods          ModifiersData         `xml:"user>modifiers" json:"user-mods"`
 	ObjectMods        ModifiersData         `xml:"object>modifiers" json:"object-mods"`
 	TargetMods        ModifiersData         `xml:"target>modifiers" json:"target-mods"`

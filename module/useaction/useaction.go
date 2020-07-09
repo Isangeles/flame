@@ -43,6 +43,8 @@ type UseAction struct {
 	object            Usable
 	castMax           int64
 	cast              int64
+	cooldownMax       int64
+	cooldown          int64
 	userMods          []effect.Modifier
 	objectMods        []effect.Modifier
 	targetMods        []effect.Modifier
@@ -59,6 +61,9 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 	ua := UseAction{
 		object:         ob,
 		castMax:        data.CastMax,
+		cast:           data.Cast,
+		cooldownMax:    data.CooldownMax,
+		cooldown:       data.Cooldown,
 		userMods:       effect.NewModifiers(data.UserMods),
 		objectMods:     effect.NewModifiers(data.ObjectMods),
 		targetMods:     effect.NewModifiers(data.TargetMods),
@@ -104,6 +109,16 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 	return &ua
 }
 
+// Update updates use action.
+func (ua *UseAction) Update(delta int64) {
+	if ua.Cooldown() > 0 {
+		ua.SetCooldown(ua.Cooldown() - delta)
+	}
+	if ua.Cooldown() < 0 {
+		ua.SetCooldown(0)
+	}
+}
+
 // CastMax returns maxinal cast time in milliseconds.
 func (ua *UseAction) CastMax() int64 {
 	return ua.castMax
@@ -117,6 +132,21 @@ func (ua *UseAction) Cast() int64 {
 // SetCast sets current cast time.
 func (ua *UseAction) SetCast(cast int64) {
 	ua.cast = cast
+}
+
+// CooldownMax returns maximal cooldown time in milliseconds.
+func (ua *UseAction) CooldownMax() int64 {
+	return ua.cooldownMax
+}
+
+// Cooldown returns current cooldown time in milliseconds.
+func (ua *UseAction) Cooldown() int64 {
+	return ua.cooldown
+}
+
+// SetCooldown sets cooldown time.
+func (ua *UseAction) SetCooldown(cooldown int64) {
+	ua.cooldown = cooldown
 }
 
 // UserMods returns use modifiers for user.
@@ -189,6 +219,8 @@ func (ua *UseAction) Data() res.UseActionData {
 	data := res.UseActionData{
 		CastMax:      ua.CastMax(),
 		Cast:         ua.Cast(),
+		CooldownMax:  ua.CooldownMax(),
+		Cooldown:     ua.Cooldown(),
 		UserMods:     effect.ModifiersData(ua.UserMods()...),
 		ObjectMods:   effect.ModifiersData(ua.ObjectMods()...),
 		TargetMods:   effect.ModifiersData(ua.TargetMods()...),
