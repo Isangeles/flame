@@ -18,7 +18,7 @@ MINOR:
 * Improve NPC AI(selecting skills proper to situation)
 * Refactor chapter's SetOnAreaAddedFunc to AddOnAreaAddedFunc, i.e. adding event functions,
   not just handling and overriding one function
-* Use sync.Map to store area objects(and subareas?)
+* Use sync.Map for: area objects(and subareas?), character flags
 * Exporting character exports also quests, effects, items, etc., its desirable for save game,
   but other marshaling method should be applied for exporting character to use in different game
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
@@ -32,6 +32,7 @@ MINOR:
 * In-game time
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
+* Effects with duration 0 should apply modifiers once and then deactivate
 DONE:
 * Generating unique serial values for game objects
 * Save/load game mechanism
