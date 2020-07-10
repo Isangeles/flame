@@ -35,14 +35,17 @@ type SkillsData struct {
 
 // Struct for skill data.
 type SkillData struct {
-	XMLName  xml.Name     `xml:"skill" json:"-"`
-	ID       string       `xml:"id,attr" json:"id"`
-	Name     string       `xml:"name,attr" json:"name"`
-	Cast     int64        `xml:"cast,attr" json:"cast"`
-	Cooldown int64        `xml:"cooldown,attr" json:"cooldown"`
-	Range    string       `xml:"range,attr" json:"range"`
-	Melee    bool         `xml:"melee,attr" json:"melee"`
-	Spell    bool         `xml:"spell,attr" json:"spell"`
-	UseReqs  ReqsData     `xml:"reqs" json:"reqs"`
-	Effects  []EffectData `xml:"effects>effect" json:"effect"`
+	XMLName  xml.Name          `xml:"skill" json:"-"`
+	ID       string            `xml:"id,attr" json:"id"`
+	Name     string            `xml:"name,attr" json:"name"`
+	Cast     int64             `xml:"cast,attr" json:"cast"`
+	Cooldown int64             `xml:"cooldown,attr" json:"cooldown"`
+	Range    string            `xml:"range,attr" json:"range"`
+	UseReqs  ReqsData          `xml:"reqs" json:"reqs"`
+	Effects  []SkillEffectData `xml:"effects>effect" json:"effect"`
+}
+
+// Struct for skill effect data.
+type SkillEffectData struct {
+	ID string `xml:"id,attr" json:"id"`
 }

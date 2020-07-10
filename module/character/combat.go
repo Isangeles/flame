@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/serial"
 	"github.com/isangeles/flame/module/skill"
 )
 
@@ -149,11 +150,16 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	// Add effect.
 	c.AddEffect(e)
 	// Memorize source as hostile.
-	mem := TargetMemory{
-		Attitude:     Hostile,
-	}
+	mem := TargetMemory{Attitude: Hostile}
 	mem.TargetID, mem.TargetSerial = e.Source()
 	c.MemorizeTarget(&mem)
+	// Add hit effects.
+	source := serial.Object(e.Source())
+	if s, ok := source.(effect.Target); ok && e.MeleeHit() {
+		for _, e := range s.HitEffects() {
+			c.TakeEffect(e)
+		}
+	}
 	// Send combat message.
 	msg := fmt.Sprintf("%s: %s: %s", c.Name(), lang.Text("ob_effect"), e.Name())
 	if config.Debug { // add effect serial ID to combat message

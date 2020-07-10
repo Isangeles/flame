@@ -38,6 +38,7 @@ type EffectData struct {
 	XMLName   xml.Name      `xml:"effect" json:"-"`
 	ID        string        `xml:"id,attr" json:"id"`
 	Duration  int64         `xml:"duration,attr" json:"duration"`
+	MeleeHit  bool          `xml:"melee-hit,attr" json:"melee-hit"`
 	Modifiers ModifiersData `xml:"modifiers" json:"modifiers"`
 }
 

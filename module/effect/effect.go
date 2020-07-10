@@ -41,6 +41,7 @@ type Effect struct {
 	duration         int64
 	time             int64
 	secTimer         int64
+	meleeHit         bool
 }
 
 // New creates new effect.
@@ -50,6 +51,7 @@ func New(data res.EffectData) *Effect {
 	e.name = lang.Text(e.ID())
 	e.modifiers = NewModifiers(data.Modifiers)
 	e.duration = int64(data.Duration)
+	e.meleeHit = data.MeleeHit
 	e.SetTime(data.Duration)
 	if len(e.name) < 1 {
 		e.name = lang.Text(e.id)
@@ -61,7 +63,7 @@ func New(data res.EffectData) *Effect {
 // Update updates effect.
 func (e *Effect) Update(delta int64) {
 	if e.Time() <= 0 {
-		log.Err.Printf("effect: %s#%s: no time left", e.ID(),
+		log.Err.Printf("effect: %s#%s: no time left: %d", e.ID(),
 			e.Serial(), e.duration)
 		return
 	}
@@ -111,6 +113,11 @@ func (e *Effect) Duration() int64 {
 // milliseconds.
 func (e *Effect) Time() int64 {
 	return e.time
+}
+
+// MeleeHit checks if this effect is a melee hit.
+func (e *Effect) MeleeHit() bool {
+	return e.meleeHit
 }
 
 // Source returns ID and serial value of effect
