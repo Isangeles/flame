@@ -62,7 +62,7 @@ func NewMisc(data res.MiscItemData) *Misc {
 		m.info = nameInfo[1]
 	}
 	// Use action.
-	m.useAction = useaction.New(&m, data.UseAction)
+	m.useAction = useaction.New(data.UseAction)
 	// Serial.
 	serial.Register(&m)
 	return &m

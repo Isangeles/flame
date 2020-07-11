@@ -48,28 +48,28 @@ func (c *Character) Use(ob useaction.Usable) {
 // usable object on use action owner, user and user target.
 func (c *Character) useCasted(ob useaction.Usable) {
 	// Apply effects and modifiers.
-	c.TakeModifiers(ob, ob.UseAction().UserMods()...)
+	c.TakeModifiers(c, ob.UseAction().UserMods()...)
 	for _, e := range ob.UseAction().UserEffects() {
 		c.TakeEffect(e)
 	}
 	if tar, ok := ob.(effect.Target); ok {
-		tar.TakeModifiers(ob, ob.UseAction().UserMods()...)
+		tar.TakeModifiers(c, ob.UseAction().UserMods()...)
 		for _, e := range ob.UseAction().UserEffects() {
 			tar.TakeEffect(e)
 		}
 	}
 	if len(c.Targets()) > 0 && c.Targets()[0] != nil {
 		tar := c.Targets()[0]
-		tar.TakeModifiers(tar, ob.UseAction().TargetMods()...)
+		tar.TakeModifiers(c, ob.UseAction().TargetMods()...)
 		for _, e := range ob.UseAction().TargetEffects() {
 			tar.TakeEffect(e)
 		}
-		tar.TakeModifiers(tar, ob.UseAction().TargetUserMods()...)
+		tar.TakeModifiers(c, ob.UseAction().TargetUserMods()...)
 		for _, e := range ob.UseAction().TargetUserEffects() {
 			tar.TakeEffect(e)
 		}
 	} else {
-		c.TakeModifiers(ob, ob.UseAction().TargetUserMods()...)
+		c.TakeModifiers(c, ob.UseAction().TargetUserMods()...)
 		for _, e := range ob.UseAction().TargetUserEffects() {
 			c.TakeEffect(e)
 		}

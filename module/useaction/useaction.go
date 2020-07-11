@@ -28,19 +28,16 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
-	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
 )
 
 // Interface for usable game objects.
 type Usable interface {
-	objects.Object
 	UseAction() *UseAction
 }
 
 // Struct for use action of usable object.
 type UseAction struct {
-	object            Usable
 	castMax           int64
 	cast              int64
 	cooldownMax       int64
@@ -57,9 +54,8 @@ type UseAction struct {
 }
 
 // New creates new use action.
-func New(ob Usable, data res.UseActionData) *UseAction {
+func New(data res.UseActionData) *UseAction {
 	ua := UseAction{
-		object:         ob,
 		castMax:        data.CastMax,
 		cast:           data.Cast,
 		cooldownMax:    data.CooldownMax,
@@ -73,8 +69,7 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 	for _, ed := range data.UserEffects {
 		data := res.Effect(ed.ID)
 		if data == nil {
-			log.Err.Printf("%s %s: use action: effect not found: %s",
-				ua.object.ID(), ua.object.Serial(), ed.ID)
+			log.Err.Printf("use action: effect not found: %s", ed.ID)
 			continue
 		}
 		ua.userEffects = append(ua.userEffects, *data)
@@ -82,8 +77,7 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 	for _, ed := range data.ObjectEffects {
 		data := res.Effect(ed.ID)
 		if data == nil {
-			log.Err.Printf("%s %s: use action: effect not found: %s",
-				ua.object.ID(), ua.object.Serial(), ed.ID)
+			log.Err.Printf("use action: effect not found: %s", ed.ID)
 			continue
 		}
 		ua.objectEffects = append(ua.objectEffects, *data)
@@ -91,8 +85,7 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 	for _, ed := range data.TargetEffects {
 		data := res.Effect(ed.ID)
 		if data == nil {
-			log.Err.Printf("%s %s: use action: effect not found: %s",
-				ua.object.ID(), ua.object.Serial(), ed.ID)
+			log.Err.Printf("use action: effect not found: %s", ed.ID)
 			continue
 		}
 		ua.targetEffects = append(ua.targetEffects, *data)
@@ -100,8 +93,7 @@ func New(ob Usable, data res.UseActionData) *UseAction {
 	for _, ed := range data.TargetUserEffects {
 		data := res.Effect(ed.ID)
 		if data == nil {
-			log.Err.Printf("%s %s: use action: effect not found: %s",
-				ua.object.ID(), ua.object.Serial(), ed.ID)
+			log.Err.Printf("use action: effect not found: %s", ed.ID)
 			continue
 		}
 		ua.targetUserEffects = append(ua.targetUserEffects, *data)
@@ -173,7 +165,6 @@ func (ua *UseAction) TargetUserMods() []effect.Modifier {
 func (ua *UseAction) UserEffects() (effects []*effect.Effect) {
 	for _, ed := range ua.userEffects {
 		e := effect.New(ed)
-		e.SetSource(ua.object.ID(), ua.object.Serial())
 		effects = append(effects, e)
 	}
 	return
@@ -183,7 +174,6 @@ func (ua *UseAction) UserEffects() (effects []*effect.Effect) {
 func (ua *UseAction) ObjectEffects() (effects []*effect.Effect) {
 	for _, ed := range ua.objectEffects {
 		e := effect.New(ed)
-		e.SetSource(ua.object.ID(), ua.object.Serial())
 		effects = append(effects, e)
 	}
 	return
@@ -193,7 +183,6 @@ func (ua *UseAction) ObjectEffects() (effects []*effect.Effect) {
 func (ua *UseAction) TargetEffects() (effects []*effect.Effect) {
 	for _, ed := range ua.targetEffects {
 		e := effect.New(ed)
-		e.SetSource(ua.object.ID(), ua.object.Serial())
 		effects = append(effects, e)
 	}
 	return
@@ -203,7 +192,6 @@ func (ua *UseAction) TargetEffects() (effects []*effect.Effect) {
 func (ua *UseAction) TargetUserEffects() (effects []*effect.Effect) {
 	for _, ed := range ua.targetUserEffects {
 		e := effect.New(ed)
-		e.SetSource(ua.object.ID(), ua.object.Serial())
 		effects = append(effects, e)
 	}
 	return
