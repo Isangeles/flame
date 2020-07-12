@@ -25,6 +25,7 @@ package skill
 
 import (
 	"github.com/isangeles/flame/module/effect"
+	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for skill users.
@@ -33,5 +34,5 @@ type User interface {
 	Skills() []*Skill
 	AddSkill(s *Skill)
 	RemoveSkill(s *Skill)
-	UseSkill(s *Skill)
+	Use(u useaction.Usable)
 }

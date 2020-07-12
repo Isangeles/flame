@@ -109,7 +109,7 @@ func (ai *AI) Update(delta int64) {
 			if skill == nil {
 				continue
 			}
-			npc.UseSkill(skill)
+			npc.Use(skill)
 		}
 		break
 	}

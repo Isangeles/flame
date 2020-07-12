@@ -33,7 +33,6 @@ import (
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/serial"
-	"github.com/isangeles/flame/module/skill"
 )
 
 // Damage retruns min and max damage value,
@@ -113,35 +112,6 @@ func (c *Character) HitEffects() []*effect.Effect {
 	effects := c.DamageEffects()
 	effects = append(effects, hitEffect...)
 	return effects
-}
-
-// UseSkill attempts to use specified skill on current target.
-// If character fail to use skill then proper message is sent
-// on character private chat channel.
-func (c *Character) UseSkill(s *skill.Skill) {
-	if c.Casting() || c.Moving() || c.cooldown > 0 {
-		msg := fmt.Sprintf("%s:%s:%s", c.Name(), s.Name(),
-			lang.Text("cant_do_right_now"))
-		c.SendPrivate(msg)
-		return
-	}
-	charSkill := c.skills[s.ID()]
-	if charSkill == s {
-		tar := c.Targets()[0]
-		err := s.Cast(c, tar)
-		if err != nil {
-			// Move to target if is too far.
-			if err == skill.TooFar {
-				c.SetDestPoint(tar.Position())
-			}
-			msg := fmt.Sprintf("%s: %s: %v", c.Name(), s.Name(), err)
-			c.SendPrivate(msg)
-		}
-		return
-	}
-	msg := fmt.Sprintf("%s: %s: %s", c.Name(), s.Name(),
-		lang.Text("skill_not_known"))
-	c.SendPrivate(msg)
 }
 
 // takeEffects adds specified effects

@@ -87,8 +87,8 @@ type Character struct {
 }
 
 const (
-	base_exp  = 1000
-	global_cd = 2000 // millis
+	baseExp  = 1000
+	globalCD = 2000 // millis
 )
 
 // New creates new character from specified data.
@@ -164,7 +164,7 @@ func New(data res.CharacterData) *Character {
 			continue
 		}
 		skill := skill.New(*skillData)
-		skill.SetCooldown(charSkillData.Cooldown)
+		skill.UseAction().SetCooldown(charSkillData.Cooldown)
 		c.AddSkill(skill)
 	}
 	// Add dialogs.
@@ -253,6 +253,10 @@ func (c *Character) Update(delta int64) {
 	// Journal && inventory.
 	c.Journal().Update(delta)
 	c.Inventory().Update(delta)
+	// Skills.
+	for _, s := range c.skills {
+		s.Update(delta)
+	}
 	// Effects.
 	for serial, e := range c.effects {
 		e.Update(delta)
@@ -260,18 +264,6 @@ func (c *Character) Update(delta int64) {
 		if e.Time() <= 0 {
 			delete(c.effects, serial)
 		}
-	}
-	// Skills.
-	for _, s := range c.Skills() {
-		s.Update(delta)
-		if !s.Casted() {
-			continue
-		}
-		s.Activate()
-		if c.onSkillActivated != nil {
-			c.onSkillActivated(s)
-		}
-		c.cooldown = global_cd
 	}
 	// Recipes.
 	for _, r := range c.Crafting().Recipes() {
@@ -567,11 +559,6 @@ func (c *Character) Moving() bool {
 // Casting checks whether character casts
 // something.
 func (c *Character) Casting() bool {
-	for _, s := range c.Skills() {
-		if s.Casting() {
-			return true
-		}
-	}
 	for _, r := range c.Crafting().Recipes() {
 		if r.Casting() {
 			return true
@@ -629,11 +616,7 @@ func (c *Character) SetOnHealthModFunc(f func(v int)) {
 // Interrupt stops any acction(like skill
 // casting) performed by character.
 func (c *Character) Interrupt() {
-	for _, s := range c.skills {
-		if s.Casting() {
-			s.StopCast()
-		}
-	}
+	c.casted = nil
 }
 
 // SendChat sends specified text to character
@@ -752,7 +735,7 @@ func (c *Character) levelup() {
 	c.level += 1
 	c.SetHealth(c.MaxHealth())
 	c.SetMana(c.MaxMana())
-	c.maxExp = base_exp * c.Level()
+	c.maxExp = baseExp * c.Level()
 }
 
 // agonyHP returns value of health causing

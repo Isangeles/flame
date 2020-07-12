@@ -24,9 +24,9 @@
 package character
 
 import (
-	"github.com/isangeles/flame/module/req"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/req"
 )
 
 // ReqsMeet checks whether all specified requirements
@@ -38,6 +38,18 @@ func (c *Character) MeetReqs(reqs ...req.Requirement) bool {
 		}
 	}
 	return true
+}
+
+// MeetTargetRangeReqs check if all target range requirements are meet.
+func (c *Character) MeetTargetRangeReqs(reqs ...req.Requirement) (meet bool) {
+	for _, r := range reqs {
+		if r, ok := r.(*req.TargetRange); ok {
+			if !c.MeetReq(r) {
+				meet = false
+			}
+		}
+	}
+	return
 }
 
 // ChargeReqs takes from character all things that makes
@@ -75,7 +87,7 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 		val := 0
 		for _, it := range c.Inventory().Items() {
 			misc, ok := it.(*item.Misc)
-			if ! ok {
+			if !ok {
 				continue
 			}
 			if !misc.Currency() {
@@ -105,7 +117,7 @@ func (c *Character) ChargeReq(r req.Requirement) {
 	}
 	switch r := r.(type) {
 	case *req.Item:
-		for i := 0; i < r.ItemAmount(); i ++ {
+		for i := 0; i < r.ItemAmount(); i++ {
 			for _, i := range c.Inventory().Items() {
 				if i.ID() != r.ItemID() {
 					continue
