@@ -44,11 +44,12 @@ type EffectData struct {
 
 // Struct for modifiers data resource.
 type ModifiersData struct {
-	XMLName    xml.Name        `xml:"modifiers" json:"-"`
-	HealthMods []HealthModData `xml:"health-mod" json:"health-mods"`
-	FlagMods   []FlagModData   `xml:"flag-mod" json:"flag-mods"`
-	QuestMods  []QuestModData  `xml:"quest-mod" json:"quest-mods"`
-	AreaMods   []AreaModData   `xml:"area-mod" json:"area-mods"`
+	XMLName     xml.Name         `xml:"modifiers" json:"-"`
+	HealthMods  []HealthModData  `xml:"health-mod" json:"health-mods"`
+	FlagMods    []FlagModData    `xml:"flag-mod" json:"flag-mods"`
+	QuestMods   []QuestModData   `xml:"quest-mod" json:"quest-mods"`
+	AreaMods    []AreaModData    `xml:"area-mod" json:"area-mods"`
+	AddItemMods []AddItemModData `xml:"add-item-mod" json:"add-item-mods"`
 }
 
 // Struct for health modifier
@@ -77,4 +78,10 @@ type AreaModData struct {
 	ID     string  `xml:"id,attr" json:"id"`
 	EnterX float64 `xml:"enter-pos-x,attr" json:"enter-pos-x"`
 	EnterY float64 `xml:"enter-pos-y,attr" json:"enter-pos-y"`
+}
+
+// Struct for add item modifier data.
+type AddItemModData struct {
+	ItemID string `xml:"item-id,attr" json:"item-id"`
+	Amount int    `xml:"amount,attr" json:"amount"`
 }

@@ -28,10 +28,11 @@ import (
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
+	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/quest"
-	"github.com/isangeles/flame/log"
 )
 
 // TakeModifiers handles all specified modifiers.
@@ -72,10 +73,22 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 	case *effect.QuestMod:
 		data := res.Quest(m.QuestID())
 		if data == nil {
-			log.Err.Printf("char: %s#%s: quest mod: data not found:%s", m.QuestID())
+			log.Err.Printf("char: %s %s: quest mod: data not found: %s", c.ID(),
+				c.Serial(), m.QuestID())
 			break
 		}
 		q := quest.New(*data)
 		c.Journal().AddQuest(q)
+	case *effect.AddItemMod:
+		data := res.Item(m.ItemID())
+		if data == nil {
+			log.Err.Printf("char: %s %s: add item mod: data not found: %s", c.ID(),
+				c.Serial(), m.ItemID())
+			break
+		}
+		for i := 0; i < m.Amount(); i++ {
+			i := item.New(data)
+			c.Inventory().AddItem(i)
+		}
 	}
 }

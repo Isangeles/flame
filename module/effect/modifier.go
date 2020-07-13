@@ -48,6 +48,10 @@ func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 		areaMod := NewAreaMod(md)
 		mods = append(mods, areaMod)
 	}
+	for _, md := range data.AddItemMods {
+		addItemMod := NewAddItemMod(md)
+		mods = append(mods, addItemMod)
+	}
 	return
 }
 
@@ -63,6 +67,8 @@ func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
 			data.QuestMods = append(data.QuestMods, m.Data())
 		case *AreaMod:
 			data.AreaMods = append(data.AreaMods, m.Data())
+		case *AddItemMod:
+			data.AddItemMods = append(data.AddItemMods, m.Data())
 		}
 	}
 	return
