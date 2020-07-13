@@ -28,11 +28,11 @@ import (
 	"sync"
 
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
-	"github.com/isangeles/flame/log"
 )
 
 // Area struct represents game world area.
@@ -53,7 +53,7 @@ func New(data res.AreaData) *Area {
 	// Characters.
 	for _, areaCharData := range data.Characters {
 		// Retireve char data.
-		charData := res.Character(areaCharData.ID, "")
+		charData := res.Character(areaCharData.ID, areaCharData.Serial)
 		if charData == nil {
 			log.Err.Printf("area: %s: npc data not found: %s",
 				a.ID(), areaCharData.ID)
@@ -70,7 +70,7 @@ func New(data res.AreaData) *Area {
 	// Objects.
 	for _, areaObData := range data.Objects {
 		// Retrieve object data.
-		obData := res.Object(areaObData.ID, "")
+		obData := res.Object(areaObData.ID, areaObData.Serial)
 		if obData == nil {
 			log.Err.Printf("area %s: object data not found: %s",
 				a.ID(), areaObData.ID)
@@ -238,15 +238,17 @@ func (a *Area) Data() res.AreaData {
 	}
 	for _, c := range a.Characters() {
 		charData := res.AreaCharData{
-			ID: c.ID(),
-			AI: c.AI(),
+			ID:     c.ID(),
+			Serial: c.Serial(),
+			AI:     c.AI(),
 		}
 		charData.PosX, charData.PosY = c.Position()
 		data.Characters = append(data.Characters, charData)
 	}
 	for _, o := range a.Objects() {
 		obData := res.AreaObjectData{
-			ID: o.ID(),
+			ID:     o.ID(),
+			Serial: o.Serial(),
 		}
 		obData.PosX, obData.PosY = o.Position()
 		data.Objects = append(data.Objects, obData)
