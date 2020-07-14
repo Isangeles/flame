@@ -268,14 +268,6 @@ func (c *Character) Update(delta int64) {
 	// Recipes.
 	for _, r := range c.Crafting().Recipes() {
 		r.Update(delta)
-		if !r.Casted() {
-			continue
-		}
-		c.ChargeReqs(r.Reqs()...)
-		res := r.Make()
-		for _, i := range res {
-			c.Inventory().AddItem(i)
-		}
 	}
 	// Casting action.
 	if c.Casted() != nil {
@@ -554,17 +546,6 @@ func (c *Character) Moving() bool {
 	} else {
 		return false
 	}
-}
-
-// Casting checks whether character casts
-// something.
-func (c *Character) Casting() bool {
-	for _, r := range c.Crafting().Recipes() {
-		if r.Casting() {
-			return true
-		}
-	}
-	return c.Casted() != nil
 }
 
 // Fighting checks if character is in combat.

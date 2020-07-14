@@ -35,17 +35,9 @@ type RecipesData struct {
 
 // Struct for recipe data.
 type RecipeData struct {
-	ID       string             `xml:"id,attr" json:"id"`
-	Category string             `xml:"category,attr" json:"category"`
-	Cast     int64              `xml:"cast,attr" json:"cast"`
-	Results  []RecipeResultData `xml:"results>result" json:"results"`
-	Reqs     ReqsData           `xml:"reqs" json:"reqs"`
-}
-
-// Struct for recipe result data.
-type RecipeResultData struct {
-	ID     string `xml:"id,attr" json:"id"`
-	Amount int    `xml:"amount,attr" json:"amount"`
+	ID        string        `xml:"id,attr" json:"id"`
+	Category  string        `xml:"category,attr" json:"category"`
+	UseAction UseActionData `xml:"use" json:"use"`
 }
 
 // Struct for crafting data.

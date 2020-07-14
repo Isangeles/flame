@@ -64,7 +64,7 @@ func (ai *AI) Update(delta int64) {
 	for _, npc := range ai.npcs {
 		// Move around.
 		if ai.moveTimer >= moveFreq {
-			if npc.Casting() || npc.Moving() || npc.Fighting() || npc.Agony() {
+			if npc.Casted() != nil || npc.Moving() || npc.Fighting() || npc.Agony() {
 				continue
 			}
 			posX, posY := npc.Position()
@@ -77,7 +77,7 @@ func (ai *AI) Update(delta int64) {
 		}
 		// Random chat.
 		if ai.chatTimer >= chatFreq {
-			if npc.Casting() || npc.Moving() || npc.Fighting() || npc.Agony() {
+			if npc.Casted() != nil || npc.Moving() || npc.Fighting() || npc.Agony() {
 				continue
 			}
 			ai.saySomething(npc)

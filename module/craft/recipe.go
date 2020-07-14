@@ -26,74 +26,36 @@ package craft
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
-	"github.com/isangeles/flame/module/item"
-	"github.com/isangeles/flame/module/req"
+	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for recipes.
 type Recipe struct {
-	id          string
-	name, info  string
-	catID       string
-	res         []res.RecipeResultData
-	reqs        []req.Requirement
-	castTime    int64
-	castTimeMax int64
-	casting     bool
-	casted      bool
+	id        string
+	name      string
+	info      string
+	category  string
+	useAction *useaction.UseAction
 }
 
 // NewRecipe creates new crafting recipe.
 func NewRecipe(data res.RecipeData) *Recipe {
-	r := new(Recipe)
-	r.id = data.ID
-	r.catID = data.Category
-	r.res = data.Results
-	r.reqs = req.NewRequirements(data.Reqs)
-	r.castTimeMax = data.Cast
+	r := Recipe{
+		id:        data.ID,
+		category:  data.Category,
+		useAction: useaction.New(data.UseAction),
+	}
 	nameInfo := lang.Texts(r.ID())
 	r.name = nameInfo[0]
 	if len(nameInfo) > 1 {
 		r.info = nameInfo[1]
 	}
-	return r
+	return &r
 }
 
 // Update updates recipe.
 func (r *Recipe) Update(delta int64) {
-	if r.casting {
-		r.castTime += delta
-		if r.castTime >= r.castTimeMax {
-			r.casting = false
-			r.casted = true
-		}
-	}
-}
-
-// Make creates, assigns serials and
-// returns items from recipe.
-func (r *Recipe) Make() []item.Item {
-	r.casted = false
-	items := make([]item.Item, 0)
-	for _, resData := range r.res {
-		itemData := res.Item(resData.ID)
-		switch d := itemData.(type) {
-		case res.WeaponData:
-			it := item.NewWeapon(d)
-			items = append(items, it)
-		case res.MiscItemData:
-			it := item.NewMisc(d)
-			items = append(items, it)
-		}
-	}
-	return items
-}
-
-// Cast starts casting make
-// recipe action.
-func (r *Recipe) Cast() {
-	r.castTime = 0
-	r.casting = true
+	r.UseAction().Update(delta)
 }
 
 // ID returns recipe ID.
@@ -111,41 +73,12 @@ func (r *Recipe) Info() string {
 	return r.info
 }
 
-// CategoryID returns ID of recipe category.
-func (r *Recipe) CategoryID() string {
-	return r.catID
+// Category returns ID of recipe category.
+func (r *Recipe) Category() string {
+	return r.category
 }
 
-// Reqs returns recipe requirements
-func (r *Recipe) Reqs() []req.Requirement {
-	return r.reqs
-}
-
-// Result returns recipe result data.
-func (r *Recipe) Result() []res.RecipeResultData {
-	return r.res
-}
-
-// CastTime returns current casting
-// time in millisecond.
-func (r *Recipe) CastTime() int64 {
-	return r.castTime
-}
-
-// CastTimeMax returns maximal casting
-// time in milliseconds.
-func (r *Recipe) CastTimeMax() int64 {
-	return r.castTimeMax
-}
-
-// Casting checks if recipe make action
-// is active.
-func (r *Recipe) Casting() bool {
-	return r.casting
-}
-
-// Casted checks if recipe make action
-// was finished.
-func (r *Recipe) Casted() bool {
-	return r.casted
+// UseAction returns recipe use action.
+func (r *Recipe) UseAction() *useaction.UseAction {
+	return r.useAction
 }
