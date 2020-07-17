@@ -31,7 +31,7 @@ MINOR:
 * In-game time
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
-* Effects with duration 0 should apply modifiers once and then deactivate
+* Info for skills
 DONE:
 * Generating unique serial values for game objects
 * Save/load game mechanism

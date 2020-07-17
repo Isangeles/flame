@@ -42,6 +42,7 @@ type Effect struct {
 	time             int64
 	secTimer         int64
 	meleeHit         bool
+	started          bool
 }
 
 // New creates new effect.
@@ -62,11 +63,12 @@ func New(data res.EffectData) *Effect {
 
 // Update updates effect.
 func (e *Effect) Update(delta int64) {
-	if e.Time() <= 0 {
+	if e.started && e.Time() <= 0 {
 		log.Err.Printf("effect: %s#%s: no time left: %d", e.ID(),
 			e.Serial(), e.duration)
 		return
 	}
+	e.started = true
 	object := serial.Object(e.tarID, e.tarSerial)
 	if object == nil {
 		log.Err.Printf("effect: %s#%s: target not found: %s#%s",

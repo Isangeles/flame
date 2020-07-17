@@ -105,7 +105,6 @@ func (c *Character) HitEffects() []*effect.Effect {
 	}
 	hitData := res.EffectData{
 		ID:        c.ID() + c.Serial() + "_hit",
-		Duration:  1000,
 		Modifiers: mods,
 	}
 	hitEffect := c.buildEffects(hitData)
