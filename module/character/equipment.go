@@ -39,39 +39,24 @@ type Equipment struct {
 
 // Struct for equipment slots.
 type EquipmentSlot struct {
-	sType EquipmentSlotType
-	item  item.Equiper
+	slotType item.Slot
+	item     item.Equiper
 }
-
-// Type for equipment slot type.
-type EquipmentSlotType string
-
-const (
-	Head EquipmentSlotType = EquipmentSlotType("eqSlotHead")
-	Neck = EquipmentSlotType("eqSlotNeck")
-	Chest = EquipmentSlotType("eqSlotChest")
-	HandRight = EquipmentSlotType("eqSlotHandRight")
-	HandLeft = EquipmentSlotType("eqSlotHandLeft")
-	FingerRight = EquipmentSlotType("eqSlotFingerRight")
-	FingerLeft = EquipmentSlotType("eqSlotFingerLeft")
-	Legs = EquipmentSlotType("eqSlotLegs")
-	Feet = EquipmentSlotType("eqSlotFeet")
-)
 
 // newEquipment creates new equipment for
 // specified character.
 func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 	eq := new(Equipment)
 	eq.char = char
-	eq.slots = append(eq.slots, newEquipmentSlot(Head))
-	eq.slots = append(eq.slots, newEquipmentSlot(Neck))
-	eq.slots = append(eq.slots, newEquipmentSlot(Chest))
-	eq.slots = append(eq.slots, newEquipmentSlot(HandRight))
-	eq.slots = append(eq.slots, newEquipmentSlot(HandLeft))
-	eq.slots = append(eq.slots, newEquipmentSlot(FingerRight))
-	eq.slots = append(eq.slots, newEquipmentSlot(FingerLeft))
-	eq.slots = append(eq.slots, newEquipmentSlot(Legs))
-	eq.slots = append(eq.slots, newEquipmentSlot(Feet))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Head))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Neck))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Chest))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Hand))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Hand))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Finger))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Finger))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Legs))
+	eq.slots = append(eq.slots, newEquipmentSlot(item.Feet))
 	for _, itData := range data.Items {
 		it := char.Inventory().Item(itData.ID, itData.Serial)
 		if it == nil {
@@ -89,9 +74,9 @@ func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 		if !char.MeetReqs(eqItem.EquipReqs()...) {
 			continue
 		}
-		st := EquipmentSlotType(itData.Slot)
+		slot := item.Slot(itData.Slot)
 		for _, s := range eq.Slots() {
-			if s.Type() != st {
+			if s.Type() != slot {
 				continue
 			}
 			s.SetItem(eqItem)
@@ -102,9 +87,9 @@ func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 
 // newEquipmentSlot creates new equipment slot for
 // specified slot type.
-func newEquipmentSlot(sType EquipmentSlotType) *EquipmentSlot {
+func newEquipmentSlot(slotType item.Slot) *EquipmentSlot {
 	s := new(EquipmentSlot)
-	s.sType = sType
+	s.slotType = slotType
 	return s
 }
 
@@ -114,19 +99,10 @@ func (eq *Equipment) Equip(it item.Equiper) error {
 	if !eq.char.MeetReqs(it.EquipReqs()...) {
 		return fmt.Errorf("reqs not meet")
 	}
-	for _, s := range it.Slots() {
-		switch s {
-		case item.Hand:
-			for _, s := range eq.Slots() {
-				if s.Type() == HandRight {
-					s.SetItem(it)
-				}
-			}
-		case item.Chest:
-			for _, s := range eq.Slots() {
-				if s.Type() == Chest {
-					s.SetItem(it)
-				}
+	for _, itSlot := range it.Slots() {
+		for _, eqSlot := range eq.Slots() {
+			if eqSlot.Type() == itSlot {
+				eqSlot.SetItem(it)
 			}
 		}
 	}
@@ -197,8 +173,8 @@ func (eq *Equipment) Data() res.EquipmentData {
 }
 
 // Type returns slot type.
-func (eqSlot *EquipmentSlot) Type() EquipmentSlotType {
-	return eqSlot.sType
+func (eqSlot *EquipmentSlot) Type() item.Slot {
+	return eqSlot.slotType
 }
 
 // Item returns slot item or nil if slot is empty.
@@ -209,26 +185,4 @@ func (eqSlot *EquipmentSlot) Item() item.Equiper {
 // SetItem sets inserts specified item to slot.
 func (eqSlot *EquipmentSlot) SetItem(it item.Equiper) {
 	eqSlot.item = it
-}
-
-// compact checks whether equipment slot is compatible with
-// specified item slot.
-func (eqSlotType EquipmentSlotType) compact(itSlot item.Slot) bool {
-	switch eqSlotType {
-	case Head:
-		return itSlot == item.Head
-	case Neck:
-		return itSlot == item.Neck
-	case Chest:
-		return itSlot == item.Chest
-	case HandRight, HandLeft:
-		return itSlot == item.Hand
-	case FingerRight, FingerLeft:
-		return itSlot == item.Finger
-	case Legs:
-		return itSlot == item.Legs
-	case Feet:
-		return itSlot == item.Feet
-	}
-	return false
 }

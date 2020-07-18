@@ -41,7 +41,7 @@ func (c *Character) Damage() (int, int) {
 	min, max := c.Attributes().Damage()
 	var rightHandItem item.Equiper
 	for _, s := range c.Equipment().Slots() {
-		if s.Type() != HandRight {
+		if s.Type() != item.Hand {
 			continue
 		}
 		rightHandItem = s.Item()
@@ -62,7 +62,7 @@ func (c *Character) Damage() (int, int) {
 func (c *Character) DamageType() objects.Element {
 	var rightHandItem item.Equiper
 	for _, s := range c.Equipment().Slots() {
-		if s.Type() != HandRight {
+		if s.Type() != item.Hand {
 			continue
 		}
 		rightHandItem = s.Item()
@@ -81,7 +81,7 @@ func (c *Character) DamageEffects() []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
 	var rightHandItem item.Equiper
 	for _, s := range c.Equipment().Slots() {
-		if s.Type() != HandRight {
+		if s.Type() != item.Hand {
 			continue
 		}
 		rightHandItem = s.Item()
