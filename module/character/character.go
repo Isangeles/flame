@@ -115,7 +115,6 @@ func New(data res.CharacterData) *Character {
 	c.crafting = craft.NewCrafting(data.Crafting, &c)
 	c.live = true
 	c.inventory.SetCapacity(c.Attributes().Lift())
-	c.targets = make([]effect.Target, 1)
 	c.effects = make(map[string]*effect.Effect)
 	c.skills = make(map[string]*skill.Skill)
 	c.memory = make(map[string]*TargetMemory)
@@ -536,7 +535,7 @@ func (c *Character) Targets() []effect.Target {
 // SetTarget sets specified 'targetable' as current
 // target.
 func (c *Character) SetTarget(t effect.Target) {
-	c.targets[0] = t
+	c.targets = []effect.Target{t}
 }
 
 // Moving checks whether character is moving.
@@ -550,8 +549,11 @@ func (c *Character) Moving() bool {
 
 // Fighting checks if character is in combat.
 func (c *Character) Fighting() bool {
-	tar := c.Targets()[0]
-	if tar != nil && c.AttitudeFor(tar) == Hostile {
+	if len(c.Targets()) > 0 {
+		tar := c.Targets()[0]
+		if c.AttitudeFor(tar) != Hostile {
+			return false
+		}
 		tarPos, ok := tar.(objects.Positioner)
 		if !ok {
 			return false

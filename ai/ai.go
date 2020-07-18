@@ -83,9 +83,9 @@ func (ai *AI) Update(delta int64) {
 			ai.saySomething(npc)
 		}
 		// Combat.
-		tar := npc.Targets()[0]
-		if tar == nil || npc.AttitudeFor(tar) != character.Hostile {
+		if len(npc.Targets()) < 1 || npc.AttitudeFor(npc.Targets()[0]) != character.Hostile {
 			// Look for hostile target.
+			var tar effect.Target
 			area := ai.mod.Chapter().CharacterArea(npc)
 			if area == nil {
 				continue
