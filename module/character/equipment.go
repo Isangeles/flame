@@ -24,8 +24,6 @@
 package character
 
 import (
-	"fmt"
-	
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/log"
@@ -93,33 +91,13 @@ func newEquipmentSlot(slotType item.Slot) *EquipmentSlot {
 	return s
 }
 
-// Equip add specified equipable item to all
-// compatible slots.
-func (eq *Equipment) Equip(it item.Equiper) error {
-	if !eq.char.MeetReqs(it.EquipReqs()...) {
-		return fmt.Errorf("reqs not meet")
-	}
-	for _, itSlot := range it.Slots() {
-		for _, eqSlot := range eq.Slots() {
-			if eqSlot.Type() == itSlot {
-				eqSlot.SetItem(it)
-			}
-		}
-	}
-	if !eq.Equiped(it) {
-		return fmt.Errorf("no compatible slots")
-	}
-	return nil
-}
-
 // Unequip removes specified item from all
 // compatible slots.
 func (eq *Equipment) Unequip(it item.Equiper) {
 	for _, s := range eq.Slots() {
-		if s.Item() != it {
-			continue
+		if s.Item() == it {
+			s.SetItem(nil)
 		}
-		s.SetItem(nil)
 	}
 }
 
