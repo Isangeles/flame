@@ -37,6 +37,7 @@ type Equipment struct {
 
 // Struct for equipment slots.
 type EquipmentSlot struct {
+	id       int
 	slotType item.Slot
 	item     item.Equiper
 }
@@ -46,26 +47,26 @@ type EquipmentSlot struct {
 func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 	eq := new(Equipment)
 	eq.char = char
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Head))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Neck))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Chest))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Hand))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Hand))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Finger))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Finger))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Legs))
-	eq.slots = append(eq.slots, newEquipmentSlot(item.Feet))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Head))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Neck))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Chest))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Hand))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Hand))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Finger))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Finger))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Legs))
+	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Feet))
 	for _, itData := range data.Items {
 		it := char.Inventory().Item(itData.ID, itData.Serial)
 		if it == nil {
-			log.Err.Printf("character: %s: eq: fail to retrieve eq item from inv: %s",
-				char.ID(), itData.ID)
+			log.Err.Printf("character: %s %s: eq: unable to retrieve item from inventory: %s",
+				char.ID(), char.Serial(), itData.ID)
 			continue
 		}
 		eqItem, ok := it.(item.Equiper)
 		if !ok {
-			log.Err.Printf("character: %s: eq: not eqipable item: %s",
-				char.ID(), it.ID())
+			log.Err.Printf("character: %s %s: eq: not eqipable item: %s",
+				char.ID(), char.Serial(), it.ID())
 			continue
 		}
 		// Equip.
@@ -74,21 +75,13 @@ func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 		}
 		slot := item.Slot(itData.Slot)
 		for _, s := range eq.Slots() {
-			if s.Type() != slot {
+			if s.Type() != slot || s.ID() != itData.SlotID {
 				continue
 			}
 			s.SetItem(eqItem)
 		}
 	}
 	return eq
-}
-
-// newEquipmentSlot creates new equipment slot for
-// specified slot type.
-func newEquipmentSlot(slotType item.Slot) *EquipmentSlot {
-	s := new(EquipmentSlot)
-	s.slotType = slotType
-	return s
 }
 
 // Unequip removes specified item from all
@@ -144,10 +137,16 @@ func (eq *Equipment) Data() res.EquipmentData {
 			ID:     s.Item().ID(),
 			Serial: s.Item().Serial(),
 			Slot:   string(s.Type()),
+			SlotID: s.ID(),
 		}
 		data.Items = append(data.Items, eqItemData)
 	}
 	return data
+}
+
+// ID returns slot ID.
+func (eqSlot *EquipmentSlot) ID() int {
+	return eqSlot.id
 }
 
 // Type returns slot type.
@@ -163,4 +162,20 @@ func (eqSlot *EquipmentSlot) Item() item.Equiper {
 // SetItem sets inserts specified item to slot.
 func (eqSlot *EquipmentSlot) SetItem(it item.Equiper) {
 	eqSlot.item = it
+}
+
+// newEquipmentSlot creates new equipment slot for
+// specified slot type.
+func (eq *Equipment) newEquipmentSlot(slotType item.Slot) *EquipmentSlot {
+	s := new(EquipmentSlot)
+	s.slotType = slotType
+	// Count existing slots with specified type and set unique ID for new slot.
+	slots := make([]*EquipmentSlot, 0)
+	for _, s := range eq.Slots() {
+		if s.Type() == slotType {
+			slots = append(slots, s)
+		}
+	}
+	s.id = len(slots)
+	return s
 }

@@ -87,6 +87,7 @@ type EquipmentItemData struct {
 	ID     string `xml:"id,attr" json:"id"`
 	Serial string `xml:"serial,attr" json:"serial"`
 	Slot   string `xml:"slot,attr" json:"slot"`
+	SlotID int    `xml:"slot-id,attr" json:"slot-id"`
 }
 
 // Struct for attitude memory data.
