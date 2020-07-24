@@ -28,7 +28,6 @@ import (
 	"fmt"
 	
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/data"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module"
@@ -37,13 +36,8 @@ import (
 
 // Main function.
 func main() {
-	// Load flame config.
-	err := config.Load()
-	if err != nil {
-		panic(fmt.Errorf("Unable to load config: %v", err))
-	}
-	// Import module from config.
-	modData, err := data.ImportModule(config.ModulePath())
+	// Import game module from file system.
+	modData, err := data.ImportModule("data/modules/test")
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
