@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<characters>
+ <char id="char"
+        gender="genderMale"
+        race="raceHuman"
+        attitude="attHostile"
+        alignment="aliChaoticGood"
+        guild=""
+        level="1">
+    <attributes strenght="2"
+                constitution="3"
+                dexterity="3"
+                intelligence="1"
+                wisdom="0"/>
+  </char>
+</characters>
