@@ -90,5 +90,11 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 			i := item.New(data)
 			c.Inventory().AddItem(i)
 		}
+	case *effect.AttributeMod:
+		c.Attributes().Str += m.Strength()
+		c.Attributes().Con += m.Constitution()
+		c.Attributes().Dex += m.Dexterity()
+		c.Attributes().Int += m.Intelligence()
+		c.Attributes().Wis += m.Wisdom()
 	}
 }

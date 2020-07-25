@@ -59,7 +59,7 @@ type Character struct {
 	attitude         Attitude
 	alignment        Alignment
 	guild            Guild
-	attributes       Attributes
+	attributes       *Attributes
 	resilience       objects.Resilience
 	posX, posY       float64
 	destX, destY     float64
@@ -94,21 +94,15 @@ const (
 // New creates new character from specified data.
 func New(data res.CharacterData) *Character {
 	c := Character{
-		id:        data.ID,
-		name:      data.Name,
-		ai:        data.AI,
-		sex:       Gender(data.Sex),
-		attitude:  Attitude(data.Attitude),
-		alignment: Alignment(data.Alignment),
-		inventory: item.NewInventory(data.Inventory),
-		trainings: train.NewTrainings(data.Trainings),
-	}
-	c.attributes = Attributes{
-		Str: data.Attributes.Str,
-		Con: data.Attributes.Con,
-		Dex: data.Attributes.Dex,
-		Int: data.Attributes.Int,
-		Wis: data.Attributes.Wis,
+		id:         data.ID,
+		name:       data.Name,
+		ai:         data.AI,
+		sex:        Gender(data.Sex),
+		attitude:   Attitude(data.Attitude),
+		alignment:  Alignment(data.Alignment),
+		attributes: newAttributes(data.Attributes),
+		inventory:  item.NewInventory(data.Inventory),
+		trainings:  train.NewTrainings(data.Trainings),
 	}
 	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(data.QuestLog, &c)
@@ -399,7 +393,7 @@ func (c *Character) Guild() Guild {
 }
 
 // Attributes returns character attributes.
-func (c *Character) Attributes() Attributes {
+func (c *Character) Attributes() *Attributes {
 	return c.attributes
 }
 
@@ -535,6 +529,10 @@ func (c *Character) Targets() []effect.Target {
 // SetTarget sets specified 'targetable' as current
 // target.
 func (c *Character) SetTarget(t effect.Target) {
+	if t == nil {
+		c.targets = []effect.Target{}
+		return
+	}
 	c.targets = []effect.Target{t}
 }
 
