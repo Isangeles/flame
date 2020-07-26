@@ -63,7 +63,7 @@ func TestExportModule(t *testing.T) {
 		Int:       5,
 		Wis:       6,
 	}
-	res.SetCharactersData(append(res.Characters(), charData))
+	res.Characters = append(res.Characters, charData)
 	areaCharData := res.AreaCharData{ID: charData.ID}
 	areaData.Characters = append(areaData.Characters, areaCharData)
 	area := area.New(areaData)

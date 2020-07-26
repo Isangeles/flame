@@ -35,7 +35,11 @@ key1:value1
 key2:value2;value3
 key3:value4;value5;value6
 #comment2`
-	keyValues := UnmarshalConfig(strings.NewReader(config))
+	keyValues, err := UnmarshalConfig(strings.NewReader(config))
+	if err != nil {
+		t.Errorf("Unable to unmarshal config: %v", err)
+		return
+	}
 	for key, values := range keyValues {
 		t.Logf("%s: ", key)
 		for _, v := range values {
