@@ -50,6 +50,7 @@ type ModifiersData struct {
 	QuestMods     []QuestModData     `xml:"quest-mod" json:"quest-mods"`
 	AreaMods      []AreaModData      `xml:"area-mod" json:"area-mods"`
 	AddItemMods   []AddItemModData   `xml:"add-item-mod" json:"add-item-mods"`
+	AddSkillMods  []AddSkillModData  `xml:"add-skill-mod" json:"add-skill-mods"`
 	AttributeMods []AttributeModData `xml:"attribute-mod" json:"attribute-mods"`
 }
 
@@ -85,6 +86,11 @@ type AreaModData struct {
 type AddItemModData struct {
 	ItemID string `xml:"item-id,attr" json:"item-id"`
 	Amount int    `xml:"amount,attr" json:"amount"`
+}
+
+// Struct for add skill modifier data.
+type AddSkillModData struct {
+	SkillID string `xml:"skill-id,attr" json:"skill-id"`
 }
 
 // Type for attribute modifier data.

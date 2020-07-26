@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/item"
+	"github.com/isangeles/flame/module/skill"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/quest"
 )
@@ -90,6 +91,15 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 			i := item.New(data)
 			c.Inventory().AddItem(i)
 		}
+	case *effect.AddSkillMod:
+		data := res.Skill(m.SkillID())
+		if data == nil {
+			log.Err.Printf("char: %s %s: add skill mod: data not found: %s", c.ID(),
+				c.Serial(), m.SkillID())
+			break
+		}
+		s := skill.New(*data)
+		c.AddSkill(s)
 	case *effect.AttributeMod:
 		c.Attributes().Str += m.Strength()
 		c.Attributes().Con += m.Constitution()
