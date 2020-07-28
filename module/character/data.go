@@ -25,7 +25,6 @@ package character
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module/train"
 )
 
 // Data creates data resource struct for character.
@@ -47,7 +46,6 @@ func (c *Character) Data() res.CharacterData {
 		Equipment: c.Equipment().Data(),
 		QuestLog:  c.Journal().Data(),
 		Crafting:  c.Crafting().Data(),
-		Trainings: train.TrainingsData(c.Trainings()...),
 		Restore:   true,
 	}
 	if c.Race() != nil {
@@ -97,6 +95,9 @@ func (c *Character) Data() res.CharacterData {
 			dialogData.Stage = d.Stage().ID()
 		}
 		data.Dialogs = append(data.Dialogs, dialogData)
+	}
+	for _, t := range c.Trainings() {
+		data.Trainings = append(data.Trainings, t.Data())
 	}
 	return data
 }

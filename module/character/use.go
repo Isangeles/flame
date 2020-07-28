@@ -27,6 +27,7 @@ import (
 	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/skill"
+	"github.com/isangeles/flame/module/training"
 	"github.com/isangeles/flame/module/useaction"
 )
 
@@ -36,8 +37,12 @@ func (c *Character) Use(ob useaction.Usable) {
 	if ob.UseAction() == nil {
 		return
 	}
+	reqs := ob.UseAction().Requirements()
+	if t, ok := ob.(*training.TrainerTraining); ok {
+		reqs = t.Requirements()
+	}
 	// Check requirements and cooldown.
-	if !c.MeetReqs(ob.UseAction().Requirements()...) || c.cooldown > 0 ||
+	if !c.MeetReqs(reqs...) || c.cooldown > 0 ||
 		ob.UseAction().Cooldown() > 0 || c.Moving() {
 		c.SendPrivate(lang.Text("cant_do_right_now"))
 		if !c.MeetTargetRangeReqs(ob.UseAction().Requirements()...) {

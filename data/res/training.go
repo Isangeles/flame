@@ -1,7 +1,7 @@
 /*
  * train.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,27 +21,26 @@
  *
  */
 
-package character
+package res
 
 import (
-	"fmt"
-	
-	"github.com/isangeles/flame/module/train"
+	"encoding/xml"
 )
 
-// Train trains character with specified training.
-func (char *Character) Train(t train.Training) error {
-	if !char.MeetReqs(t.Reqs()...) {
-		return fmt.Errorf("reqs-not-meet")
-	}
-	char.ChargeReqs(t.Reqs()...)
-	switch t := t.(type) {
-	case *train.AttrsTraining:
-		char.attributes.Str += t.Strenght()
-		char.attributes.Con += t.Constitution()
-		char.attributes.Dex += t.Dexterity()
-		char.attributes.Wis += t.Wisdom()
-		char.attributes.Int += t.Intelligence()
-	}
-	return nil
+// Struct for trainings data.
+type TrainingsData struct {
+	XMLName   xml.Name       `xml:"trainings" json:"-"`
+	Trainings []TrainingData `xml:"training" json:"trainings"`
+}
+
+// Struct for training data.
+type TrainingData struct {
+	ID  string        `xml:"id,attr" json:"id"`
+	Use UseActionData `xml:"use" json:"use"`
+}
+
+// Struct for trainer training data.
+type TrainerTrainingData struct {
+	ID   string   `xml:"id,attr" json:"id"`
+	Reqs ReqsData `xml:"reqs" json:"reqs"`
 }

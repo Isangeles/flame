@@ -40,7 +40,7 @@ import (
 	"github.com/isangeles/flame/module/quest"
 	"github.com/isangeles/flame/module/serial"
 	"github.com/isangeles/flame/module/skill"
-	"github.com/isangeles/flame/module/train"
+	"github.com/isangeles/flame/module/training"
 	"github.com/isangeles/flame/module/useaction"
 )
 
@@ -76,7 +76,7 @@ type Character struct {
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
 	flags            map[string]flag.Flag
-	trainings        []train.Training
+	trainings        []*training.TrainerTraining
 	casted           useaction.Usable
 	chatlog          chan string
 	combatlog        chan string
@@ -102,7 +102,6 @@ func New(data res.CharacterData) *Character {
 		alignment:  Alignment(data.Alignment),
 		attributes: newAttributes(data.Attributes),
 		inventory:  item.NewInventory(data.Inventory),
-		trainings:  train.NewTrainings(data.Trainings),
 	}
 	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(data.QuestLog, &c)
@@ -189,6 +188,18 @@ func New(data res.CharacterData) *Character {
 		effect.SetTime(charEffectData.Time)
 		effect.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
 		c.AddEffect(effect)
+	}
+	// Trainings.
+	for _, charTrainingData := range data.Trainings {
+		trainingData := res.Training(charTrainingData.ID)
+		if trainingData == nil {
+			log.Err.Printf("new character: %s: training data not found: %s",
+				c.ID(), charTrainingData.ID)
+			continue
+		}
+		train := training.New(*trainingData)
+		trainerTraining := training.NewTrainerTraining(train, charTrainingData)
+		c.trainings = append(c.trainings, trainerTraining)
 	}
 	// Memory.
 	for _, memData := range data.Memory {
@@ -685,13 +696,13 @@ func (c *Character) Crafting() *craft.Crafting {
 }
 
 // Trainings returns all trainings.
-func (c *Character) Trainings() []train.Training {
+func (c *Character) Trainings() []*training.TrainerTraining {
 	return c.trainings
 }
 
 // AddTrainings adds specified training to
 // character trainings list.
-func (c *Character) AddTraining(t train.Training) {
+func (c *Character) AddTraining(t *training.TrainerTraining) {
 	c.trainings = append(c.trainings, t)
 }
 

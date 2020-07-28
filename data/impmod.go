@@ -96,6 +96,11 @@ func ImportModule(path string) (data res.ModuleData, err error) {
 	if err != nil {
 		return data, fmt.Errorf("unable to import recipes: %v", err)
 	}
+	// Trainings.
+	data.Resources.Trainings, err = ImportTrainingsDir(filepath.Join(path, "trainings"))
+	if err != nil {
+		return data, fmt.Errorf("unable to import trainings: %v", err)
+	}
 	// Chapter.
 	if len(data.Config["chapter"]) < 1 {
 		return data, fmt.Errorf("no chapter set: %v", err)

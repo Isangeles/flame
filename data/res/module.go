@@ -53,5 +53,6 @@ type ResourcesData struct {
 	Recipes      []RecipeData      `xml:"recipes>recipe" json:"recipes"`
 	Areas        []AreaData        `xml:"areas>area" json:"areas"`
 	Races        []RaceData        `xml:"races>race" json:"races"`
+	Trainings    []TrainingData    `xml:"trainings>training" json:"trainings"`
 	Translations []TranslationData `xml:"translations>translation" json:"translations"`
 }

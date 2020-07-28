@@ -36,6 +36,7 @@ var (
 	Recipes      []RecipeData
 	Areas        []AreaData
 	Races        []RaceData
+	Trainings    []TrainingData
 	Translations []TranslationData
 )
 
@@ -180,6 +181,16 @@ func Race(id string) *RaceData {
 	return nil
 }
 
+// Training returns training data for specified ID.
+func Training(id string) *TrainingData {
+	for _, d := range Trainings {
+		if d.ID == id {
+			return &d
+		}
+	}
+	return nil
+}
+
 // Translation returns translation data for specified ID.
 func Translation(id string) *TranslationData {
 	for _, d := range Translations {
@@ -204,6 +215,7 @@ func Clear() {
 	Recipes = make([]RecipeData, 0)
 	Areas = make([]AreaData, 0)
 	Races = make([]RaceData, 0)
+	Trainings = make([]TrainingData, 0)
 	Translations = make([]TranslationData, 0)
 }
 
@@ -221,6 +233,7 @@ func Add(r ResourcesData) {
 	Dialogs = append(Dialogs, r.Dialogs...)
 	Quests = append(Quests, r.Quests...)
 	Recipes = append(Recipes, r.Recipes...)
+	Trainings = append(Trainings, r.Trainings...)
 	Areas = append(Areas, r.Areas...)
 	Translations = append(Translations, r.Translations...)
 }
