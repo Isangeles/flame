@@ -45,7 +45,7 @@ func (c *Character) Use(ob useaction.Usable) {
 	if !c.MeetReqs(reqs...) || c.cooldown > 0 ||
 		ob.UseAction().Cooldown() > 0 || c.Moving() {
 		c.SendPrivate(lang.Text("cant_do_right_now"))
-		if !c.MeetTargetRangeReqs(ob.UseAction().Requirements()...) {
+		if !c.MeetTargetRangeReqs(reqs...) {
 			tar := c.Targets()[0]
 			c.SetDestPoint(tar.Position())
 		}
@@ -57,12 +57,16 @@ func (c *Character) Use(ob useaction.Usable) {
 // useCasted applies modifiers and effects from specified
 // usable object on use action owner, user and user target.
 func (c *Character) useCasted(ob useaction.Usable) {
-	// Check requirements and cooldown.
-	if !c.MeetReqs(ob.UseAction().Requirements()...) {
+	// Check requirements.
+	reqs := ob.UseAction().Requirements()
+	if t, ok := ob.(*training.TrainerTraining); ok {
+		reqs = t.Requirements()
+	}
+	if !c.MeetReqs(reqs...) {
 		c.SendPrivate(lang.Text("cant_do_right_now"))
 		return
 	}
-	c.ChargeReqs(ob.UseAction().Requirements()...)
+	c.ChargeReqs(reqs...)
 	// Apply effects and modifiers.
 	c.TakeModifiers(c, ob.UseAction().UserMods()...)
 	for _, e := range ob.UseAction().UserEffects() {
