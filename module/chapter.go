@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/log"
 )
 
 // Chapter struct represents module chapter.
@@ -74,6 +75,14 @@ func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	res.Add(c.Res)
 	c.loadedAreas = make(map[string]*area.Area)
 	return c
+}
+
+// Update updates chapter.
+func (c *Chapter) Update(delta int64) {
+	for _, a := range c.loadedAreas {
+		a.Update(delta)
+	}
+	c.updateObjectsArea()
 }
 
 // ID returns chapter ID.
@@ -228,4 +237,43 @@ func (c *Chapter) Data() res.ChapterData {
 	}
 	data.Resources = c.Res
 	return data
+}
+
+// updateObjectsArea checks and moves game objects to
+// proper areas, if needed.
+func (c *Chapter) updateObjectsArea() {
+	for _, char := range c.Characters() {
+		currentArea := c.CharacterArea(char)
+		if currentArea != nil && currentArea.ID() == char.AreaID() {
+			continue
+		}
+		var newArea *area.Area
+		// Search for area in current chapter.
+		for _, a := range c.Areas() {
+			if a.ID() == char.AreaID() {
+				newArea = a
+				break
+			}
+			for _, sa := range a.AllSubareas() {
+				if sa.ID() == char.AreaID() {
+					newArea = sa
+					break
+				}
+			}
+		}
+		if newArea == nil {
+			// Search for area data in res package.
+			areaData := res.Area(char.AreaID())
+			if areaData == nil {
+				log.Err.Printf("area update: %s %s: area not found: %s\n",
+					char.ID(), char.Serial(), char.AreaID())
+				char.SetAreaID(currentArea.ID())
+				return
+			}
+			newArea = area.New(*areaData)
+			c.AddAreas(newArea)
+		}
+		newArea.AddCharacter(char)
+		currentArea.RemoveCharacter(char)
+	}
 }

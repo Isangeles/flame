@@ -26,10 +26,8 @@ package flame
 
 import (
 	"github.com/isangeles/flame/ai"
-	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
-	"github.com/isangeles/flame/log"
 )
 
 // Struct for game, a wrapper for the game module.
@@ -57,18 +55,8 @@ func (g *Game) Update(delta int64) {
 	if g.paused {
 		return
 	}
-	chapter := g.Module().Chapter()
-	// Characters.
-	for _, c := range chapter.Characters() {
-		c.Update(delta)
-	}
-	// Area objects.
-	for _, o := range chapter.AreaObjects() {
-		o.Update(delta)
-	}
+	g.Module().Update(delta)
 	g.AI().Update(delta)
-	// Objects area.
-	g.updateObjectsArea()
 }
 
 // Pause toggles game update pause.
@@ -89,49 +77,6 @@ func (g *Game) Module() *module.Module {
 // AI returns game AI.
 func (g *Game) AI() *ai.AI {
 	return g.npcAI
-}
-
-// updateObjectsArea checks and moves game objects to
-// proper areas, if needed.
-func (g *Game) updateObjectsArea() {
-	chapter := g.Module().Chapter()
-	if chapter == nil {
-		return
-	}
-	for _, c := range chapter.Characters() {
-		currentArea := chapter.CharacterArea(c)
-		if currentArea != nil && currentArea.ID() == c.AreaID() {
-			continue
-		}
-		var newArea *area.Area
-		// Search for area in current chapter.
-		for _, a := range chapter.Areas() {
-			if a.ID() == c.AreaID() {
-				newArea = a
-				break
-			}
-			for _, sa := range a.AllSubareas() {
-				if sa.ID() == c.AreaID() {
-					newArea = sa
-					break
-				}
-			}
-		}
-		if newArea == nil {
-			// Search for area data in res package.
-			areaData := res.Area(c.AreaID())
-			if areaData == nil {
-				log.Err.Printf("area update: %s#%s: area not found: %s\n",
-					c.ID(), c.Serial(), c.AreaID())
-				c.SetAreaID(currentArea.ID())
-				return
-			}
-			newArea = area.New(*areaData)
-			chapter.AddAreas(newArea)
-		}
-		newArea.AddCharacter(c)
-		currentArea.RemoveCharacter(c)
-	}
 }
 
 // chapterLoaded handles new loaded chapter.

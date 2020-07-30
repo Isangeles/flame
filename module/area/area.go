@@ -90,6 +90,19 @@ func New(data res.AreaData) *Area {
 	return a
 }
 
+// Update updates area.
+func (a *Area) Update(delta int64) {
+	for _, c := range a.Characters() {
+		c.Update(delta)
+	}
+	for _, o := range a.Objects() {
+		o.Update(delta)
+	}
+	for _, a := range a.Subareas() {
+		a.Update(delta)
+	}
+}
+
 // ID returns area ID.
 func (a *Area) ID() string {
 	return a.id

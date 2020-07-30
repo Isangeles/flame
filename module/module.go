@@ -58,6 +58,13 @@ func New(data res.ModuleData) *Module {
 	return m
 }
 
+// Update updates module.
+func (m *Module) Update(delta int64) {
+	if m.Chapter() != nil {
+		m.Chapter().Update(delta)
+	}
+}
+
 // Jumps to next module chapter.
 func (m *Module) SetChapter(chapter *Chapter) {
 	m.chapter = chapter
