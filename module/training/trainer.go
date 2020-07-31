@@ -25,11 +25,13 @@ package training
 
 import (
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
 )
 
 // Interface for object with trainings.
 type Trainer interface {
+	objects.Object
 	AddTraining(t *TrainerTraining)
 	Trainings() []*TrainerTraining
 }
@@ -66,4 +68,3 @@ func (tt *TrainerTraining) Data() res.TrainerTrainingData {
 	}
 	return data
 }
-	
