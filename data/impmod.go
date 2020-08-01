@@ -30,6 +30,7 @@ import (
 
 	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/log"
 )
 
 const (
@@ -54,52 +55,52 @@ func ImportModule(path string) (data res.ModuleData, err error) {
 	// Characters.
 	data.Resources.Characters, err = ImportCharactersDir(filepath.Join(path, "characters"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import characters: %v", err)
+		log.Err.Printf("Import module: unable to import characters: %v", err)
 	}
 	// Races.
 	data.Resources.Races, err = ImportRacesDir(filepath.Join(path, "characters/races"))
 	if err != nil {
-		return data, fmt.Errorf("unable to imports races: %v", err)
+		log.Err.Printf("Import module: unable to imports races: %v", err)
 	}
 	// Objects.
 	data.Resources.Objects, err = ImportObjectsDir(filepath.Join(path, "objects"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import objects: %v", err)
+		log.Err.Printf("Import module: unable to import objects: %v", err)
 	}
 	// Skills.
 	data.Resources.Skills, err = ImportSkillsDir(filepath.Join(path, "skills"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import skills: %v", err)
+		log.Err.Printf("Import module: unable to import skills: %v", err)
 	}
 	// Effects.
 	data.Resources.Effects, err = ImportEffectsDir(filepath.Join(path, "effects"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import effects: %v", err)
+		log.Err.Printf("Import module: unable to import effects: %v", err)
 	}
 	// Armors.
 	data.Resources.Armors, err = ImportArmorsDir(filepath.Join(path, "items"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import armors: %v", err)
+		log.Err.Printf("Import module: unable to import armors: %v", err)
 	}
 	// Weapons.
 	data.Resources.Weapons, err = ImportWeaponsDir(filepath.Join(path, "items"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import weapons: %v", err)
+		log.Err.Printf("Import module: unable to import weapons: %v", err)
 	}
 	// Miscs.
 	data.Resources.Miscs, err = ImportMiscItemsDir(filepath.Join(path, "items"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import misc items: %v", err)
+		log.Err.Printf("Import module: unable to import misc items: %v", err)
 	}
 	// Recipes.
 	data.Resources.Recipes, err = ImportRecipesDir(filepath.Join(path, "recipes"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import recipes: %v", err)
+		log.Err.Printf("Import module: unable to import recipes: %v", err)
 	}
 	// Trainings.
 	data.Resources.Trainings, err = ImportTrainingsDir(filepath.Join(path, "trainings"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import trainings: %v", err)
+		log.Err.Printf("Import module: unable to import trainings: %v", err)
 	}
 	// Chapter.
 	if len(data.Config["chapter"]) < 1 {
@@ -130,27 +131,27 @@ func ImportChapter(path string) (data res.ChapterData, err error) {
 	// Characters.
 	data.Resources.Characters, err = ImportCharactersDir(filepath.Join(path, "characters"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import characters: %v", err)
+		log.Err.Printf("Import chapter: unable to import characters: %v", err)
 	}
 	// Objects.
 	data.Resources.Objects, err = ImportObjectsDir(filepath.Join(path, "objects"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import objects: %v", err)
+		log.Err.Printf("Import chapter: unable to import objects: %v", err)
 	}
 	// Quests.
 	data.Resources.Quests, err = ImportQuestsDir(filepath.Join(path, "quests"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import quests: %v", err)
+		log.Err.Printf("Import chapter: unable to import quests: %v", err)
 	}
 	// Dialogs.
 	data.Resources.Dialogs, err = ImportDialogsDir(filepath.Join(path, "dialogs"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import dialogs: %v", err)
+		log.Err.Printf("Import chapter: unable to import dialogs: %v", err)
 	}
 	// Areas.
 	data.Resources.Areas, err = ImportAreasDir(filepath.Join(path, "areas"))
 	if err != nil {
-		return data, fmt.Errorf("unable to import areas: %v", err)
+		log.Err.Printf("Import chapter: unable to import areas: %v", err)
 	}
 	return data, nil
 }
