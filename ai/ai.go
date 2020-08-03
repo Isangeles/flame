@@ -172,7 +172,7 @@ func (ai *AI) saySomething(npc *character.Character) {
 		return
 	}
 	id := rng.RollInt(0, len(texts)-1)
-	npc.SendChat(texts[id])
+	npc.ChatLog().Add(texts[id])
 }
 
 // combatSkill selects NPC skill to use in combat or nil if specified

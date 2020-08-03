@@ -78,9 +78,9 @@ type Character struct {
 	flags            map[string]flag.Flag
 	trainings        []*training.TrainerTraining
 	casted           useaction.Usable
-	chatlog          chan string
-	combatlog        chan string
-	privlog          chan string
+	chatLog          *objects.Log
+	combatLog        *objects.Log
+	privateLog       *objects.Log
 	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
 	onHealthMod      func(v int)
@@ -113,9 +113,9 @@ func New(data res.CharacterData) *Character {
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.flags = make(map[string]flag.Flag)
-	c.chatlog = make(chan string, 1)
-	c.combatlog = make(chan string, 3)
-	c.privlog = make(chan string, 3)
+	c.chatLog = objects.NewLog()
+	c.combatLog = objects.NewLog()
+	c.privateLog = objects.NewLog()
 	// Translate name if not set.
 	if len(c.Name()) < 1 {
 		c.SetName(lang.Text(c.ID()))
@@ -573,18 +573,18 @@ func (c *Character) Fighting() bool {
 }
 
 // CombatLog returns character combat log channel.
-func (c *Character) CombatLog() chan string {
-	return c.combatlog
+func (c *Character) CombatLog() *objects.Log {
+	return c.combatLog
 }
 
 // ChatLog returns character speech log channel.
-func (c *Character) ChatLog() chan string {
-	return c.chatlog
+func (c *Character) ChatLog() *objects.Log {
+	return c.chatLog
 }
 
 // PrivateLog returns character private log channel.
-func (c *Character) PrivateLog() chan string {
-	return c.privlog
+func (c *Character) PrivateLog() *objects.Log {
+	return c.privateLog
 }
 
 // SetOnSkillActivatedFunc sets function triggered after
@@ -609,36 +609,6 @@ func (c *Character) SetOnHealthModFunc(f func(v int)) {
 // casting) performed by character.
 func (c *Character) Interrupt() {
 	c.casted = nil
-}
-
-// SendChat sends specified text to character
-// speech log channel.
-func (c *Character) SendChat(t string) {
-	select {
-	case c.chatlog <- t:
-		if c.onChatSent != nil {
-			c.onChatSent(t)
-		}
-	default:
-	}
-}
-
-// SendCombat sends specified text message to
-// comabt log channel.
-func (c *Character) SendCombat(t string) {
-	select {
-	case c.combatlog <- t:
-	default:
-	}
-}
-
-// SendPrivate sends specified text to character
-// private log.
-func (c *Character) SendPrivate(t string) {
-	select {
-	case c.privlog <- t:
-	default:
-	}
 }
 
 // Dialog returns dialog for specified character.

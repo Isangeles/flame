@@ -79,12 +79,9 @@ type Magician interface {
 type Logger interface {
 	Object
 	Name() string
-	CombatLog() chan string
-	ChatLog() chan string
-	PrivateLog() chan string
-	SendCombat(msg string)
-	SendChat(msg string)
-	SendPrivate(msg string)
+	CombatLog() *Log
+	ChatLog() *Log
+	PrivateLog() *Log
 }
 
 // Interface for area objects.

@@ -134,5 +134,5 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 	if config.Debug { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
-	c.SendCombat(msg)
+	c.CombatLog().Add(msg)
 }

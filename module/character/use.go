@@ -44,7 +44,7 @@ func (c *Character) Use(ob useaction.Usable) {
 	// Check requirements and cooldown.
 	if !c.MeetReqs(reqs...) || c.cooldown > 0 ||
 		ob.UseAction().Cooldown() > 0 || c.Moving() {
-		c.SendPrivate(lang.Text("cant_do_right_now"))
+		c.PrivateLog().Add(lang.Text("cant_do_right_now"))
 		if !c.MeetTargetRangeReqs(reqs...) {
 			tar := c.Targets()[0]
 			c.SetDestPoint(tar.Position())
@@ -63,7 +63,7 @@ func (c *Character) useCasted(ob useaction.Usable) {
 		reqs = t.Requirements()
 	}
 	if !c.MeetReqs(reqs...) {
-		c.SendPrivate(lang.Text("cant_do_right_now"))
+		c.PrivateLog().Add(lang.Text("cant_do_right_now"))
 		return
 	}
 	c.ChargeReqs(reqs...)

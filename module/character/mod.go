@@ -63,7 +63,7 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		}
 		cmbMsg := fmt.Sprintf("%s: %s: %d", c.Name(),
 			lang.Text("ob_health"), val)
-		c.SendCombat(cmbMsg)
+		c.CombatLog().Add(cmbMsg)
 		if s == nil {
 			break
 		}
