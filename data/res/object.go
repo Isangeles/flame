@@ -25,6 +25,7 @@ package res
 
 import (
 	"encoding/xml"
+	"time"
 )
 
 // Struct for objects data.
@@ -68,6 +69,17 @@ type ObjectSkillData struct {
 type ObjectDialogData struct {
 	ID    string `xml:"id,attr" json:"id"`
 	Stage string `xml:"stage,attr" json:"stage"`
+}
+
+// Struct for object log data.
+type ObjectLogData struct {
+	Messages []ObjectLogMessageData `xml:"message" json:"messages"`
+}
+
+// Struct for object log message data.
+type ObjectLogMessageData struct {
+	Time time.Time `xml:"time,attr" json:"time"`
+	Text string    `xml:"text,attr" json:"text"`
 }
 
 // Struct for flag data.

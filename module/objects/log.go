@@ -25,6 +25,8 @@ package objects
 
 import (
 	"time"
+
+	"github.com/isangeles/flame/data/res"
 )
 
 // Struct for character log.
@@ -40,8 +42,12 @@ type Message struct {
 }
 
 // NewLog creates new log.
-func NewLog() *Log {
+func NewLog(data res.ObjectLogData) *Log {
 	l := Log{channel: make(chan string, 3)}
+	for _, md := range data.Messages {
+		m := Message{md.Time, md.Text}
+		l.messages = append(l.messages, m)
+	}
 	return &l
 }
 
@@ -63,6 +69,15 @@ func (l *Log) Channel() chan string {
 // Messages returns all messages from log.
 func (l *Log) Messages() []Message {
 	return l.messages
+}
+
+// Data creates data resource for object log.
+func (l *Log) Data() (data res.ObjectLogData) {
+	for _, m := range l.Messages() {
+		md := res.ObjectLogMessageData{m.Time(), m.String()}
+		data.Messages = append(data.Messages, md)
+	}
+	return
 }
 
 // String returns message text.

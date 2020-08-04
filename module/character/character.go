@@ -113,9 +113,9 @@ func New(data res.CharacterData) *Character {
 	c.memory = make(map[string]*TargetMemory)
 	c.dialogs = make(map[string]*dialog.Dialog)
 	c.flags = make(map[string]flag.Flag)
-	c.chatLog = objects.NewLog()
-	c.combatLog = objects.NewLog()
-	c.privateLog = objects.NewLog()
+	c.chatLog = objects.NewLog(data.ChatLog)
+	c.combatLog = objects.NewLog(data.CombatLog)
+	c.privateLog = objects.NewLog(data.PrivateLog)
 	// Translate name if not set.
 	if len(c.Name()) < 1 {
 		c.SetName(lang.Text(c.ID()))
