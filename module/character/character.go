@@ -102,20 +102,20 @@ func New(data res.CharacterData) *Character {
 		alignment:  Alignment(data.Alignment),
 		attributes: newAttributes(data.Attributes),
 		inventory:  item.NewInventory(data.Inventory),
+		effects:    make(map[string]*effect.Effect),
+		skills:     make(map[string]*skill.Skill),
+		memory:     make(map[string]*TargetMemory),
+		dialogs:    make(map[string]*dialog.Dialog),
+		flags:      make(map[string]flag.Flag),
+		chatLog:    objects.NewLog(data.ChatLog),
+		combatLog:  objects.NewLog(data.CombatLog),
+		privateLog: objects.NewLog(data.PrivateLog),
+		live:       true,
 	}
 	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(data.QuestLog, &c)
 	c.crafting = craft.NewCrafting(data.Crafting, &c)
-	c.live = true
 	c.inventory.SetCapacity(c.Attributes().Lift())
-	c.effects = make(map[string]*effect.Effect)
-	c.skills = make(map[string]*skill.Skill)
-	c.memory = make(map[string]*TargetMemory)
-	c.dialogs = make(map[string]*dialog.Dialog)
-	c.flags = make(map[string]flag.Flag)
-	c.chatLog = objects.NewLog(data.ChatLog)
-	c.combatLog = objects.NewLog(data.CombatLog)
-	c.privateLog = objects.NewLog(data.PrivateLog)
 	// Translate name if not set.
 	if len(c.Name()) < 1 {
 		c.SetName(lang.Text(c.ID()))

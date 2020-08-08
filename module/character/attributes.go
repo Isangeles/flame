@@ -91,3 +91,15 @@ func (a Attributes) String() string {
 	return fmt.Sprintf("%d, %d, %d, %d, %d",
 		a.Str, a.Con, a.Dex, a.Wis, a.Int)
 }
+
+// Data returns data resource for attributes.
+func (a Attributes) Data() res.AttributesData {
+	data := res.AttributesData{
+		Str: a.Str,
+		Con: a.Con,
+		Dex: a.Dex,
+		Wis: a.Wis,
+		Int: a.Int,
+	}
+	return data
+}

@@ -42,6 +42,7 @@ func (c *Character) Data() res.CharacterData {
 		HP:         c.Health(),
 		Mana:       c.Mana(),
 		Exp:        c.Experience(),
+		Attributes: c.Attributes().Data(),
 		Inventory:  c.Inventory().Data(),
 		Equipment:  c.Equipment().Data(),
 		QuestLog:   c.Journal().Data(),
@@ -56,13 +57,6 @@ func (c *Character) Data() res.CharacterData {
 	}
 	data.PosX, data.PosY = c.Position()
 	data.DefX, data.DefY = c.DefaultPosition()
-	data.Attributes = res.AttributesData{
-		Str: c.Attributes().Str,
-		Con: c.Attributes().Con,
-		Dex: c.Attributes().Dex,
-		Wis: c.Attributes().Wis,
-		Int: c.Attributes().Int,
-	}
 	for _, f := range c.Flags() {
 		data.Flags = append(data.Flags, res.FlagData{string(f)})
 	}
