@@ -56,30 +56,30 @@ func newAttributes(data res.AttributesData) *Attributes {
 
 // Lift returns maximal size of inventory based on
 // attributes.
-func (a Attributes) Lift() int {
+func (a *Attributes) Lift() int {
 	return Base_lift * (1 + a.Str)
 }
 
 // Sight returns maximal sight range based on
 // attributes.
-func (a Attributes) Sight() float64 {
+func (a *Attributes) Sight() float64 {
 	return Base_sight // * float64(1 + a.Wis)
 }
 
 // Health returns maximal health based on
 // attributes.
-func (a Attributes) Health() int {
+func (a *Attributes) Health() int {
 	return (Base_health * (1 + a.Con)) * (1 + a.Str/2)
 }
 
 // Mana returns maximal mana based on attributes.
-func (a Attributes) Mana() int {
+func (a *Attributes) Mana() int {
 	return (Base_mana * (1 + a.Int)) * (1 + a.Wis/2)
 }
 
 // Damage returns min and max damage values
 // based on attributes.
-func (a Attributes) Damage() (int, int) {
+func (a *Attributes) Damage() (int, int) {
 	min := 1 + (10 * a.Str)
 	max := 10 + (10 * a.Str)
 	return min, max
@@ -87,13 +87,13 @@ func (a Attributes) Damage() (int, int) {
 
 // String returns attributes struct as string in format:
 // [strengt], [constitution], [dexterity], [wisdom], [intelligence]
-func (a Attributes) String() string {
+func (a *Attributes) String() string {
 	return fmt.Sprintf("%d, %d, %d, %d, %d",
 		a.Str, a.Con, a.Dex, a.Wis, a.Int)
 }
 
 // Data returns data resource for attributes.
-func (a Attributes) Data() res.AttributesData {
+func (a *Attributes) Data() res.AttributesData {
 	data := res.AttributesData{
 		Str: a.Str,
 		Con: a.Con,
