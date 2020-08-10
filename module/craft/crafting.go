@@ -47,16 +47,7 @@ func NewCrafting(data res.CraftingData, object Crafter) *Crafting {
 	c := new(Crafting)
 	c.owner = object
 	c.recipes = make(map[string]*Recipe)
-	for _, craftRecipeData := range data.Recipes {
-		recipeData := res.Recipe(craftRecipeData.ID)
-		if recipeData == nil {
-			log.Err.Printf("crafting: %s#%s: unable to retrieve recipe: %s",
-				c.owner.ID(), c.owner.Serial(), craftRecipeData.ID)
-			continue
-		}
-		recipe := NewRecipe(*recipeData)
-		c.AddRecipes(recipe)
-	}
+	c.Apply(data)
 	return c
 }
 
@@ -72,6 +63,24 @@ func (c *Crafting) Recipes() (recipes []*Recipe) {
 func (c *Crafting) AddRecipes(recipes ...*Recipe) {
 	for _, r := range recipes {
 		c.recipes[r.ID()] = r
+	}
+}
+
+// Apply applies specified data on the crafting struct.
+func (c *Crafting) Apply(data res.CraftingData) {
+	for _, craftRecipeData := range data.Recipes {
+		recipe := c.recipes[craftRecipeData.ID]
+		if recipe != nil {
+			continue
+		}
+		recipeData := res.Recipe(craftRecipeData.ID)
+		if recipeData == nil {
+			log.Err.Printf("crafting: %s#%s: unable to retrieve recipe: %s",
+				c.owner.ID(), c.owner.Serial(), craftRecipeData.ID)
+			continue
+		}
+		recipe = NewRecipe(*recipeData)
+		c.AddRecipes(recipe)
 	}
 }
 

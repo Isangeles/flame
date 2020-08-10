@@ -56,31 +56,7 @@ func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Finger))
 	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Legs))
 	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Feet))
-	for _, itData := range data.Items {
-		it := char.Inventory().Item(itData.ID, itData.Serial)
-		if it == nil {
-			log.Err.Printf("character: %s %s: eq: unable to retrieve item from inventory: %s",
-				char.ID(), char.Serial(), itData.ID)
-			continue
-		}
-		eqItem, ok := it.(item.Equiper)
-		if !ok {
-			log.Err.Printf("character: %s %s: eq: not eqipable item: %s",
-				char.ID(), char.Serial(), it.ID())
-			continue
-		}
-		// Equip.
-		if !char.MeetReqs(eqItem.EquipReqs()...) {
-			continue
-		}
-		slot := item.Slot(itData.Slot)
-		for _, s := range eq.Slots() {
-			if s.Type() != slot || s.ID() != itData.SlotID {
-				continue
-			}
-			s.SetItem(eqItem)
-		}
-	}
+	eq.Apply(data)
 	return eq
 }
 
@@ -124,6 +100,37 @@ func (eq *Equipment) Equiped(item item.Equiper) bool {
 // Slots retuns all equipment slots.
 func (eq *Equipment) Slots() []*EquipmentSlot {
 	return eq.slots
+}
+
+// Apply applies specified data on the equipment.
+func (eq *Equipment) Apply(data res.EquipmentData) {
+	for _, itData := range data.Items {
+		it := eq.char.Inventory().Item(itData.ID, itData.Serial)
+		if it == nil {
+			log.Err.Printf("character: %s %s: eq: unable to retrieve item from inventory: %s",
+				eq.char.ID(), eq.char.Serial(), itData.ID)
+			continue
+		}
+		eqItem, ok := it.(item.Equiper)
+		if !ok {
+			log.Err.Printf("character: %s %s: eq: not eqipable item: %s",
+				eq.char.ID(), eq.char.Serial(), it.ID())
+			continue
+		}
+		// Equip.
+		if !eq.char.MeetReqs(eqItem.EquipReqs()...) {
+			log.Err.Printf("character: %s %s: eq: equip reqs not meet: %s",
+				eq.char.ID(), eq.char.Serial(), it.ID())
+			continue
+		}
+		slot := item.Slot(itData.Slot)
+		for _, s := range eq.Slots() {
+			if s.Type() != slot || s.ID() != itData.SlotID {
+				continue
+			}
+			s.SetItem(eqItem)
+		}
+	}
 }
 
 // Data creates data resource for equipment.

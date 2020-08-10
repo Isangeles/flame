@@ -51,59 +51,21 @@ type Container interface {
 func NewInventory(data res.InventoryData) *Inventory {
 	inv := new(Inventory)
 	inv.items = make(map[string]Item)
-	for _, invItData := range data.Items {
-		if invItData.Random > 0 && !rng.RollChance(invItData.Random) {
-			continue
-		}
-		itData := res.Item(invItData.ID)
-		if itData == nil {
-			log.Err.Printf("NewInventory: item: %s: data not found", invItData.ID)
-			continue
-		}
-		it := New(itData)
-		if it == nil {
-			log.Err.Printf("NewInventory: item: %s: unable to create item from data",
-				invItData.ID)
-			continue
-		}
-		if len(invItData.Serial) > 0 {
-			it.SetSerial(invItData.Serial)
-		}
-		inv.items[it.ID()+it.Serial()] = it
-		if invItData.Trade {
-			ti := TradeItem{
-				Item:  it,
-				Price: invItData.TradeValue,
-			}
-			err := inv.AddTradeItem(&ti)
-			if err != nil {
-				log.Err.Printf("NewInventory: item: %s: unable to add trade item: %v",
-					invItData.ID, err)
-			}
-		}
-		if invItData.Loot {
-			err := inv.AddLootItem(it)
-			if err != nil {
-				log.Err.Printf("NewInventory: item: %s: unable to add loot item: %v",
-					invItData.ID, err)
-			}
-		}
-	}
-	inv.cap = data.Cap
+	inv.Apply(data)
 	return inv
 }
 
 // Update updates all items in the inventory.
-func (inv *Inventory) Update(delta int64) {
-	for _, i := range inv.Items() {
-		i.Update(delta)
+func (i *Inventory) Update(delta int64) {
+	for _, it := range i.Items() {
+		it.Update(delta)
 	}
 }
 
 // Items returns all items in inventory.
-func (inv *Inventory) Items() (items []Item) {
-	for _, i := range inv.items {
-		items = append(items, i)
+func (i *Inventory) Items() (items []Item) {
+	for _, it := range i.items {
+		items = append(items, it)
 	}
 	return
 }
@@ -111,96 +73,142 @@ func (inv *Inventory) Items() (items []Item) {
 // Item returns item with specified serial ID
 // from inventory or nil if no item with such serial
 // ID was found in inventory.
-func (inv *Inventory) Item(id, serial string) Item {
-	return inv.items[id+serial]
+func (i *Inventory) Item(id, serial string) Item {
+	return i.items[id+serial]
 }
 
 // AddItems add specified item to inventory.
-func (inv *Inventory) AddItem(i Item) error {
-	if inv.items[i.ID()+i.Serial()] != nil {
+func (i *Inventory) AddItem(it Item) error {
+	if i.items[it.ID()+it.Serial()] != nil {
 		return nil
 	}
-	if len(inv.items) >= inv.Capacity() {
+	if len(i.items) >= i.Capacity() {
 		return fmt.Errorf("no_inv_space")
 	}
-	inv.items[i.ID()+i.Serial()] = i
+	i.items[it.ID()+it.Serial()] = it
 	return nil
 }
 
 // RemoveItem removes specified item from inventory.
-func (inv *Inventory) RemoveItem(i Item) {
-	delete(inv.items, i.ID()+i.Serial())
+func (i *Inventory) RemoveItem(it Item) {
+	delete(i.items, it.ID()+it.Serial())
 }
 
 // TradeItems returns all items for trade
 // from inventory.
-func (inv *Inventory) TradeItems() []*TradeItem {
-	return inv.tradeItems
+func (i *Inventory) TradeItems() []*TradeItem {
+	return i.tradeItems
 }
 
 // AddTradeItems adds specified trade item to inventory.
-func (inv *Inventory) AddTradeItem(i *TradeItem) error {
-	err := inv.AddItem(i)
+func (i *Inventory) AddTradeItem(it *TradeItem) error {
+	err := i.AddItem(it)
 	if err != nil {
 		return err
 	}
-	inv.tradeItems = append(inv.tradeItems, i)
+	i.tradeItems = append(i.tradeItems, it)
 	return nil
 }
 
 // LootItems returns all 'lootable' items from inventory.
-func (inv *Inventory) LootItems() []Item {
-	return inv.lootItems
+func (i *Inventory) LootItems() []Item {
+	return i.lootItems
 }
 
 // AddLootItem adds specified 'lootable' item to
 // the inventory.
-func (inv *Inventory) AddLootItem(i Item) error {
-	err := inv.AddItem(i)
+func (i *Inventory) AddLootItem(it Item) error {
+	err := i.AddItem(it)
 	if err != nil {
 		return err
 	}
-	inv.lootItems = append(inv.lootItems, i)
+	i.lootItems = append(i.lootItems, it)
 	return nil
 }
 
 // Size returns current amount of items
 // in inventory.
-func (inv *Inventory) Size() int {
-	return len(inv.items)
+func (i *Inventory) Size() int {
+	return len(i.items)
 }
 
 // SetCapacity sets maximal capacity.
-func (inv *Inventory) SetCapacity(c int) {
-	inv.cap = c
+func (i *Inventory) SetCapacity(c int) {
+	i.cap = c
 }
 
 // Capacity returns maximal inventory
 // capacity.
-func (inv *Inventory) Capacity() int {
-	return inv.cap
+func (i *Inventory) Capacity() int {
+	return i.cap
+}
+
+// Apply applies specified data on the inventory.
+func (i *Inventory) Apply(data res.InventoryData) {
+	for _, invItData := range data.Items {
+		it := i.Item(invItData.ID, invItData.Serial)
+		if it == nil {
+			if invItData.Random > 0 && !rng.RollChance(invItData.Random) {
+				continue
+			}
+			itData := res.Item(invItData.ID)
+			if itData == nil {
+				log.Err.Printf("Inventory: Apply: item: %s: data not found", invItData.ID)
+				continue
+			}
+			it = New(itData)
+			if it == nil {
+				log.Err.Printf("Inventory: Apply: item: %s: unable to create item from data",
+					invItData.ID)
+				continue
+			}
+			if len(invItData.Serial) > 0 {
+				it.SetSerial(invItData.Serial)
+			}
+			i.items[it.ID()+it.Serial()] = it
+		}
+		if invItData.Trade {
+			ti := TradeItem{
+				Item:  it,
+				Price: invItData.TradeValue,
+			}
+			err := i.AddTradeItem(&ti)
+			if err != nil {
+				log.Err.Printf("Inventory: Apply: item: %s: unable to add trade item: %v",
+					invItData.ID, err)
+			}
+		}
+		if invItData.Loot {
+			err := i.AddLootItem(it)
+			if err != nil {
+				log.Err.Printf("Inventory: Apply: item: %s: unable to add loot item: %v",
+					invItData.ID, err)
+			}
+		}
+	}
+	i.cap = data.Cap
 }
 
 // Data creates data resource for inventory.
-func (inv *Inventory) Data() res.InventoryData {
+func (i *Inventory) Data() res.InventoryData {
 	data := res.InventoryData{
-		Cap: inv.Capacity(),
+		Cap: i.Capacity(),
 	}
-	for _, i := range inv.TradeItems() {
+	for _, it := range i.TradeItems() {
 		// Build trade item data.
 		invItemData := res.InventoryItemData{
-			ID:         i.ID(),
-			Serial:     i.Serial(),
+			ID:         it.ID(),
+			Serial:     it.Serial(),
 			Trade:      true,
-			TradeValue: i.Price,
+			TradeValue: it.Price,
 		}
 		data.Items = append(data.Items, invItemData)
 	}
-	for _, i := range inv.Items() {
+	for _, it := range i.Items() {
 		// Check if item was already added as trade item.
 		prs := false
 		for _, id := range data.Items {
-			if i.ID() == id.ID && i.Serial() == id.Serial {
+			if it.ID() == id.ID && it.Serial() == id.Serial {
 				prs = true
 				break
 			}
@@ -210,8 +218,8 @@ func (inv *Inventory) Data() res.InventoryData {
 		}
 		// Build item data.
 		invItemData := res.InventoryItemData{
-			ID:     i.ID(),
-			Serial: i.Serial(),
+			ID:     it.ID(),
+			Serial: it.Serial(),
 		}
 		data.Items = append(data.Items, invItemData)
 	}

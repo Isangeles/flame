@@ -40,27 +40,7 @@ func NewJournal(data res.QuestLogData, quester Quester) *Journal {
 	j := new(Journal)
 	j.owner = quester
 	j.quests = make(map[string]*Quest)
-	for _, logQuestData := range data.Quests {
-		questData := res.Quest(logQuestData.ID)
-		if questData == nil {
-			log.Err.Printf("build quest log: %s#%s: fail to retrieve quest data: %s",
-				j.owner.ID(), j.owner.Serial(), logQuestData.ID)
-			continue
-		}
-		// Restore quest stage.
-		quest := New(*questData)
-		for _, s := range quest.Stages() {
-			if s.ID() == logQuestData.Stage {
-				quest.SetActiveStage(s)
-			}
-		}
-		if quest.ActiveStage() == nil {
-			log.Err.Printf("build quest log: %s#%s: quest: %s: fail to set active stage",
-				j.owner.ID(), j.owner.Serial(), quest.ID())
-		}
-		// Add quest to quest log.
-		j.AddQuest(quest)
-	}
+	j.Apply(data)
 	return j
 }
 
@@ -140,6 +120,34 @@ func (j *Journal) checkStage(s *Stage) {
 			continue
 		}
 		o.SetComplete(true)
+	}
+}
+
+// Apply applies specifie data on the journal.
+func (j *Journal) Apply(data res.QuestLogData) {
+	for _, logQuestData := range data.Quests {
+		quest := j.quests[logQuestData.ID]
+		if quest == nil {
+			questData := res.Quest(logQuestData.ID)
+			if questData == nil {
+				log.Err.Printf("build quest log: %s#%s: unable to retrieve quest data: %s",
+					j.owner.ID(), j.owner.Serial(), logQuestData.ID)
+				continue
+			}
+			quest = New(*questData)
+		}
+		// Restore quest stage.
+		for _, s := range quest.Stages() {
+			if s.ID() == logQuestData.Stage {
+				quest.SetActiveStage(s)
+			}
+		}
+		if quest.ActiveStage() == nil {
+			log.Err.Printf("build quest log: %s#%s: quest: %s: unable to set active stage",
+				j.owner.ID(), j.owner.Serial(), quest.ID())
+		}
+		// Add quest to quest log.
+		j.AddQuest(quest)
 	}
 }
 

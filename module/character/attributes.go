@@ -44,14 +44,9 @@ type Attributes struct {
 
 // newAttributes creates character attributes.
 func newAttributes(data res.AttributesData) *Attributes {
-	a := Attributes{
-		Str: data.Str,
-		Con: data.Con,
-		Dex: data.Dex,
-		Int: data.Int,
-		Wis: data.Wis,
-	}
-	return &a
+	a := new(Attributes)
+	a.Apply(data)
+	return a
 }
 
 // Lift returns maximal size of inventory based on
@@ -90,6 +85,15 @@ func (a *Attributes) Damage() (int, int) {
 func (a *Attributes) String() string {
 	return fmt.Sprintf("%d, %d, %d, %d, %d",
 		a.Str, a.Con, a.Dex, a.Wis, a.Int)
+}
+
+// Apply applies specified data on character attributes.
+func (a *Attributes) Apply(data res.AttributesData) {
+	a.Str = data.Str
+	a.Con = data.Con
+	a.Dex = data.Dex
+	a.Int = data.Int
+	a.Wis = data.Wis
 }
 
 // Data returns data resource for attributes.
