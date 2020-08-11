@@ -95,7 +95,6 @@ const (
 func New(data res.CharacterData) *Character {
 	c := Character{
 		id:         data.ID,
-		name:       data.Name,
 		ai:         data.AI,
 		sex:        Gender(data.Sex),
 		attitude:   Attitude(data.Attitude),
@@ -116,12 +115,11 @@ func New(data res.CharacterData) *Character {
 	c.journal = quest.NewJournal(data.QuestLog, &c)
 	c.crafting = craft.NewCrafting(data.Crafting, &c)
 	c.inventory.SetCapacity(c.Attributes().Lift())
-	// Translate name if not set.
-	if len(c.Name()) < 1 {
-		c.SetName(lang.Text(c.ID()))
-	}
+	// Translate name.
+	c.SetName(lang.Text(c.ID()))
 	// Restore
 	if data.Restore {
+		c.SetName(data.Name)
 		c.SetSerial(data.Serial)
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
@@ -372,6 +370,11 @@ func (c *Character) Gender() Gender {
 	return c.sex
 }
 
+// SetGander sets character gender.
+func (c *Character) SetGender(gender Gender) {
+	c.sex = gender
+}
+
 // Race returns character race.
 func (c *Character) Race() *Race {
 	return c.race
@@ -380,6 +383,11 @@ func (c *Character) Race() *Race {
 // Attitude returns character attitude.
 func (c *Character) Attitude() Attitude {
 	return c.attitude
+}
+
+// SetAttitude sets character attitude.
+func (c *Character) SetAttitude(att Attitude) {
+	c.attitude = att
 }
 
 // AttitudeFor returns attitude for specified objects.
@@ -411,6 +419,11 @@ func (c *Character) Attributes() *Attributes {
 // Alignment returns character alignment
 func (c *Character) Alignment() Alignment {
 	return c.alignment
+}
+
+// SetAlignment sets character alignment.
+func (c *Character) SetAlignment(ali Alignment) {
+	c.alignment = ali
 }
 
 // Position returns current character position.

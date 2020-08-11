@@ -25,7 +25,130 @@ package character
 
 import (
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/module/dialog"
+	"github.com/isangeles/flame/module/effect"
+	"github.com/isangeles/flame/module/flag"
+	"github.com/isangeles/flame/module/skill"
+	"github.com/isangeles/flame/module/training"
 )
+
+// Apply applies specified data on the character.
+func (c *Character) Apply(data res.CharacterData) {
+	c.SetSerial(data.Serial)
+	c.SetHealth(data.HP)
+	c.SetMana(data.Mana)
+	c.SetExperience(data.Exp)
+	c.SetPosition(data.PosX, data.PosY)
+	c.SetDefaultPosition(data.DefY, data.DefY)
+	c.SetName(data.Name)
+	c.SetAI(data.AI)
+	c.SetGender(Gender(data.Sex))
+	c.SetAttitude(Attitude(data.Attitude))
+	c.Equipment().Apply(data.Equipment)
+	c.Journal().Apply(data.QuestLog)
+	c.Crafting().Apply(data.Crafting)
+	c.Inventory().Apply(data.Inventory)
+	c.Attributes().Apply(data.Attributes)
+	c.ChatLog().Apply(data.ChatLog)
+	c.CombatLog().Apply(data.CombatLog)
+	c.PrivateLog().Apply(data.PrivateLog)
+	// Set Race.
+	raceData := res.Race(data.Race)
+	if raceData != nil && c.Race().ID() != raceData.ID {
+		c.race = NewRace(*raceData)
+	}
+	// Add flags.
+	for _, fd := range data.Flags {
+		f := flag.Flag(fd.ID)
+		c.flags[f.ID()] = f
+	}
+	// Add skills.
+	for _, charSkillData := range data.Skills {
+		s := c.skills[charSkillData.ID]
+		if s != nil {
+			continue
+		}
+		skillData := res.Skill(charSkillData.ID)
+		if skillData == nil {
+			log.Err.Printf("Character: %s: Apply: skill data not found: %v",
+				c.ID(), charSkillData.ID)
+			continue
+		}
+		s = skill.New(*skillData)
+		s.UseAction().SetCooldown(charSkillData.Cooldown)
+		c.AddSkill(s)
+	}
+	// Add dialogs.
+	for _, charDialogData := range data.Dialogs {
+		d := c.dialogs[charDialogData.ID]
+		if d != nil {
+			continue
+		}
+		dialogData := res.Dialog(charDialogData.ID)
+		if dialogData == nil {
+			log.Err.Printf("Character: %s: Apply: dialog data not found: %s",
+				c.ID(), charDialogData.ID)
+			continue
+		}
+		d = dialog.New(*dialogData)
+		for _, s := range d.Stages() {
+			if s.ID() == charDialogData.Stage {
+				d.SetStage(s)
+			}
+		}
+		c.AddDialog(d)
+	}
+	// Effects.
+	for _, charEffectData := range data.Effects {
+		e := c.effects[charEffectData.ID]
+		if e == nil {
+			effectData := res.Effect(charEffectData.ID)
+			if effectData == nil {
+				log.Err.Printf("Character: %s: Apply: effect data not found: %s",
+					c.ID(), charEffectData.ID)
+				continue
+			}
+			e = effect.New(*effectData)
+		}
+		e.SetSerial(charEffectData.Serial)
+		e.SetTime(charEffectData.Time)
+		e.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
+		c.AddEffect(e)
+	}
+	// Trainings.
+	for _, charTrainingData := range data.Trainings {
+		hasTraining := false
+		for _, t := range c.Trainings() {
+			if t.ID() == charTrainingData.ID {
+				hasTraining = true
+				break
+			}
+		}
+		if hasTraining {
+			continue
+		}
+		trainingData := res.Training(charTrainingData.ID)
+		if trainingData == nil {
+			log.Err.Printf("Character: %s: Apply: training data not found: %s",
+				c.ID(), charTrainingData.ID)
+			continue
+		}
+		t := training.New(*trainingData)
+		trainerTraining := training.NewTrainerTraining(t, charTrainingData)
+		c.trainings = append(c.trainings, trainerTraining)
+	}
+	// Memory.
+	for _, memData := range data.Memory {
+		att := Attitude(memData.Attitude)
+		mem := TargetMemory{
+			TargetID:     memData.ObjectID,
+			TargetSerial: memData.ObjectSerial,
+			Attitude:     att,
+		}
+		c.MemorizeTarget(&mem)
+	}
+}
 
 // Data creates data resource struct for character.
 func (c *Character) Data() res.CharacterData {
