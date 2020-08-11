@@ -44,10 +44,7 @@ type Message struct {
 // NewLog creates new log.
 func NewLog(data res.ObjectLogData) *Log {
 	l := Log{channel: make(chan string, 3)}
-	for _, md := range data.Messages {
-		m := Message{md.Time, md.Text}
-		l.messages = append(l.messages, m)
-	}
+	l.Apply(data)
 	return &l
 }
 
@@ -69,6 +66,14 @@ func (l *Log) Channel() chan string {
 // Messages returns all messages from log.
 func (l *Log) Messages() []Message {
 	return l.messages
+}
+
+// Apply applies specified data on the object log.
+func (l *Log) Apply(data res.ObjectLogData) {
+	for _, md := range data.Messages {
+		m := Message{md.Time, md.Text}
+		l.messages = append(l.messages, m)
+	}
 }
 
 // Data creates data resource for object log.
