@@ -35,6 +35,7 @@ import (
 
 // Apply applies specified data on the character.
 func (c *Character) Apply(data res.CharacterData) {
+	c.id = data.ID
 	c.SetSerial(data.Serial)
 	c.SetHealth(data.HP)
 	c.SetMana(data.Mana)
@@ -45,6 +46,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetAI(data.AI)
 	c.SetGender(Gender(data.Sex))
 	c.SetAttitude(Attitude(data.Attitude))
+	c.SetAlignment(Alignment(data.Alignment))
 	c.Equipment().Apply(data.Equipment)
 	c.Journal().Apply(data.QuestLog)
 	c.Crafting().Apply(data.Crafting)
@@ -53,9 +55,10 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.ChatLog().Apply(data.ChatLog)
 	c.CombatLog().Apply(data.CombatLog)
 	c.PrivateLog().Apply(data.PrivateLog)
+	c.Inventory().SetCapacity(c.Attributes().Lift())
 	// Set Race.
 	raceData := res.Race(data.Race)
-	if raceData != nil && c.Race().ID() != raceData.ID {
+	if raceData != nil && (c.Race() == nil || c.Race().ID() != raceData.ID) {
 		c.race = NewRace(*raceData)
 	}
 	// Add flags.

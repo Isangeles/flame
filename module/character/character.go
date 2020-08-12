@@ -94,11 +94,6 @@ const (
 // New creates new character from specified data.
 func New(data res.CharacterData) *Character {
 	c := Character{
-		id:         data.ID,
-		ai:         data.AI,
-		sex:        Gender(data.Sex),
-		attitude:   Attitude(data.Attitude),
-		alignment:  Alignment(data.Alignment),
 		attributes: newAttributes(data.Attributes),
 		inventory:  item.NewInventory(data.Inventory),
 		effects:    make(map[string]*effect.Effect),
@@ -109,106 +104,27 @@ func New(data res.CharacterData) *Character {
 		chatLog:    objects.NewLog(data.ChatLog),
 		combatLog:  objects.NewLog(data.CombatLog),
 		privateLog: objects.NewLog(data.PrivateLog),
-		live:       true,
 	}
 	c.equipment = newEquipment(data.Equipment, &c)
 	c.journal = quest.NewJournal(data.QuestLog, &c)
 	c.crafting = craft.NewCrafting(data.Crafting, &c)
-	c.inventory.SetCapacity(c.Attributes().Lift())
-	// Translate name.
-	c.SetName(lang.Text(c.ID()))
+	c.Apply(data)
 	// Restore
-	if data.Restore {
-		c.SetName(data.Name)
-		c.SetSerial(data.Serial)
-		c.SetHealth(data.HP)
-		c.SetMana(data.Mana)
-		c.SetExperience(data.Exp)
-		c.SetPosition(data.PosX, data.PosY)
-		c.SetDefaultPosition(data.DefY, data.DefY)
+	if !data.Restore {
+		// Translate name.
+		c.SetName(lang.Text(c.ID()))
+		// Set level.
+		for i := 0; i < data.Level; i++ {
+			oldMaxExp := c.MaxExperience()
+			c.levelup()
+			c.SetExperience(oldMaxExp)
+		}
+		// Set max HP & mana.
+		c.SetHealth(c.MaxHealth())
+		c.SetMana(c.MaxMana())
 	}
 	// Register serial.
 	serial.Register(&c)
-	// Set Race.
-	raceData := res.Race(data.Race)
-	if raceData != nil {
-		c.race = NewRace(*raceData)
-	}
-	// Set level.
-	for i := 0; i < data.Level; i++ {
-		oldMaxExp := c.MaxExperience()
-		c.levelup()
-		c.SetExperience(oldMaxExp)
-	}
-	// Add flags.
-	for _, fd := range data.Flags {
-		f := flag.Flag(fd.ID)
-		c.flags[f.ID()] = f
-	}
-	// Add skills.
-	for _, charSkillData := range data.Skills {
-		skillData := res.Skill(charSkillData.ID)
-		if skillData == nil {
-			log.Err.Printf("new character: %s: skill data not found: %v",
-				c.ID(), charSkillData.ID)
-			continue
-		}
-		skill := skill.New(*skillData)
-		skill.UseAction().SetCooldown(charSkillData.Cooldown)
-		c.AddSkill(skill)
-	}
-	// Add dialogs.
-	for _, charDialogData := range data.Dialogs {
-		dialogData := res.Dialog(charDialogData.ID)
-		if dialogData == nil {
-			log.Err.Printf("new character: %s: dialog data not found: %s",
-				c.ID(), charDialogData.ID)
-			continue
-		}
-		d := dialog.New(*dialogData)
-		for _, s := range d.Stages() {
-			if s.ID() == charDialogData.Stage {
-				d.SetStage(s)
-			}
-		}
-		c.AddDialog(d)
-	}
-	// Effects.
-	for _, charEffectData := range data.Effects {
-		effectData := res.Effect(charEffectData.ID)
-		if effectData == nil {
-			log.Err.Printf("new character: %s: effect data not found: %s",
-				c.ID(), charEffectData.ID)
-			continue
-		}
-		effect := effect.New(*effectData)
-		effect.SetSerial(charEffectData.Serial)
-		effect.SetTime(charEffectData.Time)
-		effect.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
-		c.AddEffect(effect)
-	}
-	// Trainings.
-	for _, charTrainingData := range data.Trainings {
-		trainingData := res.Training(charTrainingData.ID)
-		if trainingData == nil {
-			log.Err.Printf("new character: %s: training data not found: %s",
-				c.ID(), charTrainingData.ID)
-			continue
-		}
-		train := training.New(*trainingData)
-		trainerTraining := training.NewTrainerTraining(train, charTrainingData)
-		c.trainings = append(c.trainings, trainerTraining)
-	}
-	// Memory.
-	for _, memData := range data.Memory {
-		att := Attitude(memData.Attitude)
-		mem := TargetMemory{
-			TargetID:     memData.ObjectID,
-			TargetSerial: memData.ObjectSerial,
-			Attitude:     att,
-		}
-		c.MemorizeTarget(&mem)
-	}
 	return &c
 }
 
@@ -255,6 +171,7 @@ func (c *Character) Update(delta int64) {
 	// Journal && inventory.
 	c.Journal().Update(delta)
 	c.Inventory().Update(delta)
+	c.Inventory().SetCapacity(c.Attributes().Lift())
 	// Skills.
 	for _, s := range c.skills {
 		s.Update(delta)
