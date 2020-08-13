@@ -25,7 +25,36 @@ package object
 
 import (
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/module/effect"
+	"github.com/isangeles/flame/module/item"
+	"github.com/isangeles/flame/module/useaction"
+	"github.com/isangeles/flame/log"
 )
+
+// Apply applies specifed data on the object.
+func (o *Object) Apply(data res.ObjectData) {
+	o.id = data.ID
+	o.SetSerial(data.Serial)
+	o.SetName(data.Name)
+	o.SetMaxHealth(data.MaxHP)
+	o.SetHealth(data.HP)
+	o.inventory = item.NewInventory(data.Inventory)
+	o.action = useaction.New(data.UseAction)
+	// Add effects.
+	for _, data := range data.Effects {
+		effData := res.Effect(data.ID)
+		if effData == nil {
+			log.Err.Printf("Object: %s: Apply: effect data not found: %s",
+				o.ID(), data.ID)
+			continue
+		}
+		eff := effect.New(*effData)
+		eff.SetSerial(data.Serial)
+		eff.SetTime(data.Time)
+		eff.SetSource(data.SourceID, data.SourceSerial)
+		o.AddEffect(eff)
+	}
+}
 
 // Data return data resource for object.
 func (o *Object) Data() res.ObjectData {

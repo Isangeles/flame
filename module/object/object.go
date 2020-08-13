@@ -33,7 +33,6 @@ import (
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/serial"
 	"github.com/isangeles/flame/module/useaction"
-	"github.com/isangeles/flame/log"
 )
 
 // Struct for area objects.
@@ -55,46 +54,24 @@ type Object struct {
 // New creates new area object from
 // specified data.
 func New(data res.ObjectData) *Object {
-	ob := Object{
-		id:     data.ID,
-		name:   data.Name,
-		maxHP:  data.MaxHP,
+	o := Object{
+		effects:   make(map[string]*effect.Effect),
+		flags:     make(map[string]flag.Flag),
+		chatlog:   make(chan string, 1),
+		combatlog: make(chan string, 3),
 	}
-	ob.SetHealth(ob.MaxHealth())
-	ob.action = useaction.New(data.UseAction)
-	ob.inventory = item.NewInventory(data.Inventory)
-	ob.inventory.SetCapacity(10)
-	ob.effects = make(map[string]*effect.Effect)
-	ob.flags = make(map[string]flag.Flag)
-	ob.chatlog = make(chan string, 1)
-	ob.combatlog = make(chan string, 3)
-	// Translate name if not set.
-	if len(ob.Name()) < 1 {
-		ob.SetName(lang.Text(ob.ID()))
-	}
+	o.Apply(data)
+	o.inventory.SetCapacity(10)
 	// Restore.
-	if data.Restore {
-		ob.SetSerial(data.Serial)
-		ob.SetHealth(data.HP)
-		ob.SetPosition(data.PosX, data.PosY)
+	if !data.Restore {
+		// Translate name.
+		o.SetName(lang.Text(o.ID()))
+		o.SetHealth(o.MaxHealth())
+		o.SetPosition(data.PosX, data.PosY)
 	}
 	// Register serial.
-	serial.Register(&ob)
-	// Add effects.
-	for _, data := range data.Effects {
-		effData := res.Effect(data.ID)
-		if effData == nil {
-			log.Err.Printf("object: %s: effect data not found: %s",
-				ob.ID(), data.ID)
-			continue
-		}
-		eff := effect.New(*effData)
-		eff.SetSerial(data.Serial)
-		eff.SetTime(data.Time)
-		eff.SetSource(data.SourceID, data.SourceSerial)
-		ob.AddEffect(eff)
-	}
-	return &ob
+	serial.Register(&o)
+	return &o
 }
 
 // Update updates object.
