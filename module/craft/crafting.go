@@ -43,12 +43,12 @@ type Crafting struct {
 }
 
 // NewCrafting creates new crafting object.
-func NewCrafting(data res.CraftingData, object Crafter) *Crafting {
-	c := new(Crafting)
-	c.owner = object
-	c.recipes = make(map[string]*Recipe)
-	c.Apply(data)
-	return c
+func NewCrafting(crafter Crafter) *Crafting {
+	c := Crafting{
+		owner:   crafter,
+		recipes: make(map[string]*Recipe),
+	}
+	return &c
 }
 
 // Recipes returns all recipes in crafting object.

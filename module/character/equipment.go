@@ -44,7 +44,7 @@ type EquipmentSlot struct {
 
 // newEquipment creates new equipment for
 // specified character.
-func newEquipment(data res.EquipmentData, char *Character) *Equipment {
+func newEquipment(char *Character) *Equipment {
 	eq := new(Equipment)
 	eq.char = char
 	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Head))
@@ -56,7 +56,6 @@ func newEquipment(data res.EquipmentData, char *Character) *Equipment {
 	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Finger))
 	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Legs))
 	eq.slots = append(eq.slots, eq.newEquipmentSlot(item.Feet))
-	eq.Apply(data)
 	return eq
 }
 

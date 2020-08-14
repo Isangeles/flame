@@ -46,13 +46,10 @@ type Container interface {
 	Inventory() *Inventory
 }
 
-// NewInventory creates new inventory with
-// specified maximal capacity.
-func NewInventory(data res.InventoryData) *Inventory {
-	inv := new(Inventory)
-	inv.items = make(map[string]Item)
-	inv.Apply(data)
-	return inv
+// NewInventory creates new inventory.
+func NewInventory() *Inventory {
+	i := Inventory{items: make(map[string]Item)}
+	return &i
 }
 
 // Update updates all items in the inventory.

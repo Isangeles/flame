@@ -26,7 +26,6 @@ package object
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/effect"
-	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/useaction"
 	"github.com/isangeles/flame/log"
 )
@@ -38,7 +37,7 @@ func (o *Object) Apply(data res.ObjectData) {
 	o.SetName(data.Name)
 	o.SetMaxHealth(data.MaxHP)
 	o.SetHealth(data.HP)
-	o.inventory = item.NewInventory(data.Inventory)
+	o.Inventory().Apply(data.Inventory)
 	o.action = useaction.New(data.UseAction)
 	// Add effects.
 	for _, data := range data.Effects {

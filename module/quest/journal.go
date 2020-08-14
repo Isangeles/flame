@@ -36,12 +36,12 @@ type Journal struct {
 }
 
 // NewJournal creates quests journal.
-func NewJournal(data res.QuestLogData, quester Quester) *Journal {
-	j := new(Journal)
-	j.owner = quester
-	j.quests = make(map[string]*Quest)
-	j.Apply(data)
-	return j
+func NewJournal(quester Quester) *Journal {
+	j := Journal{
+		owner:  quester,
+		quests: make(map[string]*Quest),
+	}
+	return &j
 }
 
 // Update updates journal quests.

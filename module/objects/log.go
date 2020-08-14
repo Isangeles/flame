@@ -42,9 +42,8 @@ type Message struct {
 }
 
 // NewLog creates new log.
-func NewLog(data res.ObjectLogData) *Log {
+func NewLog() *Log {
 	l := Log{channel: make(chan string, 3)}
-	l.Apply(data)
 	return &l
 }
 

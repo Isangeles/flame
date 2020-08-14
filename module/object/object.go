@@ -55,6 +55,7 @@ type Object struct {
 // specified data.
 func New(data res.ObjectData) *Object {
 	o := Object{
+		inventory: item.NewInventory(),
 		effects:   make(map[string]*effect.Effect),
 		flags:     make(map[string]flag.Flag),
 		chatlog:   make(chan string, 1),

@@ -94,20 +94,20 @@ const (
 // New creates new character from specified data.
 func New(data res.CharacterData) *Character {
 	c := Character{
-		attributes: newAttributes(data.Attributes),
-		inventory:  item.NewInventory(data.Inventory),
+		attributes: new(Attributes),
+		inventory:  item.NewInventory(),
 		effects:    make(map[string]*effect.Effect),
 		skills:     make(map[string]*skill.Skill),
 		memory:     make(map[string]*TargetMemory),
 		dialogs:    make(map[string]*dialog.Dialog),
 		flags:      make(map[string]flag.Flag),
-		chatLog:    objects.NewLog(data.ChatLog),
-		combatLog:  objects.NewLog(data.CombatLog),
-		privateLog: objects.NewLog(data.PrivateLog),
+		chatLog:    objects.NewLog(),
+		combatLog:  objects.NewLog(),
+		privateLog: objects.NewLog(),
 	}
-	c.equipment = newEquipment(data.Equipment, &c)
-	c.journal = quest.NewJournal(data.QuestLog, &c)
-	c.crafting = craft.NewCrafting(data.Crafting, &c)
+	c.equipment = newEquipment(&c)
+	c.journal = quest.NewJournal(&c)
+	c.crafting = craft.NewCrafting(&c)
 	c.Apply(data)
 	// Restore
 	if !data.Restore {

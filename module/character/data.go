@@ -47,15 +47,14 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetGender(Gender(data.Sex))
 	c.SetAttitude(Attitude(data.Attitude))
 	c.SetAlignment(Alignment(data.Alignment))
+	c.Attributes().Apply(data.Attributes)
+	c.Inventory().Apply(data.Inventory)
 	c.Equipment().Apply(data.Equipment)
 	c.Journal().Apply(data.QuestLog)
 	c.Crafting().Apply(data.Crafting)
-	c.Inventory().Apply(data.Inventory)
-	c.Attributes().Apply(data.Attributes)
 	c.ChatLog().Apply(data.ChatLog)
 	c.CombatLog().Apply(data.CombatLog)
 	c.PrivateLog().Apply(data.PrivateLog)
-	c.Inventory().SetCapacity(c.Attributes().Lift())
 	// Set Race.
 	raceData := res.Race(data.Race)
 	if raceData != nil && (c.Race() == nil || c.Race().ID() != raceData.ID) {

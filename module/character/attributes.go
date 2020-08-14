@@ -42,13 +42,6 @@ type Attributes struct {
 	Str, Con, Dex, Wis, Int int
 }
 
-// newAttributes creates character attributes.
-func newAttributes(data res.AttributesData) *Attributes {
-	a := new(Attributes)
-	a.Apply(data)
-	return a
-}
-
 // Lift returns maximal size of inventory based on
 // attributes.
 func (a *Attributes) Lift() int {
