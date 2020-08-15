@@ -29,7 +29,6 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/craft"
 	"github.com/isangeles/flame/module/dialog"
@@ -109,20 +108,6 @@ func New(data res.CharacterData) *Character {
 	c.journal = quest.NewJournal(&c)
 	c.crafting = craft.NewCrafting(&c)
 	c.Apply(data)
-	// Restore
-	if !data.Restore {
-		// Translate name.
-		c.SetName(lang.Text(c.ID()))
-		// Set level.
-		for i := 0; i < data.Level; i++ {
-			oldMaxExp := c.MaxExperience()
-			c.levelup()
-			c.SetExperience(oldMaxExp)
-		}
-		// Set max HP & mana.
-		c.SetHealth(c.MaxHealth())
-		c.SetMana(c.MaxMana())
-	}
 	// Register serial.
 	serial.Register(&c)
 	return &c

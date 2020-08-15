@@ -26,7 +26,6 @@ package object
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/flag"
 	"github.com/isangeles/flame/module/item"
@@ -63,13 +62,6 @@ func New(data res.ObjectData) *Object {
 	}
 	o.Apply(data)
 	o.inventory.SetCapacity(10)
-	// Restore.
-	if !data.Restore {
-		// Translate name.
-		o.SetName(lang.Text(o.ID()))
-		o.SetHealth(o.MaxHealth())
-		o.SetPosition(data.PosX, data.PosY)
-	}
 	// Register serial.
 	serial.Register(&o)
 	return &o

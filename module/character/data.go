@@ -25,6 +25,7 @@ package character
 
 import (
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/effect"
@@ -37,8 +38,7 @@ import (
 func (c *Character) Apply(data res.CharacterData) {
 	c.id = data.ID
 	c.SetSerial(data.Serial)
-	c.SetHealth(data.HP)
-	c.SetMana(data.Mana)
+	c.SetName(data.Name)
 	c.SetExperience(data.Exp)
 	c.SetPosition(data.PosX, data.PosY)
 	c.SetDefaultPosition(data.DefY, data.DefY)
@@ -55,6 +55,18 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.ChatLog().Apply(data.ChatLog)
 	c.CombatLog().Apply(data.CombatLog)
 	c.PrivateLog().Apply(data.PrivateLog)
+	// Set level.
+	for i := 0; i < data.Level; i++ {
+		c.levelup()
+	}
+	if data.Restore {
+		c.SetHealth(data.HP)
+		c.SetMana(data.Mana)
+	}
+	if len(c.Name()) < 1 {
+		// Translate name.
+		c.SetName(lang.Text(c.ID()))
+	}
 	// Set Race.
 	raceData := res.Race(data.Race)
 	if raceData != nil && (c.Race() == nil || c.Race().ID() != raceData.ID) {
