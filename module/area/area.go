@@ -40,16 +40,16 @@ import (
 type Area struct {
 	id       string
 	chars    *sync.Map
-	objects  map[string]*object.Object
-	subareas map[string]*Area
+	objects  *sync.Map
+	subareas *sync.Map
 }
 
 // New creates new area.
 func New(data res.AreaData) *Area {
 	a := new(Area)
 	a.chars = new(sync.Map)
-	a.objects = make(map[string]*object.Object)
-	a.subareas = make(map[string]*Area)
+	a.objects = new(sync.Map)
+	a.subareas = new(sync.Map)
 	a.Apply(data)
 	return a
 }
@@ -85,21 +85,21 @@ func (a *Area) RemoveCharacter(c *character.Character) {
 
 // AddObjects adds specified object to object.
 func (a *Area) AddObject(o *object.Object) {
-	a.objects[o.ID()+o.Serial()] = o
+	a.objects.Store(o.ID()+o.Serial(), o)
 }
 
 func (a *Area) RemoveObject(o *object.Object) {
-	delete(a.objects, o.ID()+o.Serial())
+	a.objects.Delete(o.ID()+o.Serial())
 }
 
 // AddSubareas adds specified area to subareas.
 func (a *Area) AddSubarea(sa *Area) {
-	a.subareas[sa.ID()] = sa
+	a.subareas.Store(sa.ID(), sa)
 }
 
 // RemoveSubareas removes specified subobject.
 func (a *Area) RemoveSubarea(sa *Area) {
-	delete(a.subareas, sa.ID())
+	a.subareas.Delete(sa.ID())
 }
 
 // Chracters returns list with characters in
@@ -129,9 +129,14 @@ func (a *Area) AllCharacters() (chars []*character.Character) {
 // Objects returns list with all objects in
 // area(excluding subareas).
 func (a *Area) Objects() (objects []*object.Object) {
-	for _, o := range a.objects {
-		objects = append(objects, o)
+	addObject := func(k, v interface{}) bool {
+		o, ok := v.(*object.Object)
+		if ok {
+			objects = append(objects, o)
+		}
+		return true
 	}
+	a.objects.Range(addObject)
 	return
 }
 
@@ -147,9 +152,14 @@ func (a *Area) AllObjects() (objects []*object.Object) {
 
 // Subareas returns all subareas.
 func (a *Area) Subareas() (areas []*Area) {
-	for _, sa := range a.subareas {
-		areas = append(areas, sa)
+	addArea := func(k, v interface{}) bool {
+		area, ok := v.(*Area)
+		if ok {
+			areas = append(areas, area)
+		}
+		return true
 	}
+	a.subareas.Range(addArea)
 	return
 }
 
@@ -164,48 +174,33 @@ func (a *Area) AllSubareas() (subareas []*Area) {
 }
 
 // NearTargets returns all targets near specified position.
-func (a *Area) NearTargets(pos objects.Positioner, maxrange float64) []effect.Target {
-	targets := make([]effect.Target, 0)
-	// Characters.
-	addChar := func(k, v interface{}) bool {
-		t, ok := v.(*character.Character)
+func (a *Area) NearTargets(pos objects.Positioner, maxrange float64) (targets []effect.Target) {
+	addTar := func(k, v interface{}) bool {
+		t, ok := v.(effect.Target)
 		if ok && objects.Range(t, pos) <= maxrange {
 			targets = append(targets, t)
 		}
 		return true
 	}
-	a.chars.Range(addChar)
-	// Objects.
-	for _, ob := range a.objects {
-		if objects.Range(ob, pos) <= maxrange {
-			targets = append(targets, ob)
-		}
-	}
-	return targets
+	a.chars.Range(addTar)
+	a.objects.Range(addTar)
+	return
 }
 
 // NearObjects returns all objects within specified range from specified
 // XY position.
-func (a *Area) NearObjects(x, y, maxrange float64) []objects.Positioner {
-	objects := make([]objects.Positioner, 0)
-	// Characters.
-	addChar := func(k, v interface{}) bool {
-		c, ok := v.(*character.Character)
-		charX, charY := c.Position()
-		if ok && math.Hypot(charX-x, charY-y) <= maxrange {
-			objects = append(objects, c)
+func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
+	addObject := func(k, v interface{}) bool {
+		o, ok := v.(objects.Positioner)
+		posX, posY := o.Position()
+		if ok && math.Hypot(posX-x, posY-y) <= maxrange {
+			obs = append(obs, o)
 		}
 		return true
 	}
-	a.chars.Range(addChar)
-	// Objects.
-	for _, ob := range a.objects {
-		obX, obY := ob.Position()
-		if math.Hypot(obX-x, obY-y) <= maxrange {
-			objects = append(objects, ob)
-		}
-	}
-	return objects
+	a.chars.Range(addObject)
+	a.objects.Range(addObject)
+	return
 }
 
 // Apply applies specified data on the area.
@@ -213,8 +208,8 @@ func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
 	// Characters.
 	for _, areaCharData := range data.Characters {
-		ob, _ := a.chars.Load(areaCharData.ID+areaCharData.Serial)
-		char, _ := ob.(*character.Character)
+		v, _ := a.chars.Load(areaCharData.ID+areaCharData.Serial)
+		char, _ := v.(*character.Character)
 		if char == nil {
 			// Retireve char data.
 			charData := res.Character(areaCharData.ID, areaCharData.Serial)
@@ -234,7 +229,8 @@ func (a *Area) Apply(data res.AreaData) {
 	}
 	// Objects.
 	for _, areaObData := range data.Objects {
-		ob := a.objects[areaObData.ID+areaObData.Serial]
+		v, _ := a.objects.Load(areaObData.ID+areaObData.Serial)
+		ob, _ := v.(*object.Object)
 		if ob == nil {
 			// Retrieve object data.
 			obData := res.Object(areaObData.ID, areaObData.Serial)
@@ -252,7 +248,8 @@ func (a *Area) Apply(data res.AreaData) {
 	}
 	// Subareas.
 	for _, subareaData := range data.Subareas {
-		subarea := a.subareas[subareaData.ID]
+		v, _ := a.subareas.Load(subareaData.ID)
+		subarea, _ := v.(*Area)
 		if subarea == nil {
 			subarea = New(subareaData)
 			a.AddSubarea(subarea)
