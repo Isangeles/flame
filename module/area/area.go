@@ -21,6 +21,7 @@
  *
  */
 
+// Package with game area struct.
 package area
 
 import (
@@ -43,50 +44,13 @@ type Area struct {
 	subareas map[string]*Area
 }
 
-// NewArea returns new instace of object.
+// New creates new area.
 func New(data res.AreaData) *Area {
 	a := new(Area)
-	a.id = data.ID
 	a.chars = new(sync.Map)
 	a.objects = make(map[string]*object.Object)
 	a.subareas = make(map[string]*Area)
-	// Characters.
-	for _, areaCharData := range data.Characters {
-		// Retireve char data.
-		charData := res.Character(areaCharData.ID, areaCharData.Serial)
-		if charData == nil {
-			log.Err.Printf("area: %s: npc data not found: %s",
-				a.ID(), areaCharData.ID)
-			continue
-		}
-		charData.AI = areaCharData.AI
-		char := character.New(*charData)
-		// Set position.
-		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
-		char.SetDefaultPosition(areaCharData.PosX, areaCharData.PosY)
-		// Char to area.
-		a.AddCharacter(char)
-	}
-	// Objects.
-	for _, areaObData := range data.Objects {
-		// Retrieve object data.
-		obData := res.Object(areaObData.ID, areaObData.Serial)
-		if obData == nil {
-			log.Err.Printf("area %s: object data not found: %s",
-				a.ID(), areaObData.ID)
-			continue
-		}
-		ob := object.New(*obData)
-		// Set position.
-		ob.SetPosition(areaObData.PosX, areaObData.PosY)
-		// Object to area.
-		a.AddObject(ob)
-	}
-	// Subareas.
-	for _, subareaData := range data.Subareas {
-		subarea := New(subareaData)
-		a.AddSubarea(subarea)
-	}
+	a.Apply(data)
 	return a
 }
 
@@ -98,8 +62,8 @@ func (a *Area) Update(delta int64) {
 	for _, o := range a.Objects() {
 		o.Update(delta)
 	}
-	for _, a := range a.Subareas() {
-		a.Update(delta)
+	for _, sa := range a.Subareas() {
+		sa.Update(delta)
 	}
 }
 
@@ -242,6 +206,59 @@ func (a *Area) NearObjects(x, y, maxrange float64) []objects.Positioner {
 		}
 	}
 	return objects
+}
+
+// Apply applies specified data on the area.
+func (a *Area) Apply(data res.AreaData) {
+	a.id = data.ID
+	// Characters.
+	for _, areaCharData := range data.Characters {
+		ob, _ := a.chars.Load(areaCharData.ID+areaCharData.Serial)
+		char, _ := ob.(*character.Character)
+		if char == nil {
+			// Retireve char data.
+			charData := res.Character(areaCharData.ID, areaCharData.Serial)
+			if charData == nil {
+				log.Err.Printf("area: %s: npc data not found: %s",
+					a.ID(), areaCharData.ID)
+				continue
+			}
+			charData.AI = areaCharData.AI
+			char = character.New(*charData)
+			// Add to area.
+			a.AddCharacter(char)
+		}
+		// Set position.
+		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
+		char.SetDefaultPosition(areaCharData.PosX, areaCharData.PosY)
+	}
+	// Objects.
+	for _, areaObData := range data.Objects {
+		ob := a.objects[areaObData.ID+areaObData.Serial]
+		if ob == nil {
+			// Retrieve object data.
+			obData := res.Object(areaObData.ID, areaObData.Serial)
+			if obData == nil {
+				log.Err.Printf("area %s: object data not found: %s",
+					a.ID(), areaObData.ID)
+				continue
+			}
+			ob = object.New(*obData)
+			// Add to area.
+			a.AddObject(ob)
+		}
+		// Set position.
+		ob.SetPosition(areaObData.PosX, areaObData.PosY)
+	}
+	// Subareas.
+	for _, subareaData := range data.Subareas {
+		subarea := a.subareas[subareaData.ID]
+		if subarea == nil {
+			subarea = New(subareaData)
+			a.AddSubarea(subarea)
+		}
+		subarea.Apply(subareaData)
+	}
 }
 
 // Data returns area data resource.
