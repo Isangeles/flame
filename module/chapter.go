@@ -37,7 +37,7 @@ import (
 // Chapter struct represents module chapter.
 type Chapter struct {
 	Res         res.ResourcesData
-	conf        ChapterConfig
+	conf        *ChapterConfig
 	mod         *Module
 	loadedAreas map[string]*area.Area
 	onAreaAdded func(s *area.Area)
@@ -49,6 +49,7 @@ type Chapter struct {
 func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
+	c.conf = new(ChapterConfig)
 	c.loadedAreas = make(map[string]*area.Area)
 	c.Apply(data)
 	return c
@@ -110,7 +111,7 @@ func (c *Chapter) AddAreas(areas ...*area.Area) {
 }
 
 // Conf returns chapter configuration.
-func (c *Chapter) Conf() ChapterConfig {
+func (c *Chapter) Conf() *ChapterConfig {
 	return c.conf
 }
 

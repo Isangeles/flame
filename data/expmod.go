@@ -63,7 +63,7 @@ func exportChapter(path string, chapter *module.Chapter) error {
 	}
 	// Config.
 	confPath := filepath.Join(path, "chapter.conf")
-	err = exportChapterConfig(confPath, chapter.Conf())
+	err = exportChapterConfig(confPath, *chapter.Conf())
 	if err != nil {
 		return fmt.Errorf("unable to create chapter config file: %v", err)
 	}
