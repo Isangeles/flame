@@ -42,19 +42,7 @@ type Module struct {
 func New(data res.ModuleData) *Module {
 	m := new(Module)
 	m.conf = new(Config)
-	if len(data.Config["id"]) > 0 {
-		m.conf.ID = data.Config["id"][0]
-	}
-	if len(data.Config["path"]) > 0 {
-		m.conf.Path = data.Config["path"][0]
-	}
-	if len(data.Config["chapter"]) > 0 {
-		m.conf.Chapter = data.Config["chapter"][0]
-	}
-	m.Res = data.Resources
-	res.Add(m.Res)
-	chapter := NewChapter(m, data.Chapter)
-	m.SetChapter(chapter)
+	m.Apply(data)
 	return m
 }
 
@@ -100,6 +88,23 @@ func (m *Module) Object(id, serial string) objects.Object {
 // SetOnChapterChangedFunc sets function triggered on chapter change.
 func (m *Module) SetOnChapterChangedFunc(f func(c *Chapter)) {
 	m.onChapterChanged = f
+}
+
+// Apply applies specified data on the module.
+func (m *Module) Apply(data res.ModuleData) {
+	if len(data.Config["id"]) > 0 {
+		m.conf.ID = data.Config["id"][0]
+	}
+	if len(data.Config["path"]) > 0 {
+		m.conf.Path = data.Config["path"][0]
+	}
+	if len(data.Config["chapter"]) > 0 {
+		m.conf.Chapter = data.Config["chapter"][0]
+	}
+	m.Res = data.Resources
+	res.Add(m.Res)
+	chapter := NewChapter(m, data.Chapter)
+	m.SetChapter(chapter)
 }
 
 // Data creates data resource for module.

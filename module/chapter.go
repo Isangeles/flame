@@ -49,31 +49,8 @@ type Chapter struct {
 func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
-	c.conf = ChapterConfig{}
-	if len(data.Config["id"]) > 0 {
-		c.conf.ID = data.Config["id"][0]
-	}
-	if len(data.Config["path"]) > 0 {
-		c.conf.Path = data.Config["path"][0]
-	}
-	if len(data.Config["start-area"]) > 0 {
-		c.conf.StartArea = data.Config["start-area"][0]
-	}
-	if len(data.Config["start-pos"]) > 1 {
-		c.conf.StartPosX, _ = strconv.ParseFloat(data.Config["start-pos"][0], 64)
-		c.conf.StartPosY, _ = strconv.ParseFloat(data.Config["start-pos"][1], 64)
-	}
-	if len(data.Config["start-attrs"]) > 0 {
-		c.conf.StartAttrs, _ = strconv.Atoi(data.Config["start-attrs"][0])
-	}
-	if len(data.Config["start-level"]) > 0 {
-		c.conf.StartLevel, _ = strconv.Atoi(data.Config["start-level"][0])
-	}
-	c.conf.StartItems = data.Config["start-items"]
-	c.conf.StartSkills = data.Config["start-skills"]
-	c.Res = data.Resources
-	res.Add(c.Res)
 	c.loadedAreas = make(map[string]*area.Area)
+	c.Apply(data)
 	return c
 }
 
@@ -224,6 +201,33 @@ func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 // new area to chapter.
 func (c *Chapter) SetOnAreaAddedFunc(f func(s *area.Area)) {
 	c.onAreaAdded = f
+}
+
+// Apply applies specified data on the chapter.
+func (c *Chapter) Apply(data res.ChapterData) {
+	if len(data.Config["id"]) > 0 {
+		c.conf.ID = data.Config["id"][0]
+	}
+	if len(data.Config["path"]) > 0 {
+		c.conf.Path = data.Config["path"][0]
+	}
+	if len(data.Config["start-area"]) > 0 {
+		c.conf.StartArea = data.Config["start-area"][0]
+	}
+	if len(data.Config["start-pos"]) > 1 {
+		c.conf.StartPosX, _ = strconv.ParseFloat(data.Config["start-pos"][0], 64)
+		c.conf.StartPosY, _ = strconv.ParseFloat(data.Config["start-pos"][1], 64)
+	}
+	if len(data.Config["start-attrs"]) > 0 {
+		c.conf.StartAttrs, _ = strconv.Atoi(data.Config["start-attrs"][0])
+	}
+	if len(data.Config["start-level"]) > 0 {
+		c.conf.StartLevel, _ = strconv.Atoi(data.Config["start-level"][0])
+	}
+	c.conf.StartItems = data.Config["start-items"]
+	c.conf.StartSkills = data.Config["start-skills"]
+	c.Res = data.Resources
+	res.Add(c.Res)	
 }
 
 // Data creates data resource for chapter.
