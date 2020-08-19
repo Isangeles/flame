@@ -39,7 +39,7 @@ type Chapter struct {
 	Res         res.ResourcesData
 	conf        *ChapterConfig
 	mod         *Module
-	loadedAreas map[string]*area.Area
+	areas       map[string]*area.Area
 	onAreaAdded func(s *area.Area)
 }
 
@@ -50,14 +50,14 @@ func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = new(ChapterConfig)
-	c.loadedAreas = make(map[string]*area.Area)
+	c.areas = make(map[string]*area.Area)
 	c.Apply(data)
 	return c
 }
 
 // Update updates chapter.
 func (c *Chapter) Update(delta int64) {
-	for _, a := range c.loadedAreas {
+	for _, a := range c.areas {
 		a.Update(delta)
 	}
 	c.updateObjectsArea()
@@ -78,22 +78,12 @@ func (c *Chapter) Module() *Module {
 // Loads area if area with specified ID was not
 // requested before.
 func (c *Chapter) Area(areaID string) *area.Area {
-	a := c.loadedAreas[areaID]
-	if a != nil {
-		return a
-	}
-	areaData := res.Area(areaID)
-	if areaData == nil {
-		return nil
-	}
-	a = area.New(*areaData)
-	c.AddAreas(a)
-	return a
+	return c.areas[areaID]
 }
 
 // Areas returns all active(loaded) areas.
 func (c *Chapter) Areas() (areas []*area.Area) {
-	for _, a := range c.loadedAreas {
+	for _, a := range c.areas {
 		areas = append(areas, a)
 	}
 	return
@@ -103,7 +93,7 @@ func (c *Chapter) Areas() (areas []*area.Area) {
 // areas list.
 func (c *Chapter) AddAreas(areas ...*area.Area) {
 	for _, a := range areas {
-		c.loadedAreas[a.ID()] = a
+		c.areas[a.ID()] = a
 		if c.onAreaAdded != nil {
 			c.onAreaAdded(a)
 		}
@@ -118,7 +108,7 @@ func (c *Chapter) Conf() *ChapterConfig {
 // Characters returns list with all existing(loaded)
 // characters in chapter.
 func (c *Chapter) Characters() (chars []*character.Character) {
-	for _, a := range c.loadedAreas {
+	for _, a := range c.areas {
 		for _, c := range a.AllCharacters() {
 			chars = append(chars, c)
 		}
@@ -129,7 +119,7 @@ func (c *Chapter) Characters() (chars []*character.Character) {
 // Objects returns list with all area objects from all
 // loaded areas.
 func (c *Chapter) AreaObjects() (objects []*object.Object) {
-	for _, a := range c.loadedAreas {
+	for _, a := range c.areas {
 		for _, o := range a.AllObjects() {
 			objects = append(objects, o)
 		}
@@ -140,7 +130,7 @@ func (c *Chapter) AreaObjects() (objects []*object.Object) {
 // Character returns existing game character with specified
 // serial ID or nil if no character with specified ID exists.
 func (c *Chapter) Character(id, serial string) *character.Character {
-	for _, a := range c.loadedAreas {
+	for _, a := range c.areas {
 		for _, c := range a.AllCharacters() {
 			if c.ID() == id && c.Serial() == serial {
 				return c
@@ -153,7 +143,7 @@ func (c *Chapter) Character(id, serial string) *character.Character {
 // AreaObject retruns area object with specified ID and serial
 // or nil if no object was found.
 func (c *Chapter) AreaObject(id, serial string) *object.Object {
-	for _, a := range c.loadedAreas {
+	for _, a := range c.areas {
 		for _, o := range a.AllObjects() {
 			if o.ID() == id && o.Serial() == serial {
 				return o
@@ -180,7 +170,7 @@ func (c *Chapter) Object(id, serial string) objects.Object {
 // CharacterArea returns area where specified character
 // is present, or nil if no such area was found.
 func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
-	for _, a := range c.loadedAreas {
+	for _, a := range c.areas {
 		for _, c := range a.AllCharacters() {
 			if c.SerialID() == char.SerialID() {
 				return a
@@ -228,7 +218,16 @@ func (c *Chapter) Apply(data res.ChapterData) {
 	c.conf.StartItems = data.Config["start-items"]
 	c.conf.StartSkills = data.Config["start-skills"]
 	c.Res = data.Resources
-	res.Add(c.Res)	
+	res.Add(c.Res)
+	for _, ad := range data.Resources.Areas {
+		a := c.Area(ad.ID)
+		if a == nil {
+			a := area.New(ad)
+			c.AddAreas(a)
+		} else {
+			a.Apply(ad)
+		}
+	}
 }
 
 // Data creates data resource for chapter.
