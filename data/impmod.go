@@ -39,7 +39,7 @@ const (
 )
 
 // ImportModule imports module from directory with specified path.
-func ImportModule(path, lang string) (data res.ModuleData, err error) {
+func ImportModule(path string) (data res.ModuleData, err error) {
 	// Load module config file.
 	file, err := os.Open(filepath.Join(path, ModuleConfigFile))
 	if err != nil {
@@ -102,17 +102,12 @@ func ImportModule(path, lang string) (data res.ModuleData, err error) {
 	if err != nil {
 		log.Err.Printf("Import module: unable to import trainings: %v", err)
 	}
-	// Translation.
-	data.Resources.Translations, err = ImportLangDir(filepath.Join(path, "lang", lang))
-	if err != nil {
-		log.Err.Printf("Import module: unable to import translations: %v", err)
-	}
 	// Chapter.
 	if len(data.Config["chapter"]) < 1 {
 		return data, fmt.Errorf("no chapter set: %v", err)
 	}
 	chapterPath := filepath.Join(path, "chapters", data.Config["chapter"][0])
-	data.Chapter, err = ImportChapter(chapterPath, lang)
+	data.Chapter, err = ImportChapter(chapterPath)
 	if err != nil {
 		return data, fmt.Errorf("unable to import chapter: %v", err)
 	}
@@ -120,7 +115,7 @@ func ImportModule(path, lang string) (data res.ModuleData, err error) {
 }
 
 // ImportChapter imports chapter from directory with specified path.
-func ImportChapter(path, lang string) (data res.ChapterData, err error) {
+func ImportChapter(path string) (data res.ChapterData, err error) {
 	// Load module config file.
 	file, err := os.Open(filepath.Join(path, ChapterConfigFile))
 	if err != nil {
@@ -157,11 +152,6 @@ func ImportChapter(path, lang string) (data res.ChapterData, err error) {
 	data.Resources.Areas, err = ImportAreasDir(filepath.Join(path, "areas"))
 	if err != nil {
 		log.Err.Printf("Import chapter: unable to import areas: %v", err)
-	}
-	// Translation.
-	data.Resources.Translations, err = ImportLangDir(filepath.Join(path, "lang", lang))
-	if err != nil {
-		log.Err.Printf("Import chapter: unable to import translations: %v", err)
 	}
 	return data, nil
 }
