@@ -222,7 +222,7 @@ func (c *Chapter) Apply(data res.ChapterData) {
 	for _, ad := range data.Resources.Areas {
 		a := c.Area(ad.ID)
 		if a == nil {
-			a := area.New(ad)
+			a = area.New(ad)
 			c.AddAreas(a)
 		} else {
 			a.Apply(ad)
@@ -240,6 +240,16 @@ func (c *Chapter) Data() res.ChapterData {
 		data.Areas = append(data.Areas, a.Data())
 	}
 	data.Resources = c.Res
+	for _, c := range c.Characters() {
+		data.Resources.Characters = append(data.Resources.Characters, c.Data())
+	}
+	for _, o := range c.AreaObjects() {
+		data.Resources.Objects = append(data.Resources.Objects, o.Data())
+	}
+	data.Resources.Areas = make([]res.AreaData, 0)
+	for _, a := range c.Areas() {
+		data.Resources.Areas = append(data.Areas, a.Data())
+	}
 	return data
 }
 
