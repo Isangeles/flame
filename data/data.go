@@ -27,30 +27,9 @@ package data
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module"
 )
-
-// LoadModuleLang loads translation data for specified
-// language for specified module.
-func LoadModuleLang(mod *module.Module, lang string) error {
-	modLangPath := filepath.Join(mod.Conf().LangPath(), lang)
-	err := LoadTranslationData(modLangPath)
-	if err != nil {
-		return fmt.Errorf("unable to load module translation data: %v", err)
-	}
-	if mod.Chapter() == nil {
-		return nil
-	}
-	chapterLangPath := filepath.Join(mod.Chapter().Conf().LangPath(), lang)
-	err = LoadTranslationData(chapterLangPath)
-	if err != nil {
-		return fmt.Errorf("unable to load chapter translation data: %v", err)
-	}
-	return nil
-}
 
 // LoadTranslationData loads all lang files from
 // from directory with specified path.

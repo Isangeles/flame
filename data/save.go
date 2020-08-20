@@ -73,7 +73,7 @@ func ExportGame(game *flame.Game, path string) error {
 
 // ImportGame imports saved game from save file with specified name in
 // specified dir.
-func ImportGame(mod *module.Module, path string) (*flame.Game, error) {
+func ImportGame(mod *module.Module, path, lang string) (*flame.Game, error) {
 	doc, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open savegame file: %v", err)
@@ -91,7 +91,7 @@ func ImportGame(mod *module.Module, path string) (*flame.Game, error) {
 	serial.Reset()
 	// Load chapter with ID from save.
 	chapterPath := filepath.Join(mod.Conf().ChaptersPath(), gameData.SavedChapter.ID)
-	chapterData, err := ImportChapter(chapterPath)
+	chapterData, err := ImportChapter(chapterPath, lang)
 	if err != nil {
 		return nil, fmt.Errorf("unable to import chapter: %v", err)
 	}
@@ -106,7 +106,7 @@ func ImportGame(mod *module.Module, path string) (*flame.Game, error) {
 
 // ImportGamesDir imports all saved games from save files in
 // directory with specified path.
-func ImportGamesDir(mod *module.Module, dirPath string) ([]*flame.Game, error) {
+func ImportGamesDir(mod *module.Module, dirPath, lang string) ([]*flame.Game, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		log.Err.Printf("unable to read dir: %v", err)
@@ -116,7 +116,8 @@ func ImportGamesDir(mod *module.Module, dirPath string) ([]*flame.Game, error) {
 		if !strings.HasSuffix(fInfo.Name(), SavegameFileExt) {
 			continue
 		}
-		game, err := ImportGame(mod, filepath.Join(dirPath, fInfo.Name()))
+		path := filepath.Join(dirPath, fInfo.Name())
+		game, err := ImportGame(mod, path, lang)
 		if err != nil {
 			log.Err.Printf("data savegame load: unable to import saved game: %v", err)
 			continue
