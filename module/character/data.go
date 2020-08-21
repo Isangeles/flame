@@ -25,7 +25,6 @@ package character
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/effect"
@@ -62,10 +61,6 @@ func (c *Character) Apply(data res.CharacterData) {
 	if data.Restore {
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
-	}
-	if len(c.Name()) < 1 {
-		// Translate name.
-		c.SetName(lang.Text(c.ID()))
 	}
 	// Set Race.
 	raceData := res.Race(data.Race)

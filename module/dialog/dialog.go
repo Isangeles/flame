@@ -185,9 +185,9 @@ func (d *Dialog) Target() Talker {
 	return d.target
 }
 
-// dialogText replaces all macros in specified
+// DialogText replaces all macros in specified
 // text with proper info from owner/target.
-func (d *Dialog) dialogText(t string) string {
+func (d *Dialog) DialogText(t string) string {
 	text := strings.ReplaceAll(t, OwnerNameMacro, d.Owner().Name())
 	text = strings.ReplaceAll(text, TargetNameMacro, d.Target().Name())
 	return text

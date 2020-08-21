@@ -25,7 +25,6 @@ package dialog
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/req"
 )
@@ -56,7 +55,6 @@ func NewAnswer(dialog *Dialog, data res.DialogAnswerData) *Answer {
 	a.reqs = req.NewRequirements(data.Reqs)
 	a.talkerMods = effect.NewModifiers(data.TalkerMods)
 	a.ownerMods = effect.NewModifiers(data.OwnerMods)
-	a.text = lang.Text(a.ID())
 	return a
 }
 
@@ -101,9 +99,4 @@ func (a *Answer) TargetModifiers() []effect.Modifier {
 // OnwerModifiers returns modifiers for dialog owner.
 func (a *Answer) OwnerModifiers() []effect.Modifier {
 	return a.ownerMods
-}
-
-// String returns translated text for answer.
-func (a *Answer) String() string {
-	return a.dialog.dialogText(a.text)
 }

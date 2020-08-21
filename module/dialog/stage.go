@@ -25,7 +25,6 @@ package dialog
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"	
 	"github.com/isangeles/flame/module/req"
 )
@@ -34,7 +33,6 @@ import (
 type Stage struct {
 	dialog     *Dialog
 	id         string
-	text       string
 	ordinalID  string
 	start      bool
 	reqs       []req.Requirement
@@ -57,7 +55,6 @@ func NewStage(dialog *Dialog, data res.DialogStageData) *Stage {
 		a := NewAnswer(s.dialog, ad)
 		s.answers = append(s.answers, a)
 	}
-	s.text = lang.Text(s.ID())
 	return s
 }
 
@@ -84,9 +81,4 @@ func (s *Stage) TargetModifiers() []effect.Modifier {
 // OnwerModifiers returns modifiers for dialog owner.
 func (s *Stage) OwnerModifiers() []effect.Modifier {
 	return s.ownerMods
-}
-
-// String returns translated text for stage.
-func (s *Stage) String() string {
-	return s.dialog.dialogText(s.text)
 }
