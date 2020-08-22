@@ -44,8 +44,7 @@ func (o *Object) takeModifier(s objects.Object, m effect.Modifier) {
 	case *effect.HealthMod:
 		val := m.RandomValue()
 		o.SetHealth(o.Health() + val)
-		cmbMsg := fmt.Sprintf("%s: %s: %d", o.Name(),
-			lang.Text("ob_health"), val)
+		cmbMsg := fmt.Sprintf("%s: %d", lang.Text("ob_health"), val)
 		o.SendCombat(cmbMsg)
 	}
 }

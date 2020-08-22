@@ -39,7 +39,6 @@ type ObjectData struct {
 	XMLName   xml.Name           `xml:"object" json:"-"`
 	ID        string             `xml:"id,attr" json:"id"`
 	Serial    string             `xml:"serial,attr" json:"serial"`
-	Name      string             `xml:"name,attr" json:"name"`
 	MaxHP     int                `xml:"max-hp,attr" json:"max-hp"`
 	HP        int                `xml:"hp,attr" json:"hp"`
 	PosX      float64            `xml:"pos-x,attr" json:"pos-x"`

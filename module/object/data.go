@@ -25,7 +25,6 @@ package object
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/useaction"
 	"github.com/isangeles/flame/log"
@@ -35,16 +34,11 @@ import (
 func (o *Object) Apply(data res.ObjectData) {
 	o.id = data.ID
 	o.SetSerial(data.Serial)
-	o.SetName(data.Name)
 	o.SetMaxHealth(data.MaxHP)
 	o.SetHealth(o.MaxHealth())
 	o.SetPosition(data.PosX, data.PosY)
 	o.Inventory().Apply(data.Inventory)
 	o.action = useaction.New(data.UseAction)
-	if len(o.Name()) < 1 {
-		// Translate name.
-		o.SetName(lang.Text(o.ID()))
-	}
 	// Restore.
 	if data.Restore {
 		o.SetHealth(data.HP)
@@ -70,7 +64,6 @@ func (o *Object) Data() res.ObjectData {
 	data := res.ObjectData{
 		ID:        o.ID(),
 		Serial:    o.Serial(),
-		Name:      o.Name(),
 		MaxHP:     o.MaxHealth(),
 		HP:        o.Health(),
 		Inventory: o.Inventory().Data(),

@@ -37,7 +37,6 @@ import (
 // Struct for area objects.
 type Object struct {
 	id, serial string
-	name       string
 	hp, maxHP  int
 	resilience objects.Resilience
 	posX, posY float64
@@ -100,16 +99,6 @@ func (ob *Object) Serial() string {
 // object serial value.
 func (ob *Object) SetSerial(s string) {
 	ob.serial = s
-}
-
-// Name returns object name.
-func (ob *Object) Name() string {
-	return ob.name
-}
-
-// SetName sets object name.
-func (ob *Object) SetName(s string) {
-	ob.name = s
 }
 
 // Position returns object XY position.
