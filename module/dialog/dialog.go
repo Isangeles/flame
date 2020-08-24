@@ -27,6 +27,7 @@ import (
 	"strings"
 	
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
@@ -188,8 +189,8 @@ func (d *Dialog) Target() Talker {
 // DialogText replaces all macros in specified
 // text with proper info from owner/target.
 func (d *Dialog) DialogText(t string) string {
-	text := strings.ReplaceAll(t, OwnerNameMacro, d.Owner().Name())
-	text = strings.ReplaceAll(text, TargetNameMacro, d.Target().Name())
+	text := strings.ReplaceAll(t, OwnerNameMacro, lang.Text(d.Owner().ID()))
+	text = strings.ReplaceAll(text, TargetNameMacro, lang.Text(d.Target().ID()))
 	return text
 }
 
