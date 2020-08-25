@@ -61,7 +61,7 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		if c.onHealthMod != nil {
 			c.onHealthMod(val)
 		}
-		cmbMsg := fmt.Sprintf("%s: %s: %d", c.Name(),
+		cmbMsg := fmt.Sprintf("%s: %s: %d", lang.Text(c.ID()),
 			lang.Text("ob_health"), val)
 		c.CombatLog().Add(cmbMsg)
 		if s == nil {

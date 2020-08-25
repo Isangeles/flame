@@ -130,7 +130,8 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 		}
 	}
 	// Send combat message.
-	msg := fmt.Sprintf("%s: %s: %s", c.Name(), lang.Text("ob_effect"), e.Name())
+	msg := fmt.Sprintf("%s: %s: %s", lang.Text(c.ID()), lang.Text("ob_effect"),
+		lang.Text(e.ID()))
 	if config.Debug { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}

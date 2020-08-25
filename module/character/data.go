@@ -37,11 +37,9 @@ import (
 func (c *Character) Apply(data res.CharacterData) {
 	c.id = data.ID
 	c.SetSerial(data.Serial)
-	c.SetName(data.Name)
 	c.SetExperience(data.Exp)
 	c.SetPosition(data.PosX, data.PosY)
 	c.SetDefaultPosition(data.DefY, data.DefY)
-	c.SetName(data.Name)
 	c.SetAI(data.AI)
 	c.SetGender(Gender(data.Sex))
 	c.SetAttitude(Attitude(data.Attitude))
@@ -164,7 +162,6 @@ func (c *Character) Data() res.CharacterData {
 	data := res.CharacterData{
 		ID:         c.ID(),
 		Serial:     c.Serial(),
-		Name:       c.Name(),
 		AI:         c.AI(),
 		Level:      c.Level(),
 		Sex:        string(c.Gender()),

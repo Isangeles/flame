@@ -200,11 +200,6 @@ func (c *Character) SerialID() string {
 	return fmt.Sprintf("%s_%s", c.ID(), c.serial)
 }
 
-// Name returns character name.
-func (c *Character) Name() string {
-	return c.name
-}
-
 // Level returns character level.
 func (c *Character) Level() int {
 	return c.level
@@ -356,12 +351,6 @@ func (c *Character) Inventory() *item.Inventory {
 // Equipment returns character equipment.
 func (c *Character) Equipment() *Equipment {
 	return c.equipment
-}
-
-// SetName sets specified text as character
-// display name.
-func (c *Character) SetName(name string) {
-	c.name = name
 }
 
 // SetHealth sets specified value as current
