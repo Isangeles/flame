@@ -48,7 +48,6 @@ func main() {
 	// Example pc data.
 	pcData := res.CharacterData{
 		ID:        "pc",
-		Name:      "PC",
 		Level:     1,
 		Sex:       string(character.Male),
 		Race:      "rHuman",
