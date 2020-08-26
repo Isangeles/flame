@@ -47,7 +47,6 @@ func TestExportModule(t *testing.T) {
 	}
 	charData := res.CharacterData{
 		ID:        "char1",
-		Name:      "charName",
 		AI:        true,
 		Level:     2,
 		Sex:       "genderMale",

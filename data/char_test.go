@@ -34,7 +34,6 @@ import (
 func TestExportCharacters(t *testing.T) {
 	data := res.CharacterData{
 		ID:        "char1",
-		Name:      "charName",
 		AI:        true,
 		Level:     2,
 		Sex:       "genderMale",
