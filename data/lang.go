@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -76,4 +77,25 @@ func ImportLangDir(path string) ([]res.TranslationData, error) {
 		data = append(data, impData...)
 	}
 	return data, nil
+}
+
+// ExportLang exports translation data to a new file with specified path.
+func ExportLang(path string, data ...res.TranslationData) error {
+	txt := text.MarshalLangData(data)
+	if !strings.HasSuffix(path, LangFileExt) {
+		path += LangFileExt
+	}
+	err := os.MkdirAll(filepath.Dir(path), 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create lang file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create lang file: %v", err)
+	}
+	defer file.Close()
+	writer := bufio.NewWriter(file)
+	writer.WriteString(txt)
+	writer.Flush()
+	return nil
 }

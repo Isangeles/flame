@@ -1,5 +1,5 @@
 /*
- * lang.go
+ * lang_test.go
  *
  * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -21,35 +21,26 @@
  *
  */
 
-package text
+package data
 
 import (
-	"fmt"
-	"io"
+	"testing"
 
 	"github.com/isangeles/flame/data/res"
 )
 
-// UnmarshalLangData retrives all translation data from
-// specified source.
-func UnmarshalLangData(data io.Reader) ([]res.TranslationData, error) {
-	values, err := UnmarshalConfig(data)
+// Test for exporting translation data for lang file.
+func TestExportLang(t *testing.T) {
+	data1 := res.TranslationData{
+		ID:    "item1",
+		Texts: []string{"Item 1", "Item description 1"},
+	}
+	data2 := res.TranslationData{
+		ID:    "item2",
+		Texts: []string{"Item 2", "Item description 2"},
+	}
+	err := ExportLang("testlang", data1, data2)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal config data: %v", err)
+		t.Errorf("Unable to export translation data: %v", err)
 	}
-	translations := make([]res.TranslationData, 0)
-	for k, v := range values {
-		td := res.TranslationData{k, v}
-		translations = append(translations, td)
-	}
-	return translations, nil
-}
-
-// MarshalLangData marshals specified translation data into text string.
-func MarshalLangData(data []res.TranslationData) string {
-	keyValues := make(map[string][]string)
-	for _, d := range data {
-		keyValues[d.ID] = d.Texts
-	}
-	return MarshalConfig(keyValues)
 }

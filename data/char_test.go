@@ -1,5 +1,5 @@
 /*
- * data_test.go
+ * char_test.go
  * 
  * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
  * 
