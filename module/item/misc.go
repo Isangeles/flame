@@ -25,7 +25,6 @@ package item
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/serial"
 	"github.com/isangeles/flame/module/useaction"
@@ -34,7 +33,6 @@ import (
 // Struct for miscellaneous items.
 type Misc struct {
 	id         string
-	name, info string
 	serial     string
 	value      int
 	level      int
@@ -55,12 +53,6 @@ func NewMisc(data res.MiscItemData) *Misc {
 		currency:   data.Currency,
 		consumable: data.Consumable,
 	}
-	// Name & info.
-	nameInfo := lang.Texts(m.ID())
-	m.name = nameInfo[0]
-	if len(nameInfo) > 1 {
-		m.info = nameInfo[1]
-	}
 	// Use action.
 	m.useAction = useaction.New(data.UseAction)
 	// Serial.
@@ -78,16 +70,6 @@ func (m *Misc) Update(delta int64) {
 // ID returns item ID.
 func (m *Misc) ID() string {
 	return m.id
-}
-
-// Name returns item name.
-func (m *Misc) Name() string {
-	return m.name
-}
-
-// Info returns item info.
-func (m *Misc) Info() string {
-	return m.info
 }
 
 // Serial returns item serial value.

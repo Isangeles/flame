@@ -25,7 +25,6 @@ package item
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
 	"github.com/isangeles/flame/module/serial"
@@ -35,7 +34,6 @@ import (
 // Struct for weapons.
 type Weapon struct {
 	id             string
-	name, info     string
 	serial         string
 	value          int
 	level          int
@@ -58,12 +56,6 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		dmgMin:  data.Damage.Min,
 		dmgMax:  data.Damage.Max,
 		dmgType: objects.Element(data.Damage.Type),
-	}
-	// Name & info.
-	nameInfo := lang.Texts(w.ID())
-	w.name = nameInfo[0]
-	if len(nameInfo) > 1 {
-		w.info = nameInfo[1]
 	}
 	// Effects.
 	for _, ed := range data.Damage.Effects {
@@ -92,16 +84,6 @@ func (w *Weapon) Update(delta int64) {
 // ID returns weapon ID.
 func (w *Weapon) ID() string {
 	return w.id
-}
-
-// Name returns weapon name.
-func (w *Weapon) Name() string {
-	return w.name
-}
-
-// Info return weapon info.
-func (w *Weapon) Info() string {
-	return w.info
 }
 
 // Serial returns weapon serial value.

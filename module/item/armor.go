@@ -25,7 +25,6 @@ package item
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/req"
 	"github.com/isangeles/flame/module/serial"
@@ -35,8 +34,6 @@ import (
 // Struct for armor items.
 type Armor struct {
 	id        string
-	name      string
-	info      string
 	serial    string
 	level     int
 	value     int
@@ -62,11 +59,6 @@ func NewArmor(data res.ArmorData) *Armor {
 	for _, s := range data.Slots {
 		a.slots = append(a.slots, Slot(s.ID))
 	}
-	nameInfo := lang.Texts(a.ID())
-	a.name = nameInfo[0]
-	if len(nameInfo) > 1 {
-		a.info = nameInfo[1]
-	}
 	serial.Register(&a)
 	return &a
 }
@@ -81,16 +73,6 @@ func (a *Armor) Update(delta int64) {
 // ID returns armor ID.
 func (a *Armor) ID() string {
 	return a.id
-}
-
-// Name returns armor name.
-func (a *Armor) Name() string {
-	return a.name
-}
-
-// Info returns armor info.
-func (a *Armor) Info() string {
-	return a.info
 }
 
 // Serial returns armor serial value.
