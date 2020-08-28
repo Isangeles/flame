@@ -31,7 +31,6 @@ MINOR:
 * In-game time
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
-* Info for skills
 * Remove Apply call in character.New and data argument, Apply function should be called
   separately after calling character.New
 * Apply function for UseAction struct
