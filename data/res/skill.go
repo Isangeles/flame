@@ -35,7 +35,6 @@ type SkillsData struct {
 
 // Struct for skill data.
 type SkillData struct {
-	ID       string            `xml:"id,attr" json:"id"`
-	Name     string            `xml:"name,attr" json:"name"`
-	UseAction UseActionData    `xml:"use" json:"use"`
+	ID        string        `xml:"id,attr" json:"id"`
+	UseAction UseActionData `xml:"use" json:"use"`
 }

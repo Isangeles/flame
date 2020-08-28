@@ -26,14 +26,12 @@ package skill
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for skills.
 type Skill struct {
 	id          string
-	name        string
 	useAction   *useaction.UseAction
 }
 
@@ -41,10 +39,6 @@ type Skill struct {
 func New(data res.SkillData) *Skill {
 	s := new(Skill)
 	s.id = data.ID
-	s.name = data.Name
-	if len(s.name) < 1 {
-		s.name = lang.Text(s.id)
-	}
 	s.useAction = useaction.New(data.UseAction)
 	return s
 }
@@ -57,17 +51,6 @@ func (s *Skill) Update(delta int64) {
 // ID returns skill ID.
 func (s *Skill) ID() string {
 	return s.id
-}
-
-// Name returns skill name.
-func (s *Skill) Name() string {
-	return s.name
-}
-
-// SetName sets specified name as
-// skill display name.
-func (s *Skill) SetName(name string) {
-	s.name = name
 }
 
 // UseAction returns skill use action.
