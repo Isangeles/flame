@@ -25,15 +25,12 @@ package craft
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for recipes.
 type Recipe struct {
 	id        string
-	name      string
-	info      string
 	category  string
 	useAction *useaction.UseAction
 }
@@ -44,11 +41,6 @@ func NewRecipe(data res.RecipeData) *Recipe {
 		id:        data.ID,
 		category:  data.Category,
 		useAction: useaction.New(data.UseAction),
-	}
-	nameInfo := lang.Texts(r.ID())
-	r.name = nameInfo[0]
-	if len(nameInfo) > 1 {
-		r.info = nameInfo[1]
 	}
 	return &r
 }
@@ -61,16 +53,6 @@ func (r *Recipe) Update(delta int64) {
 // ID returns recipe ID.
 func (r *Recipe) ID() string {
 	return r.id
-}
-
-// Name returns recipe name.
-func (r *Recipe) Name() string {
-	return r.name
-}
-
-// Info returns recipe info.
-func (r *Recipe) Info() string {
-	return r.info
 }
 
 // Category returns ID of recipe category.

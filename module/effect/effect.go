@@ -26,7 +26,6 @@ package effect
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/serial"
 	"github.com/isangeles/flame/log"
 )
@@ -34,7 +33,6 @@ import (
 // Struct for effects.
 type Effect struct {
 	id, serial       string
-	name             string
 	srcID, srcSerial string
 	tarID, tarSerial string
 	modifiers        []Modifier
@@ -49,14 +47,10 @@ type Effect struct {
 func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
-	e.name = lang.Text(e.ID())
 	e.modifiers = NewModifiers(data.Modifiers)
 	e.duration = int64(data.Duration)
 	e.meleeHit = data.MeleeHit
 	e.SetTime(data.Duration)
-	if len(e.name) < 1 {
-		e.name = lang.Text(e.id)
-	}
 	serial.Register(e)
 	return e
 }
@@ -100,11 +94,6 @@ func (e *Effect) Serial() string {
 	return e.serial
 }
 
-// Name returns effect display name.
-func (e *Effect) Name() string {
-	return e.name
-}
-
 // Duration returns effect duration time
 // in milliseconds.
 func (e *Effect) Duration() int64 {
@@ -132,12 +121,6 @@ func (e *Effect) Source() (string, string) {
 // effect serial value.
 func (e *Effect) SetSerial(serial string) {
 	e.serial = serial
-}
-
-// SetName sets specified text as effect
-// display name.
-func (e *Effect) SetName(name string) {
-	e.name = name
 }
 
 // SetTime sets specified value as effect

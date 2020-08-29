@@ -40,7 +40,7 @@ func (ob *Object) HitEffects() []*effect.Effect {
 // TakeEffect handles effect casted towards object.
 func (ob *Object) TakeEffect(e *effect.Effect) {
 	ob.AddEffect(e)
-	msg := fmt.Sprintf("%s: %s", lang.Text("ob_effect"), e.Name())
+	msg := fmt.Sprintf("%s: %s", lang.Text("ob_effect"), lang.Text(e.ID()))
 	if config.Debug { // add effect serial ID to combat message
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}

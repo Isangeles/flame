@@ -26,15 +26,12 @@ package training
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/useaction"
 )
 
 // Struct for training.
 type Training struct {
 	id        string
-	name      string
-	info      string
 	useAction *useaction.UseAction
 }
 
@@ -45,27 +42,12 @@ func New(data res.TrainingData) *Training {
 		id:        data.ID,
 		useAction: ua,
 	}
-	nameInfo := lang.Texts(t.ID())
-	t.name = nameInfo[0]
-	if len(nameInfo) > 1 {
-		t.info = nameInfo[1]
-	}
 	return &t
 }
 
 // ID returns training ID.
 func (t *Training) ID() string {
 	return t.id
-}
-
-// Name returns training name.
-func (t *Training) Name() string {
-	return t.name
-}
-
-// Info return training info.
-func (t *Training) Info() string {
-	return t.info
 }
 
 // UseAction returns training use action.
