@@ -25,7 +25,6 @@ package quest
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/req"
 )
@@ -33,7 +32,6 @@ import (
 // Struct for quest.
 type Quest struct {
 	id          string
-	name, info  string
 	completed   bool
 	activeStage *Stage
 	stages      []*Stage
@@ -45,10 +43,6 @@ type Quester interface {
 	Journal() *Journal
 	MeetReqs(reqs ...req.Requirement) bool
 }
-
-const (
-	END_QUEST_ID = "end"
-)
 
 // New creates quest.
 func New(data res.QuestData) *Quest {
@@ -63,27 +57,12 @@ func New(data res.QuestData) *Quest {
 			q.activeStage = s
 		}
 	}
-	nameInfo := lang.Texts(q.ID())
-	q.name = nameInfo[0]
-	if len(nameInfo) > 1 {
-		q.info = nameInfo[1]
-	}
 	return q
 }
 
 // ID returns quest ID.
 func (q *Quest) ID() string {
 	return q.id
-}
-
-// Name returns name of the quest.
-func (q *Quest) Name() string {
-	return q.name
-}
-
-// Info returns info about quest.
-func (q *Quest) Info() string {
-	return q.info
 }
 
 // Completed check if quest was marked
