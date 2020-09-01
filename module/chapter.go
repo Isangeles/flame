@@ -172,12 +172,12 @@ func (c *Chapter) Object(id, serial string) objects.Object {
 func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 	for _, a := range c.areas {
 		for _, c := range a.AllCharacters() {
-			if c.SerialID() == char.SerialID() {
+			if c.ID() == char.ID() && c.Serial() == char.Serial() {
 				return a
 			}
 			for _, a := range a.AllSubareas() {
 				for _, c := range a.Characters() {
-					if c.SerialID() == char.SerialID() {
+					if c.ID() == char.ID() && c.Serial() == char.Serial() {
 						return a
 					}
 				}

@@ -26,8 +26,6 @@
 package character
 
 import (
-	"fmt"
-
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/craft"
@@ -45,7 +43,7 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id, serial, name string
+	id, serial       string
 	level            int
 	hp, maxHP        int
 	mana, maxMana    int
@@ -192,12 +190,6 @@ func (c *Character) ID() string {
 // Serial returns serial value.
 func (c *Character) Serial() string {
 	return c.serial
-}
-
-// SerialID returns character ID and serial value
-// in form: [ID]_[serial].
-func (c *Character) SerialID() string {
-	return fmt.Sprintf("%s_%s", c.ID(), c.serial)
 }
 
 // Level returns character level.
