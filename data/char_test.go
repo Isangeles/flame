@@ -27,7 +27,6 @@ import (
 	"testing"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module/character"
 )
 
 // Test for exporting characters to characters file.
@@ -49,10 +48,10 @@ func TestExportCharacters(t *testing.T) {
 		Int:       5,
 		Wis:       6,
 	}
-	chars := make([]*character.Character, 0)
-	chars = append(chars, character.New(data))
+	chars := make([]res.CharacterData, 0)
+	chars = append(chars, data)
 	data.ID = "char2"
-	chars = append(chars, character.New(data))
+	chars = append(chars, data)
 	err := ExportCharacters("testchars", chars...)
 	if err != nil {
 		t.Errorf("Unable to export characters: %v", err)

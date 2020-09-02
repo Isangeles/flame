@@ -30,6 +30,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
@@ -78,7 +79,11 @@ func exportChapter(path string, chapter *module.Chapter) error {
 	}
 	// Characters.
 	charsPath := filepath.Join(path, "characters", "main")
-	err = ExportCharacters(charsPath, chapter.Characters()...)
+	charsData := make([]res.CharacterData, 0)
+	for _, c := range chapter.Characters() {
+		charsData = append(charsData, c.Data())
+	}
+	err = ExportCharacters(charsPath, charsData...)
 	if err != nil {
 		return fmt.Errorf("unable to export characters: %v", err)
 	}

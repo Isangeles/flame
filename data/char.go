@@ -33,7 +33,6 @@ import (
 	"strings"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/log"
 )
 
@@ -86,10 +85,10 @@ func ImportCharactersDir(path string) ([]res.CharacterData, error) {
 }
 
 // ExportCharacters saves characters to new file with specified path.
-func ExportCharacters(path string, chars ...*character.Character) error {
+func ExportCharacters(path string, chars ...res.CharacterData) error {
 	data := new(res.CharactersData)
 	for _, c := range chars {
-		data.Characters = append(data.Characters, c.Data())
+		data.Characters = append(data.Characters, c)
 	}
 	// Marshal character data.
 	xml, err := xml.Marshal(data)
