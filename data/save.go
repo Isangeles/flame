@@ -172,7 +172,8 @@ func buildSavedArea(mod *module.Module, data res.SavedAreaData) *area.Area {
 	areaData := res.AreaData{
 		ID: data.ID,
 	}
-	area := area.New(areaData)
+	area := area.New()
+	area.Apply(areaData)
 	// Characters.
 	for _, charData := range data.Chars {
 		char := character.New(charData)
