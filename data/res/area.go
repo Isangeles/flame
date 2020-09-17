@@ -29,7 +29,7 @@ import (
 
 // Struct for area data.
 type AreaData struct {
-	XMLName    xml.Name         `xml:"area" json:"area"`
+	XMLName    xml.Name         `xml:"area" json:"-"`
 	ID         string           `xml:"id,attr" json:"id"`
 	Characters []AreaCharData   `xml:"characters>character" json:"character"`
 	Objects    []AreaObjectData `xml:"objects>object" json:"objects"`
@@ -39,7 +39,7 @@ type AreaData struct {
 // Struct for area character data.
 type AreaCharData struct {
 	ID     string  `xml:"id,attr" json:"id"`
-	Serial string  `xml:"serial,attr" json:"id"`
+	Serial string  `xml:"serial,attr" json:"serial"`
 	PosX   float64 `xml:"x,attr" json:"pos-x"`
 	PosY   float64 `xml:"y,attr" json:"pos-y"`
 	AI     bool    `xml:"ai,attr" json:"ai"`
