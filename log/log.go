@@ -22,8 +22,10 @@
  */
 
 // Package with engine log.
-// To use log, create new log.Loger with one of
-// log writers as writer.
+// To use log, create new log.Loger with one of log
+// writers as writer.
+// Use PrintStdOut boolean to enable/disable printing
+// messages on standard output.
 package log
 
 import (
@@ -32,8 +34,9 @@ import (
 )
 
 var (
-	messages []Message
-	counter  int64
+	PrintStdOut = false
+	messages    []Message
+	counter     int64
 )
 
 // Messages returns all messages from log.
@@ -51,6 +54,9 @@ func logInfo(msg string) {
 	m.id = fmt.Sprintf("%d", counter)
 	counter += 1
 	messages = append(messages, m)
+	if PrintStdOut {
+		fmt.Print(msg)
+	}
 }
 
 // Error registers specified text as error message.
@@ -63,7 +69,9 @@ func logError(msg string) {
 	m.id = fmt.Sprintf("%d", counter)
 	counter += 1
 	messages = append(messages, m)
-	fmt.Print(msg)
+	if PrintStdOut {
+		fmt.Print(msg)
+	}
 }
 
 // Debug registers specified text as debug message.
@@ -76,5 +84,7 @@ func logDebug(msg string) {
 	m.id = fmt.Sprintf("%d", counter)
 	counter += 1
 	messages = append(messages, m)
-	fmt.Print(msg)
+	if PrintStdOut {
+		fmt.Print(msg)
+	}
 }
