@@ -113,7 +113,7 @@ func Misc(id string) *MiscItemData {
 // and serial value.
 func Character(id, serial string) *CharacterData {
 	for _, d := range Characters {
-		if d.ID == id {
+		if d.ID == id && d.Serial == serial {
 			return &d
 		}
 	}
@@ -124,7 +124,7 @@ func Character(id, serial string) *CharacterData {
 // serial value.
 func Object(id, serial string) *ObjectData {
 	for _, d := range Objects {
-		if d.ID == id {
+		if d.ID == id && d.Serial == serial {
 			return &d
 		}
 	}
