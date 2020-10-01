@@ -249,7 +249,7 @@ func (c *Chapter) Data() res.ChapterData {
 	}
 	data.Resources.Areas = make([]res.AreaData, 0)
 	for _, a := range c.Areas() {
-		data.Resources.Areas = append(data.Areas, a.Data())
+		data.Resources.Areas = append(data.Resources.Areas, a.Data())
 	}
 	return data
 }
