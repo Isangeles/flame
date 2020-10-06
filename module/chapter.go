@@ -225,9 +225,9 @@ func (c *Chapter) Apply(data res.ChapterData) {
 			a = area.New()
 			a.Apply(ad)
 			c.AddAreas(a)
-		} else {
-			a.Apply(ad)
+			continue
 		}
+		a.Apply(ad)
 	}
 }
 
