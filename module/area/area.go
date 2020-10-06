@@ -205,9 +205,6 @@ func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
 // Apply applies specified data on the area.
 func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
-	a.chars = new(sync.Map)
-	a.objects = new(sync.Map)
-	a.subareas = new(sync.Map)
 	// Characters.
 	for _, areaCharData := range data.Characters {
 		v, _ := a.chars.Load(areaCharData.ID+areaCharData.Serial)
