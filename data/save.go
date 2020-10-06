@@ -95,7 +95,8 @@ func ImportGame(mod *module.Module, path string) (*flame.Game, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to import chapter: %v", err)
 	}
-	chapter := module.NewChapter(mod, chapterData)
+	chapter := module.NewChapter(mod)
+	chapter.Apply(chapterData)
 	mod.SetChapter(chapter)
 	game, err := buildSavedGame(mod, gameData)
 	if err != nil {

@@ -37,12 +37,10 @@ type Module struct {
 	onChapterChanged func(c *Chapter)
 }
 
-// New creates new instance of module from specified data, adds
-// module resources to resources base in res package.
-func New(data res.ModuleData) *Module {
+// New creates new game module.
+func New() *Module {
 	m := new(Module)
 	m.conf = new(Config)
-	m.Apply(data)
 	return m
 }
 
@@ -91,6 +89,8 @@ func (m *Module) SetOnChapterChangedFunc(f func(c *Chapter)) {
 }
 
 // Apply applies specified data on the module.
+// Also, adds module resources to resources
+// base in res package.
 func (m *Module) Apply(data res.ModuleData) {
 	if len(data.Config["id"]) > 0 {
 		m.conf.ID = data.Config["id"][0]
@@ -104,9 +104,8 @@ func (m *Module) Apply(data res.ModuleData) {
 	m.Res = data.Resources
 	res.Add(m.Res)
 	if m.Chapter() == nil || m.Chapter().Conf().ID != data.Chapter.ID {
-		chapter := NewChapter(m, data.Chapter)
+		chapter := NewChapter(m)
 		m.SetChapter(chapter)
-		return
 	}
 	m.Chapter().Apply(data.Chapter)
 }

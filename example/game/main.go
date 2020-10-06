@@ -41,7 +41,8 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
-	mod := module.New(modData)
+	mod := module.New()
+	mod.Apply(modData)
 	// Create game.
 	game := flame.NewGame(mod)
 	// Create PC.

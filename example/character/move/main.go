@@ -42,7 +42,8 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
-	mod := module.New(modData)
+	mod := module.New()
+	mod.Apply(modData)
 	// Create game and start game loop.
 	game := flame.NewGame(mod)
 	go update(game)

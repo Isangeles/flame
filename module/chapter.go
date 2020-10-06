@@ -43,15 +43,12 @@ type Chapter struct {
 	onAreaAdded func(s *area.Area)
 }
 
-// NewChapter creates new instance of module chapter
-// from specified data, adds chapter resources to
-// resources base in res package.
-func NewChapter(mod *Module, data res.ChapterData) *Chapter {
+// NewChapter creates new module chapter.
+func NewChapter(mod *Module) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = new(ChapterConfig)
 	c.areas = make(map[string]*area.Area)
-	c.Apply(data)
 	return c
 }
 
@@ -195,6 +192,8 @@ func (c *Chapter) SetOnAreaAddedFunc(f func(s *area.Area)) {
 }
 
 // Apply applies specified data on the chapter.
+// Also, adds chapter resources to resources
+// base in res package.
 func (c *Chapter) Apply(data res.ChapterData) {
 	if len(data.Config["id"]) > 0 {
 		c.conf.ID = data.Config["id"][0]
