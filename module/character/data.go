@@ -39,7 +39,8 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetSerial(data.Serial)
 	c.SetExperience(data.Exp)
 	c.SetPosition(data.PosX, data.PosY)
-	c.SetDefaultPosition(data.DefY, data.DefY)
+	c.SetDefaultPosition(data.DefX, data.DefY)
+	c.SetDestPoint(data.DestX, data.DestY)
 	c.SetAI(data.AI)
 	c.SetGender(Gender(data.Sex))
 	c.SetAttitude(Attitude(data.Attitude))
@@ -186,6 +187,7 @@ func (c *Character) Data() res.CharacterData {
 	}
 	data.PosX, data.PosY = c.Position()
 	data.DefX, data.DefY = c.DefaultPosition()
+	data.DestX, data.DestY = c.DestPoint()
 	for _, f := range c.Flags() {
 		data.Flags = append(data.Flags, res.FlagData{string(f)})
 	}

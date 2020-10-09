@@ -49,6 +49,8 @@ type CharacterData struct {
 	PosY       float64               `xml:"position-y,attr" json:"pos-y"`
 	DefX       float64               `xml:"def-position-x,attr" json:"def-pos-x"`
 	DefY       float64               `xml:"def-position-y,attr" json:"def-pos-y"`
+	DestX      float64               `xml:"dest-point-x,attr" json:"dest-point-x"`
+	DestY      float64               `xml:"dest-point-y,attr" json:"dest-point-y"`
 	HP         int                   `xml:"hp,attr" json:"hp"`
 	Mana       int                   `xml:"mana,attr" json:"mana"`
 	Exp        int                   `xml:"exp,attr" json:"exp"`
