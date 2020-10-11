@@ -207,20 +207,22 @@ func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
 	// Characters.
 	for _, areaCharData := range data.Characters {
+		// Retireve char data.
+		charData := res.Character(areaCharData.ID, areaCharData.Serial)
+		if charData == nil {
+			log.Err.Printf("area: %s: npc data not found: %s",
+				a.ID(), areaCharData.ID)
+			continue
+		}
 		v, _ := a.chars.Load(areaCharData.ID+areaCharData.Serial)
 		char, _ := v.(*character.Character)
 		if char == nil {
-			// Retireve char data.
-			charData := res.Character(areaCharData.ID, areaCharData.Serial)
-			if charData == nil {
-				log.Err.Printf("area: %s: npc data not found: %s",
-					a.ID(), areaCharData.ID)
-				continue
-			}
 			charData.AI = areaCharData.AI
 			char = character.New(*charData)
 			// Add to area.
 			a.AddCharacter(char)
+		} else {
+			char.Apply(*charData)
 		}
 		// Set position.
 		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
