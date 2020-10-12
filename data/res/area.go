@@ -42,6 +42,10 @@ type AreaCharData struct {
 	Serial string  `xml:"serial,attr" json:"serial"`
 	PosX   float64 `xml:"x,attr" json:"pos-x"`
 	PosY   float64 `xml:"y,attr" json:"pos-y"`
+	DestX  float64 `xml:"dest-x,attr" json:"dest-pos-x"`
+	DestY  float64 `xml:"dest-y,attr" json:"dest-pos-y"`
+	DefX   float64 `xml:"def-x,attr" json:"def-pos-x"`
+	DefY   float64 `xml:"def-y,attr" json:"def-pos-y"`
 	AI     bool    `xml:"ai,attr" json:"ai"`
 }
 

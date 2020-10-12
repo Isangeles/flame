@@ -226,7 +226,8 @@ func (a *Area) Apply(data res.AreaData) {
 		}
 		// Set position.
 		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
-		char.SetDefaultPosition(areaCharData.PosX, areaCharData.PosY)
+		char.SetDestPoint(areaCharData.DestX, areaCharData.DestY)
+		char.SetDefaultPosition(areaCharData.DefX, areaCharData.DefY)
 	}
 	// Objects.
 	for _, areaObData := range data.Objects {
@@ -272,6 +273,8 @@ func (a *Area) Data() res.AreaData {
 			AI:     c.AI(),
 		}
 		charData.PosX, charData.PosY = c.Position()
+		charData.DestX, charData.DestY = c.DestPoint()
+		charData.DefX, charData.DefY = c.DefaultPosition()
 		data.Characters = append(data.Characters, charData)
 	}
 	for _, o := range a.Objects() {
