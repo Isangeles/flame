@@ -102,6 +102,11 @@ func ImportModule(path string) (data res.ModuleData, err error) {
 	if err != nil {
 		log.Err.Printf("Import module: unable to import trainings: %v", err)
 	}
+	// Translations.
+	data.Resources.Translations, err = ImportLangDirs(filepath.Join(path, "lang"))
+	if err != nil {
+		log.Err.Printf("Import module: unable to import translations: %v", err)
+	}
 	// Chapter.
 	if len(data.Config["chapter"]) < 1 {
 		return data, fmt.Errorf("no chapter set: %v", err)
@@ -152,6 +157,11 @@ func ImportChapter(path string) (data res.ChapterData, err error) {
 	data.Resources.Areas, err = ImportAreasDir(filepath.Join(path, "areas"))
 	if err != nil {
 		log.Err.Printf("Import chapter: unable to import areas: %v", err)
+	}
+	// Translations.
+	data.Resources.Translations, err = ImportLangDirs(filepath.Join(path, "lang"))
+	if err != nil {
+		log.Err.Printf("Import chapter: unable to import translations: %v", err)
 	}
 	return data, nil
 }

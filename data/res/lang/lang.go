@@ -30,25 +30,45 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-// Text returns first text for specified ID.
+// Variable with language ID, "english" by default.
+var ID = "english"
+
+// Text returns first text for specified ID and current Lang variable.
 // Returns error text if translation data for
 // specified ID was not found.
 func Text(id string) string {
-	data := res.Translation(id)
-	if data == nil {
+	data, found := Translation(id)
+	if !found {
 		return fmt.Sprintf("translation not found: %s", id)
 	}
 	return data.Texts[0]
 }
 
-// Texts returns all texts for specified ID.
+// Texts returns all texts for specified ID and current Lang variable.
 // Returns 1-length slice with error text
 // if transaltion data for specified ID was
 // not found.
 func Texts(id string) []string {
-	data := res.Translation(id)
-	if data == nil {
+	data, found := Translation(id)
+	if !found {
 		return []string{fmt.Sprintf("translation not found: %s", id)}
 	}
 	return data.Texts
+}
+
+// Translation returns translation data for specified ID and current
+// Lang variable. Second return argument indicates whether data was
+// found or not.
+func Translation(id string) (data res.TranslationData, found bool) {
+	translations := res.Translations[ID]
+	if translations == nil {
+		return data, false
+	}
+	for _, t := range translations {
+		if t.ID != id {
+			continue
+		}
+		return t, true
+	}
+	return data, false
 }

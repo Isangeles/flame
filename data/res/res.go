@@ -37,7 +37,7 @@ var (
 	Areas        []AreaData
 	Races        []RaceData
 	Trainings    []TrainingData
-	Translations []TranslationData
+	Translations = make(map[string][]TranslationData)
 )
 
 // Item returns item resource data for item
@@ -191,16 +191,6 @@ func Training(id string) *TrainingData {
 	return nil
 }
 
-// Translation returns translation data for specified ID.
-func Translation(id string) *TranslationData {
-	for _, d := range Translations {
-		if d.ID == id {
-			return &d
-		}
-	}
-	return nil
-}
-
 // Clear removes all resources from base.
 func Clear() {
 	Effects = make([]EffectData, 0)
@@ -216,7 +206,7 @@ func Clear() {
 	Areas = make([]AreaData, 0)
 	Races = make([]RaceData, 0)
 	Trainings = make([]TrainingData, 0)
-	Translations = make([]TranslationData, 0)
+	Translations = make(map[string][]TranslationData)
 }
 
 // Add adds resources from specified module data
@@ -235,5 +225,7 @@ func Add(r ResourcesData) {
 	Recipes = append(Recipes, r.Recipes...)
 	Trainings = append(Trainings, r.Trainings...)
 	Areas = append(Areas, r.Areas...)
-	Translations = append(Translations, r.Translations...)
+	for lang, trans := range r.Translations {
+		Translations[lang] = append(Translations[lang], trans...)
+	}
 }

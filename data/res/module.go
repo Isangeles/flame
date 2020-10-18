@@ -41,18 +41,18 @@ type ChapterData struct {
 
 // Struct for module resouces data.
 type ResourcesData struct {
-	Characters   []CharacterData   `xml:"characters>character" json:"characters"`
-	Objects      []ObjectData      `xml:"objects>object" json:"objects"`
-	Effects      []EffectData      `xml:"effects>effect" json:"effects"`
-	Skills       []SkillData       `xml:"skills>skill" json:"skills"`
-	Armors       []ArmorData       `xml:"armors>armor" json:"armors"`
-	Weapons      []WeaponData      `xml:"weapons>weapon" json:"weapons"`
-	Miscs        []MiscItemData    `xml:"misc>misc" json:"miscs"`
-	Dialogs      []DialogData      `xml:"dialogs>dialog" json:"dialogs"`
-	Quests       []QuestData       `xml:"quests>quest" json:"quests"`
-	Recipes      []RecipeData      `xml:"recipes>recipe" json:"recipes"`
-	Areas        []AreaData        `xml:"areas>area" json:"areas"`
-	Races        []RaceData        `xml:"races>race" json:"races"`
-	Trainings    []TrainingData    `xml:"trainings>training" json:"trainings"`
-	Translations []TranslationData `xml:"translations>translation" json:"translations"`
+	Characters   []CharacterData              `xml:"characters>character" json:"characters"`
+	Objects      []ObjectData                 `xml:"objects>object" json:"objects"`
+	Effects      []EffectData                 `xml:"effects>effect" json:"effects"`
+	Skills       []SkillData                  `xml:"skills>skill" json:"skills"`
+	Armors       []ArmorData                  `xml:"armors>armor" json:"armors"`
+	Weapons      []WeaponData                 `xml:"weapons>weapon" json:"weapons"`
+	Miscs        []MiscItemData               `xml:"misc>misc" json:"miscs"`
+	Dialogs      []DialogData                 `xml:"dialogs>dialog" json:"dialogs"`
+	Quests       []QuestData                  `xml:"quests>quest" json:"quests"`
+	Recipes      []RecipeData                 `xml:"recipes>recipe" json:"recipes"`
+	Areas        []AreaData                   `xml:"areas>area" json:"areas"`
+	Races        []RaceData                   `xml:"races>race" json:"races"`
+	Trainings    []TrainingData               `xml:"trainings>training" json:"trainings"`
+	Translations map[string][]TranslationData `xml:"translations>translation" json:"translations"`
 }
