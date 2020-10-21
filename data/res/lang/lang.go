@@ -56,15 +56,27 @@ func Texts(id string) []string {
 	return data.Texts
 }
 
+// AddTranslation add specified translation data to the translation
+// base for current Lang variable.
+func AddTranslation(data res.TranslationData) {
+	base := res.TranslationBase(ID)
+	if base == nil {
+		base := new(res.TranslationBaseData)
+		base.ID = ID
+		res.TranslationBases = append(res.TranslationBases, base)
+	}
+	base.Translations = append(base.Translations, data)
+}
+
 // Translation returns translation data for specified ID and current
 // Lang variable. Second return argument indicates whether data was
 // found or not.
 func Translation(id string) (data res.TranslationData, found bool) {
-	translations := res.Translations[ID]
-	if translations == nil {
+	base := res.TranslationBase(ID)
+	if base == nil {
 		return data, false
 	}
-	for _, t := range translations {
+	for _, t := range base.Translations {
 		if t.ID != id {
 			continue
 		}

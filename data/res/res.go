@@ -24,20 +24,20 @@
 package res
 
 var (
-	Effects      []EffectData
-	Skills       []SkillData
-	Armors       []ArmorData
-	Weapons      []WeaponData
-	Miscs        []MiscItemData
-	Characters   []CharacterData
-	Objects      []ObjectData
-	Dialogs      []DialogData
-	Quests       []QuestData
-	Recipes      []RecipeData
-	Areas        []AreaData
-	Races        []RaceData
-	Trainings    []TrainingData
-	Translations = make(map[string][]TranslationData)
+	Effects          []EffectData
+	Skills           []SkillData
+	Armors           []ArmorData
+	Weapons          []WeaponData
+	Miscs            []MiscItemData
+	Characters       []CharacterData
+	Objects          []ObjectData
+	Dialogs          []DialogData
+	Quests           []QuestData
+	Recipes          []RecipeData
+	Areas            []AreaData
+	Races            []RaceData
+	Trainings        []TrainingData
+	TranslationBases []*TranslationBaseData
 )
 
 // Item returns item resource data for item
@@ -191,6 +191,16 @@ func Training(id string) *TrainingData {
 	return nil
 }
 
+// TranslationBase returns translation base for specified ID.
+func TranslationBase(id string) *TranslationBaseData {
+	for _, b := range TranslationBases {
+		if b.ID == id {
+			return b
+		}
+	}
+	return nil
+}
+
 // Clear removes all resources from base.
 func Clear() {
 	Effects = make([]EffectData, 0)
@@ -206,7 +216,7 @@ func Clear() {
 	Areas = make([]AreaData, 0)
 	Races = make([]RaceData, 0)
 	Trainings = make([]TrainingData, 0)
-	Translations = make(map[string][]TranslationData)
+	TranslationBases = make([]*TranslationBaseData, 0)
 }
 
 // Add adds resources from specified module data
@@ -225,7 +235,7 @@ func Add(r ResourcesData) {
 	Recipes = append(Recipes, r.Recipes...)
 	Trainings = append(Trainings, r.Trainings...)
 	Areas = append(Areas, r.Areas...)
-	for lang, trans := range r.Translations {
-		Translations[lang] = append(Translations[lang], trans...)
+	for _, b := range r.TranslationBases {
+		TranslationBases = append(TranslationBases, &b)
 	}
 }

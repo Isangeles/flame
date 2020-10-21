@@ -38,9 +38,13 @@ func LoadTranslationData(path string) error {
 	// Translation.
 	langData, err := ImportLangDir(path)
 	if err != nil {
-		return fmt.Errorf("unable to import lang dir: %v", err)
+		return fmt.Errorf("Unable to import lang dir: %v", err)
 	}
 	lang := filepath.Base(path)
-	res.Translations[lang] = append(res.Translations[lang], langData...)
+	base := res.TranslationBase(lang)
+	if base == nil {
+		return fmt.Errorf("Translation base not found: %s", lang)
+	}
+	base.Translations = append(base.Translations, langData...)
 	return nil
 }

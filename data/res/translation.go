@@ -25,6 +25,12 @@ package res
 
 // Struct for translation data.
 type TranslationData struct {
-	ID    string
-	Texts []string
+	ID    string   `xml:"id,attr" json:"id"`
+	Texts []string `xml:"texts" json:"texts"`
+}
+
+// Struct for translation base data.
+type TranslationBaseData struct {
+	ID           string            `xml:"id,attr" json:"id"`
+	Translations []TranslationData `xml:"translations" json:"translations"`
 }

@@ -81,14 +81,12 @@ func ImportLangDir(path string) ([]res.TranslationData, error) {
 
 // ImportLangDirs imports all translation data from child directories
 // of the directory with a specified path.
-// Returns map with names of child directories as keys and slices
-// with translation data as values.
-func ImportLangDirs(path string) (map[string][]res.TranslationData, error) {
+func ImportLangDirs(path string) ([]res.TranslationBaseData, error) {
 	langDirs, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to read lang directory: %v", err)
 	}
-	data := make(map[string][]res.TranslationData)
+	data := make([]res.TranslationBaseData, 0)
 	for _, langDir := range langDirs {
 		langDirPath := filepath.Join(path, langDir.Name())
 		langDirData, err := ImportLangDir(langDirPath)
@@ -96,7 +94,11 @@ func ImportLangDirs(path string) (map[string][]res.TranslationData, error) {
 			log.Err.Printf("Import lang dirs: unable to import dir: %v", err)
 			continue
 		}
-		data[langDir.Name()] = langDirData
+		base := res.TranslationBaseData{
+			ID:           langDir.Name(),
+			Translations: langDirData,
+		}
+		data = append(data, base)
 	}
 	return data, nil
 }

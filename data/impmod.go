@@ -103,7 +103,7 @@ func ImportModule(path string) (data res.ModuleData, err error) {
 		log.Err.Printf("Import module: unable to import trainings: %v", err)
 	}
 	// Translations.
-	data.Resources.Translations, err = ImportLangDirs(filepath.Join(path, "lang"))
+	data.Resources.TranslationBases, err = ImportLangDirs(filepath.Join(path, "lang"))
 	if err != nil {
 		log.Err.Printf("Import module: unable to import translations: %v", err)
 	}
@@ -159,7 +159,7 @@ func ImportChapter(path string) (data res.ChapterData, err error) {
 		log.Err.Printf("Import chapter: unable to import areas: %v", err)
 	}
 	// Translations.
-	data.Resources.Translations, err = ImportLangDirs(filepath.Join(path, "lang"))
+	data.Resources.TranslationBases, err = ImportLangDirs(filepath.Join(path, "lang"))
 	if err != nil {
 		log.Err.Printf("Import chapter: unable to import translations: %v", err)
 	}
