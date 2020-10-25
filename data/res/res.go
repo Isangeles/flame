@@ -235,7 +235,19 @@ func Add(r ResourcesData) {
 	Recipes = append(Recipes, r.Recipes...)
 	Trainings = append(Trainings, r.Trainings...)
 	Areas = append(Areas, r.Areas...)
-	for _, b := range r.TranslationBases {
-		TranslationBases = append(TranslationBases, &b)
+	for _, resBase := range r.TranslationBases {
+		found := false
+		for _, base := range TranslationBases {
+			if resBase.ID != base.ID {
+				continue
+			}
+			base.Translations = append(base.Translations,
+				resBase.Translations...)
+			found = true
+			break
+		}
+		if !found {
+			TranslationBases = append(TranslationBases, &resBase)
+		}
 	}
 }
