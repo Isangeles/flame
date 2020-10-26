@@ -36,6 +36,7 @@ import (
 // Apply applies specified data on the character.
 func (c *Character) Apply(data res.CharacterData) {
 	c.id = data.ID
+	c.level = data.Level
 	c.SetSerial(data.Serial)
 	c.SetExperience(data.Exp)
 	c.SetPosition(data.PosX, data.PosY)
@@ -53,10 +54,6 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.ChatLog().Apply(data.ChatLog)
 	c.CombatLog().Apply(data.CombatLog)
 	c.PrivateLog().Apply(data.PrivateLog)
-	// Set level.
-	for i := 0; i < data.Level; i++ {
-		c.levelup()
-	}
 	if data.Restore {
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
