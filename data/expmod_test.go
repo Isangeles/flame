@@ -33,6 +33,7 @@ import (
 
 // Test for exporting module.
 func TestExportModule(t *testing.T) {
+	mod := module.New()
 	modData := res.ModuleData{
 		Config:  make(map[string][]string),
 		Chapter: res.ChapterData{Config: make(map[string][]string)},
@@ -41,7 +42,8 @@ func TestExportModule(t *testing.T) {
 	modData.Config["chapter"] = []string{"ch1"}
 	modData.Chapter.Config["id"] = []string{"ch1"}
 	modData.Chapter.Config["start-area"] = []string{"a1"}
-	mod := module.New(modData)
+	mod.Apply(modData)
+	area := area.New()
 	areaData := res.AreaData{
 		ID: "a1",
 	}
@@ -65,7 +67,7 @@ func TestExportModule(t *testing.T) {
 	res.Characters = append(res.Characters, charData)
 	areaCharData := res.AreaCharData{ID: charData.ID}
 	areaData.Characters = append(areaData.Characters, areaCharData)
-	area := area.New(areaData)
+	area.Apply(areaData)
 	mod.Chapter().AddAreas(area)
 	err := ExportModule(mod, "testexp")
 	if err != nil {
