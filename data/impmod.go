@@ -24,19 +24,41 @@
 package data
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
-	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/log"
 )
 
 const (
-	ModuleConfigFile = ".module"
+	ModuleFileExt     = ".mod"
+	ModuleConfigFile  = ".module"
 	ChapterConfigFile = ".chapter"
 )
+
+// ImportModuleFile imports module from module file with specified path.
+func ImportModuleFile(path string) (res.ModuleData, error) {
+	data := res.ModuleData{}
+	file, err := os.Open(path)
+	if err != nil {
+		return data, fmt.Errorf("unable to open file: %v", err)
+	}
+	defer file.Close()
+	buf, err := ioutil.ReadAll(file)
+	if err != nil {
+		return data, fmt.Errorf("unable to read file: %v", err)
+	}
+	err = json.Unmarshal(buf, &data)
+	if err != nil {
+		return data, fmt.Errorf("unable to unmarshal JSON data: %v", err)
+	}
+	return data, nil
+}
 
 // ImportModule imports module from directory with specified path.
 func ImportModule(path string) (data res.ModuleData, err error) {

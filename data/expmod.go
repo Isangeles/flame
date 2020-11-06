@@ -26,15 +26,41 @@ package data
 import (
 	"bufio"
 	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/area"
 )
+
+// ExportModuleFile exports module to the single file.
+func ExportModuleFile(path string, mod *module.Module) error {
+	json, err := json.Marshal(mod.Data())
+	if err != nil {
+		return fmt.Errorf("unable to marshal module data: %v", err)
+	}
+	if !strings.HasSuffix(path, ModuleFileExt) {
+		path += ModuleFileExt
+	}
+	err = os.MkdirAll(filepath.Dir(path), 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create module file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create module file: %v", err)
+	}
+	defer file.Close()
+	writer := bufio.NewWriter(file)
+	writer.Write(json)
+	writer.Flush()
+	return nil
+}
 
 // ExportModule exports module to new a directory under specified path.
 func ExportModule(mod *module.Module, path string) error {
