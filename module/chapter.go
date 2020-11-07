@@ -24,6 +24,7 @@
 package module
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/isangeles/flame/data/res"
@@ -236,6 +237,10 @@ func (c *Chapter) Data() res.ChapterData {
 	data.Config = make(map[string][]string)
 	data.Config["id"] = []string{c.Conf().ID}
 	data.Config["path"] = []string{c.Conf().Path}
+	data.Config["start-area"] = []string{c.Conf().StartArea}
+	data.Config["start-pos"] = []string{fmt.Sprintf("%f", c.Conf().StartPosX),
+		fmt.Sprintf("%f", c.Conf().StartPosY)}
+	data.Config["start-level"] = []string{fmt.Sprintf("%d", c.Conf().StartLevel)}
 	for _, a := range c.Areas() {
 		data.Areas = append(data.Areas, a.Data())
 	}
