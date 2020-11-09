@@ -45,9 +45,9 @@ import (
 type Character struct {
 	id, serial       string
 	level            int
-	hp, maxHP        int
-	mana, maxMana    int
-	exp, maxExp      int
+	hp               int
+	mana             int
+	exp              int
 	live             bool
 	agony            bool
 	ai               bool
@@ -240,7 +240,7 @@ func (c *Character) Experience() int {
 // MaxExperience returns maximal value of
 // experience points.
 func (c *Character) MaxExperience() int {
-	return c.maxExp
+	return baseExp * c.Level()
 }
 
 // Live checks wheter character is live.
@@ -592,7 +592,6 @@ func (c *Character) levelup() {
 	c.level += 1
 	c.SetHealth(c.MaxHealth())
 	c.SetMana(c.MaxMana())
-	c.maxExp = baseExp * c.Level()
 }
 
 // agonyHP returns value of health causing
