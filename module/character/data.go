@@ -57,6 +57,9 @@ func (c *Character) Apply(data res.CharacterData) {
 	if data.Restore {
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
+	} else {
+		c.SetHealth(c.MaxHealth())
+		c.SetMana(c.MaxMana())
 	}
 	// Set Race.
 	raceData := res.Race(data.Race)
