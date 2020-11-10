@@ -67,8 +67,14 @@ func (l *Log) Messages() []Message {
 	return l.messages
 }
 
+// Clear clears log messages.
+func (l *Log) Clear() {
+	l.messages = make([]Message, 0)
+}
+
 // Apply applies specified data on the object log.
 func (l *Log) Apply(data res.ObjectLogData) {
+	l.Clear()
 	for _, md := range data.Messages {
 		m := Message{md.Time, md.Text}
 		l.messages = append(l.messages, m)
