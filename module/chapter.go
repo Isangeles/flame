@@ -245,6 +245,19 @@ func (c *Chapter) Data() res.ChapterData {
 		data.Areas = append(data.Areas, a.Data())
 	}
 	data.Resources = c.Res
+	// Remove old characters and objects from resources, besides basic ones.
+	data.Resources.Characters = make([]res.CharacterData, 0)
+	for _, c := range c.Res.Characters {
+		if len(c.Serial) < 1 {
+			data.Resources.Characters = append(data.Resources.Characters, c)
+		}
+	}
+	data.Resources.Objects = make([]res.ObjectData, 0)
+	for _, o := range c.Res.Objects {
+		if len(o.Serial) < 1 {
+			data.Resources.Objects = append(data.Resources.Objects, o)
+		}
+	}
 	for _, c := range c.Characters() {
 		data.Resources.Characters = append(data.Resources.Characters, c.Data())
 	}

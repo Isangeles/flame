@@ -119,5 +119,18 @@ func (m *Module) Data() res.ModuleData {
 	data.Config["chapter"] = []string{m.Chapter().Conf().ID}
 	data.Chapter = m.Chapter().Data()
 	data.Resources = m.Res
+	// Remove old characters and objects from resources, besides basic ones.
+	data.Resources.Characters = make([]res.CharacterData, 0)
+	for _, c := range m.Res.Characters {
+		if len(c.Serial) < 1 {
+			data.Resources.Characters = append(data.Resources.Characters, c)
+		}
+	}
+	data.Resources.Objects = make([]res.ObjectData, 0)
+	for _, o := range m.Res.Objects {
+		if len(o.Serial) < 1 {
+			data.Resources.Objects = append(data.Resources.Objects, o)
+		}
+	}
 	return data
 }
