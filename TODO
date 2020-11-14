@@ -33,6 +33,7 @@ MINOR:
 * Remove Apply call in character.New and data argument, Apply function should be called
   separately after calling character.New
 * Apply function for UseAction struct
+* Remove ExportGame and ImportGame functions(interfaces should use ImportModuleFile and ExportModuleFile instead)
 DONE:
 * Generating unique serial values for game objects
 * Save/load game mechanism
