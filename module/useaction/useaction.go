@@ -33,6 +33,7 @@ import (
 
 // Interface for usable game objects.
 type Usable interface {
+	ID() string
 	UseAction() *UseAction
 }
 
