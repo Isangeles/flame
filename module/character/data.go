@@ -67,39 +67,34 @@ func (c *Character) Apply(data res.CharacterData) {
 		c.race = NewRace(*raceData)
 	}
 	// Add flags.
+	c.flags = make(map[string]flag.Flag)
 	for _, fd := range data.Flags {
 		f := flag.Flag(fd.ID)
 		c.flags[f.ID()] = f
 	}
 	// Add skills.
+	c.skills = make(map[string]*skill.Skill)
 	for _, charSkillData := range data.Skills {
-		s := c.skills[charSkillData.ID]
-		if s != nil {
-			continue
-		}
 		skillData := res.Skill(charSkillData.ID)
 		if skillData == nil {
 			log.Err.Printf("Character: %s: Apply: skill data not found: %v",
 				c.ID(), charSkillData.ID)
 			continue
 		}
-		s = skill.New(*skillData)
+		s := skill.New(*skillData)
 		s.UseAction().SetCooldown(charSkillData.Cooldown)
 		c.AddSkill(s)
 	}
 	// Add dialogs.
+	c.dialogs = make(map[string]*dialog.Dialog)
 	for _, charDialogData := range data.Dialogs {
-		d := c.dialogs[charDialogData.ID]
-		if d != nil {
-			continue
-		}
 		dialogData := res.Dialog(charDialogData.ID)
 		if dialogData == nil {
 			log.Err.Printf("Character: %s: Apply: dialog data not found: %s",
 				c.ID(), charDialogData.ID)
 			continue
 		}
-		d = dialog.New(*dialogData)
+		d := dialog.New(*dialogData)
 		for _, s := range d.Stages() {
 			if s.ID() == charDialogData.Stage {
 				d.SetStage(s)
@@ -108,34 +103,23 @@ func (c *Character) Apply(data res.CharacterData) {
 		c.AddDialog(d)
 	}
 	// Effects.
+	c.effects = make(map[string]*effect.Effect)
 	for _, charEffectData := range data.Effects {
-		e := c.effects[charEffectData.ID]
-		if e == nil {
-			effectData := res.Effect(charEffectData.ID)
-			if effectData == nil {
-				log.Err.Printf("Character: %s: Apply: effect data not found: %s",
-					c.ID(), charEffectData.ID)
-				continue
-			}
-			e = effect.New(*effectData)
+		effectData := res.Effect(charEffectData.ID)
+		if effectData == nil {
+			log.Err.Printf("Character: %s: Apply: effect data not found: %s",
+				c.ID(), charEffectData.ID)
+			continue
 		}
+		e := effect.New(*effectData)
 		e.SetSerial(charEffectData.Serial)
 		e.SetTime(charEffectData.Time)
 		e.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
 		c.AddEffect(e)
 	}
 	// Trainings.
+	c.trainings = make([]*training.TrainerTraining, 0)
 	for _, charTrainingData := range data.Trainings {
-		hasTraining := false
-		for _, t := range c.Trainings() {
-			if t.ID() == charTrainingData.ID {
-				hasTraining = true
-				break
-			}
-		}
-		if hasTraining {
-			continue
-		}
 		trainingData := res.Training(charTrainingData.ID)
 		if trainingData == nil {
 			log.Err.Printf("Character: %s: Apply: training data not found: %s",
@@ -147,6 +131,7 @@ func (c *Character) Apply(data res.CharacterData) {
 		c.trainings = append(c.trainings, trainerTraining)
 	}
 	// Memory.
+	c.memory = make(map[string]*TargetMemory)
 	for _, memData := range data.Memory {
 		att := Attitude(memData.Attitude)
 		mem := TargetMemory{
