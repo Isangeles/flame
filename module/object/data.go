@@ -44,6 +44,7 @@ func (o *Object) Apply(data res.ObjectData) {
 		o.SetHealth(data.HP)
 	}
 	// Add effects.
+	o.effects = make(map[string]*effect.Effect)
 	for _, data := range data.Effects {
 		effData := res.Effect(data.ID)
 		if effData == nil {
