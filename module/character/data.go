@@ -66,6 +66,8 @@ func (c *Character) Apply(data res.CharacterData) {
 	if raceData != nil && (c.Race() == nil || c.Race().ID() != raceData.ID) {
 		c.race = NewRace(*raceData)
 	}
+	// Clear old data.
+	c.clearOldObjects(data)
 	// Add flags.
 	c.flags = make(map[string]flag.Flag)
 	for _, fd := range data.Flags {
@@ -73,28 +75,34 @@ func (c *Character) Apply(data res.CharacterData) {
 		c.flags[f.ID()] = f
 	}
 	// Add skills.
-	c.skills = make(map[string]*skill.Skill)
 	for _, charSkillData := range data.Skills {
+		s := c.skills[charSkillData.ID]
+		if s != nil {
+			continue
+		}
 		skillData := res.Skill(charSkillData.ID)
 		if skillData == nil {
 			log.Err.Printf("Character: %s: Apply: skill data not found: %v",
 				c.ID(), charSkillData.ID)
 			continue
 		}
-		s := skill.New(*skillData)
+		s = skill.New(*skillData)
 		s.UseAction().SetCooldown(charSkillData.Cooldown)
 		c.AddSkill(s)
 	}
 	// Add dialogs.
-	c.dialogs = make(map[string]*dialog.Dialog)
 	for _, charDialogData := range data.Dialogs {
+		d := c.dialogs[charDialogData.ID]
+		if d != nil {
+			continue
+		}
 		dialogData := res.Dialog(charDialogData.ID)
 		if dialogData == nil {
 			log.Err.Printf("Character: %s: Apply: dialog data not found: %s",
 				c.ID(), charDialogData.ID)
 			continue
 		}
-		d := dialog.New(*dialogData)
+		d = dialog.New(*dialogData)
 		for _, s := range d.Stages() {
 			if s.ID() == charDialogData.Stage {
 				d.SetStage(s)
@@ -103,23 +111,41 @@ func (c *Character) Apply(data res.CharacterData) {
 		c.AddDialog(d)
 	}
 	// Effects.
-	c.effects = make(map[string]*effect.Effect)
 	for _, charEffectData := range data.Effects {
+		e := c.effects[charEffectData.ID]
+		if e == nil {
+			effectData := res.Effect(charEffectData.ID)
+			if effectData == nil {
+				log.Err.Printf("Character: %s: Apply: effect data not found: %s",
+					c.ID(), charEffectData.ID)
+				continue
+			}
+			e = effect.New(*effectData)
+		}
 		effectData := res.Effect(charEffectData.ID)
 		if effectData == nil {
 			log.Err.Printf("Character: %s: Apply: effect data not found: %s",
 				c.ID(), charEffectData.ID)
 			continue
 		}
-		e := effect.New(*effectData)
+		e = effect.New(*effectData)
 		e.SetSerial(charEffectData.Serial)
 		e.SetTime(charEffectData.Time)
 		e.SetSource(charEffectData.SourceID, charEffectData.SourceSerial)
 		c.AddEffect(e)
 	}
 	// Trainings.
-	c.trainings = make([]*training.TrainerTraining, 0)
 	for _, charTrainingData := range data.Trainings {
+		hasTraining := false
+		for _, t := range c.Trainings() {
+			if t.ID() == charTrainingData.ID {
+				hasTraining = true
+				break
+			}
+		}
+		if hasTraining {
+			continue
+		}
 		trainingData := res.Training(charTrainingData.ID)
 		if trainingData == nil {
 			log.Err.Printf("Character: %s: Apply: training data not found: %s",
@@ -131,7 +157,6 @@ func (c *Character) Apply(data res.CharacterData) {
 		c.trainings = append(c.trainings, trainerTraining)
 	}
 	// Memory.
-	c.memory = make(map[string]*TargetMemory)
 	for _, memData := range data.Memory {
 		att := Attitude(memData.Attitude)
 		mem := TargetMemory{
@@ -213,4 +238,45 @@ func (c *Character) Data() res.CharacterData {
 		data.Trainings = append(data.Trainings, t.Data())
 	}
 	return data
+}
+
+// clearOldData clears all effects, skills, dialogs, and memory
+// targets present in specified data.
+func (c *Character) clearOldObjects(data res.CharacterData) {
+	for k, e := range c.effects {
+		found := false
+		for _, ed := range data.Effects {
+			found = e.ID() == ed.ID && e.Serial() == ed.Serial
+		}
+		if !found {
+			delete(c.effects, k)
+		}
+	}
+	for k, s := range c.skills {
+		found := false
+		for _, sd := range data.Skills {
+			found = s.ID() == sd.ID
+		}
+		if !found {
+			delete(c.skills, k)
+		}
+	}
+	for k, d := range c.dialogs {
+		found := false
+		for _, dd := range data.Dialogs {
+			found = d.ID() == dd.ID
+		}
+		if !found {
+			delete(c.dialogs, k)
+		}
+	}
+	for k, m := range c.memory {
+		found := false
+		for _, md := range data.Memory {
+			found = m.TargetID == md.ObjectID && m.TargetSerial == md.ObjectSerial
+		}
+		if !found {
+			delete(c.memory, k)
+		}
+	}
 }
