@@ -241,7 +241,7 @@ func (c *Character) Data() res.CharacterData {
 }
 
 // clearOldData clears all effects, skills, dialogs, and memory
-// targets present in specified data.
+// targets not present in specified data.
 func (c *Character) clearOldObjects(data res.CharacterData) {
 	for k, e := range c.effects {
 		found := false

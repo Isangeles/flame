@@ -43,8 +43,9 @@ func (o *Object) Apply(data res.ObjectData) {
 	if data.Restore {
 		o.SetHealth(data.HP)
 	}
+	// Clear old data.
+	o.clearOldObjects(data)
 	// Add effects.
-	o.effects = make(map[string]*effect.Effect)
 	for _, data := range data.Effects {
 		effData := res.Effect(data.ID)
 		if effData == nil {
@@ -82,4 +83,17 @@ func (o *Object) Data() res.ObjectData {
 		data.Effects = append(data.Effects, effData)
 	}
 	return data
+}
+
+// clearOldObjects clears all effects not present in specified data.
+func (o *Object) clearOldObjects(data res.ObjectData) {
+	for k, e := range o.effects {
+		found := false
+		for _, ed := range data.Effects {
+			found = e.ID() == ed.ID && e.Serial() == ed.Serial
+		}
+		if !found {
+			delete(o.effects, k)
+		}
+	}
 }
