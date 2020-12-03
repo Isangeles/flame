@@ -67,7 +67,7 @@ type Character struct {
 	equipment        *Equipment
 	journal          *quest.Journal
 	crafting         *craft.Crafting
-	targets          []effect.Target
+	targets          []res.CharacterTargetData
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
@@ -428,18 +428,29 @@ func (c *Character) RemoveSkill(s *skill.Skill) {
 }
 
 // Targets returns character targets.
-func (c *Character) Targets() []effect.Target {
-	return c.targets
+func (c *Character) Targets() (targets []effect.Target) {
+	for _, td := range c.targets {
+		ob := serial.Object(td.ID, td.Serial)
+		if ob == nil {
+			continue
+		}
+		tar, ok := ob.(effect.Target)
+		if ok {
+			targets = append(targets, tar)
+		}
+	}
+	return
 }
 
 // SetTarget sets specified 'targetable' as current
 // target.
 func (c *Character) SetTarget(t effect.Target) {
 	if t == nil {
-		c.targets = []effect.Target{}
+		c.targets = []res.CharacterTargetData{}
 		return
 	}
-	c.targets = []effect.Target{t}
+	tarData := res.CharacterTargetData{t.ID(), t.Serial()}
+	c.targets = []res.CharacterTargetData{tarData}
 }
 
 // Moving checks whether character is moving.

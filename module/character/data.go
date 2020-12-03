@@ -54,6 +54,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.ChatLog().Apply(data.ChatLog)
 	c.CombatLog().Apply(data.CombatLog)
 	c.PrivateLog().Apply(data.PrivateLog)
+	c.targets = data.Targets
 	if data.Restore {
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
@@ -190,6 +191,7 @@ func (c *Character) Data() res.CharacterData {
 		ChatLog:    c.ChatLog().Data(),
 		CombatLog:  c.CombatLog().Data(),
 		PrivateLog: c.PrivateLog().Data(),
+		Targets:    c.targets,
 		Restore:    true,
 	}
 	if c.Race() != nil {
