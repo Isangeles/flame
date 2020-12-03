@@ -54,7 +54,7 @@ type CharacterData struct {
 	HP         int                   `xml:"hp,attr" json:"hp"`
 	Mana       int                   `xml:"mana,attr" json:"mana"`
 	Exp        int                   `xml:"exp,attr" json:"exp"`
-	Restore    bool                  `xml:"restore,attr" json:"resore"`
+	Restore    bool                  `xml:"restore,attr" json:"restore"`
 	Attributes AttributesData        `xml:"attributes" json:"attributes"`
 	Inventory  InventoryData         `xml:"inventory" json:"inventory"`
 	Equipment  EquipmentData         `xml:"equipment" json:"equipment"`
