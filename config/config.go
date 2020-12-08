@@ -24,7 +24,7 @@
 package config
 
 const (
-	Name, Version  = "Flame Engine", "0.0.0"
+	Name, Version  = "Flame Engine", "0.1.0-dev"
 )
 
 var (
