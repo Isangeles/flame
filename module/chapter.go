@@ -240,6 +240,9 @@ func (c *Chapter) Data() res.ChapterData {
 	data.Config["start-area"] = []string{c.Conf().StartArea}
 	data.Config["start-pos"] = []string{fmt.Sprintf("%f", c.Conf().StartPosX),
 		fmt.Sprintf("%f", c.Conf().StartPosY)}
+	data.Config["start-items"] = c.Conf().StartItems
+	data.Config["start-skills"] = c.Conf().StartSkills
+	data.Config["start-attrs"] = []string{fmt.Sprintf("%d", c.Conf().StartAttrs)}
 	data.Config["start-level"] = []string{fmt.Sprintf("%d", c.Conf().StartLevel)}
 	for _, a := range c.Areas() {
 		data.Areas = append(data.Areas, a.Data())
