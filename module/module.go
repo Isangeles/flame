@@ -31,7 +31,7 @@ import (
 
 // Module struct represents engine module.
 type Module struct {
-	Res              res.ResourcesData
+	res              *res.ResourcesData
 	conf             *Config
 	chapter          *Chapter
 	onChapterChanged func(c *Chapter)
@@ -83,6 +83,11 @@ func (m *Module) Object(id, serial string) objects.Object {
 	return nil
 }
 
+// Resources returns module resources.
+func (m *Module) Resources() *res.ResourcesData {
+	return m.res
+}
+
 // SetOnChapterChangedFunc sets function triggered on chapter change.
 func (m *Module) SetOnChapterChangedFunc(f func(c *Chapter)) {
 	m.onChapterChanged = f
@@ -101,8 +106,8 @@ func (m *Module) Apply(data res.ModuleData) {
 	if len(data.Config["chapter"]) > 0 {
 		m.conf.Chapter = data.Config["chapter"][0]
 	}
-	m.Res = data.Resources
-	res.Add(m.Res)
+	m.res = &data.Resources
+	res.Add(*m.res)
 	if m.Chapter() == nil || m.Chapter().Conf().ID != data.Chapter.ID {
 		chapter := NewChapter(m)
 		m.SetChapter(chapter)
@@ -118,16 +123,16 @@ func (m *Module) Data() res.ModuleData {
 	data.Config["path"] = []string{m.Conf().Path}
 	data.Config["chapter"] = []string{m.Chapter().Conf().ID}
 	data.Chapter = m.Chapter().Data()
-	data.Resources = m.Res
+	data.Resources = *m.res
 	// Remove old characters and objects from resources, besides basic ones.
 	data.Resources.Characters = make([]res.CharacterData, 0)
-	for _, c := range m.Res.Characters {
+	for _, c := range m.Resources().Characters {
 		if len(c.Serial) < 1 {
 			data.Resources.Characters = append(data.Resources.Characters, c)
 		}
 	}
 	data.Resources.Objects = make([]res.ObjectData, 0)
-	for _, o := range m.Res.Objects {
+	for _, o := range m.Resources().Objects {
 		if len(o.Serial) < 1 {
 			data.Resources.Objects = append(data.Resources.Objects, o)
 		}

@@ -37,7 +37,7 @@ import (
 
 // Chapter struct represents module chapter.
 type Chapter struct {
-	Res         res.ResourcesData
+	res         *res.ResourcesData
 	conf        *ChapterConfig
 	mod         *Module
 	areas       map[string]*area.Area
@@ -69,6 +69,11 @@ func (c *Chapter) ID() string {
 // Module returns chapter module.
 func (c *Chapter) Module() *Module {
 	return c.mod
+}
+
+// Resources chapter resources.
+func (c *Chapter) Resources() *res.ResourcesData {
+	return c.res
 }
 
 // Area returns area with specified ID,
@@ -217,8 +222,8 @@ func (c *Chapter) Apply(data res.ChapterData) {
 	}
 	c.conf.StartItems = data.Config["start-items"]
 	c.conf.StartSkills = data.Config["start-skills"]
-	c.Res = data.Resources
-	res.Add(c.Res)
+	c.res = &data.Resources
+	res.Add(*c.res)
 	for _, ad := range data.Resources.Areas {
 		a := c.Area(ad.ID)
 		if a == nil {
@@ -247,16 +252,16 @@ func (c *Chapter) Data() res.ChapterData {
 	for _, a := range c.Areas() {
 		data.Areas = append(data.Areas, a.Data())
 	}
-	data.Resources = c.Res
+	data.Resources = *c.res
 	// Remove old characters and objects from resources, besides basic ones.
 	data.Resources.Characters = make([]res.CharacterData, 0)
-	for _, c := range c.Res.Characters {
+	for _, c := range c.Resources().Characters {
 		if len(c.Serial) < 1 {
 			data.Resources.Characters = append(data.Resources.Characters, c)
 		}
 	}
 	data.Resources.Objects = make([]res.ObjectData, 0)
-	for _, o := range c.Res.Objects {
+	for _, o := range c.Resources().Objects {
 		if len(o.Serial) < 1 {
 			data.Resources.Objects = append(data.Resources.Objects, o)
 		}
