@@ -67,11 +67,35 @@ func (i *Inventory) Items() (items []Item) {
 	return
 }
 
-// Item returns item with specified serial ID
-// from inventory or nil if no item with such serial
-// ID was found in inventory.
+// Item returns item with specified ID and serial
+// from the inventory or nil if no such item was
+// found.
 func (i *Inventory) Item(id, serial string) Item {
 	return i.items[id+serial]
+}
+
+// TradeItem returns 'tradable' item with specified ID
+// and serial from the inventory or nil if no such item
+// was found.
+func (i *Inventory) TradeItem(id, serial string) *TradeItem {
+	for _, it := range i.TradeItems() {
+		if it.ID() == id && it.Serial() == serial {
+			return it
+		}
+	}
+	return nil
+}
+
+// LootItem returns 'lootable' item with specified ID
+// and serial from the inventory or nil if no such
+// item was found.
+func (i *Inventory) LootItem(id, serial string) Item {
+	for _, it := range i.LootItems() {
+		if it.ID() == id && it.Serial() == serial {
+			return it
+		}
+	}
+	return nil
 }
 
 // AddItems add specified item to inventory.
@@ -191,32 +215,18 @@ func (i *Inventory) Data() res.InventoryData {
 	data := res.InventoryData{
 		Cap: i.Capacity(),
 	}
-	for _, it := range i.TradeItems() {
-		// Build trade item data.
+	for _, it := range i.Items() {
+		// Build item data.
 		invItemData := res.InventoryItemData{
 			ID:         it.ID(),
 			Serial:     it.Serial(),
-			Trade:      true,
-			TradeValue: it.Price,
 		}
-		data.Items = append(data.Items, invItemData)
-	}
-	for _, it := range i.Items() {
-		// Check if item was already added as trade item.
-		prs := false
-		for _, id := range data.Items {
-			if it.ID() == id.ID && it.Serial() == id.Serial {
-				prs = true
-				break
-			}
+		if it := i.TradeItem(it.ID(), it.Serial()); it != nil {
+			invItemData.Trade = true
+			invItemData.TradeValue = it.Price
 		}
-		if prs {
-			continue
-		}
-		// Build item data.
-		invItemData := res.InventoryItemData{
-			ID:     it.ID(),
-			Serial: it.Serial(),
+		if i.LootItem(it.ID(), it.Serial()) != nil {
+			invItemData.Loot = true
 		}
 		data.Items = append(data.Items, invItemData)
 	}
