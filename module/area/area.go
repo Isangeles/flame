@@ -231,19 +231,21 @@ func (a *Area) Apply(data res.AreaData) {
 	}
 	// Objects.
 	for _, areaObData := range data.Objects {
+		// Retrieve object data.
+		obData := res.Object(areaObData.ID, areaObData.Serial)
+		if obData == nil {
+			log.Err.Printf("area %s: object data not found: %s",
+				a.ID(), areaObData.ID)
+			continue
+		}
 		v, _ := a.objects.Load(areaObData.ID+areaObData.Serial)
 		ob, _ := v.(*object.Object)
 		if ob == nil {
-			// Retrieve object data.
-			obData := res.Object(areaObData.ID, areaObData.Serial)
-			if obData == nil {
-				log.Err.Printf("area %s: object data not found: %s",
-					a.ID(), areaObData.ID)
-				continue
-			}
 			ob = object.New(*obData)
 			// Add to area.
 			a.AddObject(ob)
+		} else {
+			ob.Apply(*obData)
 		}
 		// Set position.
 		ob.SetPosition(areaObData.PosX, areaObData.PosY)
