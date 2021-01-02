@@ -166,6 +166,22 @@ func (i *Inventory) Capacity() int {
 
 // Apply applies specified data on the inventory.
 func (i *Inventory) Apply(data res.InventoryData) {
+	// Clear removed items.
+	i.tradeItems = make([]*TradeItem, 0)
+	i.lootItems = make([]Item, 0)
+	for _, it := range i.Items() {
+		found := false
+		for _, invItData := range data.Items {
+			if it.ID() == invItData.ID && it.Serial() == invItData.Serial {
+				found = true
+				break
+			}
+		}
+		if !found {
+			delete(i.items, it.ID()+it.Serial())
+		}
+	}
+	// Add/update items.
 	for _, invItData := range data.Items {
 		it := i.Item(invItData.ID, invItData.Serial)
 		if it == nil {
