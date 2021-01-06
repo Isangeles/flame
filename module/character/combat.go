@@ -1,7 +1,7 @@
 /*
  * combat.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,4 +136,7 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
 	}
 	c.CombatLog().Add(msg)
+	if c.onEffectTaken != nil {
+		c.onEffectTaken(e)
+	}
 }

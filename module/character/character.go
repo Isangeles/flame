@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,6 +81,7 @@ type Character struct {
 	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
 	onHealthMod      func(v int)
+	onEffectTaken    func(e *effect.Effect)
 }
 
 const (
@@ -509,6 +510,12 @@ func (c *Character) SetOnChatSentFunc(f func(t string)) {
 // character health value.
 func (c *Character) SetOnHealthModFunc(f func(v int)) {
 	c.onHealthMod = f
+}
+
+// SetOnEffectTakenFunc sets function triggered after taking new
+// effect.
+func (c *Character) SetOnEffectTakenFunc(f func(e *effect.Effect)) {
+	c.onEffectTaken = f
 }
 
 // Interrupt stops any acction(like skill
