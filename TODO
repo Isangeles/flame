@@ -34,8 +34,8 @@ MINOR:
   separately after calling character.New
 * Apply function for UseAction struct
 * Remove ExportGame and ImportGame functions(interfaces should use ImportModuleFile and ExportModuleFile instead)
-* Removing old(not existing) items in the Apply function for the items inventory
 * Appearance struct for game character
+* Remove all usages of lang package(lang package should be only used by interfaces)
 DONE:
 * Generating unique serial values for game objects
 * Save/load game mechanism
