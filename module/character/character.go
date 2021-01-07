@@ -80,7 +80,7 @@ type Character struct {
 	privateLog       *objects.Log
 	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
-	onHealthMod      func(v int)
+	onModifierTaken  func(m *effect.Modifier)
 	onEffectTaken    func(e *effect.Effect)
 }
 
@@ -506,10 +506,10 @@ func (c *Character) SetOnChatSentFunc(f func(t string)) {
 	c.onChatSent = f
 }
 
-// SetOnHealthModFunc sets function triggered after modifing
-// character health value.
-func (c *Character) SetOnHealthModFunc(f func(v int)) {
-	c.onHealthMod = f
+// SetOnModifierTakenFunc sets function triggered after receiving new
+// modifier.
+func (c *Character) SetOnModifierTakenFunc(f func(m *effect.Modifier)) {
+	c.onModifierTaken = f
 }
 
 // SetOnEffectTakenFunc sets function triggered after taking new

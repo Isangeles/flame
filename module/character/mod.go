@@ -1,7 +1,7 @@
 /*
  * mod.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,9 +58,6 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		lived := c.Live()
 		val := m.RandomValue()
 		c.SetHealth(c.Health() + val)
-		if c.onHealthMod != nil {
-			c.onHealthMod(val)
-		}
 		cmbMsg := fmt.Sprintf("%s: %s: %d", lang.Text(c.ID()),
 			lang.Text("ob_health"), val)
 		c.CombatLog().Add(cmbMsg)
@@ -106,5 +103,8 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		c.Attributes().Dex += m.Dexterity()
 		c.Attributes().Int += m.Intelligence()
 		c.Attributes().Wis += m.Wisdom()
+	}
+	if c.onModifierTaken != nil {
+		c.onModifierTaken(&m)
 	}
 }
