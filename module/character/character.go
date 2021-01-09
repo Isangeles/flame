@@ -76,7 +76,6 @@ type Character struct {
 	trainings        []*training.TrainerTraining
 	casted           useaction.Usable
 	chatLog          *objects.Log
-	combatLog        *objects.Log
 	privateLog       *objects.Log
 	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
@@ -100,7 +99,6 @@ func New(data res.CharacterData) *Character {
 		dialogs:    make(map[string]*dialog.Dialog),
 		flags:      make(map[string]flag.Flag),
 		chatLog:    objects.NewLog(),
-		combatLog:  objects.NewLog(),
 		privateLog: objects.NewLog(),
 	}
 	c.equipment = newEquipment(&c)
@@ -477,11 +475,6 @@ func (c *Character) Fighting() bool {
 		return objects.Range(c, tarPos) <= c.SightRange()
 	}
 	return false
-}
-
-// CombatLog returns character combat log channel.
-func (c *Character) CombatLog() *objects.Log {
-	return c.combatLog
 }
 
 // ChatLog returns character speech log channel.

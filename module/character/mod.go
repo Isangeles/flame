@@ -24,10 +24,7 @@
 package character
 
 import (
-	"fmt"
-
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/item"
@@ -58,9 +55,6 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		lived := c.Live()
 		val := m.RandomValue()
 		c.SetHealth(c.Health() + val)
-		cmbMsg := fmt.Sprintf("%s: %s: %d", lang.Text(c.ID()),
-			lang.Text("ob_health"), val)
-		c.CombatLog().Add(cmbMsg)
 		if s == nil {
 			break
 		}

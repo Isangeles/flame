@@ -52,7 +52,6 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.Journal().Apply(data.QuestLog)
 	c.Crafting().Apply(data.Crafting)
 	c.ChatLog().Apply(data.ChatLog)
-	c.CombatLog().Apply(data.CombatLog)
 	c.PrivateLog().Apply(data.PrivateLog)
 	c.targets = data.Targets
 	if data.Restore {
@@ -189,7 +188,6 @@ func (c *Character) Data() res.CharacterData {
 		QuestLog:   c.Journal().Data(),
 		Crafting:   c.Crafting().Data(),
 		ChatLog:    c.ChatLog().Data(),
-		CombatLog:  c.CombatLog().Data(),
 		PrivateLog: c.PrivateLog().Data(),
 		Targets:    c.targets,
 		Restore:    true,

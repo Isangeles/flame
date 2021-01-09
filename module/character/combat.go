@@ -24,11 +24,7 @@
 package character
 
 import (
-	"fmt"
-
-	"github.com/isangeles/flame/config"
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
@@ -129,13 +125,6 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 			c.TakeEffect(e)
 		}
 	}
-	// Send combat message.
-	msg := fmt.Sprintf("%s: %s: %s", lang.Text(c.ID()), lang.Text("ob_effect"),
-		lang.Text(e.ID()))
-	if config.Debug { // add effect serial ID to combat message
-		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
-	}
-	c.CombatLog().Add(msg)
 	if c.onEffectTaken != nil {
 		c.onEffectTaken(e)
 	}

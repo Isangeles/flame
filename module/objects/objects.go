@@ -78,7 +78,6 @@ type Magician interface {
 // channels.
 type Logger interface {
 	Object
-	CombatLog() *Log
 	ChatLog() *Log
 	PrivateLog() *Log
 }
