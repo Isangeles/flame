@@ -1,7 +1,7 @@
 /*
  * healthmod.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,9 @@ import (
 
 // Struct for health modifier.
 type HealthMod struct {
-	min, max int
+	min       int
+	max       int
+	lastValue int
 }
 
 // NewHealthMod creates new health modifier.
@@ -54,7 +56,14 @@ func (hm *HealthMod) Max() int {
 // RandomValue returns random number from
 // Min - Max range of modifier.
 func (hm *HealthMod) RandomValue() int {
-	return rng.RollInt(hm.Min(), hm.Max())
+	hm.lastValue = rng.RollInt(hm.Min(), hm.Max())
+	return hm.lastValue
+}
+
+// LastValue returns last value generated with
+// RandomValue function.
+func (hm *HealthMod) LastValue() int {
+	return hm.lastValue
 }
 
 // Data creates data resource for modifier.
