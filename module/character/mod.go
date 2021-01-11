@@ -99,6 +99,6 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		c.Attributes().Wis += m.Wisdom()
 	}
 	if c.onModifierTaken != nil {
-		c.onModifierTaken(&m)
+		c.onModifierTaken(m)
 	}
 }
