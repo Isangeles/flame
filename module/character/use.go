@@ -1,7 +1,7 @@
 /*
  * use.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 package character
 
 import (
+	"fmt"
+
 	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/skill"
@@ -33,9 +35,11 @@ import (
 
 // Use checks requirements and starts cast action for
 // specified usable object.
-func (c *Character) Use(ob useaction.Usable) {
+// Returns an error if use requirements are not meet,
+// cooldown is active, or character is currently moving.
+func (c *Character) Use(ob useaction.Usable) error {
 	if ob.UseAction() == nil {
-		return
+		return nil
 	}
 	reqs := ob.UseAction().Requirements()
 	if t, ok := ob.(*training.TrainerTraining); ok {
@@ -44,14 +48,14 @@ func (c *Character) Use(ob useaction.Usable) {
 	// Check requirements and cooldown.
 	if !c.MeetReqs(reqs...) || c.cooldown > 0 ||
 		ob.UseAction().Cooldown() > 0 || c.Moving() {
-		c.PrivateLog().Add(lang.Text("cant_do_right_now"))
 		if !c.MeetTargetRangeReqs(reqs...) {
 			tar := c.Targets()[0]
 			c.SetDestPoint(tar.Position())
 		}
-		return
+		return fmt.Errorf("cant cast action")
 	}
 	c.casted = ob
+	return nil
 }
 
 // useCasted applies modifiers and effects from specified
