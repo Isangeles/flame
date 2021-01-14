@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,6 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.Journal().Apply(data.QuestLog)
 	c.Crafting().Apply(data.Crafting)
 	c.ChatLog().Apply(data.ChatLog)
-	c.PrivateLog().Apply(data.PrivateLog)
 	c.targets = data.Targets
 	if data.Restore {
 		c.SetHealth(data.HP)
@@ -188,7 +187,6 @@ func (c *Character) Data() res.CharacterData {
 		QuestLog:   c.Journal().Data(),
 		Crafting:   c.Crafting().Data(),
 		ChatLog:    c.ChatLog().Data(),
-		PrivateLog: c.PrivateLog().Data(),
 		Targets:    c.targets,
 		Restore:    true,
 	}

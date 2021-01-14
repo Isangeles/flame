@@ -26,7 +26,6 @@ package character
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/skill"
 	"github.com/isangeles/flame/module/training"
@@ -67,7 +66,6 @@ func (c *Character) useCasted(ob useaction.Usable) {
 		reqs = t.Requirements()
 	}
 	if !c.MeetReqs(reqs...) {
-		c.PrivateLog().Add(lang.Text("cant_do_right_now"))
 		return
 	}
 	c.ChargeReqs(reqs...)

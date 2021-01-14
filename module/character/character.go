@@ -76,7 +76,6 @@ type Character struct {
 	trainings        []*training.TrainerTraining
 	casted           useaction.Usable
 	chatLog          *objects.Log
-	privateLog       *objects.Log
 	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
 	onModifierTaken  func(m effect.Modifier)
@@ -99,7 +98,6 @@ func New(data res.CharacterData) *Character {
 		dialogs:    make(map[string]*dialog.Dialog),
 		flags:      make(map[string]flag.Flag),
 		chatLog:    objects.NewLog(),
-		privateLog: objects.NewLog(),
 	}
 	c.equipment = newEquipment(&c)
 	c.journal = quest.NewJournal(&c)
@@ -480,11 +478,6 @@ func (c *Character) Fighting() bool {
 // ChatLog returns character speech log channel.
 func (c *Character) ChatLog() *objects.Log {
 	return c.chatLog
-}
-
-// PrivateLog returns character private log channel.
-func (c *Character) PrivateLog() *objects.Log {
-	return c.privateLog
 }
 
 // SetOnSkillActivatedFunc sets function triggered after
