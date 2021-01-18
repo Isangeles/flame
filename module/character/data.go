@@ -52,6 +52,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.Journal().Apply(data.QuestLog)
 	c.Crafting().Apply(data.Crafting)
 	c.ChatLog().Apply(data.ChatLog)
+	c.SetAreaID(data.Area)
 	c.targets = data.Targets
 	if data.Restore {
 		c.SetHealth(data.HP)
@@ -189,6 +190,7 @@ func (c *Character) Data() res.CharacterData {
 		ChatLog:    c.ChatLog().Data(),
 		Targets:    c.targets,
 		Restore:    true,
+		Area:       c.AreaID(),
 	}
 	if c.Race() != nil {
 		data.Race = c.Race().ID()

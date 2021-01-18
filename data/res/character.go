@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ type CharacterData struct {
 	Mana       int                   `xml:"mana,attr" json:"mana"`
 	Exp        int                   `xml:"exp,attr" json:"exp"`
 	Restore    bool                  `xml:"restore,attr" json:"restore"`
+	Area       string                `xml:"area,attr" json:"area"`
 	Attributes AttributesData        `xml:"attributes" json:"attributes"`
 	Inventory  InventoryData         `xml:"inventory" json:"inventory"`
 	Equipment  EquipmentData         `xml:"equipment" json:"equipment"`
