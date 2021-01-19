@@ -64,7 +64,7 @@ type CharacterData struct {
 	ChatLog    ObjectLogData         `xml:"chat-log" json:"chat-log"`
 	CombatLog  ObjectLogData         `xml:"combat-log" json:"combat-log"`
 	PrivateLog ObjectLogData         `xml:"private-log" json:"private-log"`
-	Targets    []CharacterTargetData `xml:"targets" json:"targets"`
+	Targets    []SerialObjectData    `xml:"targets" json:"targets"`
 	Trainings  []TrainerTrainingData `xml:"trainings>training" json:"trainings"`
 	Flags      []FlagData            `xml:"flags>flag" json:"flags"`
 	Effects    []ObjectEffectData    `xml:"effects>effect" json:"effects"`
@@ -113,10 +113,4 @@ type RacesData struct {
 type RaceData struct {
 	ID       string `xml:"id,attr" json:"id"`
 	Playable bool   `xml:"playable,attr" json:"playable"`
-}
-
-// Struct for character target data.
-type CharacterTargetData struct {
-	ID     string `xml:"id,attr" json:"id"`
-	Serial string `xml:"serial,attr" json:"serial"`
 }

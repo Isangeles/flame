@@ -67,7 +67,7 @@ type Character struct {
 	equipment        *Equipment
 	journal          *quest.Journal
 	crafting         *craft.Crafting
-	targets          []res.CharacterTargetData
+	targets          []res.SerialObjectData
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
@@ -443,11 +443,11 @@ func (c *Character) Targets() (targets []effect.Target) {
 // target.
 func (c *Character) SetTarget(t effect.Target) {
 	if t == nil {
-		c.targets = []res.CharacterTargetData{}
+		c.targets = []res.SerialObjectData{}
 		return
 	}
-	tarData := res.CharacterTargetData{t.ID(), t.Serial()}
-	c.targets = []res.CharacterTargetData{tarData}
+	tarData := res.SerialObjectData{t.ID(), t.Serial()}
+	c.targets = []res.SerialObjectData{tarData}
 }
 
 // Moving checks whether character is moving.
