@@ -452,11 +452,7 @@ func (c *Character) SetTarget(t effect.Target) {
 
 // Moving checks whether character is moving.
 func (c *Character) Moving() bool {
-	if c.posX != c.destX || c.posY != c.destY {
-		return true
-	} else {
-		return false
-	}
+	return c.posX != c.destX || c.posY != c.destY
 }
 
 // Fighting checks if character is in combat.
