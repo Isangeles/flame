@@ -1,7 +1,7 @@
 /*
  * chapter.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -174,19 +174,18 @@ func (c *Chapter) Object(id, serial string) objects.Object {
 // is present, or nil if no such area was found.
 func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
 	for _, a := range c.areas {
-		for _, c := range a.AllCharacters() {
+		for _, c := range a.Characters() {
 			if c.ID() == char.ID() && c.Serial() == char.Serial() {
 				return a
 			}
-			for _, a := range a.AllSubareas() {
-				for _, c := range a.Characters() {
-					if c.ID() == char.ID() && c.Serial() == char.Serial() {
-						return a
-					}
+		}
+		for _, a := range a.AllSubareas() {
+			for _, c := range a.Characters() {
+				if c.ID() == char.ID() && c.Serial() == char.Serial() {
+					return a
 				}
 			}
 		}
-
 	}
 	return nil
 }
