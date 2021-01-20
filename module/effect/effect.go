@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,21 +26,21 @@ package effect
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module/serial"
 	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/module/serial"
 )
 
 // Struct for effects.
 type Effect struct {
-	id, serial       string
-	srcID, srcSerial string
-	tarID, tarSerial string
-	modifiers        []Modifier
-	duration         int64
-	time             int64
-	secTimer         int64
-	meleeHit         bool
-	started          bool
+	id, serial string
+	source     res.SerialObjectData
+	target     res.SerialObjectData
+	modifiers  []Modifier
+	duration   int64
+	time       int64
+	secTimer   int64
+	meleeHit   bool
+	started    bool
 }
 
 // New creates new effect.
@@ -63,19 +63,19 @@ func (e *Effect) Update(delta int64) {
 		return
 	}
 	e.started = true
-	object := serial.Object(e.tarID, e.tarSerial)
+	object := serial.Object(e.target.ID, e.target.Serial)
 	if object == nil {
 		log.Err.Printf("effect: %s#%s: target not found: %s#%s",
-			e.ID(), e.Serial(), e.tarID, e.tarSerial)
+			e.ID(), e.Serial(), e.target.ID, e.target.Serial)
 		return
 	}
 	target, ok := object.(Target)
 	if !ok {
 		log.Err.Printf("effect: %s#%s: target is invalid: %s#%s",
-			e.ID(), e.Serial(), e.tarID, e.tarSerial)
+			e.ID(), e.Serial(), e.target.ID, e.target.Serial)
 		return
 	}
-	source := serial.Object(e.srcID, e.srcSerial)
+	source := serial.Object(e.source.ID, e.source.Serial)
 	e.secTimer += delta
 	if e.time == e.duration || e.secTimer >= 1000 { // at start and every second after that
 		target.TakeModifiers(source, e.modifiers...)
@@ -114,7 +114,7 @@ func (e *Effect) MeleeHit() bool {
 // Source returns ID and serial value of effect
 // source object.
 func (e *Effect) Source() (string, string) {
-	return e.srcID, e.srcSerial
+	return e.source.ID, e.source.Serial
 }
 
 // SetSerial sets specified value as
@@ -132,13 +132,13 @@ func (e *Effect) SetTime(time int64) {
 // SetSource sets targetable object with specified ID
 // and serial value as effect source.
 func (e *Effect) SetSource(id, serial string) {
-	e.srcID, e.srcSerial = id, serial
+	e.source.ID, e.source.Serial = id, serial
 }
 
 // SetTarget sets specified targertable object
 // as effect target.
 func (e *Effect) SetTarget(t Target) {
-	e.tarID, e.tarSerial = t.ID(), t.Serial()
+	e.target.ID, e.target.Serial = t.ID(), t.Serial()
 }
 
 // Data creates data resource for effect.
