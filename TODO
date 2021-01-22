@@ -36,6 +36,7 @@ MINOR:
 * Remove ExportGame and ImportGame functions(interfaces should use ImportModuleFile and ExportModuleFile instead)
 * Appearance struct for game character
 * Remove all usages of lang package(lang package should be only used by interfaces)
+* Rename serial.Serialer struct to serial.Object
 DONE:
 * Generating unique serial values for game objects
 * Save/load game mechanism
