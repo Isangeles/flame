@@ -1,7 +1,7 @@
 /*
  * misc.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ func NewMisc(data res.MiscItemData) *Misc {
 	}
 	// Use action.
 	m.useAction = useaction.New(data.UseAction)
+	m.useAction.SetOwner(&m)
 	// Serial.
 	serial.Register(&m)
 	return &m

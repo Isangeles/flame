@@ -1,7 +1,7 @@
 /*
  * crafting.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,12 +27,12 @@ package craft
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/serial"
 )
 
 // Interface for objects with crafting.
 type Crafter interface {
-	objects.Object
+	serial.Serialer
 	Crafting() *Crafting
 }
 
@@ -62,6 +62,7 @@ func (c *Crafting) Recipes() (recipes []*Recipe) {
 // AddRecipes adds specified recipes to crafting object.
 func (c *Crafting) AddRecipes(recipes ...*Recipe) {
 	for _, r := range recipes {
+		r.UseAction().SetOwner(c.owner)
 		c.recipes[r.ID()] = r
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * useaction.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/req"
+	"github.com/isangeles/flame/module/serial"
 )
 
 // Interface for usable game objects.
@@ -52,6 +53,7 @@ type UseAction struct {
 	targetEffects     []res.EffectData
 	targetUserEffects []res.EffectData
 	requirements      []req.Requirement
+	owner             res.SerialObjectData
 }
 
 // New creates new use action.
@@ -201,6 +203,16 @@ func (ua *UseAction) TargetUserEffects() (effects []*effect.Effect) {
 // Requirements returns use action requirements.
 func (ua *UseAction) Requirements() []req.Requirement {
 	return ua.requirements
+}
+
+// SetOwner sets specified serial object as use action owner.
+func (ua *UseAction) SetOwner(o serial.Serialer) {
+	ua.owner.ID, ua.owner.Serial = o.ID(), o.Serial()
+}
+
+// Owner returns use action owner.
+func (ua *UseAction) Onwer() serial.Serialer {
+	return serial.Object(ua.owner.ID, ua.owner.Serial)
 }
 
 // Data creates data resource for use action.

@@ -416,6 +416,7 @@ func (c *Character) Skills() []*skill.Skill {
 // AddSkill adds specified skill to characters
 // skills.
 func (c *Character) AddSkill(s *skill.Skill) {
+	s.UseAction().SetOwner(c)
 	c.skills[s.ID()] = s
 }
 
@@ -568,6 +569,7 @@ func (c *Character) Trainings() []*training.TrainerTraining {
 // AddTrainings adds specified training to
 // character trainings list.
 func (c *Character) AddTraining(t *training.TrainerTraining) {
+	t.UseAction().SetOwner(c)
 	c.trainings = append(c.trainings, t)
 }
 

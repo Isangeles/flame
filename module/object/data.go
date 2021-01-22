@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ func (o *Object) Apply(data res.ObjectData) {
 	o.SetPosition(data.PosX, data.PosY)
 	o.Inventory().Apply(data.Inventory)
 	o.action = useaction.New(data.UseAction)
+	o.action.SetOwner(o)
 	// Restore.
 	if data.Restore {
 		o.SetHealth(data.HP)
