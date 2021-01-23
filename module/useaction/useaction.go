@@ -211,7 +211,7 @@ func (ua *UseAction) SetOwner(o serial.Serialer) {
 }
 
 // Owner returns use action owner.
-func (ua *UseAction) Onwer() serial.Serialer {
+func (ua *UseAction) Owner() serial.Serialer {
 	return serial.Object(ua.owner.ID, ua.owner.Serial)
 }
 
