@@ -114,3 +114,9 @@ type RaceData struct {
 	ID       string `xml:"id,attr" json:"id"`
 	Playable bool   `xml:"playable,attr" json:"playable"`
 }
+
+// Struct for data of usable object casted by character.
+type CastedObjectData struct {
+	ID    string           `xml:"id,attr" json:"id"`
+	Owner SerialObjectData `xml:"owner" json:"owner"`
+}

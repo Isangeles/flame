@@ -53,11 +53,11 @@ func NewMisc(data res.MiscItemData) *Misc {
 		currency:   data.Currency,
 		consumable: data.Consumable,
 	}
+	// Serial.
+	serial.Register(&m)
 	// Use action.
 	m.useAction = useaction.New(data.UseAction)
 	m.useAction.SetOwner(&m)
-	// Serial.
-	serial.Register(&m)
 	return &m
 }
 

@@ -33,13 +33,12 @@ import (
 // Apply applies specifed data on the object.
 func (o *Object) Apply(data res.ObjectData) {
 	o.id = data.ID
-	o.SetSerial(data.Serial)
 	o.SetMaxHealth(data.MaxHP)
 	o.SetHealth(o.MaxHealth())
 	o.SetPosition(data.PosX, data.PosY)
 	o.Inventory().Apply(data.Inventory)
 	o.action = useaction.New(data.UseAction)
-	o.action.SetOwner(o)
+	o.SetSerial(data.Serial)
 	// Restore.
 	if data.Restore {
 		o.SetHealth(data.HP)

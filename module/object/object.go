@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,6 +99,10 @@ func (ob *Object) Serial() string {
 // object serial value.
 func (ob *Object) SetSerial(s string) {
 	ob.serial = s
+	// Update ownerships.
+	if ob.UseAction() != nil {
+		ob.UseAction().SetOwner(ob)
+	}
 }
 
 // Position returns object XY position.

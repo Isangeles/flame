@@ -26,6 +26,7 @@ package character
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/skill"
 	"github.com/isangeles/flame/module/training"
@@ -53,7 +54,13 @@ func (c *Character) Use(ob useaction.Usable) error {
 		}
 		return fmt.Errorf("cant cast action")
 	}
-	c.casted = ob
+	c.casted = res.CastedObjectData{ID: ob.ID()}
+	if ob.UseAction().Owner() != nil {
+		c.casted.Owner = res.SerialObjectData{
+			ID:     ob.UseAction().Owner().ID(),
+			Serial: ob.UseAction().Owner().Serial(),
+		}
+	}
 	return nil
 }
 

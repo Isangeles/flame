@@ -74,7 +74,7 @@ type Character struct {
 	dialogs          map[string]*dialog.Dialog
 	flags            map[string]flag.Flag
 	trainings        []*training.TrainerTraining
-	casted           useaction.Usable
+	casted           res.CastedObjectData
 	chatLog          *objects.Log
 	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
@@ -169,12 +169,12 @@ func (c *Character) Update(delta int64) {
 		r.Update(delta)
 	}
 	// Casting action.
-	if c.Casted() != nil {
-		time := c.Casted().UseAction().Cast() + delta
-		c.Casted().UseAction().SetCast(time)
-		if time >= c.Casted().UseAction().CastMax() {
-			c.useCasted(c.Casted())
-			c.casted = nil
+	if ob := c.Casted(); ob != nil {
+		time := ob.UseAction().Cast() + delta
+		ob.UseAction().SetCast(time)
+		if time >= ob.UseAction().CastMax() {
+			c.useCasted(ob)
+			c.casted.ID = ""
 		}
 	}
 }
@@ -382,6 +382,16 @@ func (c *Character) SetDefaultPosition(x, y float64) {
 // character.
 func (c *Character) SetSerial(serial string) {
 	c.serial = serial
+	// Update ownerships.
+	for _, s := range c.Skills() {
+		s.UseAction().SetOwner(c)
+	}
+	for _, r := range c.Crafting().Recipes() {
+		r.UseAction().SetOwner(c)
+	}
+	for _, t := range c.Trainings() {
+		t.UseAction().SetOwner(c)
+	}
 }
 
 // Effects returns character all effects.
@@ -504,7 +514,7 @@ func (c *Character) SetOnEffectTakenFunc(f func(e *effect.Effect)) {
 // Interrupt stops any acction(like skill
 // casting) performed by character.
 func (c *Character) Interrupt() {
-	c.casted = nil
+	c.casted.ID = ""
 }
 
 // Dialog returns dialog for specified character.
@@ -584,9 +594,57 @@ func (c *Character) SetAreaID(areaID string) {
 	c.areaID = areaID
 }
 
-// Casted returns casted action.
+// Casted returns usable object currently casted by the character.
 func (c *Character) Casted() useaction.Usable {
-	return c.casted
+	if len(c.casted.ID) < 1 {
+		return nil
+	}
+	// Owner.
+	var owner serial.Serialer
+	if c.casted.Owner.ID == c.ID() && c.casted.Owner.Serial == c.Serial() {
+		owner = c
+	} else {
+		owner = serial.Object(c.casted.Owner.ID, c.casted.Owner.Serial)
+	}
+	if owner == nil {
+		return nil
+	}
+	if c.casted.ID == owner.ID() {
+		return owner.(useaction.Usable)
+	}
+	// Skills.
+	if owner, ok := owner.(skill.User); ok {
+		for _, s := range owner.Skills() {
+			if s.ID() == c.casted.ID {
+				return s
+			}
+		}
+	}
+	// Items.
+	if owner, ok := owner.(item.Container); ok {
+		for _, i := range owner.Inventory().Items() {
+			if i.ID() == c.casted.ID {
+				return owner.(useaction.Usable)
+			}
+		}
+	}
+	// Recipes.
+	if owner, ok := owner.(craft.Crafter); ok {
+		for _, r := range owner.Crafting().Recipes() {
+			if r.ID() == c.casted.ID {
+				return r
+			}
+		}
+	}
+	// Trainings.
+	if owner, ok := owner.(training.Trainer); ok {
+		for _, t := range owner.Trainings() {
+			if t.ID() == c.casted.ID {
+				return t
+			}
+		}
+	}
+	return nil
 }
 
 // levelup promotes character to next level.
