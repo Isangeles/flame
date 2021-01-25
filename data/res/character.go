@@ -62,6 +62,7 @@ type CharacterData struct {
 	QuestLog   QuestLogData          `xml:"quests" json:"quests"`
 	Crafting   CraftingData          `xml:"crafting" json:"crafting"`
 	ChatLog    ObjectLogData         `xml:"chat-log" json:"chat-log"`
+	Casted     CastedObjectData      `xml:"casted" json:"casted"`
 	Targets    []SerialObjectData    `xml:"targets" json:"targets"`
 	Trainings  []TrainerTrainingData `xml:"trainings>training" json:"trainings"`
 	Flags      []FlagData            `xml:"flags>flag" json:"flags"`
