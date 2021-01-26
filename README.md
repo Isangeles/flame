@@ -3,7 +3,9 @@
 
   The main goal is to create simple, flexible, extensible and completely modular game engine.
   
-  Flame parses readable text files and creates game objects, this means that all game data is easy to modify and extend.
+  Flame is able to create all game objects from textual data, this guarantees that game data is easy to modify and extend.
+  
+  This repository contains engine core API, which allows to load game module data from textual format, create and modify game objects, and export game module data back into textual format.
 
   Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or use some existing one.
 
@@ -15,7 +17,7 @@
 
   Flame as a project consists with many different repositories, some of them are independent and can be reused in other projects:
 
-  * [Flame](https://github.com/Isangeles/flame) - engine core
+  * [Flame](https://github.com/Isangeles/flame) - engine core API
   * [Burn](https://github.com/Isangeles/burn) - commands interpreter with it's own scripting language [Ash](https://github.com/Isangeles/burn/tree/master/ash) for creating cutscenes etc.
   * [Fire](https://github.com/Isangeles/fire) - TCP server that enables creating multiplayer games
   * [Burnsh](https://github.com/Isangeles/burnsh) - textual fronted(CLI)
