@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ import (
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/serial"
 )
 
 // Area struct represents game world area.
@@ -88,7 +89,7 @@ func (a *Area) AddObject(o *object.Object) {
 }
 
 func (a *Area) RemoveObject(o *object.Object) {
-	a.objects.Delete(o.ID()+o.Serial())
+	a.objects.Delete(o.ID() + o.Serial())
 }
 
 // AddSubareas adds specified area to subareas.
@@ -205,6 +206,22 @@ func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
 // Apply applies specified data on the area.
 func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
+	// Remove characters not present anymore.
+	removeChars := func(key, value interface{}) bool {
+		key, _ = key.(string)
+		found := false
+		for _, cd := range data.Characters {
+			if cd.ID+cd.Serial == key {
+				found = true
+				break
+			}
+		}
+		if !found {
+			a.chars.Delete(key)
+		}
+		return true
+	}
+	a.chars.Range(removeChars)
 	// Characters.
 	for _, areaCharData := range data.Characters {
 		// Retireve char data.
@@ -214,15 +231,20 @@ func (a *Area) Apply(data res.AreaData) {
 				a.ID(), areaCharData.ID)
 			continue
 		}
-		v, _ := a.chars.Load(areaCharData.ID+areaCharData.Serial)
-		char, _ := v.(*character.Character)
-		if char == nil {
+		ob := serial.Object(areaCharData.ID, areaCharData.Serial)
+		char, ok := ob.(*character.Character)
+		if ok {
+			// Apply data and add to area if not present already.
+			char.Apply(*charData)
+			_, inArea := a.chars.Load(areaCharData.ID + areaCharData.Serial)
+			if !inArea {
+				a.AddCharacter(char)
+			}
+		} else {
+			// Add new character to area.
 			charData.AI = areaCharData.AI
 			char = character.New(*charData)
-			// Add to area.
 			a.AddCharacter(char)
-		} else {
-			char.Apply(*charData)
 		}
 		// Set position.
 		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
@@ -238,7 +260,7 @@ func (a *Area) Apply(data res.AreaData) {
 				a.ID(), areaObData.ID)
 			continue
 		}
-		v, _ := a.objects.Load(areaObData.ID+areaObData.Serial)
+		v, _ := a.objects.Load(areaObData.ID + areaObData.Serial)
 		ob, _ := v.(*object.Object)
 		if ob == nil {
 			ob = object.New(*obData)
