@@ -1,7 +1,7 @@
 /*
  * ai.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import (
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/effect"
+	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/skill"
 	"github.com/isangeles/flame/rng"
 )
@@ -172,7 +173,7 @@ func (ai *AI) saySomething(npc *character.Character) {
 		return
 	}
 	id := rng.RollInt(0, len(texts)-1)
-	npc.ChatLog().Add(texts[id])
+	npc.ChatLog().Add(objects.Message{Text: texts[id]})
 }
 
 // combatSkill selects NPC skill to use in combat or nil if specified

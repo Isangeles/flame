@@ -77,8 +77,9 @@ type ObjectLogData struct {
 
 // Struct for object log message data.
 type ObjectLogMessageData struct {
-	Time time.Time `xml:"time,attr" json:"time"`
-	Text string    `xml:"text,attr" json:"text"`
+	Translated bool      `xml:"translated,attr" json:"translated"`
+	Text       string    `xml:"text,attr" json:"text"`
+	Time       time.Time `xml:"time,attr" json:"time"`
 }
 
 // Struct for flag data.

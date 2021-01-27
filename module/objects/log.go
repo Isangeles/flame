@@ -1,7 +1,7 @@
 /*
  * log.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,34 +31,35 @@ import (
 
 // Struct for character log.
 type Log struct {
-	channel  chan string
+	channel  chan Message
 	messages []Message
 }
 
 // Struct for character log message.
 type Message struct {
-	time time.Time
-	text string
+	Translated bool
+	Text       string
+	time       time.Time
 }
 
 // NewLog creates new log.
 func NewLog() *Log {
-	l := Log{channel: make(chan string, 3)}
+	l := Log{channel: make(chan Message, 3)}
 	return &l
 }
 
 // Add adds new message to log.
-func (l *Log) Add(m string) {
-	msg := Message{time.Now(), m}
+func (l *Log) Add(message Message) {
+	message.time = time.Now()
 	select {
-	case l.channel <- m:
+	case l.channel <- message:
 	default:
 	}
-	l.messages = append(l.messages, msg)
+	l.messages = append(l.messages, message)
 }
 
 // Channel returns log channel.
-func (l *Log) Channel() chan string {
+func (l *Log) Channel() chan Message {
 	return l.channel
 }
 
@@ -76,7 +77,7 @@ func (l *Log) Clear() {
 func (l *Log) Apply(data res.ObjectLogData) {
 	l.Clear()
 	for _, md := range data.Messages {
-		m := Message{md.Time, md.Text}
+		m := Message{md.Translated, md.Text, md.Time}
 		l.messages = append(l.messages, m)
 	}
 }
@@ -84,7 +85,7 @@ func (l *Log) Apply(data res.ObjectLogData) {
 // Data creates data resource for object log.
 func (l *Log) Data() (data res.ObjectLogData) {
 	for _, m := range l.Messages() {
-		md := res.ObjectLogMessageData{m.Time(), m.String()}
+		md := res.ObjectLogMessageData{m.Translated, m.String(), m.Time()}
 		data.Messages = append(data.Messages, md)
 	}
 	return
@@ -92,7 +93,7 @@ func (l *Log) Data() (data res.ObjectLogData) {
 
 // String returns message text.
 func (m Message) String() string {
-	return m.text
+	return m.Text
 }
 
 // Time returns message time.
