@@ -26,7 +26,6 @@ package ai
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/effect"
@@ -168,12 +167,7 @@ func (ai *AI) saySomething(npc *character.Character) {
 		return
 	}
 	textID := fmt.Sprintf("random_chat_%s", npc.Race().ID())
-	texts := lang.Texts(textID)
-	if len(texts) < 1 {
-		return
-	}
-	id := rng.RollInt(0, len(texts)-1)
-	npc.ChatLog().Add(objects.Message{Text: texts[id]})
+	npc.ChatLog().Add(objects.Message{Text: textID})
 }
 
 // combatSkill selects NPC skill to use in combat or nil if specified
