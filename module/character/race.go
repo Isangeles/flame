@@ -1,7 +1,7 @@
 /*
  * race.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,13 +25,11 @@ package character
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 )
 
 // Struct for character race.
 type Race struct {
 	id       string
-	name     string
 	playable bool
 }
 
@@ -40,7 +38,6 @@ func NewRace(data res.RaceData) *Race {
 	r := new(Race)
 	r.id = data.ID
 	r.playable = data.Playable
-	r.name = lang.Text(r.ID())
 	return r
 }
 
