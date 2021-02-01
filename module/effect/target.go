@@ -33,7 +33,6 @@ type Target interface {
 	Effects() []*Effect
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)
-	AddEffect(e *Effect)
 	RemoveEffect(e *Effect)
 	TakeModifiers(s objects.Object, m ...Modifier)
 }
