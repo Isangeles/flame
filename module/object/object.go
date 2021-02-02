@@ -36,17 +36,19 @@ import (
 
 // Struct for area objects.
 type Object struct {
-	id, serial string
-	hp, maxHP  int
-	resilience objects.Resilience
-	posX, posY float64
-	action     *useaction.UseAction
-	inventory  *item.Inventory
-	effects    map[string]*effect.Effect
-	flags      map[string]flag.Flag
-	chatlog    chan string
-	combatlog  chan string
-	privatelog chan string
+	id, serial      string
+	hp, maxHP       int
+	resilience      objects.Resilience
+	posX, posY      float64
+	action          *useaction.UseAction
+	inventory       *item.Inventory
+	effects         map[string]*effect.Effect
+	flags           map[string]flag.Flag
+	chatlog         chan string
+	combatlog       chan string
+	privatelog      chan string
+	onEffectTaken   func(e *effect.Effect)
+	onModifierTaken func(m effect.Modifier)
 }
 
 // New creates new area object from
@@ -220,6 +222,16 @@ func (ob *Object) Flags() (flags []flag.Flag) {
 		flags = append(flags, f)
 	}
 	return
+}
+
+// SetOnEffectTakenFunc sets function triggered on taking new effect.
+func (ob *Object) SetOnEffectTakenFunc(f func(e *effect.Effect)) {
+	ob.onEffectTaken = f
+}
+
+// SetOnModifierTakenFunc sets function triggered on taking new modifier.
+func (ob *Object) SetOnModifierTakenFunc(f func(m effect.Modifier)) {
+	ob.onModifierTaken = f
 }
 
 // SendCmb sends specified text message to

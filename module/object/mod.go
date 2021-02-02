@@ -1,7 +1,7 @@
 /*
  * mod.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,5 +46,8 @@ func (o *Object) takeModifier(s objects.Object, m effect.Modifier) {
 		o.SetHealth(o.Health() + val)
 		cmbMsg := fmt.Sprintf("%s: %d", lang.Text("ob_health"), val)
 		o.SendCombat(cmbMsg)
+	}
+	if o.onModifierTaken != nil {
+		o.onModifierTaken(m)
 	}
 }
