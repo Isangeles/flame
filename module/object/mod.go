@@ -24,9 +24,6 @@
 package object
 
 import (
-	"fmt"
-
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/objects"
 )
@@ -44,8 +41,6 @@ func (o *Object) takeModifier(s objects.Object, m effect.Modifier) {
 	case *effect.HealthMod:
 		val := m.RandomValue()
 		o.SetHealth(o.Health() + val)
-		cmbMsg := fmt.Sprintf("%s: %d", lang.Text("ob_health"), val)
-		o.SendCombat(cmbMsg)
 	}
 	if o.onModifierTaken != nil {
 		o.onModifierTaken(m)

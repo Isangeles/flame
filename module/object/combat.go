@@ -24,10 +24,6 @@
 package object
 
 import (
-	"fmt"
-
-	"github.com/isangeles/flame/config"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/effect"
 )
 
@@ -43,9 +39,4 @@ func (ob *Object) TakeEffect(e *effect.Effect) {
 	if ob.onEffectTaken != nil {
 		ob.onEffectTaken(e)
 	}
-	msg := fmt.Sprintf("%s: %s", lang.Text("ob_effect"), lang.Text(e.ID()))
-	if config.Debug { // add effect serial ID to combat message
-		msg = fmt.Sprintf("%s(%s_%s)", msg, e.ID(), e.Serial())
-	}
-	ob.SendCombat(msg)
 }

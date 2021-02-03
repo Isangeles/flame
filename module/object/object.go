@@ -45,8 +45,6 @@ type Object struct {
 	effects         map[string]*effect.Effect
 	flags           map[string]flag.Flag
 	chatlog         chan string
-	combatlog       chan string
-	privatelog      chan string
 	onEffectTaken   func(e *effect.Effect)
 	onModifierTaken func(m effect.Modifier)
 }
@@ -59,7 +57,6 @@ func New(data res.ObjectData) *Object {
 		effects:   make(map[string]*effect.Effect),
 		flags:     make(map[string]flag.Flag),
 		chatlog:   make(chan string, 1),
-		combatlog: make(chan string, 3),
 	}
 	o.Apply(data)
 	o.inventory.SetCapacity(10)
@@ -234,27 +231,7 @@ func (ob *Object) SetOnModifierTakenFunc(f func(m effect.Modifier)) {
 	ob.onModifierTaken = f
 }
 
-// SendCmb sends specified text message to
-// comabt log channel.
-func (ob *Object) SendCombat(msg string) {
-	select {
-	case ob.combatlog <- msg:
-	default:
-	}
-}
-
-// CombatLog returns object combat log
-// channel.
-func (ob *Object) CombatLog() chan string {
-	return ob.combatlog
-}
-
 // ChatLog returns object speech log channel.
 func (ob *Object) ChatLog() chan string {
 	return ob.chatlog
-}
-
-// PrivateLog returns object private log channel.
-func (ob *Object) PrivateLog() chan string {
-	return ob.privatelog
 }
