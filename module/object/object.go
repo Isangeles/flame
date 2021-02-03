@@ -44,7 +44,7 @@ type Object struct {
 	inventory       *item.Inventory
 	effects         map[string]*effect.Effect
 	flags           map[string]flag.Flag
-	chatlog         chan string
+	chatlog         *objects.Log
 	onEffectTaken   func(e *effect.Effect)
 	onModifierTaken func(m effect.Modifier)
 }
@@ -56,7 +56,7 @@ func New(data res.ObjectData) *Object {
 		inventory: item.NewInventory(),
 		effects:   make(map[string]*effect.Effect),
 		flags:     make(map[string]flag.Flag),
-		chatlog:   make(chan string, 1),
+		chatlog:   objects.NewLog(),
 	}
 	o.Apply(data)
 	o.inventory.SetCapacity(10)
@@ -232,6 +232,6 @@ func (ob *Object) SetOnModifierTakenFunc(f func(m effect.Modifier)) {
 }
 
 // ChatLog returns object speech log channel.
-func (ob *Object) ChatLog() chan string {
+func (ob *Object) ChatLog() *objects.Log {
 	return ob.chatlog
 }
