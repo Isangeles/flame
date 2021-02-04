@@ -1,7 +1,7 @@
 /*
  * stage.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ package quest
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/module/flag"
 )
 
@@ -59,18 +58,12 @@ func NewStage(data res.QuestStageData) *Stage {
 		f := flag.Flag(fd.ID)
 		s.completeFlags = append(s.completeFlags, f)
 	}
-	s.info = lang.Text(s.ID())
 	return s
 }
 
 // ID returns stage ID.
 func (s *Stage) ID() string {
 	return s.id
-}
-
-// Info returns stage info.
-func (s *Stage) Info() string {
-	return s.info
 }
 
 // Ordinal returns stage ordinal number.
