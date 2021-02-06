@@ -1,7 +1,7 @@
 /*
  * journal.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,16 +125,32 @@ func (j *Journal) checkStage(s *Stage) {
 
 // Apply applies specifie data on the journal.
 func (j *Journal) Apply(data res.QuestLogData) {
+	// Remove quests not present anymore.
+	for i, _ := range j.quests {
+		found := false
+		for _, qd := range data.Quests {
+			if qd.ID == i {
+				found = true
+				break
+			}
+		}
+		if !found {
+			delete(j.quests, i)
+		}
+	}
+	// Add/update quests.
 	for _, logQuestData := range data.Quests {
 		quest := j.quests[logQuestData.ID]
 		if quest == nil {
 			questData := res.Quest(logQuestData.ID)
 			if questData == nil {
-				log.Err.Printf("build quest log: %s#%s: unable to retrieve quest data: %s",
+				log.Err.Printf("Quest log: Apply: %s#%s: unable to retrieve quest data: %s",
 					j.owner.ID(), j.owner.Serial(), logQuestData.ID)
 				continue
 			}
 			quest = New(*questData)
+			// Add quest to the quest log.
+			j.AddQuest(quest)
 		}
 		// Restore quest stage.
 		for _, s := range quest.Stages() {
@@ -146,8 +162,6 @@ func (j *Journal) Apply(data res.QuestLogData) {
 			log.Err.Printf("build quest log: %s#%s: quest: %s: unable to set active stage",
 				j.owner.ID(), j.owner.Serial(), quest.ID())
 		}
-		// Add quest to quest log.
-		j.AddQuest(quest)
 	}
 }
 
