@@ -73,11 +73,10 @@ func (eq *Equipment) Unequip(it item.Equiper) {
 func (eq *Equipment) Items() (items []item.Equiper) {
 	uniqueItems := make(map[string]item.Equiper)
 	for _, s := range eq.Slots() {
-		it := s.Item()
-		if it == nil {
+		if s.Item() == nil {
 			continue
 		}
-		uniqueItems[it.ID()+it.Serial()] = it
+		uniqueItems[s.Item().ID()+s.Item().Serial()] = s.Item()
 	}
 	for _, it := range uniqueItems {
 		items = append(items, it)
@@ -103,6 +102,25 @@ func (eq *Equipment) Slots() []*EquipmentSlot {
 
 // Apply applies specified data on the equipment.
 func (eq *Equipment) Apply(data res.EquipmentData) {
+	// Remove unequiped items.
+	for _, s := range eq.Slots() {
+		if s.Item() == nil {
+			continue
+		}
+		found := false
+		for _, id := range data.Items {
+			slotType := item.Slot(id.Slot)
+			if id.ID == s.Item().ID() && id.Serial == s.Item().Serial() &&
+				slotType == s.Type() && id.SlotID == s.ID() {
+				found = true
+				break
+			}
+		}
+		if !found {
+			s.SetItem(nil)
+		}
+	}
+	// Equip items.
 	for _, itData := range data.Items {
 		it := eq.char.Inventory().Item(itData.ID, itData.Serial)
 		if it == nil {
