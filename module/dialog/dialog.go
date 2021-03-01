@@ -118,7 +118,7 @@ func (d *Dialog) Next(a *Answer) {
 	}
 	d.trading = a.StartsTrade()
 	d.training = a.StartsTraining()
-	if a.EndsDialog() {
+	if a.EndsDialog() || d.Trading() || d.Training() {
 		d.finished = true
 		return
 	}
