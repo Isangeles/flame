@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,6 +120,7 @@ func (d *Dialog) Next(a *Answer) {
 	d.training = a.StartsTraining()
 	if a.EndsDialog() || d.Trading() || d.Training() {
 		d.finished = true
+		d.target = nil
 		return
 	}
 	// Search for proper stage for target.
@@ -176,7 +177,7 @@ func (d *Dialog) Owner() Talker {
 // SetTarget sets dialog target.
 func (d *Dialog) SetTarget(t Talker) {
 	d.target = t
-	if d.activeStage == nil {
+	if t != nil && d.activeStage == nil {
 		d.activeStage = talkerStage(d.Target(), d.activeStages)
 	}
 }
