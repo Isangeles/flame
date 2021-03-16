@@ -243,6 +243,7 @@ func (a *Area) Apply(data res.AreaData) {
 		} else {
 			// Add new character to area.
 			charData.AI = areaCharData.AI
+			charData.Flags = append(charData.Flags, areaCharData.Flags...)
 			char = character.New(*charData)
 			a.AddCharacter(char)
 		}
