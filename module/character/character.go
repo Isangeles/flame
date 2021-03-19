@@ -561,6 +561,16 @@ func (c *Character) RemoveFlag(f flag.Flag) {
 	log.Dbg.Printf("char: %s#%s: remove flag: %s", c.ID(), c.Serial(), f)
 }
 
+// HasFlag checks if character has specified flag.
+func (c *Character) HasFlag(flag flag.Flag) bool {
+	for _, f := range c.Flags() {
+		if f == flag {
+			return true
+		}
+	}
+	return false
+}
+
 // Journal returns quest journal.
 func (c *Character) Journal() *quest.Journal {
 	return c.journal
