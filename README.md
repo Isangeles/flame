@@ -20,6 +20,7 @@
   * [Flame](https://github.com/Isangeles/flame) - engine core API
   * [Burn](https://github.com/Isangeles/burn) - commands interpreter with it's own scripting language [Ash](https://github.com/Isangeles/burn/tree/master/ash) for creating cutscenes etc.
   * [Fire](https://github.com/Isangeles/fire) - TCP server that enables creating multiplayer games
+  * [Ignite](https://github.com/Isangeles/ignite) - AI program for the Fire server
   * [Burnsh](https://github.com/Isangeles/burnsh) - textual fronted(CLI)
   * [Mural](https://github.com/Isangeles/mural) - graphical fronted(2D GUI)
   * [MTK](https://github.com/Isangeles/mtk) - simple graphical toolkit
