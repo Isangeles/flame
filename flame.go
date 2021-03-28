@@ -28,6 +28,14 @@ import (
 	"github.com/isangeles/flame/module"
 )
 
+const (
+	Name, Version  = "Flame Engine", "0.1.0-dev"
+)
+
+var (
+	Debug  = false
+)
+
 // Struct for game, a wrapper for the game module.
 type Game struct {
 	mod    *module.Module
