@@ -33,7 +33,6 @@ MINOR:
 * Remove Apply call in character.New and data argument, Apply function should be called
   separately after calling character.New
 * Apply function for UseAction struct
-* Remove ExportGame and ImportGame functions(interfaces should use ImportModuleFile and ExportModuleFile instead)
 * Appearance struct for game character
 * Remove all usages of lang package(lang package should be only used by interfaces)
 * Rename serial.Serialer struct to serial.Object
