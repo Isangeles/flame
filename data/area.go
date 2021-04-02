@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,13 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -79,4 +80,27 @@ func ImportAreasDir(path string) ([]res.AreaData, error) {
 		areas = append(areas, area)
 	}
 	return areas, nil
+}
+
+// ExportArea exports area to a new directory under specified
+// path.
+func ExportArea(path string, data res.AreaData) error {
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create area dir: %v", err)
+	}
+	xmlData, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal area data: %v", err)
+	}
+	areaFilePath := filepath.Join(path, "main"+AreaFileExt)
+	areaFile, err := os.Create(areaFilePath)
+	if err != nil {
+		return fmt.Errorf("unable to create area file: %v", err)
+	}
+	defer areaFile.Close()
+	w := bufio.NewWriter(areaFile)
+	w.Write(xmlData)
+	w.Flush()
+	return nil
 }
