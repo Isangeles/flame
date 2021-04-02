@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -81,4 +82,37 @@ func ImportObjectsDir(path string) ([]res.ObjectData, error) {
 		objects = append(objects, impObjects...)
 	}
 	return objects, nil
+}
+
+// ExportObjects exports area objects to the data file under
+// specified path.
+func ExportObjects(path string, objects ...res.ObjectData) error {
+	data := new(res.ObjectsData)
+	for _, o := range objects {
+		data.Objects = append(data.Objects, o)
+	}
+	// Marshal objects data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal objects: %v", err)
+	}
+	// Create objects file.
+	if !strings.HasSuffix(path, ObjectsFileExt) {
+		path += ObjectsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create objects file dircetory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }

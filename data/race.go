@@ -1,7 +1,7 @@
 /*
  * race.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -80,4 +81,36 @@ func ImportRacesDir(path string) ([]res.RaceData, error) {
 		races = append(races, impRaces...)
 	}
 	return races, nil
+}
+
+// ExportRaces exports races to data file under specified path.
+func ExportRaces(path string, races ...res.RaceData) error {
+	data := new(res.RacesData)
+	for _, r := range races {
+		data.Races = append(data.Races, r)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal races: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, RacesFileExt) {
+		path += RacesFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create races file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create races file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }

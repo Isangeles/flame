@@ -1,7 +1,7 @@
 /*
  * skill.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -83,4 +84,36 @@ func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
 		}
 	}
 	return skills, nil
+}
+
+// ExportSkills exports skills to data file under specified path.
+func ExportSkills(path string, skills ...res.SkillData) error {
+	data := new(res.SkillsData)
+	for _, s := range skills {
+		data.Skills = append(data.Skills, s)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal skills: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, SkillsFileExt) {
+		path += SkillsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create skills file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create skills file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }

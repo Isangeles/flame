@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,14 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
-	"os"
 	"io/ioutil"
-	"strings"
+	"os"
 	"path/filepath"
-	
+	"strings"
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -83,4 +84,36 @@ func ImportEffectsDir(dirPath string) ([]res.EffectData, error) {
 		}
 	}
 	return effects, nil
+}
+
+// ExportEffects exports effects to the data file under specified path.
+func ExportEffects(path string, effects ...res.EffectData) error {
+	data := new(res.EffectsData)
+	for _, e := range effects {
+		data.Effects = append(data.Effects, e)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal effects: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, EffectsFileExt) {
+		path += EffectsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create effects file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create effects file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }
