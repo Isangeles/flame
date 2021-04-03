@@ -1,7 +1,7 @@
 /*
  * item.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -60,7 +61,7 @@ func ImportArmors(path string) ([]res.ArmorData, error) {
 	return data.Armors, nil
 }
 
-// ImportArmorsDir imports all armors data from files 
+// ImportArmorsDir imports all armors data from files
 func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -169,4 +170,100 @@ func ImportMiscItemsDir(dirPath string) ([]res.MiscItemData, error) {
 		miscs = append(miscs, impMiscs...)
 	}
 	return miscs, nil
+}
+
+// ExportArmors exports armors to the data file under specified path.
+func ExportArmors(path string, armors ...res.ArmorData) error {
+	data := new(res.ArmorsData)
+	for _, a := range armors {
+		data.Armors = append(data.Armors, a)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal armors: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, EffectsFileExt) {
+		path += EffectsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create armors file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create armors file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
+}
+
+// ExportWeapons exports weapons to the data file under specified path.
+func ExportWeapons(path string, weapons ...res.WeaponData) error {
+	data := new(res.WeaponsData)
+	for _, w := range weapons {
+		data.Weapons = append(data.Weapons, w)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal weapons: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, EffectsFileExt) {
+		path += EffectsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create weapons file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create weapons file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
+}
+
+// ExportMiscItems exports misc items to the data file under specified path.
+func ExportMiscItems(path string, miscs ...res.MiscItemData) error {
+	data := new(res.MiscItemsData)
+	for _, m := range miscs {
+		data.Miscs = append(data.Miscs, m)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal misc items: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, EffectsFileExt) {
+		path += EffectsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create misc items file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create misc items file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }

@@ -1,7 +1,7 @@
 /*
  * training.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -82,4 +83,36 @@ func ImportTrainingsDir(path string) ([]res.TrainingData, error) {
 		}
 	}
 	return trainings, nil
+}
+
+// ExportTrainings exports trainings to the data file under specified path.
+func ExportTrainings(path string, trainings ...res.TrainingData) error {
+	data := new(res.TrainingsData)
+	for _, t := range trainings {
+		data.Trainings = append(data.Trainings, t)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal trainings: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, EffectsFileExt) {
+		path += EffectsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create trainings file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create trainings file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }
