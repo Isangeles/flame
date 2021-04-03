@@ -1,7 +1,7 @@
 /*
  * lang.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,5 +121,22 @@ func ExportLang(path string, data ...res.TranslationData) error {
 	writer := bufio.NewWriter(file)
 	writer.WriteString(txt)
 	writer.Flush()
+	return nil
+}
+
+// ExportLangDirs exports translation bases to new directories under specified path.
+func ExportLangDirs(path string, data ...res.TranslationBaseData) error {
+	for _, b := range data {
+		basePath := filepath.Join(path, b.ID)
+		err := os.MkdirAll(basePath, 0755)
+		if err != nil {
+			return fmt.Errorf("unable to create base directory: %v", err)
+		}
+		filePath := filepath.Join(basePath, "main")
+		err = ExportLang(filePath, b.Translations...)
+		if err != nil {
+			return fmt.Errorf("unable to export translation data: %v", err)
+		}
+	}
 	return nil
 }
