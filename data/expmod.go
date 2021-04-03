@@ -1,7 +1,7 @@
 /*
  * expmod.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -35,7 +34,6 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/module"
-	"github.com/isangeles/flame/module/area"
 )
 
 // ExportModuleFile exports module to the single file.
@@ -62,27 +60,95 @@ func ExportModuleFile(path string, mod *module.Module) error {
 	return nil
 }
 
-// ExportModule exports module to new a directory under specified path.
+// ExportModule exports module to a new directory under specified path.
 func ExportModule(mod *module.Module, path string) error {
+	// Dir.
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
 		return fmt.Errorf("unable to create module dir: %v", err)
 	}
+	data := mod.Data()
+	// Config.
 	confPath := filepath.Join(path, "mod.conf")
-	err = exportModuleConfig(confPath, *mod.Conf())
+	err = exportConfig(confPath, data.Config)
 	if err != nil {
-		return fmt.Errorf("unable to create module config file: %v", err)
+		return fmt.Errorf("unable to create config file: %v", err)
 	}
-	chapterPath := filepath.Join(path, "chapters", mod.Chapter().ID())
-	err = exportChapter(chapterPath, mod.Chapter())
+	// Characters.
+	charsPath := filepath.Join(path, "characters", "main")
+	err = ExportCharacters(charsPath, data.Resources.Characters...)
 	if err != nil {
-		return fmt.Errorf("unable to export module chapter: %v", err)
+		return fmt.Errorf("unable to export characters: %v", err)
+	}
+	// Races.
+	racesPath := filepath.Join(charsPath, "races", "main")
+	err = ExportRaces(racesPath, data.Resources.Races...)
+	if err != nil {
+		return fmt.Errorf("unable to export races: %v", err)
+	}
+	// Objects.
+	objectsPath := filepath.Join(path, "objects", "main")
+	err = ExportObjects(objectsPath, data.Resources.Objects...)
+	if err != nil {
+		return fmt.Errorf("unable to export objects: %v", err)
+	}
+	// Skills.
+	skillsPath := filepath.Join(path, "skills", "main")
+	err = ExportSkills(skillsPath, data.Resources.Skills...)
+	if err != nil {
+		return fmt.Errorf("unable to export skills: %v", err)
+	}
+	// Effects.
+	effectsPath := filepath.Join(path, "effects", "main")
+	err = ExportEffects(effectsPath, data.Resources.Effects...)
+	if err != nil {
+		return fmt.Errorf("unable to export effects: %v", err)
+	}
+	// Armors.
+	itemsPath := filepath.Join(path, "items", "main")
+	err = ExportArmors(itemsPath, data.Resources.Armors...)
+	if err != nil {
+		return fmt.Errorf("unable to export armors: %v", err)
+	}
+	// Weapons.
+	err = ExportWeapons(itemsPath, data.Resources.Weapons...)
+	if err != nil {
+		return fmt.Errorf("unable to export weapons: %v", err)
+	}
+	// Miscs.
+	err = ExportMiscItems(itemsPath, data.Resources.Miscs...)
+	if err != nil {
+		return fmt.Errorf("unable to export misc items: %v", err)
+	}
+	// Recipes.
+	recipesPath := filepath.Join(path, "recipes", "main")
+	err = ExportRecipes(recipesPath, data.Resources.Recipes...)
+	if err != nil {
+		return fmt.Errorf("unable to export module recipes: %v", err)
+	}
+	// Trainings.
+	trainingsPath := filepath.Join(path, "trainings", "main")
+	err = ExportTrainings(trainingsPath, data.Resources.Trainings...)
+	if err != nil {
+		return fmt.Errorf("unable to export module trainings: %v", err)
+	}
+	// Translations.
+	langPath := filepath.Join(path, "lang")
+	err = ExportLangDirs(langPath, data.Resources.TranslationBases...)
+	if err != nil {
+		return fmt.Errorf("unable to export translations: %v", err)
+	}
+	// Chapters.
+	chapterPath := filepath.Join(path, "chapters", data.Chapter.ID)
+	err = exportChapter(chapterPath, data.Chapter)
+	if err != nil {
+		return fmt.Errorf("unable to export chapter: %v", err)
 	}
 	return nil
 }
 
 // exportChapter exports chapter to a new directory under specified path.
-func exportChapter(path string, chapter *module.Chapter) error {
+func exportChapter(path string, data res.ChapterData) error {
 	// Dir.
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
@@ -90,82 +156,56 @@ func exportChapter(path string, chapter *module.Chapter) error {
 	}
 	// Config.
 	confPath := filepath.Join(path, "chapter.conf")
-	err = exportChapterConfig(confPath, *chapter.Conf())
-	if err != nil {
-		return fmt.Errorf("unable to create chapter config file: %v", err)
-	}
-	// Areas.
-	areasPath := filepath.Join(path, "areas")
-	for _, a := range chapter.Areas() {
-		areaPath := filepath.Join(areasPath, a.ID())
-		err = exportArea(areaPath, a)
-		if err != nil {
-			return fmt.Errorf("unable to export area: %s: %v", a.ID(), err)
-		}
-	}
-	// Characters.
-	charsPath := filepath.Join(path, "characters", "main")
-	charsData := make([]res.CharacterData, 0)
-	for _, c := range chapter.Characters() {
-		charsData = append(charsData, c.Data())
-	}
-	err = ExportCharacters(charsPath, charsData...)
-	if err != nil {
-		return fmt.Errorf("unable to export characters: %v", err)
-	}
-	return nil
-}
-
-// exportArea exports area to a new file under specified
-// directory.
-func exportArea(path string, area *area.Area) error {
-	err := os.MkdirAll(path, 0755)
-	if err != nil {
-		return fmt.Errorf("unable to create area dir: %v", err)
-	}
-	areaData := area.Data()
-	xmlData, err := xml.Marshal(&areaData)
-	if err != nil {
-		return fmt.Errorf("unable to marshal area data: %v", err)
-	}
-	areaFilePath := filepath.Join(path, "main.area")
-	areaFile, err := os.Create(areaFilePath)
-	if err != nil {
-		return fmt.Errorf("unable to create area file: %v", err)
-	}
-	defer areaFile.Close()
-	w := bufio.NewWriter(areaFile)
-	w.Write(xmlData)
-	w.Flush()
-	return nil
-}
-
-// exportModuleConfig exports module config to a new
-// file under specified path.
-func exportModuleConfig(path string, conf module.Config) error {
-	confValues := make(map[string][]string)
-	confValues["id"] = []string{conf.ID}
-	confValues["path"] = []string{conf.Path}
-	confValues["chapter"] = []string{conf.Chapter}
-	config := text.MarshalConfig(confValues)
-	file, err := os.Create(path)
+	err = exportConfig(confPath, data.Config)
 	if err != nil {
 		return fmt.Errorf("unable to create config file: %v", err)
 	}
-	defer file.Close()
-	w := bufio.NewWriter(file)
-	w.WriteString(config)
-	w.Flush()
+	// Characters.
+	charsPath := filepath.Join(path, "characters", "main")
+	err = ExportCharacters(charsPath, data.Resources.Characters...)
+	if err != nil {
+		return fmt.Errorf("unable to export characters: %v", err)
+	}
+	// Objects.
+	objectsPath := filepath.Join(path, "objects", "main")
+	err = ExportObjects(objectsPath, data.Resources.Objects...)
+	if err != nil {
+		return fmt.Errorf("unable to export objects: %v", err)
+	}
+	// Quests.
+	questsPath := filepath.Join(path, "quests", "main")
+	err = ExportQuests(questsPath, data.Resources.Quests...)
+	if err != nil {
+		return fmt.Errorf("unable to export quests: %v", err)
+	}
+	// Dialogs.
+	dialogsPath := filepath.Join(path, "dialogs", "main")
+	err = ExportDialogs(dialogsPath, data.Resources.Dialogs...)
+	if err != nil {
+		return fmt.Errorf("unable to export dialogs: %v", err)
+	}
+	// Areas.
+	areasPath := filepath.Join(path, "areas")
+	for _, a := range data.Areas {
+		areaPath := filepath.Join(areasPath, a.ID)
+		err = ExportArea(areaPath, a)
+		if err != nil {
+			return fmt.Errorf("unable to export area: %s: %v", a.ID, err)
+		}
+	}
+	// Translations.
+	langPath := filepath.Join(path, "lang")
+	err = ExportLangDirs(langPath, data.Resources.TranslationBases...)
+	if err != nil {
+		return fmt.Errorf("unable to export translations: %v", err)
+	}
 	return nil
 }
 
-// exportChapterConfig exports chapter config to a new
-// file under specified path.
-func exportChapterConfig(path string, conf module.ChapterConfig) error {
-	confValues := make(map[string][]string)
-	confValues["id"] = []string{conf.ID}
-	confValues["start-area"] = []string{conf.StartArea}
-	config := text.MarshalConfig(confValues)
+// exportConfig exports config values to a config file
+// new under specified path.
+func exportConfig(path string, values map[string][]string) error {
+	config := text.MarshalConfig(values)
 	file, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("unable to create config file: %v", err)
