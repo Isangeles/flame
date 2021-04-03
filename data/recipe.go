@@ -97,8 +97,8 @@ func ExportRecipes(path string, recipes ...res.RecipeData) error {
 		return fmt.Errorf("unable to marshal recipes: %v", err)
 	}
 	// Create races file.
-	if !strings.HasSuffix(path, EffectsFileExt) {
-		path += EffectsFileExt
+	if !strings.HasSuffix(path, RecipesFileExt) {
+		path += RecipesFileExt
 	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)

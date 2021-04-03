@@ -184,8 +184,8 @@ func ExportArmors(path string, armors ...res.ArmorData) error {
 		return fmt.Errorf("unable to marshal armors: %v", err)
 	}
 	// Create races file.
-	if !strings.HasSuffix(path, EffectsFileExt) {
-		path += EffectsFileExt
+	if !strings.HasSuffix(path, ArmorsFileExt) {
+		path += ArmorsFileExt
 	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
@@ -216,8 +216,8 @@ func ExportWeapons(path string, weapons ...res.WeaponData) error {
 		return fmt.Errorf("unable to marshal weapons: %v", err)
 	}
 	// Create races file.
-	if !strings.HasSuffix(path, EffectsFileExt) {
-		path += EffectsFileExt
+	if !strings.HasSuffix(path, WeaponsFileExt) {
+		path += WeaponsFileExt
 	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
@@ -248,8 +248,8 @@ func ExportMiscItems(path string, miscs ...res.MiscItemData) error {
 		return fmt.Errorf("unable to marshal misc items: %v", err)
 	}
 	// Create races file.
-	if !strings.HasSuffix(path, EffectsFileExt) {
-		path += EffectsFileExt
+	if !strings.HasSuffix(path, MiscItemsFileExt) {
+		path += MiscItemsFileExt
 	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)

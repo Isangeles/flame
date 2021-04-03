@@ -97,8 +97,8 @@ func ExportTrainings(path string, trainings ...res.TrainingData) error {
 		return fmt.Errorf("unable to marshal trainings: %v", err)
 	}
 	// Create races file.
-	if !strings.HasSuffix(path, EffectsFileExt) {
-		path += EffectsFileExt
+	if !strings.HasSuffix(path, TrainingsFileExt) {
+		path += TrainingsFileExt
 	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
