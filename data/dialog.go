@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -82,4 +83,36 @@ func ImportDialogsDir(path string) ([]res.DialogData, error) {
 		}
 	}
 	return dialogs, nil
+}
+
+// ExportDialogs exports dialogs to the data file under specified path.
+func ExportDialogs(path string, dialogs ...res.DialogData) error {
+	data := new(res.DialogsData)
+	for _, d := range dialogs {
+		data.Dialogs = append(data.Dialogs, d)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal dialogs: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, DialogsFileExt) {
+		path += DialogsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create dialogs file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create dialogs file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }

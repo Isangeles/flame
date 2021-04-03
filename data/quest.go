@@ -1,7 +1,7 @@
 /*
  * quest.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -82,4 +83,36 @@ func ImportQuestsDir(dirPath string) ([]res.QuestData, error) {
 		}
 	}
 	return quests, nil
+}
+
+// ExportQuests exports effects to the data file under specified path.
+func ExportQuests(path string, quests ...res.QuestData) error {
+	data := new(res.QuestsData)
+	for _, q := range quests {
+		data.Quests = append(data.Quests, q)
+	}
+	// Marshal races data.
+	xml, err := xml.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("unable to marshal quests: %v", err)
+	}
+	// Create races file.
+	if !strings.HasSuffix(path, QuestsFileExt) {
+		path += QuestsFileExt
+	}
+	dirPath := filepath.Dir(path)
+	err = os.MkdirAll(dirPath, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create quests file directory: %v", err)
+	}
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("unable to create quests file: %v", err)
+	}
+	defer file.Close()
+	// Write data to file.
+	writer := bufio.NewWriter(file)
+	writer.Write(xml)
+	writer.Flush()
+	return nil
 }
