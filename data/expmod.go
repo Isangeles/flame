@@ -61,7 +61,7 @@ func ExportModuleFile(path string, mod *module.Module) error {
 }
 
 // ExportModule exports module to a new directory under specified path.
-func ExportModule(mod *module.Module, path string) error {
+func ExportModule(path string, mod *module.Module) error {
 	// Dir.
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
@@ -124,13 +124,13 @@ func ExportModule(mod *module.Module, path string) error {
 	recipesPath := filepath.Join(path, "recipes", "main")
 	err = ExportRecipes(recipesPath, data.Resources.Recipes...)
 	if err != nil {
-		return fmt.Errorf("unable to export module recipes: %v", err)
+		return fmt.Errorf("unable to export recipes: %v", err)
 	}
 	// Trainings.
 	trainingsPath := filepath.Join(path, "trainings", "main")
 	err = ExportTrainings(trainingsPath, data.Resources.Trainings...)
 	if err != nil {
-		return fmt.Errorf("unable to export module trainings: %v", err)
+		return fmt.Errorf("unable to export trainings: %v", err)
 	}
 	// Translations.
 	langPath := filepath.Join(path, "lang")
