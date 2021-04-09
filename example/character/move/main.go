@@ -1,7 +1,7 @@
 /*
  * main.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  *
  */
 
-// Example for moving game character.
+// Example for moving module character.
 package main
 
 import (
@@ -30,9 +30,8 @@ import (
 	
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/data"
-	"github.com/isangeles/flame/module"
-	"github.com/isangeles/flame/module/area"
-	"github.com/isangeles/flame/module/character"
+	"github.com/isangeles/flame/area"
+	"github.com/isangeles/flame/character"
 )
 
 // Main function.
@@ -42,15 +41,14 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
-	mod := module.New()
+	mod := flame.NewModule()
 	mod.Apply(modData)
 	// Create game and start game loop.
-	game := flame.NewGame(mod)
-	go update(game)
+	go update(mod)
 	// Retrieve chapter area.
-	gameArea := game.Module().Chapter().Area("area1_main")
+	charArea := mod.Chapter().Area("area1_main")
 	// Retrieve game character to move from area.
-	char := areaCharacter(gameArea, "char", "0")
+	char := areaCharacter(charArea, "char", "0")
 	if char == nil {
 		panic(fmt.Errorf("Character not found: char 0"))
 	}
@@ -66,14 +64,14 @@ func main() {
 }
 
 // update updates specified game.
-func update(game *flame.Game) {
+func update(mod *flame.Module) {
 	var lastUpdate time.Time
 	for {
 		// Delta.
 		dtNano := time.Since(lastUpdate).Nanoseconds()
 		delta := dtNano / int64(time.Millisecond) // delta to milliseconds
 		// Game.
-		game.Update(delta)
+		mod.Update(delta)
 		// Update time.
 		lastUpdate = time.Now()
 	}

@@ -21,49 +21,125 @@
  *
  */
 
-// flame package provides game struct.
+// flame package provides structs for module and chapater.
 package flame
 
 import (
-	"github.com/isangeles/flame/module"
+	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/objects"
 )
 
 const (
-	Name, Version  = "Flame Engine", "0.1.0-dev"
+	Name, Version  = "Flame", "0.1.0-dev"
 )
 
-// Struct for game, a wrapper for the game module.
-type Game struct {
-	mod    *module.Module
-	paused bool
+// Module struct represents game module.
+type Module struct {
+	res              *res.ResourcesData
+	conf             *ModuleConfig
+	chapter          *Chapter
+	onChapterChanged func(c *Chapter)
 }
 
-// NewGame creates new game for specified module.
-func NewGame(mod *module.Module) *Game {
-	g := Game{mod: mod}
-	return &g
+// NewModule creates new game module.
+func NewModule() *Module {
+	m := new(Module)
+	m.conf = new(ModuleConfig)
+	return m
 }
 
-// Update updates game, delta value must be
-// time from last update in milliseconds.
-func (g *Game) Update(delta int64) {
-	if g.paused {
-		return
+// Update updates module.
+func (m *Module) Update(delta int64) {
+	if m.Chapter() != nil {
+		m.Chapter().Update(delta)
 	}
-	g.Module().Update(delta)
 }
 
-// Pause toggles game update pause.
-func (g *Game) Pause(pause bool) {
-	g.paused = pause
+// SetChapter sets specified chapter as current chapter.
+func (m *Module) SetChapter(chapter *Chapter) {
+	m.chapter = chapter
+	if m.onChapterChanged != nil {
+		m.onChapterChanged(m.Chapter())
+	}
 }
 
-// Paused checks whether game is paused.
-func (g *Game) Paused() bool {
-	return g.paused
+// Chapter returns current module chapter.
+func (m *Module) Chapter() *Chapter {
+	return m.chapter
 }
 
-// Module returns game module.
-func (g *Game) Module() *module.Module {
-	return g.mod
+// Conf returns module configuration.
+func (m *Module) Conf() *ModuleConfig {
+	return m.conf
+}
+
+// Object returns game object with specified ID and serial
+// or nil if no such object was found.
+func (m *Module) Object(id, serial string) objects.Object {
+	char := m.Chapter().Character(id, serial)
+	if char != nil {
+		return char
+	}
+	ob := m.Chapter().AreaObject(id, serial)
+	if ob != nil {
+		return ob
+	}
+	return nil
+}
+
+// Resources returns module resources.
+func (m *Module) Resources() *res.ResourcesData {
+	return m.res
+}
+
+// SetOnChapterChangedFunc sets function triggered on chapter change.
+func (m *Module) SetOnChapterChangedFunc(f func(c *Chapter)) {
+	m.onChapterChanged = f
+}
+
+// Apply applies specified data on the module.
+// Also, adds module resources to resources
+// base in res package.
+func (m *Module) Apply(data res.ModuleData) {
+	if len(data.Config["id"]) > 0 {
+		m.conf.ID = data.Config["id"][0]
+	}
+	if len(data.Config["path"]) > 0 {
+		m.conf.Path = data.Config["path"][0]
+	}
+	if len(data.Config["chapter"]) > 0 {
+		m.conf.Chapter = data.Config["chapter"][0]
+	}
+	m.res = &data.Resources
+	res.Add(*m.res)
+	if m.Chapter() == nil || m.Chapter().Conf().ID != data.Chapter.ID {
+		chapter := NewChapter(m)
+		m.SetChapter(chapter)
+	}
+	m.Chapter().Apply(data.Chapter)
+}
+
+// Data creates data resource for module.
+func (m *Module) Data() res.ModuleData {
+	data := res.ModuleData{ID: m.Conf().ID}
+	data.Config = make(map[string][]string)
+	data.Config["id"] = []string{m.Conf().ID}
+	data.Config["path"] = []string{m.Conf().Path}
+	data.Config["chapter"] = []string{m.Chapter().Conf().ID}
+	data.Chapter = m.Chapter().Data()
+	data.Resources = *m.res
+	// Remove old characters and objects from resources, besides basic ones.
+	data.Resources.Characters = make([]res.CharacterData, 0)
+	for _, c := range m.Resources().Characters {
+		if len(c.Serial) < 1 {
+			data.Resources.Characters = append(data.Resources.Characters, c)
+		}
+	}
+	data.Resources.Objects = make([]res.ObjectData, 0)
+	for _, o := range m.Resources().Objects {
+		if len(o.Serial) < 1 {
+			data.Resources.Objects = append(data.Resources.Objects, o)
+		}
+	}
+	return data
 }

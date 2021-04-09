@@ -1,7 +1,7 @@
 /*
  * main.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,8 +30,7 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/data"
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module"
-	"github.com/isangeles/flame/module/character"
+	"github.com/isangeles/flame/character"
 )
 
 // Main function.
@@ -41,12 +40,9 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
-	mod := module.New()
+	mod := flame.NewModule()
 	mod.Apply(modData)
-	// Create game.
-	game := flame.NewGame(mod)
-	// Create PC.
-	// Example pc data.
+	// Create PC..
 	pcData := res.CharacterData{
 		ID:        "pc",
 		Level:     1,
@@ -64,8 +60,8 @@ func main() {
 	}
 	pc := character.New(pcData)
 	// Add PC to start area and set position.
-	chapterConf := game.Module().Chapter().Conf()
-	startArea := game.Module().Chapter().Area(chapterConf.StartArea)
+	chapterConf := mod.Chapter().Conf()
+	startArea := mod.Chapter().Area(chapterConf.StartArea)
 	if startArea == nil {
 		panic(fmt.Errorf("Start area not found: %s",
 			chapterConf.StartArea))
@@ -75,7 +71,7 @@ func main() {
 	// Print game info.
 	fmt.Printf("Game started\n")
 	fmt.Printf("Characters:\n")
-	for _, c := range game.Module().Chapter().Characters() {
+	for _, c := range mod.Chapter().Characters() {
 		fmt.Printf("%s#%s\n", c.ID(), c.Serial())
 	}
 }

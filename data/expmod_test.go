@@ -1,7 +1,7 @@
 /*
  * expmod_test.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,14 +26,14 @@ package data
 import (
 	"testing"
 
+	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module"
-	"github.com/isangeles/flame/module/area"
+	"github.com/isangeles/flame/area"
 )
 
 // Test for exporting module to the single file.
 func TestExportModuleFile(t *testing.T) {
-	mod := module.New()
+	mod := flame.NewModule()
 	modData := res.ModuleData{
 		Config:  make(map[string][]string),
 		Chapter: res.ChapterData{Config: make(map[string][]string)},
@@ -77,7 +77,7 @@ func TestExportModuleFile(t *testing.T) {
 
 // Test for exporting module.
 func TestExportModule(t *testing.T) {
-	mod := module.New()
+	mod := flame.NewModule()
 	modData := res.ModuleData{
 		Config:  make(map[string][]string),
 		Chapter: res.ChapterData{Config: make(map[string][]string)},
@@ -113,7 +113,7 @@ func TestExportModule(t *testing.T) {
 	areaData.Characters = append(areaData.Characters, areaCharData)
 	area.Apply(areaData)
 	mod.Chapter().AddAreas(area)
-	err := ExportModule(mod, "testexp")
+	err := ExportModule("testexp", mod)
 	if err != nil {
 		t.Errorf("Unable to export module: %v", err)
 	}
