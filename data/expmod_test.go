@@ -69,7 +69,7 @@ func TestExportModuleFile(t *testing.T) {
 	areaData.Characters = append(areaData.Characters, areaCharData)
 	area.Apply(areaData)
 	mod.Chapter().AddAreas(area)
-	err := ExportModuleFile("testexp", mod)
+	err := ExportModuleFile("testexp", mod.Data())
 	if err != nil {
 		t.Errorf("Unable to export module file: %v", err)
 	}
@@ -113,7 +113,7 @@ func TestExportModule(t *testing.T) {
 	areaData.Characters = append(areaData.Characters, areaCharData)
 	area.Apply(areaData)
 	mod.Chapter().AddAreas(area)
-	err := ExportModule("testexp", mod)
+	err := ExportModule("testexp", mod.Data())
 	if err != nil {
 		t.Errorf("Unable to export module: %v", err)
 	}

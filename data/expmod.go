@@ -31,14 +31,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/text"
 )
 
-// ExportModuleFile exports module to the single file.
-func ExportModuleFile(path string, mod *flame.Module) error {
-	json, err := json.Marshal(mod.Data())
+// ExportModuleFile exports module data to the single file.
+func ExportModuleFile(path string, data res.ModuleData) error {
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal module data: %v", err)
 	}
@@ -60,13 +59,12 @@ func ExportModuleFile(path string, mod *flame.Module) error {
 	return nil
 }
 
-// ExportModule exports module to new a directory under specified path.
-func ExportModule(path string, mod *flame.Module) error {
+// ExportModule exports module data to new a directory under specified path.
+func ExportModule(path string, data res.ModuleData) error {
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
 		return fmt.Errorf("unable to create module dir: %v", err)
 	}
-	data := mod.Data()
 	// Config.
 	confPath := filepath.Join(path, "mod.conf")
 	err = exportConfig(confPath, data.Config)
