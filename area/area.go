@@ -261,17 +261,22 @@ func (a *Area) Apply(data res.AreaData) {
 				a.ID(), areaObData.ID)
 			continue
 		}
-		v, _ := a.objects.Load(areaObData.ID + areaObData.Serial)
-		ob, _ := v.(*object.Object)
-		if ob == nil {
-			ob = object.New(*obData)
-			// Add to area.
-			a.AddObject(ob)
+		ob := serial.Object(areaObData.ID, areaObData.Serial)
+		areaOb, ok := ob.(*object.Object)
+		if ok {
+			// Apply data and add to area if not present already.
+			areaOb.Apply(*obData)
+			_, inArea := a.objects.Load(areaObData.ID + areaObData.Serial)
+			if !inArea {
+				a.AddObject(areaOb)
+			}
 		} else {
-			ob.Apply(*obData)
+			// Add new object to area.
+			areaOb = object.New(*obData)
+			a.AddObject(areaOb)
 		}
 		// Set position.
-		ob.SetPosition(areaObData.PosX, areaObData.PosY)
+		areaOb.SetPosition(areaObData.PosX, areaObData.PosY)
 	}
 	// Subareas.
 	for _, subareaData := range data.Subareas {
