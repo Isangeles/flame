@@ -50,7 +50,6 @@ type Character struct {
 	exp              int
 	live             bool
 	agony            bool
-	ai               bool
 	sex              Gender
 	race             *Race
 	attitude         Attitude
@@ -192,16 +191,6 @@ func (c *Character) Serial() string {
 // Level returns character level.
 func (c *Character) Level() int {
 	return c.level
-}
-
-// AI checks if character is controlled by AI.
-func (c *Character) AI() bool {
-	return c.ai
-}
-
-// SetAI marks or unmarks character as controled by AI.
-func (c *Character) SetAI(ai bool) {
-	c.ai = ai
 }
 
 // Health returns current value of health

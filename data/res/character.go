@@ -38,7 +38,6 @@ type CharacterData struct {
 	XMLName    xml.Name              `xml:"char" json:"-"`
 	ID         string                `xml:"id,attr" json:"id"`
 	Serial     string                `xml:"serial,attr" json:"serial"`
-	AI         bool                  `xml:"ai,attr" json:"ai"`
 	Level      int                   `xml:"level,attr" json:"level"`
 	Sex        string                `xml:"gender,attr" json:"sex"`
 	Race       string                `xml:"race,attr" json:"race"`

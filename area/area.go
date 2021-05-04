@@ -242,7 +242,6 @@ func (a *Area) Apply(data res.AreaData) {
 			}
 		} else {
 			// Add new character to area.
-			charData.AI = areaCharData.AI
 			charData.Flags = append(charData.Flags, areaCharData.Flags...)
 			char = character.New(*charData)
 			a.AddCharacter(char)
@@ -300,7 +299,6 @@ func (a *Area) Data() res.AreaData {
 		charData := res.AreaCharData{
 			ID:     c.ID(),
 			Serial: c.Serial(),
-			AI:     c.AI(),
 		}
 		charData.PosX, charData.PosY = c.Position()
 		charData.DestX, charData.DestY = c.DestPoint()

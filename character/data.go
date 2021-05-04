@@ -42,7 +42,6 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetPosition(data.PosX, data.PosY)
 	c.SetDefaultPosition(data.DefX, data.DefY)
 	c.SetDestPoint(data.DestX, data.DestY)
-	c.SetAI(data.AI)
 	c.SetGender(Gender(data.Sex))
 	c.SetAttitude(Attitude(data.Attitude))
 	c.SetAlignment(Alignment(data.Alignment))
@@ -174,7 +173,6 @@ func (c *Character) Data() res.CharacterData {
 	data := res.CharacterData{
 		ID:         c.ID(),
 		Serial:     c.Serial(),
-		AI:         c.AI(),
 		Level:      c.Level(),
 		Sex:        string(c.Gender()),
 		Attitude:   string(c.Attitude()),
