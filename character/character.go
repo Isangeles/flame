@@ -541,13 +541,11 @@ func (c *Character) Flags() (flags []flag.Flag) {
 // AddFlag adds specified flag.
 func (c *Character) AddFlag(f flag.Flag) {
 	c.flags[f.ID()] = f
-	log.Dbg.Printf("char: %s#%s: add flag: %s", c.ID(), c.Serial(), f)
 }
 
 // RemoveFlag removes specified flag.
 func (c *Character) RemoveFlag(f flag.Flag) {
 	delete(c.flags, f.ID())
-	log.Dbg.Printf("char: %s#%s: remove flag: %s", c.ID(), c.Serial(), f)
 }
 
 // HasFlag checks if character has specified flag.
