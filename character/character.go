@@ -27,7 +27,6 @@ package character
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/craft"
 	"github.com/isangeles/flame/dialog"
 	"github.com/isangeles/flame/effect"
