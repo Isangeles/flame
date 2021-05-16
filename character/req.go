@@ -40,20 +40,6 @@ func (c *Character) MeetReqs(reqs ...req.Requirement) bool {
 	return true
 }
 
-// MeetTargetRangeReqs check if all target range requirements are meet.
-// Returns true, if none of specified requirements is a target range
-// requirement.
-func (c *Character) MeetTargetRangeReqs(reqs ...req.Requirement) bool {
-	for _, r := range reqs {
-		if r, ok := r.(*req.TargetRange); ok {
-			if !c.MeetReq(r) {
-				return false
-			}
-		}
-	}
-	return true
-}
-
 // ChargeReqs takes from character all things that makes
 // him to meet specified requirements.
 func (c *Character) ChargeReqs(reqs ...req.Requirement) {

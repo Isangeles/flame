@@ -48,10 +48,6 @@ func (c *Character) Use(ob useaction.Usable) error {
 	// Check requirements and cooldown.
 	if !c.MeetReqs(reqs...) || c.cooldown > 0 ||
 		ob.UseAction().Cooldown() > 0 || c.Moving() {
-		if !c.MeetTargetRangeReqs(reqs...) {
-			tar := c.Targets()[0]
-			c.SetDestPoint(tar.Position())
-		}
 		return fmt.Errorf("cant cast action")
 	}
 	c.casted = res.CastedObjectData{ID: ob.ID()}
