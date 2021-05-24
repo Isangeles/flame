@@ -30,27 +30,25 @@ MINOR:
 * In-game time
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
-* Remove Apply call in character.New and data argument, Apply function should be called
-  separately after calling character.New
 * Apply function for UseAction struct
 * Appearance struct for game character
-* Remove all usages of lang package(lang package should be only used by interfaces)
 * Rename serial.Serialer struct to serial.Object
 DONE:
 * Generating unique serial values for game objects
-* Save/load game mechanism
+* Functions for importing/exporting module
 * Game characters inventory and equipment
 * Weapons, armors & misc items
 * Effects & modifiers
 * Skills
 * Game objects
-* NPC AI
 * Player-NPC interaction
 * Dialogs system
 * Flags for objects
 * Quests system
-* Module, chapters, scenarios
+* Module and chapter structs
+* Areas
 * Crafting system
-* NPC trainers
-* Changing areas
+* Trainers
 * Custom races for game characters
+* Requirements
+* Use action
