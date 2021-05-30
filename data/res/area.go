@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import (
 type AreaData struct {
 	XMLName    xml.Name         `xml:"area" json:"-"`
 	ID         string           `xml:"id,attr" json:"id"`
+	Time       string           `xml:"time,attr" json:"time"`
 	Characters []AreaCharData   `xml:"characters>character" json:"character"`
 	Objects    []AreaObjectData `xml:"objects>object" json:"objects"`
 	Subareas   []AreaData       `xml:"subareas>area" json:"subareas"`

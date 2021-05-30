@@ -27,7 +27,6 @@ MINOR:
   stage answers
 * XML: rename talker node in dialog to target
 * Area weather
-* In-game time
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
 * Apply function for UseAction struct
@@ -52,3 +51,4 @@ DONE:
 * Custom races for game characters
 * Requirements
 * Use action
+* In-game time

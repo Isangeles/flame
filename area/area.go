@@ -27,6 +27,7 @@ package area
 import (
 	"math"
 	"sync"
+	"time"
 
 	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
@@ -40,6 +41,7 @@ import (
 // Area struct represents game world area.
 type Area struct {
 	id       string
+	time     time.Time
 	chars    *sync.Map
 	objects  *sync.Map
 	subareas *sync.Map
@@ -56,6 +58,7 @@ func New() *Area {
 
 // Update updates area.
 func (a *Area) Update(delta int64) {
+	a.time = a.time.Add(time.Duration(delta) * time.Millisecond)
 	for _, c := range a.Characters() {
 		c.Update(delta)
 	}
@@ -173,6 +176,11 @@ func (a *Area) AllSubareas() (subareas []*Area) {
 	return
 }
 
+// Time returns area time.
+func (a *Area) Time() time.Time {
+	return a.time
+}
+
 // NearTargets returns all targets near specified position.
 func (a *Area) NearTargets(pos objects.Positioner, maxrange float64) (targets []effect.Target) {
 	addTar := func(k, v interface{}) bool {
@@ -206,6 +214,7 @@ func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
 // Apply applies specified data on the area.
 func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
+	a.time, _ = time.Parse(time.Kitchen, data.Time)
 	// Remove characters not present anymore.
 	removeChars := func(key, value interface{}) bool {
 		key, _ = key.(string)
@@ -293,7 +302,8 @@ func (a *Area) Apply(data res.AreaData) {
 // Data returns area data resource.
 func (a *Area) Data() res.AreaData {
 	data := res.AreaData{
-		ID: a.ID(),
+		ID:   a.ID(),
+		Time: a.Time().Format(time.Kitchen),
 	}
 	for _, c := range a.Characters() {
 		charData := res.AreaCharData{
