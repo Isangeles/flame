@@ -201,7 +201,7 @@ func (c *Character) Health() int {
 // MaxHealth returns maximal value of
 // health points.
 func (c *Character) MaxHealth() int {
-	return c.attributes.Health() + (Base_health * c.Level())
+	return c.attributes.Health() + (BaseHealth * c.Level())
 }
 
 // Mana returns current value of mana
@@ -213,7 +213,7 @@ func (c *Character) Mana() int {
 // MaxMana returns maximal value of mana
 // points.
 func (c *Character) MaxMana() int {
-	return c.attributes.Mana() + (Base_mana * c.Level() / 2)
+	return c.attributes.Mana() + (BaseMana * c.Level() / 2)
 }
 
 // Experience returns current value of experience

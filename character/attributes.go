@@ -1,7 +1,7 @@
 /*
  * attributes.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,10 +30,10 @@ import (
 )
 
 const (
-	Base_lift   = 10
-	Base_sight  = 300.0
-	Base_health = 100
-	Base_mana   = 10
+	BaseLift   = 10
+	BaseSight  = 300.0
+	BaseHealth = 100
+	BaseMana   = 10
 )
 
 // Attributes struct represents game character attributes: strenght,
@@ -45,24 +45,24 @@ type Attributes struct {
 // Lift returns maximal size of inventory based on
 // attributes.
 func (a *Attributes) Lift() int {
-	return Base_lift * (1 + a.Str)
+	return BaseLift * (1 + a.Str)
 }
 
 // Sight returns maximal sight range based on
 // attributes.
 func (a *Attributes) Sight() float64 {
-	return Base_sight // * float64(1 + a.Wis)
+	return BaseSight // * float64(1 + a.Wis)
 }
 
 // Health returns maximal health based on
 // attributes.
 func (a *Attributes) Health() int {
-	return (Base_health * (1 + a.Con)) * (1 + a.Str/2)
+	return (BaseHealth * (1 + a.Con)) * (1 + a.Str/2)
 }
 
 // Mana returns maximal mana based on attributes.
 func (a *Attributes) Mana() int {
-	return (Base_mana * (1 + a.Int)) * (1 + a.Wis/2)
+	return (BaseMana * (1 + a.Int)) * (1 + a.Wis/2)
 }
 
 // Damage returns min and max damage values
