@@ -32,6 +32,7 @@ type AreaData struct {
 	XMLName    xml.Name         `xml:"area" json:"-"`
 	ID         string           `xml:"id,attr" json:"id"`
 	Time       string           `xml:"time,attr" json:"time"`
+	Weather    string           `xml:"weather,attr" json:"weather"`
 	Characters []AreaCharData   `xml:"characters>character" json:"character"`
 	Objects    []AreaObjectData `xml:"objects>object" json:"objects"`
 	Subareas   []AreaData       `xml:"subareas>area" json:"subareas"`

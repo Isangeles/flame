@@ -42,6 +42,7 @@ import (
 type Area struct {
 	id       string
 	time     time.Time
+	weather  *Weather
 	chars    *sync.Map
 	objects  *sync.Map
 	subareas *sync.Map
@@ -50,6 +51,7 @@ type Area struct {
 // New creates new area.
 func New() *Area {
 	a := new(Area)
+	a.weather = new(Weather)
 	a.chars = new(sync.Map)
 	a.objects = new(sync.Map)
 	a.subareas = new(sync.Map)
@@ -59,6 +61,7 @@ func New() *Area {
 // Update updates area.
 func (a *Area) Update(delta int64) {
 	a.time = a.time.Add(time.Duration(delta) * time.Millisecond)
+	a.Weather().update(a.Time())
 	for _, c := range a.Characters() {
 		c.Update(delta)
 	}
@@ -181,6 +184,11 @@ func (a *Area) Time() time.Time {
 	return a.time
 }
 
+// Weather retuns area weather.
+func (a *Area) Weather() *Weather {
+	return a.weather
+}
+
 // NearTargets returns all targets near specified position.
 func (a *Area) NearTargets(pos objects.Positioner, maxrange float64) (targets []effect.Target) {
 	addTar := func(k, v interface{}) bool {
@@ -215,6 +223,7 @@ func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
 func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
 	a.time, _ = time.Parse(time.Kitchen, data.Time)
+	a.weather.conditions = Conditions(data.Weather)
 	// Remove characters not present anymore.
 	removeChars := func(key, value interface{}) bool {
 		key, _ = key.(string)
