@@ -51,17 +51,17 @@ type Area struct {
 // New creates new area.
 func New() *Area {
 	a := new(Area)
-	a.weather = new(Weather)
 	a.chars = new(sync.Map)
 	a.objects = new(sync.Map)
 	a.subareas = new(sync.Map)
+	a.weather = newWeather(a)
 	return a
 }
 
 // Update updates area.
 func (a *Area) Update(delta int64) {
 	a.time = a.time.Add(time.Duration(delta) * time.Millisecond)
-	a.Weather().update(a.Time())
+	a.Weather().update()
 	for _, c := range a.Characters() {
 		c.Update(delta)
 	}

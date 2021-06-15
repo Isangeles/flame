@@ -31,6 +31,7 @@ import (
 
 // Struct for area weather.
 type Weather struct {
+	area       *Area
 	conditions Conditions
 	lastChange time.Time
 }
@@ -44,20 +45,34 @@ const (
 	conditionsTimer            = 60.0 // minutes
 )
 
+// newWeather creates new area weather.
+func newWeather(area *Area) *Weather {
+	w := Weather{area: area}
+	return &w
+}
+
 // Conditions retuns weather conditions.
 func (w *Weather) Conditions() Conditions {
 	return w.conditions
 }
 
 // update updates weather.
-func (w *Weather) update(areaTime time.Time) {
+func (w *Weather) update() {
+	if len(w.conditions) < 1 {
+		w.changeWeather()
+	}
 	if w.lastChange.IsZero() {
-		w.lastChange = areaTime
+		w.lastChange = w.area.Time()
 		return
 	}
-	if areaTime.Sub(w.lastChange).Minutes() < conditionsTimer {
+	if w.area.Time().Sub(w.lastChange).Minutes() < conditionsTimer {
 		return
 	}
+	w.changeWeather()
+}
+
+// changeWeather changes current weather conditions.
+func (w *Weather) changeWeather() {
 	roll := rng.RollInt(1, 4)
 	switch roll {
 	case 1, 2:
@@ -65,5 +80,5 @@ func (w *Weather) update(areaTime time.Time) {
 	case 3:
 		w.conditions = Rain
 	}
-	w.lastChange = areaTime
+	w.lastChange = w.area.Time()
 }
