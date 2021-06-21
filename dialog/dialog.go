@@ -118,6 +118,9 @@ func (d *Dialog) Next(a *Answer) {
 	}
 	d.trading = a.StartsTrade()
 	d.training = a.StartsTraining()
+	// Apply answer modifiers.
+	d.Owner().TakeModifiers(d.Target(), a.OwnerModifiers()...)
+	d.Target().TakeModifiers(d.Owner(), a.TargetModifiers()...)
 	if a.EndsDialog() || d.Trading() || d.Training() {
 		d.finished = true
 		d.target = nil
@@ -131,12 +134,10 @@ func (d *Dialog) Next(a *Answer) {
 		}
 	}
 	d.activeStage = talkerStage(d.Target(), d.activeStages)
-	// Apply modifiers.
-	d.Owner().TakeModifiers(d.Target(), a.OwnerModifiers()...)
-	d.Target().TakeModifiers(d.Owner(), a.TargetModifiers()...)
 	if d.Stage() == nil {
 		return
 	}
+	// Apply stage modifiers.
 	d.Owner().TakeModifiers(d.Target(), d.Stage().OwnerModifiers()...)
 	d.Target().TakeModifiers(d.Owner(), d.Stage().TargetModifiers()...)
 }
@@ -175,11 +176,18 @@ func (d *Dialog) Owner() Talker {
 }
 
 // SetTarget sets dialog target.
+// This function sets proper dialog stage for specified
+// target and applies stage modifiers.
 func (d *Dialog) SetTarget(t Talker) {
 	d.target = t
 	if t != nil && d.activeStage == nil {
 		d.activeStage = talkerStage(d.Target(), d.activeStages)
 	}
+	if d.Stage() == nil {
+		return
+	}
+	d.Owner().TakeModifiers(d.Target(), d.Stage().OwnerModifiers()...)
+	d.Target().TakeModifiers(d.Owner(), d.Stage().TargetModifiers()...)	
 }
 
 // Target returns dialog target.
