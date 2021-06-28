@@ -21,14 +21,14 @@ MINOR:
 * Use sync.Map for: character flags
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for data package
-* Remove stage modifiers from dialog, modifiers should be passed only through
-  stage answers
 * XML: rename talker node in dialog to target
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
 * Apply function for UseAction struct
 * Appearance struct for game character
 * Rename serial.Serialer struct to serial.Object
+* Rename data.ImportModuleFile to data.ImportModule and
+  data.ImportModule to data.ImportModuleDir
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
