@@ -40,8 +40,7 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
-	mod := flame.NewModule()
-	mod.Apply(modData)
+	mod := flame.NewModule(modData)
 	// Create PC..
 	pcData := res.CharacterData{
 		ID:        "pc",

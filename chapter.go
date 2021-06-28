@@ -45,11 +45,12 @@ type Chapter struct {
 }
 
 // NewChapter creates new module chapter.
-func NewChapter(mod *Module) *Chapter {
+func NewChapter(mod *Module, data res.ChapterData) *Chapter {
 	c := new(Chapter)
 	c.mod = mod
 	c.conf = new(ChapterConfig)
 	c.areas = make(map[string]*area.Area)
+	c.Apply(data)
 	return c
 }
 
