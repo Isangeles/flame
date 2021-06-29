@@ -41,8 +41,7 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
-	mod := flame.NewModule()
-	mod.Apply(modData)
+	mod := flame.NewModule(modData)
 	// Create game and start game loop.
 	go update(mod)
 	// Retrieve chapter area.
