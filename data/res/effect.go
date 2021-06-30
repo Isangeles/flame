@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,11 +61,10 @@ type HealthModData struct {
 	Max int `xml:"max,attr" json:"max"`
 }
 
-// Struct for flag modifier
-// data.
+// Struct for flag modifier data.
 type FlagModData struct {
-	ID string `xml:"id,attr" json:"id"`
-	On bool   `xml:"disable,attr" json:"on"`
+	ID  string `xml:"id,attr" json:"id"`
+	Off bool   `xml:"off,attr" json:"off"`
 }
 
 // Struct for quest modifier

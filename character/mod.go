@@ -50,6 +50,10 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		x, y := m.EnterPosition()
 		c.SetPosition(x, y)
 	case *effect.FlagMod:
+		if m.Off() {
+			c.RemoveFlag(m.Flag())
+			break
+		}
 		c.AddFlag(m.Flag())
 	case *effect.HealthMod:
 		lived := c.Live()

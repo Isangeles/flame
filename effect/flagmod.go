@@ -31,14 +31,14 @@ import (
 // Struct for flag modifier.
 type FlagMod struct {
 	flag   flag.Flag
-	flagOn bool
+	off    bool
 }
 
 // NewFlagMod create new flag modifier.
 func NewFlagMod(data res.FlagModData) *FlagMod {
 	fm := new(FlagMod)
 	fm.flag = flag.Flag(data.ID)
-	fm.flagOn = data.On
+	fm.off = data.Off
 	return fm
 }
 
@@ -47,17 +47,16 @@ func (fm *FlagMod) Flag() flag.Flag {
 	return fm.flag
 }
 
-// FlagOn checks if modifier flag should
-// be turned on or off.
-func (fm *FlagMod) FlagOn() bool {
-	return fm.flagOn
+// Off checks if flag should be removed.
+func (fm *FlagMod) Off() bool {
+	return fm.off
 }
 
 // Data creates data resource for modifier.
 func (fm *FlagMod) Data() res.FlagModData {
 	data := res.FlagModData{
 		ID: string(fm.Flag()),
-		On: fm.FlagOn(),
+		Off: fm.Off(),
 	}
 	return data
 }
