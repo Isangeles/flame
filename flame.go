@@ -116,7 +116,9 @@ func (m *Module) Apply(data res.ModuleData) {
 	if m.Chapter() == nil || m.Chapter().Conf().ID != data.Chapter.ID {
 		chapter := NewChapter(m, data.Chapter)
 		m.SetChapter(chapter)
+		return
 	}
+	m.Chapter().Apply(data.Chapter)
 }
 
 // Data creates data resource for module.
