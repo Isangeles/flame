@@ -47,7 +47,6 @@ type Positioner interface {
 type Killable interface {
 	Object
 	SetHealth(v int)
-	SetMaxHealth(v int)
 	Health() int
 	MaxHealth() int
 	Live() bool
@@ -58,7 +57,6 @@ type Killable interface {
 type Experiencer interface {
 	Killable
 	SetExperience(v int)
-	SetMaxExperience(v int)
 	Experience() int
 	MaxExperience() int
 	Level() int
