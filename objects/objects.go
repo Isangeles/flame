@@ -52,6 +52,13 @@ type Killable interface {
 	Live() bool
 }
 
+// Interface for objects with kill records.
+type Killer interface {
+	Object
+	AddKill(k Kill)
+	Kills() []Kill
+}
+
 // Interfece for objects with
 // experience points.
 type Experiencer interface {

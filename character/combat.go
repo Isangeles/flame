@@ -31,6 +31,17 @@ import (
 	"github.com/isangeles/flame/serial"
 )
 
+// AddKill adds specified kill on character kill list.
+func (c *Character) AddKill(kill objects.Kill) {
+	c.kills = append(c.kills, kill)
+	c.SetExperience(c.Experience() + kill.Experience)
+}
+
+// Kills returns all character kill records.
+func (c *Character) Kills() []objects.Kill {
+	return c.kills
+}
+
 // Damage retruns min and max damage value,
 // including weapons, active effects, etc.
 func (c *Character) Damage() (int, int) {

@@ -62,9 +62,9 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		if s == nil {
 			break
 		}
-		if s, ok := s.(objects.Experiencer); ok && lived && !c.Live() {
-			exp := 100 * c.Level()
-			s.SetExperience(s.Experience() + exp)
+		if s, ok := s.(objects.Killer); ok && lived && !c.Live() {
+			kill := objects.Kill{c.ID(), c.Serial(), 100 * c.Level()}
+			s.AddKill(kill)
 		}
 	case *effect.QuestMod:
 		data := res.Quest(m.QuestID())

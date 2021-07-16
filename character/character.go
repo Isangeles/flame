@@ -66,6 +66,7 @@ type Character struct {
 	journal          *quest.Journal
 	crafting         *craft.Crafting
 	targets          []res.SerialObjectData
+	kills            []objects.Kill
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
@@ -334,6 +335,7 @@ func (c *Character) Equipment() *Equipment {
 // amount of health points.
 func (c *Character) SetHealth(hp int) {
 	c.hp = hp
+	c.live = c.hp < 1
 }
 
 // SetMana sets specified value as current
