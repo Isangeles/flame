@@ -109,6 +109,18 @@ func New(data res.CharacterData) *Character {
 
 // Update updates character.
 func (c *Character) Update(delta int64) {
+	// Check health value.
+	if c.Health() <= c.agonyHP() {
+		c.agony = true
+	} else if c.Agony() {
+		c.agony = false
+	}
+	if c.Health() <= 0 {
+		c.live = false
+		return
+	} else if !c.Live() {
+		c.live = true
+	}
 	// Global cooldown.
 	if c.cooldown > 0 {
 		c.cooldown -= delta
@@ -135,17 +147,6 @@ func (c *Character) Update(delta int64) {
 	// Check experience value.
 	if c.Experience() >= c.MaxExperience() {
 		c.levelup()
-	}
-	// Check health value.
-	if c.Health() <= c.agonyHP() {
-		c.agony = true
-	} else if c.Agony() {
-		c.agony = false
-	}
-	if c.Health() <= 0 {
-		c.live = false
-	} else if !c.Live() {
-		c.live = true
 	}
 	// Journal && inventory.
 	c.Journal().Update(delta)
