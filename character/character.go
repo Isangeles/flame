@@ -336,7 +336,7 @@ func (c *Character) Equipment() *Equipment {
 // amount of health points.
 func (c *Character) SetHealth(hp int) {
 	c.hp = hp
-	c.live = c.hp < 1
+	c.live = c.hp > 0
 }
 
 // SetMana sets specified value as current
