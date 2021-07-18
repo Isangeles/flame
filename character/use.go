@@ -38,7 +38,7 @@ import (
 // Returns an error if use requirements are not meet,
 // cooldown is active, or character is currently moving.
 func (c *Character) Use(ob useaction.Usable) error {
-	if ob.UseAction() == nil {
+	if !c.Live() || ob.UseAction() == nil {
 		return nil
 	}
 	reqs := ob.UseAction().Requirements()

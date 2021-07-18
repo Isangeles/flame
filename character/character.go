@@ -117,7 +117,6 @@ func (c *Character) Update(delta int64) {
 	}
 	if c.Health() <= 0 {
 		c.live = false
-		return
 	} else if !c.Live() {
 		c.live = true
 	}
@@ -454,7 +453,7 @@ func (c *Character) SetTarget(t effect.Target) {
 
 // Moving checks whether character is moving.
 func (c *Character) Moving() bool {
-	return c.posX != c.destX || c.posY != c.destY
+	return c.Live() && (c.posX != c.destX || c.posY != c.destY)
 }
 
 // Fighting checks if character is in combat.
