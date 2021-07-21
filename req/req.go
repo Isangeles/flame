@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,6 +68,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		trreq := NewTargetRange(d)
 		reqs = append(reqs, trreq)
 	}
+	for _, d := range data.KillReqs {
+		kreq := NewKill(d)
+		reqs = append(reqs, kreq)
+	}
 	return
 }
 
@@ -93,6 +97,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *TargetRange:
 			d := r.Data()
 			data.TargetRangeReqs = append(data.TargetRangeReqs, d)
+		case *Kill:
+			d := r.Data()
+			data.KillReqs = append(data.KillReqs, d)
 		}
 	}
 	return

@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ type ReqsData struct {
 	ItemReqs        []ItemReqData        `xml:"item-req" json:"item-reqs"`
 	CurrencyReqs    []CurrencyReqData    `xml:"currency-req" json:"currency-req"`
 	TargetRangeReqs []TargetRangeReqData `xml:"target-range-req" json:"target-range-req"`
+	KillReqs        []KillReqData        `xml:"kill-req" json:"kill-req"`
 }
 
 // Struct for level requirement data.
@@ -71,4 +72,10 @@ type CurrencyReqData struct {
 // Struct for target requirement data.
 type TargetRangeReqData struct {
 	MinRange float64 `xml:"min-range,attr" json:"min-range"`
+}
+
+// Struct for kill requirement data.
+type KillReqData struct {
+	ID     string `xml:"id,attr" json:"id"`
+	Amount int    `xml:"amount,attr" json:"amount"`
 }

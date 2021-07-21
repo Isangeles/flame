@@ -90,6 +90,14 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 		}
 		tar := c.Targets()[0]
 		return objects.Range(c, tar) <= r.MinRange()
+	case *req.Kill:
+		amount := 0
+		for _, k := range c.Kills() {
+			if k.ID == r.ID() {
+				amount ++
+			}
+		}
+		return amount >= r.Amount()
 	default:
 		return true
 	}
