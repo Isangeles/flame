@@ -54,6 +54,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetAreaID(data.Area)
 	c.casted = data.Casted
 	c.targets = data.Targets
+	c.kills = data.Kills
 	if data.Restore {
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
@@ -189,6 +190,7 @@ func (c *Character) Data() res.CharacterData {
 		ChatLog:    c.ChatLog().Data(),
 		Casted:     c.casted,
 		Targets:    c.targets,
+		Kills:      c.kills,
 		Restore:    true,
 		Area:       c.AreaID(),
 	}
