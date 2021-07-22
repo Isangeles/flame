@@ -32,13 +32,13 @@ import (
 )
 
 // AddKill adds specified kill on character kill list.
-func (c *Character) AddKill(kill objects.Kill) {
+func (c *Character) AddKill(kill res.KillData) {
 	c.kills = append(c.kills, kill)
 	c.SetExperience(c.Experience() + kill.Experience)
 }
 
 // Kills returns all character kill records.
-func (c *Character) Kills() []objects.Kill {
+func (c *Character) Kills() []res.KillData {
 	return c.kills
 }
 

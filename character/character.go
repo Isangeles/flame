@@ -66,7 +66,7 @@ type Character struct {
 	journal          *quest.Journal
 	crafting         *craft.Crafting
 	targets          []res.SerialObjectData
-	kills            []objects.Kill
+	kills            []res.KillData
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory

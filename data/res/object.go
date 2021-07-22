@@ -87,6 +87,13 @@ type FlagData struct {
 	ID string `xml:"id,attr" json:"id"`
 }
 
+// Struct for kill data.
+type KillData struct {
+	ID         string `xml:"id,attr" json:"id"`
+	Serial     string `xml:"serial,attr" json:"serial"`
+	Experience int    `xml:"experience,attr" json:"experience"`
+}
+
 // Struct for data of object with serial ID.
 type SerialObjectData struct {
 	ID     string `xml:"id,attr" json:"id"`

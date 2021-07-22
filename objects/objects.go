@@ -26,6 +26,8 @@ package objects
 
 import (
 	"math"
+
+	"github.com/isangeles/flame/data/res"
 )
 
 // Interface for game objects.
@@ -55,8 +57,8 @@ type Killable interface {
 // Interface for objects with kill records.
 type Killer interface {
 	Object
-	AddKill(k Kill)
-	Kills() []Kill
+	AddKill(k res.KillData)
+	Kills() []res.KillData
 }
 
 // Interfece for objects with

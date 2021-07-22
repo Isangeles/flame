@@ -63,7 +63,7 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 			break
 		}
 		if s, ok := s.(objects.Killer); ok && lived && !c.Live() {
-			kill := objects.Kill{c.ID(), c.Serial(), 100 * c.Level()}
+			kill := res.KillData{c.ID(), c.Serial(), 100 * c.Level()}
 			s.AddKill(kill)
 		}
 	case *effect.QuestMod:
