@@ -52,6 +52,7 @@ type ModifiersData struct {
 	AddItemMods   []AddItemModData   `xml:"add-item-mod" json:"add-item-mods"`
 	AddSkillMods  []AddSkillModData  `xml:"add-skill-mod" json:"add-skill-mods"`
 	AttributeMods []AttributeModData `xml:"attribute-mod" json:"attribute-mods"`
+	MemoryMods    []MemoryModData    `xml:"memory-mod" json:"memory-mods"`
 }
 
 // Struct for health modifier
@@ -94,3 +95,8 @@ type AddSkillModData struct {
 
 // Type for attribute modifier data.
 type AttributeModData AttributesData
+
+// Struct for memory modifier data.
+type MemoryModData struct {
+	Attitude string `xml:"attitude,attr" json:"attitude"`
+}

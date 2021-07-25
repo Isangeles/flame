@@ -25,12 +25,12 @@ package character
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/item"
-	"github.com/isangeles/flame/skill"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/quest"
+	"github.com/isangeles/flame/skill"
 )
 
 // TakeModifiers handles all specified modifiers.
@@ -101,6 +101,13 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 		c.Attributes().Dex += m.Dexterity()
 		c.Attributes().Int += m.Intelligence()
 		c.Attributes().Wis += m.Wisdom()
+	case *effect.MemoryMod:
+		tar := TargetMemory{
+			TargetID:     s.ID(),
+			TargetSerial: s.Serial(),
+			Attitude:     Attitude(m.Attitude()),
+		}
+		c.MemorizeTarget(&tar)
 	}
 	if c.onModifierTaken != nil {
 		c.onModifierTaken(m)
