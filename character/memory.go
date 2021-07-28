@@ -28,8 +28,6 @@ type TargetMemory struct {
 	TargetID     string
 	TargetSerial string
 	Attitude     Attitude
-	Talked       bool
-	Killed       bool
 }
 
 // Memory returns character tergets memory.
