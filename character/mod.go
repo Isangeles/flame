@@ -86,6 +86,10 @@ func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
 			i := item.New(data)
 			c.Inventory().AddItem(i)
 		}
+	case *effect.RemoveItemMod:
+		for _, it := range c.Inventory().Items() {
+			c.Inventory().RemoveItem(it)
+		}
 	case *effect.AddSkillMod:
 		data := res.Skill(m.SkillID())
 		if data == nil {

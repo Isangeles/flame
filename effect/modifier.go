@@ -52,6 +52,10 @@ func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 		addItemMod := NewAddItemMod(md)
 		mods = append(mods, addItemMod)
 	}
+	for _, md := range data.RemoveItemMods {
+		removeItemMod := NewRemoveItemMod(md)
+		mods = append(mods, removeItemMod)
+	}
 	for _, md := range data.AddSkillMods {
 		addSkillMod := NewAddSkillMod(md)
 		mods = append(mods, addSkillMod)
@@ -83,6 +87,8 @@ func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
 			data.AddItemMods = append(data.AddItemMods, m.Data())
 		case *AddSkillMod:
 			data.AddSkillMods = append(data.AddSkillMods, m.Data())
+		case *RemoveItemMod:
+			data.RemoveItemMods = append(data.RemoveItemMods, m.Data())
 		case *AttributeMod:
 			data.AttributeMods = append(data.AttributeMods, m.Data())
 		case *MemoryMod:

@@ -44,15 +44,16 @@ type EffectData struct {
 
 // Struct for modifiers data resource.
 type ModifiersData struct {
-	XMLName       xml.Name           `xml:"modifiers" json:"-"`
-	HealthMods    []HealthModData    `xml:"health-mod" json:"health-mods"`
-	FlagMods      []FlagModData      `xml:"flag-mod" json:"flag-mods"`
-	QuestMods     []QuestModData     `xml:"quest-mod" json:"quest-mods"`
-	AreaMods      []AreaModData      `xml:"area-mod" json:"area-mods"`
-	AddItemMods   []AddItemModData   `xml:"add-item-mod" json:"add-item-mods"`
-	AddSkillMods  []AddSkillModData  `xml:"add-skill-mod" json:"add-skill-mods"`
-	AttributeMods []AttributeModData `xml:"attribute-mod" json:"attribute-mods"`
-	MemoryMods    []MemoryModData    `xml:"memory-mod" json:"memory-mods"`
+	XMLName        xml.Name            `xml:"modifiers" json:"-"`
+	HealthMods     []HealthModData     `xml:"health-mod" json:"health-mods"`
+	FlagMods       []FlagModData       `xml:"flag-mod" json:"flag-mods"`
+	QuestMods      []QuestModData      `xml:"quest-mod" json:"quest-mods"`
+	AreaMods       []AreaModData       `xml:"area-mod" json:"area-mods"`
+	AddItemMods    []AddItemModData    `xml:"add-item-mod" json:"add-item-mods"`
+	AddSkillMods   []AddSkillModData   `xml:"add-skill-mod" json:"add-skill-mods"`
+	RemoveItemMods []RemoveItemModData `xml:"remove-item-mod" json:"remove-item-mods"`
+	AttributeMods  []AttributeModData  `xml:"attribute-mod" json:"attribute-mods"`
+	MemoryMods     []MemoryModData     `xml:"memory-mod" json:"memory-mods"`
 }
 
 // Struct for health modifier
@@ -87,6 +88,9 @@ type AddItemModData struct {
 	ItemID string `xml:"item-id,attr" json:"item-id"`
 	Amount int    `xml:"amount,attr" json:"amount"`
 }
+
+// Type for remove item modifier data.
+type RemoveItemModData AddItemModData
 
 // Struct for add skill modifier data.
 type AddSkillModData struct {
