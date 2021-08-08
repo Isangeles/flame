@@ -351,9 +351,10 @@ func (c *Character) SetExperience(exp int) {
 }
 
 // SetPosition sets specified XY position as current
-// position of the character.
+// position and destination point of the character.
 func (c *Character) SetPosition(x, y float64) {
 	c.posX, c.posY = x, y
+	c.SetDestPoint(x, y)
 }
 
 // SetDestPoint sets specified XY position as current
