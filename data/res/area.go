@@ -42,6 +42,8 @@ type AreaData struct {
 type AreaCharData struct {
 	ID     string     `xml:"id,attr" json:"id"`
 	Serial string     `xml:"serial,attr" json:"serial"`
+	InitX  float64    `xml:"init-x,attr" json:"init-pos-x"`
+	InitY  float64    `xml:"init-y,attr" json:"init-pos-y"`
 	PosX   float64    `xml:"x,attr" json:"pos-x"`
 	PosY   float64    `xml:"y,attr" json:"pos-y"`
 	DestX  float64    `xml:"dest-x,attr" json:"dest-pos-x"`

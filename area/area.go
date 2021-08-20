@@ -265,8 +265,12 @@ func (a *Area) Apply(data res.AreaData) {
 			a.AddCharacter(char)
 		}
 		// Set position.
+		if areaCharData.InitX > 0 && areaCharData.InitY > 0 {
+			char.SetPosition(areaCharData.InitX, areaCharData.InitY)
+			char.SetDefaultPosition(areaCharData.InitX, areaCharData.InitY)
+			continue
+		}
 		char.SetPosition(areaCharData.PosX, areaCharData.PosY)
-		char.SetDestPoint(areaCharData.DestX, areaCharData.DestY)
 		char.SetDefaultPosition(areaCharData.DefX, areaCharData.DefY)
 	}
 	// Objects.
