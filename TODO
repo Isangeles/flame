@@ -6,7 +6,6 @@ MAJOR:
 * Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
 * Documentation for directories: data, savegames, area, areas, area
 * Switch to JSON format for data files
-* Respawning area mobs
 * Ability to place items on the ground
 * Effects for custom races
 * AOE effects
@@ -52,3 +51,4 @@ DONE:
 * Use action
 * In-game time
 * Area weather
+* Area respawn

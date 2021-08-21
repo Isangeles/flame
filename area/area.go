@@ -40,12 +40,13 @@ import (
 
 // Area struct represents game world area.
 type Area struct {
-	id       string
-	time     time.Time
-	weather  *Weather
-	chars    *sync.Map
-	objects  *sync.Map
-	subareas *sync.Map
+	id          string
+	time        time.Time
+	weather     *Weather
+	respawn     *Respawn
+	chars       *sync.Map
+	objects     *sync.Map
+	subareas    *sync.Map
 }
 
 // New creates new area.
@@ -55,6 +56,7 @@ func New() *Area {
 	a.objects = new(sync.Map)
 	a.subareas = new(sync.Map)
 	a.weather = newWeather(a)
+	a.respawn = newRespawn(a)
 	return a
 }
 
@@ -71,6 +73,7 @@ func (a *Area) Update(delta int64) {
 	for _, sa := range a.Subareas() {
 		sa.Update(delta)
 	}
+	a.respawn.Update()
 }
 
 // ID returns area ID.
@@ -264,6 +267,7 @@ func (a *Area) Apply(data res.AreaData) {
 			char = character.New(*charData)
 			a.AddCharacter(char)
 		}
+		char.SetRespawn(areaCharData.Respawn)
 		// Set position.
 		if areaCharData.InitX > 0 && areaCharData.InitY > 0 {
 			char.SetPosition(areaCharData.InitX, areaCharData.InitY)
@@ -326,6 +330,7 @@ func (a *Area) Data() res.AreaData {
 		charData.PosX, charData.PosY = c.Position()
 		charData.DestX, charData.DestY = c.DestPoint()
 		charData.DefX, charData.DefY = c.DefaultPosition()
+		charData.Respawn = c.Respawn()
 		data.Characters = append(data.Characters, charData)
 	}
 	for _, o := range a.Objects() {

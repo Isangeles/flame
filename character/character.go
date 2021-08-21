@@ -60,6 +60,7 @@ type Character struct {
 	destX, destY     float64
 	defX, defY       float64
 	cooldown         int64 // millis
+	respawn          int64
 	areaID           string
 	inventory        *item.Inventory
 	equipment        *Equipment
@@ -586,6 +587,16 @@ func (c *Character) AreaID() string {
 // character area ID.
 func (c *Character) SetAreaID(areaID string) {
 	c.areaID = areaID
+}
+
+// SetRespawn sets character respawn time in milliseconds.
+func (c *Character) SetRespawn(respawn int64) {
+	c.respawn = respawn
+}
+
+// Respawn returns time of character respawn in milliseconds.
+func (c *Character) Respawn() int64 {
+	return c.respawn
 }
 
 // Casted returns usable object currently casted by the character.
