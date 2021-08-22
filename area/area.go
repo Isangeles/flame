@@ -300,6 +300,7 @@ func (a *Area) Apply(data res.AreaData) {
 			areaOb = object.New(*obData)
 			a.AddObject(areaOb)
 		}
+		areaOb.SetRespawn(areaObData.Respawn)
 		// Set position.
 		areaOb.SetPosition(areaObData.PosX, areaObData.PosY)
 	}

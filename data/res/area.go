@@ -57,8 +57,9 @@ type AreaCharData struct {
 
 // Struct for area object data.
 type AreaObjectData struct {
-	ID     string  `xml:"id,attr" json:"id"`
-	Serial string  `xml:"serial,attr" json:"serial"`
-	PosX   float64 `xml:"x,attr" json:"pos-x"`
-	PosY   float64 `xml:"y,attr" json:"pos-y"`
+	ID      string  `xml:"id,attr" json:"id"`
+	Serial  string  `xml:"serial,attr" json:"serial"`
+	PosX    float64 `xml:"x,attr" json:"pos-x"`
+	PosY    float64 `xml:"y,attr" json:"pos-y"`
+	Respawn int64   `xml:"respawn,attr" json:"respawn"`
 }

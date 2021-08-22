@@ -40,6 +40,7 @@ type Object struct {
 	hp, maxHP       int
 	resilience      objects.Resilience
 	posX, posY      float64
+	respawn         int64
 	action          *useaction.UseAction
 	inventory       *item.Inventory
 	effects         map[string]*effect.Effect
@@ -113,6 +114,16 @@ func (ob *Object) Position() (float64, float64) {
 // XY position.
 func (ob *Object) SetPosition(x, y float64) {
 	ob.posX, ob.posY = x, y
+}
+
+// Respawn returns object respawn time in milliseconds.
+func (ob *Object) Respawn() int64 {
+	return ob.respawn
+}
+
+// SetRespawn sets object respawn time in milliseconds.
+func (ob *Object) SetRespawn(respawn int64) {
+	ob.respawn = respawn
 }
 
 // Health retruns current object

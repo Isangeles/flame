@@ -28,8 +28,9 @@ import (
 
 	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/object"
+	"github.com/isangeles/flame/objects"
 )
 
 // Struct for area respawn.
@@ -56,12 +57,22 @@ func (r *Respawn) Update() {
 		}
 		r.queue[char] = r.area.time.Add(time.Duration(char.Respawn()) * time.Millisecond)
 	}
+	for _, ob := range r.area.Objects() {
+		_, inQueue := r.queue[ob]
+		if inQueue || ob.Live() || ob.Respawn() < 1 {
+			continue
+		}
+		r.queue[ob] = r.area.time.Add(time.Duration(ob.Respawn()) * time.Millisecond)
+	}
 	for ob, respTime := range r.queue {
 		if respTime.Unix() > r.area.time.Unix() {
 			continue
 		}
 		if char, ok := ob.(*character.Character); ok {
 			r.respawnChar(char)
+		}
+		if ob, ok := ob.(*object.Object); ok {
+			r.respawnObject(ob)
 		}
 		delete(r.queue, ob)
 	}
@@ -80,4 +91,18 @@ func (r *Respawn) respawnChar(char *character.Character) {
 	newChar.SetPosition(char.Position())
 	newChar.SetDefaultPosition(char.DefaultPosition())
 	r.area.AddCharacter(newChar)
+}
+
+// respawnObject respawns specified object.
+func (r *Respawn) respawnObject(ob *object.Object) {
+	obData := res.Object(ob.ID(), "")
+	if obData == nil {
+		log.Err.Printf("Area: %s: respawn: %s: object data not found",
+			r.area.ID(), ob.ID())
+		return
+	}
+	newOb := object.New(*obData)
+	newOb.SetRespawn(ob.Respawn())
+	newOb.SetPosition(ob.Position())
+	r.area.AddObject(newOb)
 }
