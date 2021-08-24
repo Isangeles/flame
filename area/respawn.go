@@ -68,10 +68,10 @@ func (r *Respawn) Update() {
 		if respTime.Unix() > r.area.time.Unix() {
 			continue
 		}
-		if char, ok := ob.(*character.Character); ok {
+		if char, ok := ob.(*character.Character); ok && !char.Live() {
 			r.respawnChar(char)
 		}
-		if ob, ok := ob.(*object.Object); ok {
+		if ob, ok := ob.(*object.Object); ok && !ob.Live() {
 			r.respawnObject(ob)
 		}
 		delete(r.queue, ob)
