@@ -88,8 +88,11 @@ func (r *Respawn) respawnChar(char *character.Character) {
 	}
 	newChar := character.New(*charData)
 	newChar.SetRespawn(char.Respawn())
-	newChar.SetPosition(char.Position())
+	newChar.SetPosition(char.DefaultPosition())
 	newChar.SetDefaultPosition(char.DefaultPosition())
+	for _, f := range char.Flags() {
+		newChar.AddFlag(f)
+	}
 	r.area.AddCharacter(newChar)
 }
 
