@@ -94,6 +94,7 @@ func (r *Respawn) respawnChar(char *character.Character) {
 		newChar.AddFlag(f)
 	}
 	r.area.AddCharacter(newChar)
+	r.area.RemoveCharacter(char)
 }
 
 // respawnObject respawns specified object.
@@ -108,4 +109,5 @@ func (r *Respawn) respawnObject(ob *object.Object) {
 	newOb.SetRespawn(ob.Respawn())
 	newOb.SetPosition(ob.Position())
 	r.area.AddObject(newOb)
+	r.area.RemoveObject(ob)
 }
