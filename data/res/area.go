@@ -33,6 +33,7 @@ type AreaData struct {
 	ID         string           `xml:"id,attr" json:"id"`
 	Time       string           `xml:"time,attr" json:"time"`
 	Weather    string           `xml:"weather,attr" json:"weather"`
+	Respawn    RespawnData      `xml:"respawn" json:"respawn"`
 	Characters []AreaCharData   `xml:"characters>character" json:"character"`
 	Objects    []AreaObjectData `xml:"objects>object" json:"objects"`
 	Subareas   []AreaData       `xml:"subareas>area" json:"subareas"`
@@ -62,4 +63,15 @@ type AreaObjectData struct {
 	PosX    float64 `xml:"x,attr" json:"pos-x"`
 	PosY    float64 `xml:"y,attr" json:"pos-y"`
 	Respawn int64   `xml:"respawn,attr" json:"respawn"`
+}
+
+// Struct for area respawn data.
+type RespawnData struct {
+	Queue []RespawnObject `xml:"queue" json:"queue"`
+}
+
+// Struct for area respawn object data.
+type RespawnObject struct {
+	SerialObjectData
+	Time int64
 }

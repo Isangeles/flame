@@ -78,6 +78,35 @@ func (r *Respawn) Update() {
 	}
 }
 
+// Apply applies respawn data.
+func (r *Respawn) Apply(data res.RespawnData) {
+	r.queue = make(map[objects.Object]time.Time)
+	for _, ob := range data.Queue {
+		char, _ := r.area.chars.Load(ob.ID+ob.Serial)
+		if char, ok := char.(*character.Character); ok {
+			r.queue[char] = time.Unix(ob.Time, 0)
+			continue
+		}
+		areaOb, _ := r.area.objects.Load(ob.ID+ob.Serial)
+		if areaOb, ok := areaOb.(*object.Object); ok {
+			r.queue[areaOb] = time.Unix(ob.Time, 0)
+		}
+	}
+}
+
+// Data returns data resource for respawn.
+func (r *Respawn) Data() res.RespawnData {
+	var data res.RespawnData
+	for ob, time := range r.queue {
+		obData := res.RespawnObject{
+			SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
+			Time: time.Unix(),
+		}
+		data.Queue = append(data.Queue, obData)
+	}
+	return data
+}
+
 // respawnChar respawns specified character.
 func (r *Respawn) respawnChar(char *character.Character) {
 	charData := res.Character(char.ID(), "")

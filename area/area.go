@@ -40,13 +40,13 @@ import (
 
 // Area struct represents game world area.
 type Area struct {
-	id          string
-	time        time.Time
-	weather     *Weather
-	respawn     *Respawn
-	chars       *sync.Map
-	objects     *sync.Map
-	subareas    *sync.Map
+	id       string
+	time     time.Time
+	weather  *Weather
+	respawn  *Respawn
+	chars    *sync.Map
+	objects  *sync.Map
+	subareas *sync.Map
 }
 
 // New creates new area.
@@ -227,6 +227,7 @@ func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
 	a.time, _ = time.Parse(time.Kitchen, data.Time)
 	a.weather.conditions = Conditions(data.Weather)
+	a.respawn.Apply(data.Respawn)
 	// Remove characters not present anymore.
 	removeChars := func(key, value interface{}) bool {
 		key, _ = key.(string)
@@ -320,8 +321,9 @@ func (a *Area) Apply(data res.AreaData) {
 // Data returns area data resource.
 func (a *Area) Data() res.AreaData {
 	data := res.AreaData{
-		ID:   a.ID(),
-		Time: a.Time().Format(time.Kitchen),
+		ID:      a.ID(),
+		Time:    a.Time().Format(time.Kitchen),
+		Respawn: a.respawn.Data(),
 	}
 	for _, c := range a.Characters() {
 		charData := res.AreaCharData{
