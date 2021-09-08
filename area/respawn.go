@@ -24,26 +24,27 @@
 package area
 
 import (
+	"sync"
 	"time"
 
 	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/object"
-	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/serial"
 )
 
 // Struct for area respawn.
 type Respawn struct {
 	area  *Area
-	queue map[objects.Object]time.Time
+	queue *sync.Map
 }
 
 // newRespawn creates respawn for area.
 func newRespawn(area *Area) *Respawn {
 	r := Respawn{
 		area:  area,
-		queue: make(map[objects.Object]time.Time),
+		queue: new(sync.Map),
 	}
 	return &r
 }
@@ -51,45 +52,51 @@ func newRespawn(area *Area) *Respawn {
 // Update updates respawn.
 func (r *Respawn) Update() {
 	for _, char := range r.area.Characters() {
-		_, inQueue := r.queue[char]
+		_, inQueue := r.queue.Load(char)
 		if inQueue || char.Live() || char.Respawn() < 1 {
 			continue
 		}
-		r.queue[char] = r.area.time.Add(time.Duration(char.Respawn()) * time.Millisecond)
+		r.queue.Store(char, r.area.time.Add(time.Duration(char.Respawn())*time.Millisecond))
 	}
 	for _, ob := range r.area.Objects() {
-		_, inQueue := r.queue[ob]
+		_, inQueue := r.queue.Load(ob)
 		if inQueue || ob.Live() || ob.Respawn() < 1 {
 			continue
 		}
-		r.queue[ob] = r.area.time.Add(time.Duration(ob.Respawn()) * time.Millisecond)
+		r.queue.Store(ob, r.area.time.Add(time.Duration(ob.Respawn())*time.Millisecond))
 	}
-	for ob, respTime := range r.queue {
-		if respTime.Unix() > r.area.time.Unix() {
-			continue
+	respObject := func(k, v interface{}) bool {
+		ob, keyOk := k.(serial.Serialer)
+		respTime, valueOk := v.(time.Time)
+		if keyOk && valueOk {
+			if respTime.Unix() > r.area.time.Unix() {
+				return true
+			}
+			if char, ok := ob.(*character.Character); ok && !char.Live() {
+				r.respawnChar(char)
+			}
+			if ob, ok := ob.(*object.Object); ok && !ob.Live() {
+				r.respawnObject(ob)
+			}
+			r.queue.Delete(ob)
 		}
-		if char, ok := ob.(*character.Character); ok && !char.Live() {
-			r.respawnChar(char)
-		}
-		if ob, ok := ob.(*object.Object); ok && !ob.Live() {
-			r.respawnObject(ob)
-		}
-		delete(r.queue, ob)
+		return true
 	}
+	r.queue.Range(respObject)
 }
 
 // Apply applies respawn data.
 func (r *Respawn) Apply(data res.RespawnData) {
-	r.queue = make(map[objects.Object]time.Time)
+	r.queue = new(sync.Map)
 	for _, ob := range data.Queue {
-		char, _ := r.area.chars.Load(ob.ID+ob.Serial)
+		char, _ := r.area.chars.Load(ob.ID + ob.Serial)
 		if char, ok := char.(*character.Character); ok {
-			r.queue[char] = time.Unix(ob.Time, 0)
+			r.queue.Store(time.Unix(ob.Time, 0), char)
 			continue
 		}
-		areaOb, _ := r.area.objects.Load(ob.ID+ob.Serial)
+		areaOb, _ := r.area.objects.Load(ob.ID + ob.Serial)
 		if areaOb, ok := areaOb.(*object.Object); ok {
-			r.queue[areaOb] = time.Unix(ob.Time, 0)
+			r.queue.Store(time.Unix(ob.Time, 0), areaOb)
 		}
 	}
 }
@@ -97,13 +104,19 @@ func (r *Respawn) Apply(data res.RespawnData) {
 // Data returns data resource for respawn.
 func (r *Respawn) Data() res.RespawnData {
 	var data res.RespawnData
-	for ob, time := range r.queue {
-		obData := res.RespawnObject{
-			SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
-			Time: time.Unix(),
+	addObject := func(k, v interface{}) bool {
+		ob, keyOk := k.(serial.Serialer)
+		time, valueOk := v.(time.Time)
+		if keyOk && valueOk {
+			obData := res.RespawnObject{
+				SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
+				Time:             time.Unix(),
+			}
+			data.Queue = append(data.Queue, obData)
 		}
-		data.Queue = append(data.Queue, obData)
+		return true
 	}
+	r.queue.Range(addObject)
 	return data
 }
 
