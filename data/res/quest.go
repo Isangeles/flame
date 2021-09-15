@@ -1,7 +1,7 @@
 /*
  * quest.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,8 @@ type QuestStageData struct {
 	ID            string               `xml:"id,attr" json:"attr"`
 	Ordinal       int                  `xml:"ordinal,attr" json:"ordinal"`
 	Next          string               `xml:"next,attr" json:"next"`
+	Start         bool                 `xml:"start,attr" json:"start"`
+	End           bool                 `xml:"end,attr" json:"end"`
 	Objectives    []QuestObjectiveData `xml:"objectives>objective" json:"objectives"`
 	CompleteFlags []FlagData           `xml:"on-complete>flags>flag" json:"complete-flags"`
 }

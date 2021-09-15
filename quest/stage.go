@@ -45,8 +45,8 @@ func NewStage(data res.QuestStageData) *Stage {
 	s := new(Stage)
 	s.id = data.ID
 	s.ordinal = data.Ordinal
-	s.start = s.ordinal == 0
-	s.last = data.Next == "end" 
+	s.start = data.Start
+	s.last = data.End
 	s.next = data.Next
 	// Objectives.
 	for _, od := range data.Objectives {
