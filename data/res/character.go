@@ -30,12 +30,12 @@ import (
 // Struct for characters data resource.
 type CharactersData struct {
 	XMLName    xml.Name        `xml:"characters" json:"-"`
-	Characters []CharacterData `xml:"char" json:"characters"`
+	Characters []CharacterData `xml:"character" json:"characters"`
 }
 
 // Struct for character data resource.
 type CharacterData struct {
-	XMLName    xml.Name              `xml:"char" json:"-"`
+	XMLName    xml.Name              `xml:"character" json:"-"`
 	ID         string                `xml:"id,attr" json:"id"`
 	Serial     string                `xml:"serial,attr" json:"serial"`
 	Level      int                   `xml:"level,attr" json:"level"`
