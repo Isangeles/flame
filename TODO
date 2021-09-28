@@ -22,7 +22,6 @@ MINOR:
 * Use sync.Map for: character flags
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for data package
-* XML: rename talker node in dialog to target
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
 * Apply function for UseAction struct

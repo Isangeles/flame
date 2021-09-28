@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ type DialogStageData struct {
 	Start      bool               `xml:"start,attr" json:"start"`
 	Answers    []DialogAnswerData `xml:"answer" json:"answers"`
 	Reqs       ReqsData           `xml:"reqs" json:"reqs"`
-	TalkerMods ModifiersData      `xml:"talker>modifiers" json:"talker-mods"`
+	TargetMods ModifiersData      `xml:"target>modifiers" json:"target-mods"`
 	OwnerMods  ModifiersData      `xml:"owner>modifiers" json:"owner-mods`
 }
 
@@ -60,6 +60,6 @@ type DialogAnswerData struct {
 	Trade      bool          `xml:"trade,attr" json:"trade"`
 	Training   bool          `xml:"train,attr" json:"training"`
 	Reqs       ReqsData      `xml:"reqs" json:"reqs"`
-	TalkerMods ModifiersData `xml:"talker>modifiers" json:"talker-mods"`
+	TargetMods ModifiersData `xml:"target>modifiers" json:"target-mods"`
 	OwnerMods  ModifiersData `xml:"owner>modifiers" json:"owner-mods"`
 }

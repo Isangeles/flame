@@ -36,7 +36,7 @@ type Stage struct {
 	ordinalID  string
 	start      bool
 	reqs       []req.Requirement
-	talkerMods []effect.Modifier
+	targetMods []effect.Modifier
 	ownerMods  []effect.Modifier
 	answers    []*Answer
 }
@@ -49,7 +49,7 @@ func NewStage(dialog *Dialog, data res.DialogStageData) *Stage {
 	s.ordinalID = data.OrdinalID
 	s.start = data.Start
 	s.reqs = req.NewRequirements(data.Reqs)
-	s.talkerMods = effect.NewModifiers(data.TalkerMods)
+	s.targetMods = effect.NewModifiers(data.TargetMods)
 	s.ownerMods = effect.NewModifiers(data.OwnerMods)
 	for _, ad := range data.Answers {
 		a := NewAnswer(s.dialog, ad)
@@ -73,9 +73,9 @@ func (s *Stage) Requirements() []req.Requirement {
 	return s.reqs
 }
 
-// TalkerModifiers retruns modifiers for talker.
+// TargetModifiers retruns modifiers for dialog target.
 func (s *Stage) TargetModifiers() []effect.Modifier {
-	return s.talkerMods
+	return s.targetMods
 }
 
 // OnwerModifiers returns modifiers for dialog owner.

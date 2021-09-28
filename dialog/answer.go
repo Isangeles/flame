@@ -39,7 +39,7 @@ type Answer struct {
 	startsTrade    bool
 	startsTraining bool
 	reqs           []req.Requirement
-	talkerMods     []effect.Modifier
+	targetMods     []effect.Modifier
 	ownerMods      []effect.Modifier
 }
 
@@ -53,7 +53,7 @@ func NewAnswer(dialog *Dialog, data res.DialogAnswerData) *Answer {
 	a.startsTrade = data.Trade
 	a.startsTraining = data.Training
 	a.reqs = req.NewRequirements(data.Reqs)
-	a.talkerMods = effect.NewModifiers(data.TalkerMods)
+	a.targetMods = effect.NewModifiers(data.TargetMods)
 	a.ownerMods = effect.NewModifiers(data.OwnerMods)
 	return a
 }
@@ -91,9 +91,9 @@ func (a *Answer) Requirements() []req.Requirement {
 	return a.reqs
 }
 
-// TalkerModifiers retruns modifiers for talker.
+// TargetModifiers retruns modifiers for dialog target.
 func (a *Answer) TargetModifiers() []effect.Modifier {
-	return a.talkerMods
+	return a.targetMods
 }
 
 // OnwerModifiers returns modifiers for dialog owner.
