@@ -35,8 +35,8 @@ import (
 	"github.com/isangeles/flame/data/text"
 )
 
-// ExportModuleFile exports module data to the single file.
-func ExportModuleFile(path string, data res.ModuleData) error {
+// ExportModule exports module data to the single file.
+func ExportModule(path string, data res.ModuleData) error {
 	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal module data: %v", err)
@@ -59,8 +59,8 @@ func ExportModuleFile(path string, data res.ModuleData) error {
 	return nil
 }
 
-// ExportModule exports module data to new a directory under specified path.
-func ExportModule(path string, data res.ModuleData) error {
+// ExportModuleDir exports module data to new a directory under specified path.
+func ExportModuleDir(path string, data res.ModuleData) error {
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
 		return fmt.Errorf("unable to create module dir: %v", err)
@@ -137,15 +137,15 @@ func ExportModule(path string, data res.ModuleData) error {
 	}
 	// Chapters.
 	chapterPath := filepath.Join(path, "chapters", data.Chapter.ID)
-	err = exportChapter(chapterPath, data.Chapter)
+	err = exportChapterDir(chapterPath, data.Chapter)
 	if err != nil {
 		return fmt.Errorf("unable to export chapter: %v", err)
 	}
 	return nil
 }
 
-// exportChapter exports chapter to a new directory under specified path.
-func exportChapter(path string, data res.ChapterData) error {
+// exportChapterDir exports chapter to a new directory under specified path.
+func exportChapterDir(path string, data res.ChapterData) error {
 	// Dir.
 	err := os.MkdirAll(path, 0755)
 	if err != nil {

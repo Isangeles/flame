@@ -2,7 +2,7 @@ MAJOR:
 * Switching chapters
 * Item materials
 * Container items
-* Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
+  * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
 * Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
 * Documentation for directories: data, savegames, area, areas, area
 * Switch to JSON format for data files
@@ -27,8 +27,6 @@ MINOR:
 * Apply function for UseAction struct
 * Appearance struct for game character
 * Rename serial.Serialer struct to serial.Object
-* Rename data.ImportModuleFile to data.ImportModule and
-  data.ImportModule to data.ImportModuleDir
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module

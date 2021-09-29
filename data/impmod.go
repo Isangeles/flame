@@ -1,7 +1,7 @@
 /*
  * impmod.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ const (
 	ChapterConfigFile = ".chapter"
 )
 
-// ImportModuleFile imports module from module file with specified path.
-func ImportModuleFile(path string) (res.ModuleData, error) {
+// ImportModule imports module from module file with specified path.
+func ImportModule(path string) (res.ModuleData, error) {
 	data := res.ModuleData{}
 	file, err := os.Open(path)
 	if err != nil {
@@ -60,8 +60,8 @@ func ImportModuleFile(path string) (res.ModuleData, error) {
 	return data, nil
 }
 
-// ImportModule imports module from directory with specified path.
-func ImportModule(path string) (data res.ModuleData, err error) {
+// ImportModuleDir imports module from directory with specified path.
+func ImportModuleDir(path string) (data res.ModuleData, err error) {
 	// Load module config file.
 	file, err := os.Open(filepath.Join(path, ModuleConfigFile))
 	if err != nil {
@@ -134,15 +134,15 @@ func ImportModule(path string) (data res.ModuleData, err error) {
 		return data, fmt.Errorf("no chapter set: %v", err)
 	}
 	chapterPath := filepath.Join(path, "chapters", data.Config["chapter"][0])
-	data.Chapter, err = ImportChapter(chapterPath)
+	data.Chapter, err = ImportChapterDir(chapterPath)
 	if err != nil {
 		return data, fmt.Errorf("unable to import chapter: %v", err)
 	}
 	return data, nil
 }
 
-// ImportChapter imports chapter from directory with specified path.
-func ImportChapter(path string) (data res.ChapterData, err error) {
+// ImportChapterDir imports chapter from directory with specified path.
+func ImportChapterDir(path string) (data res.ChapterData, err error) {
 	// Load module config file.
 	file, err := os.Open(filepath.Join(path, ChapterConfigFile))
 	if err != nil {
