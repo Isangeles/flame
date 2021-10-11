@@ -37,6 +37,7 @@ type ReqsData struct {
 	CurrencyReqs    []CurrencyReqData    `xml:"currency-req" json:"currency-req"`
 	TargetRangeReqs []TargetRangeReqData `xml:"target-range-req" json:"target-range-req"`
 	KillReqs        []KillReqData        `xml:"kill-req" json:"kill-req"`
+	QuestReqs       []QuestReqData       `xml:"quest-req" json:"quest-req"`
 }
 
 // Struct for level requirement data.
@@ -78,4 +79,10 @@ type TargetRangeReqData struct {
 type KillReqData struct {
 	ID     string `xml:"id,attr" json:"id"`
 	Amount int    `xml:"amount,attr" json:"amount"`
+}
+
+// Struct for quest requirement data.
+type QuestReqData struct {
+	ID        string `xml:"id,attr" json:"id"`
+	Completed bool   `xml:"completed,attr" json:"completed"`
 }

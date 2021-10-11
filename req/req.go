@@ -72,6 +72,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		kreq := NewKill(d)
 		reqs = append(reqs, kreq)
 	}
+	for _, d := range data.QuestReqs {
+		qreq := NewQuest(d)
+		reqs = append(reqs, qreq)
+	}
 	return
 }
 
@@ -100,6 +104,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Kill:
 			d := r.Data()
 			data.KillReqs = append(data.KillReqs, d)
+		case *Quest:
+			d := r.Data()
+			data.QuestReqs = append(data.QuestReqs, d)
 		}
 	}
 	return
