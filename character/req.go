@@ -98,6 +98,13 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 			}
 		}
 		return amount >= r.Amount()
+	case *req.Quest:
+		for _, q := range c.Journal().Quests() {
+			if q.ID() == r.QuestID() && q.Completed() == r.QuestCompleted() {
+				return true
+			}
+		}
+		return false
 	default:
 		return true
 	}
