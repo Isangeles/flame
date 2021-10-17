@@ -32,7 +32,7 @@ import (
 const (
 	BaseLift   = 10
 	BaseSight  = 300.0
-	BaseHealth = 100
+	BaseHealth = 50
 	BaseMana   = 10
 )
 
@@ -68,8 +68,8 @@ func (a *Attributes) Mana() int {
 // Damage returns min and max damage values
 // based on attributes.
 func (a *Attributes) Damage() (int, int) {
-	min := 1 + (10 * a.Str)
-	max := 10 + (10 * a.Str)
+	min := 1 + (10 * a.Str + a.Dex)
+	max := 10 + (10 * a.Str + a.Dex)
 	return min, max
 }
 
