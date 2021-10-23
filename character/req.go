@@ -24,6 +24,7 @@
 package character
 
 import (
+	"github.com/isangeles/flame/flag"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/req"
@@ -57,11 +58,11 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 	case *req.Gender:
 		return string(c.Gender()) == r.Gender()
 	case *req.Flag:
-		f := c.flags[r.FlagID()]
+		f := flag.Flag(r.FlagID())
 		if r.FlagOff() {
-			return len(f.ID()) == 0
+			return !c.HasFlag(f)
 		}
-		return len(f.ID()) > 0
+		return c.HasFlag(f)
 	case *req.Item:
 		count := 0
 		for _, i := range c.Inventory().Items() {
@@ -94,7 +95,7 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 		amount := 0
 		for _, k := range c.Kills() {
 			if k.ID == r.ID() {
-				amount ++
+				amount++
 			}
 		}
 		return amount >= r.Amount()

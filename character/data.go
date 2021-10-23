@@ -24,6 +24,8 @@
 package character
 
 import (
+	"sync"
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/dialog"
@@ -70,10 +72,10 @@ func (c *Character) Apply(data res.CharacterData) {
 	// Clear old data.
 	c.clearOldObjects(data)
 	// Add flags.
-	c.flags = make(map[string]flag.Flag)
+	c.flags = new(sync.Map)
 	for _, fd := range data.Flags {
 		f := flag.Flag(fd.ID)
-		c.flags[f.ID()] = f
+		c.flags.Store(f.ID(), f)
 	}
 	// Add skills.
 	for _, charSkillData := range data.Skills {

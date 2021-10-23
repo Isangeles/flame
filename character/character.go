@@ -26,6 +26,8 @@
 package character
 
 import (
+	"sync"
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/craft"
 	"github.com/isangeles/flame/dialog"
@@ -72,7 +74,7 @@ type Character struct {
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
 	dialogs          map[string]*dialog.Dialog
-	flags            map[string]flag.Flag
+	flags            *sync.Map
 	trainings        []*training.TrainerTraining
 	casted           res.CastedObjectData
 	chatLog          *objects.Log
@@ -96,7 +98,7 @@ func New(data res.CharacterData) *Character {
 		skills:     make(map[string]*skill.Skill),
 		memory:     make(map[string]*TargetMemory),
 		dialogs:    make(map[string]*dialog.Dialog),
-		flags:      make(map[string]flag.Flag),
+		flags:      new(sync.Map),
 		chatLog:    objects.NewLog(),
 	}
 	c.equipment = newEquipment(&c)
@@ -535,25 +537,31 @@ func (c *Character) AddDialog(d *dialog.Dialog) {
 
 // Flags returns all active flags.
 func (c *Character) Flags() (flags []flag.Flag) {
-	for _, f := range c.flags {
-		flags = append(flags, f)
+	addFlag := func(k, v interface{}) bool {
+		f, ok := v.(flag.Flag)
+		if ok {
+			flags = append(flags, f)
+		}
+		return true
 	}
+	c.flags.Range(addFlag)
 	return
 }
 
 // AddFlag adds specified flag.
 func (c *Character) AddFlag(f flag.Flag) {
-	c.flags[f.ID()] = f
+	c.flags.Store(f.ID(), f)
 }
 
 // RemoveFlag removes specified flag.
 func (c *Character) RemoveFlag(f flag.Flag) {
-	delete(c.flags, f.ID())
+	c.flags.Delete(f.ID())
 }
 
 // HasFlag checks if character has specified flag.
 func (c *Character) HasFlag(flag flag.Flag) bool {
-	return len(c.flags[flag.ID()].ID()) > 1
+	_, ok := c.flags.Load(flag.ID())
+	return ok
 }
 
 // Journal returns quest journal.
