@@ -73,7 +73,7 @@ type Character struct {
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
 	memory           map[string]*TargetMemory
-	dialogs          map[string]*dialog.Dialog
+	dialogs          *sync.Map
 	flags            *sync.Map
 	trainings        []*training.TrainerTraining
 	casted           res.CastedObjectData
@@ -97,7 +97,7 @@ func New(data res.CharacterData) *Character {
 		effects:    make(map[string]*effect.Effect),
 		skills:     make(map[string]*skill.Skill),
 		memory:     make(map[string]*TargetMemory),
-		dialogs:    make(map[string]*dialog.Dialog),
+		dialogs:    new(sync.Map),
 		flags:      new(sync.Map),
 		chatLog:    objects.NewLog(),
 	}
@@ -512,19 +512,29 @@ func (c *Character) Interrupt() {
 }
 
 // Dialog returns dialog for specified character.
-func (c *Character) Dialog(char Character) *dialog.Dialog {
+func (c *Character) Dialog(char Character) (dial *dialog.Dialog) {
 	// TODO: find proper dialog for specified character.
-	for _, d := range c.dialogs {
-		return d
+	findDialog := func(k, v interface{}) bool {
+		d, ok := v.(*dialog.Dialog)
+		if ok {
+			dial = d
+		}
+		return true
 	}
-	return nil
+	c.dialogs.Range(findDialog)
+	return
 }
 
 // Dialogs returns all character dialogs.
 func (c *Character) Dialogs() (dls []*dialog.Dialog) {
-	for _, d := range c.dialogs {
-		dls = append(dls, d)
+	addDialog := func(k, v interface{}) bool {
+		d, ok := v.(*dialog.Dialog)
+		if ok {
+			dls = append(dls, d)
+		}
+		return true
 	}
+	c.dialogs.Range(addDialog)
 	return
 }
 
@@ -532,7 +542,7 @@ func (c *Character) Dialogs() (dls []*dialog.Dialog) {
 // sets character as dialog owner.
 func (c *Character) AddDialog(d *dialog.Dialog) {
 	d.SetOwner(c)
-	c.dialogs[d.ID()] = d
+	c.dialogs.Store(d.ID(), d)
 }
 
 // Flags returns all active flags.

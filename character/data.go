@@ -95,8 +95,9 @@ func (c *Character) Apply(data res.CharacterData) {
 	}
 	// Add dialogs.
 	for _, charDialogData := range data.Dialogs {
-		d := c.dialogs[charDialogData.ID]
-		if d != nil {
+		ob, _ := c.dialogs.Load(charDialogData.ID)
+		d, ok := ob.(*dialog.Dialog)
+		if ok {
 			continue
 		}
 		dialogData := res.Dialog(charDialogData.ID)
@@ -265,13 +266,13 @@ func (c *Character) clearOldObjects(data res.CharacterData) {
 			delete(c.skills, k)
 		}
 	}
-	for k, d := range c.dialogs {
+	for k, d := range c.Dialogs() {
 		found := false
 		for _, dd := range data.Dialogs {
 			found = d.ID() == dd.ID
 		}
 		if !found {
-			delete(c.dialogs, k)
+			c.dialogs.Delete(k)
 		}
 	}
 	for k, m := range c.memory {
