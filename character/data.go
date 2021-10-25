@@ -275,13 +275,13 @@ func (c *Character) clearOldObjects(data res.CharacterData) {
 			c.dialogs.Delete(k)
 		}
 	}
-	for k, m := range c.memory {
+	for k, m := range c.Memory() {
 		found := false
 		for _, md := range data.Memory {
 			found = m.TargetID == md.ObjectID && m.TargetSerial == md.ObjectSerial
 		}
 		if !found {
-			delete(c.memory, k)
+			c.memory.Delete(k)
 		}
 	}
 }

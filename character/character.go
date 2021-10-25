@@ -72,7 +72,7 @@ type Character struct {
 	kills            []res.KillData
 	effects          map[string]*effect.Effect
 	skills           map[string]*skill.Skill
-	memory           map[string]*TargetMemory
+	memory           *sync.Map
 	dialogs          *sync.Map
 	flags            *sync.Map
 	trainings        []*training.TrainerTraining
@@ -96,7 +96,7 @@ func New(data res.CharacterData) *Character {
 		inventory:  item.NewInventory(),
 		effects:    make(map[string]*effect.Effect),
 		skills:     make(map[string]*skill.Skill),
-		memory:     make(map[string]*TargetMemory),
+		memory:     new(sync.Map),
 		dialogs:    new(sync.Map),
 		flags:      new(sync.Map),
 		chatLog:    objects.NewLog(),
@@ -270,8 +270,9 @@ func (c *Character) SetAttitude(att Attitude) {
 
 // AttitudeFor returns attitude for specified objects.
 func (c *Character) AttitudeFor(o objects.Object) Attitude {
-	mem := c.memory[o.ID()+o.Serial()]
-	if mem != nil {
+	ob, _ := c.memory.Load(o.ID()+o.Serial())
+	mem, ok := ob.(*TargetMemory)
+	if ok {
 		return mem.Attitude
 	}
 	obChar, ok := o.(*Character)

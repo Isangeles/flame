@@ -1,7 +1,7 @@
 /*
  * memory.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,13 +32,18 @@ type TargetMemory struct {
 
 // Memory returns character tergets memory.
 func (c *Character) Memory() (mem []*TargetMemory) {
-	for _, am := range c.memory {
-		mem = append(mem, am)
+	addMemory := func(k, v interface{}) bool {
+		m, ok := v.(*TargetMemory)
+		if ok {
+			mem = append(mem, m)
+		}
+		return true
 	}
+	c.memory.Range(addMemory)
 	return
 }
 
 // MemorizeTarget saves specified target memory.
 func (c *Character) MemorizeTarget(mem *TargetMemory) {
-	c.memory[mem.TargetID+mem.TargetSerial] = mem
+	c.memory.Store(mem.TargetID+mem.TargetSerial, mem)
 }
