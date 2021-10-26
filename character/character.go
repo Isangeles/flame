@@ -71,7 +71,7 @@ type Character struct {
 	targets          []res.SerialObjectData
 	kills            []res.KillData
 	effects          map[string]*effect.Effect
-	skills           map[string]*skill.Skill
+	skills           *sync.Map
 	memory           *sync.Map
 	dialogs          *sync.Map
 	flags            *sync.Map
@@ -95,7 +95,7 @@ func New(data res.CharacterData) *Character {
 		attributes: new(Attributes),
 		inventory:  item.NewInventory(),
 		effects:    make(map[string]*effect.Effect),
-		skills:     make(map[string]*skill.Skill),
+		skills:     new(sync.Map),
 		memory:     new(sync.Map),
 		dialogs:    new(sync.Map),
 		flags:      new(sync.Map),
@@ -155,7 +155,7 @@ func (c *Character) Update(delta int64) {
 	c.Inventory().Update(delta)
 	c.Inventory().SetCapacity(c.Attributes().Lift())
 	// Skills.
-	for _, s := range c.skills {
+	for _, s := range c.Skills() {
 		s.Update(delta)
 	}
 	// Effects.
@@ -410,24 +410,28 @@ func (c *Character) RemoveEffect(e *effect.Effect) {
 }
 
 // Skills return all character skills.
-func (c *Character) Skills() []*skill.Skill {
-	skills := make([]*skill.Skill, 0)
-	for _, s := range c.skills {
-		skills = append(skills, s)
+func (c *Character) Skills() (skills []*skill.Skill) {
+	addSkill := func(k, v interface{}) bool {
+		s, ok := v.(*skill.Skill)
+		if ok {
+			skills = append(skills, s)
+		}
+		return true
 	}
-	return skills
+	c.skills.Range(addSkill)
+	return
 }
 
 // AddSkill adds specified skill to characters
 // skills.
 func (c *Character) AddSkill(s *skill.Skill) {
 	s.UseAction().SetOwner(c)
-	c.skills[s.ID()] = s
+	c.skills.Store(s.ID(), s)
 }
 
 // RemoveSkill removes specified skill.
 func (c *Character) RemoveSkill(s *skill.Skill) {
-	delete(c.skills, s.ID())
+	c.skills.Delete(s.ID())
 }
 
 // Targets returns character targets.

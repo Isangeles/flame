@@ -79,8 +79,9 @@ func (c *Character) Apply(data res.CharacterData) {
 	}
 	// Add skills.
 	for _, charSkillData := range data.Skills {
-		s := c.skills[charSkillData.ID]
-		if s != nil {
+		ob, _ := c.skills.Load(charSkillData.ID)
+		s, ok := ob.(*skill.Skill)
+		if ok {
 			continue
 		}
 		skillData := res.Skill(charSkillData.ID)
@@ -257,13 +258,13 @@ func (c *Character) clearOldObjects(data res.CharacterData) {
 			delete(c.effects, k)
 		}
 	}
-	for k, s := range c.skills {
+	for k, s := range c.Skills() {
 		found := false
 		for _, sd := range data.Skills {
 			found = s.ID() == sd.ID
 		}
 		if !found {
-			delete(c.skills, k)
+			c.skills.Delete(k)
 		}
 	}
 	for k, d := range c.Dialogs() {
