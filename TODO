@@ -2,7 +2,7 @@ MAJOR:
 * Switching chapters
 * Item materials
 * Container items
-  * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
+* Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
 * Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
 * Documentation for directories: data, savegames, area, areas, area
 * Switch to JSON format for data files
@@ -16,17 +16,15 @@ MAJOR:
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
-* Improve NPC AI(selecting skills proper to situation)
 * Refactor chapter's SetOnAreaAddedFunc to AddOnAreaAddedFunc, i.e. adding event functions,
   not just handling and overriding one function
-* Use sync.Map for: character flags
+* Use sync.Map for: area object flags
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for data package
 * Use action for armors and weapons
 * Character: remove currency items in ChargeReq function
 * Apply function for UseAction struct
 * Appearance struct for game character
-* Rename serial.Serialer struct to serial.Object
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
