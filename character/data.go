@@ -117,15 +117,9 @@ func (c *Character) Apply(data res.CharacterData) {
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
-		e := c.effects[charEffectData.ID]
-		if e == nil {
-			effectData := res.Effect(charEffectData.ID)
-			if effectData == nil {
-				log.Err.Printf("Character: %s: Apply: effect data not found: %s",
-					c.ID(), charEffectData.ID)
-				continue
-			}
-			e = effect.New(*effectData)
+		e := c.effects[charEffectData.ID+charEffectData.Serial]
+		if e != nil {
+			continue
 		}
 		effectData := res.Effect(charEffectData.ID)
 		if effectData == nil {
