@@ -72,7 +72,7 @@ func (ob *Object) Update(delta int64) {
 	for serial, e := range ob.effects {
 		e.Update(delta)
 		// Remove expired effects.
-		if e.Time() <= 0 {
+		if e.Time() <= 0 && !e.Infinite() {
 			delete(ob.effects, serial)
 		}
 	}
