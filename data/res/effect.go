@@ -39,6 +39,7 @@ type EffectData struct {
 	ID        string        `xml:"id,attr" json:"id"`
 	Duration  int64         `xml:"duration,attr" json:"duration"`
 	MeleeHit  bool          `xml:"melee-hit,attr" json:"melee-hit"`
+	Infinite  bool          `xml:"infinite,attr" json:"infinite"`
 	Modifiers ModifiersData `xml:"modifiers" json:"modifiers"`
 }
 

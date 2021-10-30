@@ -40,6 +40,7 @@ type Effect struct {
 	time       int64
 	secTimer   int64
 	meleeHit   bool
+	infinite   bool
 	started    bool
 }
 
@@ -50,6 +51,7 @@ func New(data res.EffectData) *Effect {
 	e.modifiers = NewModifiers(data.Modifiers)
 	e.duration = int64(data.Duration)
 	e.meleeHit = data.MeleeHit
+	e.infinite = data.Infinite
 	e.SetTime(data.Duration)
 	serial.Register(e)
 	return e
@@ -57,12 +59,11 @@ func New(data res.EffectData) *Effect {
 
 // Update updates effect.
 func (e *Effect) Update(delta int64) {
-	if e.started && e.Time() <= 0 {
+	if e.started && e.Time() <= 0 && !e.Infinite() {
 		log.Err.Printf("effect: %s#%s: no time left: %d", e.ID(),
 			e.Serial(), e.duration)
 		return
 	}
-	e.started = true
 	object := serial.Object(e.target.ID, e.target.Serial)
 	if object == nil {
 		log.Err.Printf("effect: %s#%s: target not found: %s#%s",
@@ -77,11 +78,14 @@ func (e *Effect) Update(delta int64) {
 	}
 	source := serial.Object(e.source.ID, e.source.Serial)
 	e.secTimer += delta
-	if e.time == e.duration || e.secTimer >= 1000 { // at start and every second after that
+	if !e.started || e.secTimer >= 1000 { // at start and every second after that
 		target.TakeModifiers(source, e.modifiers...)
 		e.secTimer = 0
 	}
-	e.time -= delta
+	e.started = true
+	if !e.Infinite() {
+		e.time -= delta
+	}
 }
 
 // ID returns effect ID.
@@ -109,6 +113,11 @@ func (e *Effect) Time() int64 {
 // MeleeHit checks if this effect is a melee hit.
 func (e *Effect) MeleeHit() bool {
 	return e.meleeHit
+}
+
+// Infinite checks if effect duration time is infinite.
+func (e *Effect) Infinite() bool {
+	return e.infinite
 }
 
 // Source returns ID and serial value of effect
