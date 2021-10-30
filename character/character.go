@@ -162,7 +162,7 @@ func (c *Character) Update(delta int64) {
 	for serial, e := range c.effects {
 		e.Update(delta)
 		// Remove expired effects.
-		if e.Time() <= 0 {
+		if e.Time() <= 0 && !e.Infinite() {
 			delete(c.effects, serial)
 		}
 	}
