@@ -1,7 +1,7 @@
 /*
  * skill.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ type SkillsData struct {
 
 // Struct for skill data.
 type SkillData struct {
-	ID        string        `xml:"id,attr" json:"id"`
-	UseAction UseActionData `xml:"use" json:"use"`
+	ID             string                `xml:"id,attr" json:"id"`
+	UseAction      UseActionData         `xml:"use" json:"use"`
+	PassiveEffects []UseActionEffectData `xml:"passive>effects>effect" json:"passive-effects"`
 }

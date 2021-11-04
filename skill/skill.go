@@ -21,25 +21,35 @@
  *
  */
 
-// Package for skills.
+// Package for skill structs.
 package skill
 
 import (
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/useaction"
 )
 
 // Struct for skills.
 type Skill struct {
-	id          string
-	useAction   *useaction.UseAction
+	id             string
+	useAction      *useaction.UseAction
+	passiveEffects []res.EffectData
 }
 
-// NewSkill creates new skill with specifie parameters.
+// New creates new skill.
 func New(data res.SkillData) *Skill {
 	s := new(Skill)
 	s.id = data.ID
 	s.useAction = useaction.New(data.UseAction)
+	for _, ed := range data.PassiveEffects {
+		data := res.Effect(ed.ID)
+		if data == nil {
+			log.Err.Printf("use action: effect not found: %s", ed.ID)
+			continue
+		}
+		s.passiveEffects = append(s.passiveEffects, *data)
+	}
 	return s
 }
 
@@ -56,4 +66,9 @@ func (s *Skill) ID() string {
 // UseAction returns skill use action.
 func (s *Skill) UseAction() *useaction.UseAction {
 	return s.useAction
+}
+
+// PassiveEffects returns all passive effects.
+func (s *Skill) PassiveEffects() []res.EffectData {
+	return s.passiveEffects
 }
