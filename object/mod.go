@@ -25,18 +25,18 @@ package object
 
 import (
 	"github.com/isangeles/flame/effect"
-	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/serial"
 )
 
 // TakeModifiers handles all specified modifiers.
-func (o *Object) TakeModifiers(source objects.Object, mods ...effect.Modifier) {
+func (o *Object) TakeModifiers(source serial.Serialer, mods ...effect.Modifier) {
 	for _, m := range mods {
 		o.takeModifier(source, m)
 	}
 }
 
 // takeModifier handles specified modifier.
-func (o *Object) takeModifier(s objects.Object, m effect.Modifier) {
+func (o *Object) takeModifier(s serial.Serialer, m effect.Modifier) {
 	switch m := m.(type) {
 	case *effect.HealthMod:
 		val := m.RandomValue()

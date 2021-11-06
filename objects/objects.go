@@ -28,18 +28,13 @@ import (
 	"math"
 
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/serial"
 )
-
-// Interface for game objects.
-type Object interface {
-	ID() string
-	Serial() string
-}
 
 // Interface for all object with
 // position on game world map.
 type Positioner interface {
-	Object
+	serial.Serialer
 	SetPosition(x, y float64)
 	Position() (x, y float64)
 }
@@ -47,7 +42,7 @@ type Positioner interface {
 // Interface for objects with
 // health points.
 type Killable interface {
-	Object
+	serial.Serialer
 	SetHealth(v int)
 	Health() int
 	MaxHealth() int
@@ -56,7 +51,7 @@ type Killable interface {
 
 // Interface for objects with kill records.
 type Killer interface {
-	Object
+	serial.Serialer
 	AddKill(k res.KillData)
 	Kills() []res.KillData
 }
@@ -84,7 +79,7 @@ type Magician interface {
 // Interface for objects with log
 // channels.
 type Logger interface {
-	Object
+	serial.Serialer
 	ChatLog() *Log
 }
 
@@ -108,7 +103,7 @@ const (
 
 // Equals checks whether two specified objects
 // represents the same game object.
-func Equals(ob1, ob2 Object) bool {
+func Equals(ob1, ob2 serial.Serialer) bool {
 	return ob1.ID() + ob1.Serial() == ob2.ID() + ob2.Serial()
 }
 

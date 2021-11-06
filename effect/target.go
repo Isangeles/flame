@@ -25,6 +25,7 @@ package effect
 
 import (
 	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/serial"
 )
 
 // Interfece for effect targets.
@@ -34,5 +35,5 @@ type Target interface {
 	HitEffects() []*Effect
 	TakeEffect(e *Effect)
 	RemoveEffect(e *Effect)
-	TakeModifiers(s objects.Object, m ...Modifier)
+	TakeModifiers(s serial.Serialer, m ...Modifier)
 }

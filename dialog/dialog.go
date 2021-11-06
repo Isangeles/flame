@@ -25,16 +25,17 @@ package dialog
 
 import (
 	"strings"
-	
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/res/lang"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/req"
+	"github.com/isangeles/flame/serial"
 )
 
 const (
-	OwnerNameMacro = "@ownerName"
+	OwnerNameMacro  = "@ownerName"
 	TargetNameMacro = "@targetName"
 )
 
@@ -57,7 +58,7 @@ type Talker interface {
 	objects.Logger
 	Dialogs() []*Dialog
 	MeetReqs(reqs ...req.Requirement) bool
-	TakeModifiers(s objects.Object, mods ...effect.Modifier)
+	TakeModifiers(s serial.Serialer, mods ...effect.Modifier)
 }
 
 // New creates new dialog.
@@ -187,7 +188,7 @@ func (d *Dialog) SetTarget(t Talker) {
 		return
 	}
 	d.Owner().TakeModifiers(d.Target(), d.Stage().OwnerModifiers()...)
-	d.Target().TakeModifiers(d.Owner(), d.Stage().TargetModifiers()...)	
+	d.Target().TakeModifiers(d.Owner(), d.Stage().TargetModifiers()...)
 }
 
 // Target returns dialog target.

@@ -30,12 +30,13 @@ import (
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/quest"
+	"github.com/isangeles/flame/serial"
 	"github.com/isangeles/flame/skill"
 )
 
 // TakeModifiers handles all specified modifiers.
 // Source can be nil.
-func (c *Character) TakeModifiers(source objects.Object, mods ...effect.Modifier) {
+func (c *Character) TakeModifiers(source serial.Serialer, mods ...effect.Modifier) {
 	for _, m := range mods {
 		c.takeModifier(source, m)
 	}
@@ -43,7 +44,7 @@ func (c *Character) TakeModifiers(source objects.Object, mods ...effect.Modifier
 
 // takeModifier handles specified modifier.
 // Source can be nil.
-func (c *Character) takeModifier(s objects.Object, m effect.Modifier) {
+func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 	switch m := m.(type) {
 	case *effect.AreaMod:
 		c.SetAreaID(m.AreaID())

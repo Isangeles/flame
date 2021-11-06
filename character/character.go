@@ -268,8 +268,8 @@ func (c *Character) SetAttitude(att Attitude) {
 	c.attitude = att
 }
 
-// AttitudeFor returns attitude for specified objects.
-func (c *Character) AttitudeFor(o objects.Object) Attitude {
+// AttitudeFor returns attitude for specified object.
+func (c *Character) AttitudeFor(o serial.Serialer) Attitude {
 	ob, _ := c.memory.Load(o.ID()+o.Serial())
 	mem, ok := ob.(*TargetMemory)
 	if ok {

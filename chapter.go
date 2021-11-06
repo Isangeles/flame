@@ -27,12 +27,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/area"
 	"github.com/isangeles/flame/character"
-	"github.com/isangeles/flame/object"
-	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/object"
+	"github.com/isangeles/flame/serial"
 )
 
 // Chapter struct represents module chapter.
@@ -159,7 +159,7 @@ func (c *Chapter) AreaObject(id, serial string) *object.Object {
 
 // Object returns game object with specified ID and serial
 // or nil if no such object was found.
-func (c *Chapter) Object(id, serial string) objects.Object {
+func (c *Chapter) Object(id, serial string) serial.Serialer {
 	char := c.Character(id, serial)
 	if char != nil {
 		return char

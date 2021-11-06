@@ -28,8 +28,8 @@ import (
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/rng"
+	"github.com/isangeles/flame/serial"
 )
 
 // Struct for container with items.
@@ -42,7 +42,7 @@ type Inventory struct {
 
 // Interface for objects with inventory.
 type Container interface {
-	objects.Object
+	serial.Serialer
 	Inventory() *Inventory
 }
 
@@ -234,8 +234,8 @@ func (i *Inventory) Data() res.InventoryData {
 	for _, it := range i.Items() {
 		// Build item data.
 		invItemData := res.InventoryItemData{
-			ID:         it.ID(),
-			Serial:     it.Serial(),
+			ID:     it.ID(),
+			Serial: it.Serial(),
 		}
 		if it := i.TradeItem(it.ID(), it.Serial()); it != nil {
 			invItemData.Trade = true

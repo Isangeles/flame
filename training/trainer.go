@@ -25,13 +25,13 @@ package training
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/req"
+	"github.com/isangeles/flame/serial"
 )
 
 // Interface for object with trainings.
 type Trainer interface {
-	objects.Object
+	serial.Serialer
 	AddTraining(t *TrainerTraining)
 	Trainings() []*TrainerTraining
 }

@@ -26,7 +26,7 @@ package flame
 
 import (
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/serial"
 )
 
 const (
@@ -76,7 +76,7 @@ func (m *Module) Conf() *ModuleConfig {
 
 // Object returns game object with specified ID and serial
 // or nil if no such object was found.
-func (m *Module) Object(id, serial string) objects.Object {
+func (m *Module) Object(id, serial string) serial.Serialer {
 	char := m.Chapter().Character(id, serial)
 	if char != nil {
 		return char
