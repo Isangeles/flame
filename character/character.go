@@ -425,7 +425,7 @@ func (c *Character) Skills() (skills []*skill.Skill) {
 // AddSkill adds specified skill to characters
 // skills.
 func (c *Character) AddSkill(s *skill.Skill) {
-	s.UseAction().SetOwner(c)
+	s.SetOwner(c)
 	c.skills.Store(s.ID(), s)
 }
 
