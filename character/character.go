@@ -61,7 +61,7 @@ type Character struct {
 	posX, posY       float64
 	destX, destY     float64
 	defX, defY       float64
-	cooldown         int64 // millis
+	useCooldown      int64 // millis
 	moveCooldown     int64 // millis
 	respawn          int64
 	areaID           string
@@ -86,9 +86,9 @@ type Character struct {
 }
 
 const (
-	baseExp  = 1000
-	globalCD = 2000 // millis
-	moveCD   = 10   // millis
+	baseExp = 1000
+	useCD   = 2000 // millis
+	moveCD  = 10   // millis
 )
 
 // New creates new character from specified data.
@@ -126,11 +126,8 @@ func (c *Character) Update(delta int64) {
 		c.live = true
 	}
 	// Cooldowns.
-	if c.cooldown > 0 {
-		c.cooldown -= delta
-	}
-	if c.cooldown < 0 {
-		c.cooldown = 0
+	if c.useCooldown > 0 {
+		c.useCooldown -= delta
 	}
 	if c.moveCooldown > 0 {
 		c.moveCooldown -= delta
