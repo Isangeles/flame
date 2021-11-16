@@ -26,6 +26,7 @@ package skill
 
 import (
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/useaction"
 )
@@ -35,6 +36,7 @@ type Skill struct {
 	id             string
 	useAction      *useaction.UseAction
 	passiveEffects []res.EffectData
+	owner          User
 }
 
 // New creates new skill.
@@ -56,6 +58,19 @@ func New(data res.SkillData) *Skill {
 // Update updates skill.
 func (s *Skill) Update(delta int64) {
 	s.UseAction().Update(delta)
+	if s.owner == nil {
+		return
+	}
+passivesAdd:
+	for _, ed := range s.passiveEffects {
+		for _, e := range s.owner.Effects() {
+			if e.ID() == ed.ID {
+				continue passivesAdd
+			}
+		}
+		eff := effect.New(ed)
+		s.owner.TakeEffect(eff)
+	}
 }
 
 // ID returns skill ID.
@@ -71,4 +86,10 @@ func (s *Skill) UseAction() *useaction.UseAction {
 // PassiveEffects returns all passive effects.
 func (s *Skill) PassiveEffects() []res.EffectData {
 	return s.passiveEffects
+}
+
+// SetOwner sets specified skill user as skill owner.
+func (s *Skill) SetOwner(owner User) {
+	s.UseAction().SetOwner(owner)
+	s.owner = owner
 }
