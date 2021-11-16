@@ -28,8 +28,8 @@ package character
 import (
 	"sync"
 
-	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/craft"
+	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/dialog"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/flag"
@@ -62,6 +62,7 @@ type Character struct {
 	destX, destY     float64
 	defX, defY       float64
 	cooldown         int64 // millis
+	moveCooldown     int64 // millis
 	respawn          int64
 	areaID           string
 	inventory        *item.Inventory
@@ -87,6 +88,7 @@ type Character struct {
 const (
 	baseExp  = 1000
 	globalCD = 2000 // millis
+	moveCD   = 10   // millis
 )
 
 // New creates new character from specified data.
@@ -123,15 +125,18 @@ func (c *Character) Update(delta int64) {
 	} else if !c.Live() {
 		c.live = true
 	}
-	// Global cooldown.
+	// Cooldowns.
 	if c.cooldown > 0 {
 		c.cooldown -= delta
 	}
 	if c.cooldown < 0 {
 		c.cooldown = 0
 	}
+	if c.moveCooldown > 0 {
+		c.moveCooldown -= delta
+	}
 	// Move to dest point.
-	if c.Moving() {
+	if c.Moving() && c.moveCooldown <= 0 {
 		c.Interrupt() // interrupt current action
 		if c.posX < c.destX {
 			c.posX += 1
@@ -145,6 +150,7 @@ func (c *Character) Update(delta int64) {
 		if c.posY > c.destY {
 			c.posY -= 1
 		}
+		c.moveCooldown = moveCD
 	}
 	// Check experience value.
 	if c.Experience() >= c.MaxExperience() {
@@ -270,7 +276,7 @@ func (c *Character) SetAttitude(att Attitude) {
 
 // AttitudeFor returns attitude for specified object.
 func (c *Character) AttitudeFor(o serial.Serialer) Attitude {
-	ob, _ := c.memory.Load(o.ID()+o.Serial())
+	ob, _ := c.memory.Load(o.ID() + o.Serial())
 	mem, ok := ob.(*TargetMemory)
 	if ok {
 		return mem.Attitude
