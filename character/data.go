@@ -27,10 +27,10 @@ import (
 	"sync"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/dialog"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/flag"
+	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/skill"
 	"github.com/isangeles/flame/training"
 )
@@ -54,6 +54,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.Crafting().Apply(data.Crafting)
 	c.ChatLog().Apply(data.ChatLog)
 	c.SetAreaID(data.Area)
+	c.moveCooldown = data.MoveCooldown
 	c.casted = data.Casted
 	c.targets = data.Targets
 	c.kills = data.Kills
@@ -170,27 +171,28 @@ func (c *Character) Apply(data res.CharacterData) {
 // Data creates data resource struct for character.
 func (c *Character) Data() res.CharacterData {
 	data := res.CharacterData{
-		ID:         c.ID(),
-		Serial:     c.Serial(),
-		Level:      c.Level(),
-		Sex:        string(c.Gender()),
-		Attitude:   string(c.Attitude()),
-		Alignment:  string(c.Alignment()),
-		Guild:      c.Guild().ID(),
-		HP:         c.Health(),
-		Mana:       c.Mana(),
-		Exp:        c.Experience(),
-		Attributes: c.Attributes().Data(),
-		Inventory:  c.Inventory().Data(),
-		Equipment:  c.Equipment().Data(),
-		QuestLog:   c.Journal().Data(),
-		Crafting:   c.Crafting().Data(),
-		ChatLog:    c.ChatLog().Data(),
-		Casted:     c.casted,
-		Targets:    c.targets,
-		Kills:      c.kills,
-		Restore:    true,
-		Area:       c.AreaID(),
+		ID:           c.ID(),
+		Serial:       c.Serial(),
+		Level:        c.Level(),
+		Sex:          string(c.Gender()),
+		Attitude:     string(c.Attitude()),
+		Alignment:    string(c.Alignment()),
+		Guild:        c.Guild().ID(),
+		HP:           c.Health(),
+		Mana:         c.Mana(),
+		Exp:          c.Experience(),
+		Attributes:   c.Attributes().Data(),
+		Inventory:    c.Inventory().Data(),
+		Equipment:    c.Equipment().Data(),
+		QuestLog:     c.Journal().Data(),
+		Crafting:     c.Crafting().Data(),
+		ChatLog:      c.ChatLog().Data(),
+		Casted:       c.casted,
+		Targets:      c.targets,
+		Kills:        c.kills,
+		Restore:      true,
+		Area:         c.AreaID(),
+		MoveCooldown: c.moveCooldown,
 	}
 	if c.Race() != nil {
 		data.Race = c.Race().ID()

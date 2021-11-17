@@ -46,7 +46,7 @@ func (c *Character) Use(ob useaction.Usable) error {
 		reqs = t.Requirements()
 	}
 	// Check requirements and cooldown.
-	if !c.MeetReqs(reqs...) || c.cooldown > 0 ||
+	if !c.MeetReqs(reqs...) || c.useCooldown > 0 ||
 		ob.UseAction().Cooldown() > 0 || c.Moving() {
 		return fmt.Errorf("cant cast action")
 	}
@@ -108,5 +108,5 @@ func (c *Character) useCasted(ob useaction.Usable) {
 	}
 	ob.UseAction().SetCast(0)
 	ob.UseAction().SetCooldown(ob.UseAction().CooldownMax())
-	c.cooldown = globalCD
+	c.useCooldown = useCD
 }
