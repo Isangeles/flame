@@ -103,18 +103,6 @@ type AttitudeMemoryData struct {
 	Attitude     string `xml:"attitude,attr" json:"attitude"`
 }
 
-// Struct for races data.
-type RacesData struct {
-	XMLName xml.Name   `xml:"races" json:"-"`
-	Races   []RaceData `xml:"race" json:"races"`
-}
-
-// Struct for race data.
-type RaceData struct {
-	ID       string `xml:"id,attr" json:"id"`
-	Playable bool   `xml:"playable,attr" json:"playable"`
-}
-
 // Struct for data of usable object casted by character.
 type CastedObjectData struct {
 	ID    string           `xml:"id,attr" json:"id"`
