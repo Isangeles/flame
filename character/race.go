@@ -31,6 +31,7 @@ import (
 type Race struct {
 	id       string
 	playable bool
+	skills   []res.ObjectSkillData
 }
 
 // NewRace creates new race.
@@ -38,6 +39,7 @@ func NewRace(data res.RaceData) *Race {
 	r := new(Race)
 	r.id = data.ID
 	r.playable = data.Playable
+	r.skills = data.Skills
 	return r
 }
 
@@ -49,4 +51,9 @@ func (r *Race) ID() string {
 // Playable checks if race is playable.
 func (r *Race) Playable() bool {
 	return r.playable
+}
+
+// Skill return race skills.
+func (r *Race) Skills() []res.ObjectSkillData {
+	return r.skills
 }

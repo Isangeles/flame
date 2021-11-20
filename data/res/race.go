@@ -35,6 +35,7 @@ type RacesData struct {
 
 // Struct for race data.
 type RaceData struct {
-	ID       string `xml:"id,attr" json:"id"`
-	Playable bool   `xml:"playable,attr" json:"playable"`
+	ID       string            `xml:"id,attr" json:"id"`
+	Playable bool              `xml:"playable,attr" json:"playable"`
+	Skills   []ObjectSkillData `xml:"skills>skill" json:"skills"`
 }
