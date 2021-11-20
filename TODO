@@ -7,7 +7,6 @@ MAJOR:
 * Documentation for directories: data, savegames, area, areas, area
 * Switch to JSON format for data files
 * Ability to place items on the ground
-* Racial skills for races
 * AOE effects
 * Character visibility effect(for stealth skill, etc.)
 * Currently, the kill requirement is checked against all of the character kill records,

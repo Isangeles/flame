@@ -95,6 +95,22 @@ func (c *Character) Apply(data res.CharacterData) {
 		s.UseAction().SetCooldown(charSkillData.Cooldown)
 		c.AddSkill(s)
 	}
+	// Add racial skills.
+	for _, raceSkillData := range c.Race().Skills() {
+		ob, _ := c.skills.Load(raceSkillData.ID)
+		s, ok := ob.(*skill.Skill)
+		if ok {
+			continue
+		}
+		skillData := res.Skill(raceSkillData.ID)
+		if skillData == nil {
+			log.Err.Printf("Character: %s: Apply: race skill data not found: %v",
+				c.ID(), raceSkillData.ID)
+			continue
+		}
+		s = skill.New(*skillData)
+		c.AddSkill(s)
+	}
 	// Add dialogs.
 	for _, charDialogData := range data.Dialogs {
 		ob, _ := c.dialogs.Load(charDialogData.ID)
