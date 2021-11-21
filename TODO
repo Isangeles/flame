@@ -24,6 +24,7 @@ MINOR:
 * Character: remove currency items in ChargeReq function
 * Apply function for UseAction struct
 * Appearance struct for game character
+* Movement speed modifier
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
