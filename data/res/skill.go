@@ -35,7 +35,13 @@ type SkillsData struct {
 
 // Struct for skill data.
 type SkillData struct {
-	ID             string                `xml:"id,attr" json:"id"`
-	UseAction      UseActionData         `xml:"use" json:"use"`
-	PassiveEffects []UseActionEffectData `xml:"passive>effects>effect" json:"passive-effects"`
+	ID        string           `xml:"id,attr" json:"id"`
+	UseAction UseActionData    `xml:"use" json:"use"`
+	Passive   SkillPassiveData `xml:"passive" json:"passive"`
+}
+
+// Struct for passive skill data.
+type SkillPassiveData struct {
+	Requirements ReqsData              `xml:"reqs" json:"reqs"`
+	Effects      []UseActionEffectData `xml:"effects>effect" json:"passive-effects"`
 }

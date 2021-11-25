@@ -25,6 +25,7 @@ package skill
 
 import (
 	"github.com/isangeles/flame/effect"
+	"github.com/isangeles/flame/req"
 	"github.com/isangeles/flame/useaction"
 )
 
@@ -35,4 +36,5 @@ type User interface {
 	AddSkill(s *Skill)
 	RemoveSkill(s *Skill)
 	Use(u useaction.Usable) error
+	MeetReqs(r ...req.Requirement) bool
 }

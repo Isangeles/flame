@@ -28,6 +28,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/req"
 	"github.com/isangeles/flame/useaction"
 )
 
@@ -35,6 +36,7 @@ import (
 type Skill struct {
 	id             string
 	useAction      *useaction.UseAction
+	passiveReqs    []req.Requirement
 	passiveEffects []res.EffectData
 	owner          User
 }
@@ -44,7 +46,8 @@ func New(data res.SkillData) *Skill {
 	s := new(Skill)
 	s.id = data.ID
 	s.useAction = useaction.New(data.UseAction)
-	for _, ed := range data.PassiveEffects {
+	s.passiveReqs = req.NewRequirements(data.Passive.Requirements)
+	for _, ed := range data.Passive.Effects {
 		data := res.Effect(ed.ID)
 		if data == nil {
 			log.Err.Printf("use action: effect not found: %s", ed.ID)
@@ -59,6 +62,9 @@ func New(data res.SkillData) *Skill {
 func (s *Skill) Update(delta int64) {
 	s.UseAction().Update(delta)
 	if s.owner == nil {
+		return
+	}
+	if !s.owner.MeetReqs(s.passiveReqs...) {
 		return
 	}
 passivesAdd:
@@ -81,6 +87,12 @@ func (s *Skill) ID() string {
 // UseAction returns skill use action.
 func (s *Skill) UseAction() *useaction.UseAction {
 	return s.useAction
+}
+
+// PassiveRequirements returns list of requirements for
+// passive effects.
+func (s *Skill) PassiveRequirements() []req.Requirement {
+	return s.passiveReqs
 }
 
 // PassiveEffects returns all passive effects.
