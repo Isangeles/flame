@@ -25,6 +25,7 @@ MINOR:
 * Apply function for UseAction struct
 * Appearance struct for game character
 * Movement speed modifier
+* Health value in percentage for health requirement
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
