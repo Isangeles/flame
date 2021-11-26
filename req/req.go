@@ -76,6 +76,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		qreq := NewQuest(d)
 		reqs = append(reqs, qreq)
 	}
+	for _, d := range data.HealthReqs {
+		hreq := NewHealth(d)
+		reqs = append(reqs, hreq)
+	}
 	return
 }
 
@@ -107,6 +111,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Quest:
 			d := r.Data()
 			data.QuestReqs = append(data.QuestReqs, d)
+		case *Health:
+			d := r.Data()
+			data.HealthReqs = append(data.HealthReqs, d)
 		}
 	}
 	return
