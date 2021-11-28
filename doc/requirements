@@ -1,0 +1,15 @@
+.TH requirements
+.SH DESCRIPTION
+Requirements are used to specify requirements needed for some action.
+.br
+Requirements can be used in various data objects as dialog answers, skills, quests, items to equip/use, trainings.
+.br
+List requirement directory to see all available requirements.
+.br
+Requirements can be combined in the requirements block.
+.SH XML EXAMPLE
+.nf
+<reqs>
+	<item-req id="imToughWolfMeat1" amount="3"/>
+	<flag-req id="flagTest1"/>
+</reqs>

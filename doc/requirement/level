@@ -1,0 +1,12 @@
+.TH level
+.SH NAME
+level-req
+.SH DESCRIPTION
+The level requirement specifies the required minimal experience level of the character.
+.SH XML EXAMPLE
+.nf
+<reqs>
+	<level-req min="10"/>
+</reqs>
+.SH SEE ALSO
+requirements
