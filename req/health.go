@@ -29,19 +29,29 @@ import (
 
 // Struct for health requirement.
 type Health struct {
-	full bool
-	meet bool
+	percent int
+	less    bool
+	meet    bool
 }
 
 // NewHealth creates new health requirement.
 func NewHealth(data res.HealthReqData) *Health {
-	hr := Health{full: data.Full}
+	hr := Health{
+		percent: data.Percent,
+		less:    data.Less,
+	}
 	return &hr
 }
 
-// Full checks if maximal amount of health is required.
-func (hr *Health) Full() bool {
-	return hr.full
+// Percent retuns required health percentage value.
+func (hr *Health) Percent() int {
+	return hr.percent
+}
+
+// Less checks if actual health percentage should be
+// less then requirement health value.
+func (hr *Health) Less() bool {
+	return hr.less
 }
 
 // Meet checks if requirement is set as met.
@@ -56,6 +66,9 @@ func (hr *Health) SetMeet(meet bool) {
 
 // Data returns data resource for requirement.
 func (hr *Health) Data() res.HealthReqData {
-	data := res.HealthReqData{Full: hr.full}
+	data := res.HealthReqData{
+		Percent: hr.percent,
+		Less:    hr.less,
+	}
 	return data
 }
