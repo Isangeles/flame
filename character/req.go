@@ -106,6 +106,12 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 			}
 		}
 		return false
+	case *req.Health:
+		hp := (c.Health() * 100) / c.MaxHealth()
+		if r.Less() {
+			return hp < r.Percent()
+		}
+		return hp >= r.Percent()
 	default:
 		return true
 	}
