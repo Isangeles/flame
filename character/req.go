@@ -112,6 +112,8 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 			return hp < r.Percent()
 		}
 		return hp >= r.Percent()
+	case *req.Combat:
+		return c.Fighting() == r.Combat()
 	default:
 		return true
 	}
