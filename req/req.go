@@ -84,6 +84,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		mreq := NewMana(d)
 		reqs = append(reqs, mreq)
 	}
+	for _, d := range data.CombatReqs {
+		creq := NewCombat(d)
+		reqs = append(reqs, creq)
+	}
 	return
 }
 
@@ -121,6 +125,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Mana:
 			d := r.Data()
 			data.ManaReqs = append(data.ManaReqs, d)
+		case *Combat:
+			d := r.Data()
+			data.CombatReqs = append(data.CombatReqs, d)
 		}
 	}
 	return
