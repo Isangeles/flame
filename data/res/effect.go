@@ -47,6 +47,7 @@ type EffectData struct {
 type ModifiersData struct {
 	XMLName        xml.Name            `xml:"modifiers" json:"-"`
 	HealthMods     []HealthModData     `xml:"health-mod" json:"health-mods"`
+	ManaMods       []ManaModData       `xml:"mana-mod" json:"mana-mods"`
 	FlagMods       []FlagModData       `xml:"flag-mod" json:"flag-mods"`
 	QuestMods      []QuestModData      `xml:"quest-mod" json:"quest-mods"`
 	AreaMods       []AreaModData       `xml:"area-mod" json:"area-mods"`
@@ -57,9 +58,14 @@ type ModifiersData struct {
 	MemoryMods     []MemoryModData     `xml:"memory-mod" json:"memory-mods"`
 }
 
-// Struct for health modifier
-// data.
+// Struct for health modifier data.
 type HealthModData struct {
+	Min int `xml:"min,attr" json:"min"`
+	Max int `xml:"max,attr" json:"max"`
+}
+
+// Struct for mana modifier data.
+type ManaModData struct {
 	Min int `xml:"min,attr" json:"min"`
 	Max int `xml:"max,attr" json:"max"`
 }

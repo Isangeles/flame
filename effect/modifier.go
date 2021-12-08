@@ -28,13 +28,17 @@ import (
 )
 
 // Interface for object modifiers.
-type Modifier interface {}
+type Modifier interface{}
 
 // NewModifiers creatas modifiers for specified data.
 func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 	for _, md := range data.HealthMods {
 		hpMod := NewHealthMod(md)
 		mods = append(mods, hpMod)
+	}
+	for _, md := range data.ManaMods {
+		manaMod := NewManaMod(md)
+		mods = append(mods, manaMod)
 	}
 	for _, md := range data.FlagMods {
 		flagMod := NewFlagMod(md)
@@ -77,6 +81,8 @@ func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
 		switch m := m.(type) {
 		case *HealthMod:
 			data.HealthMods = append(data.HealthMods, m.Data())
+		case *ManaMod:
+			data.ManaMods = append(data.ManaMods, m.Data())
 		case *FlagMod:
 			data.FlagMods = append(data.FlagMods, m.Data())
 		case *QuestMod:

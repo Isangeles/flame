@@ -67,6 +67,9 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 			kill := res.KillData{c.ID(), c.Serial(), 100 * c.Level()}
 			s.AddKill(kill)
 		}
+	case *effect.ManaMod:
+		val := m.RandomValue()
+		c.SetMana(c.Mana() + val)
 	case *effect.QuestMod:
 		data := res.Quest(m.QuestID())
 		if data == nil {
