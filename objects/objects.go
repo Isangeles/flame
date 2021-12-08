@@ -71,7 +71,6 @@ type Experiencer interface {
 type Magician interface {
 	Killable
 	SetMana(v int)
-	SetMaxMana(v int)
 	Mana() int
 	MaxMana() int
 }
