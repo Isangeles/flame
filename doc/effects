@@ -1,0 +1,29 @@
+.TH effects
+.SH NAME
+effect
+.SH DESCRIPTION
+Effects are set of modifiers that affects object for specified amount of time.
+.br
+Effects can be used in other game objects like skills, items, dialogs.
+.SH PARAMETERS
+.P
+* id
+.br
+Unique ID for the effect.
+.P
+* duration
+.br
+Amount of time for the effect to be active, in milliseconds.
+.SH XML EXAMPLE
+.nf
+<effects>
+	<effect id="effectBurn1"
+		duration="1000">
+		<modifiers>
+			<health-mod min="-1"
+				    max="-2"/>
+		</modifiers>
+	</effect>
+</effect>
+.SH SEE ALSO
+modifiers

@@ -1,0 +1,12 @@
+.TH modifiers
+.SH DESCRIPTION
+Modifiers can be used to modify 'targetable' game objects in various ways.
+.SH XML EXAMPLE
+.nf
+<modifiers>
+	<health-mod min="-1"
+		    max="-2"/>
+	<flag-mod id="flagTest1"/>
+</modifiers>
+.SH SEE ALSO
+effects
