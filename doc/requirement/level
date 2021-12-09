@@ -3,6 +3,11 @@
 level-req
 .SH DESCRIPTION
 The level requirement specifies the required minimal experience level of the character.
+.SH PARAMETERS
+.P
+* min
+.br
+Minimal required value of the character level.
 .SH XML EXAMPLE
 .nf
 <reqs>
