@@ -1,0 +1,17 @@
+.TH combat
+.SH NAME
+combat-req
+.SH DESCRIPTION
+The combat requirement specifies if the object should be engaged in combat or not.
+.SH PARAMETERS
+.P
+* combat
+.br
+Specifies specifies whether object need to be in combat("true") or not("false").
+.SH XML EXAMPLE
+.nf
+<reqs>
+	<combat-req combat="true"/>
+</reqs>
+.SH SEE ALSO
+requirements
