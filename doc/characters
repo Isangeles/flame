@@ -1,0 +1,54 @@
+.TH characters
+.SH DESCRIPTION
+Characters are game objects that can move around the area.
+.br
+Characters can have inventory, skills, trainings, effects, dialogs, quests.
+.SH PARAMETERS
+.P
+* id
+.br
+Unique ID for the character.
+.P
+* level
+.br
+Character level of experience.
+.P
+* gender
+.br
+Character gender ID.
+.P
+* race
+.br
+Character race ID.
+.P
+* attitude
+.br
+Character attitude ID.
+.P
+* alignment
+.br
+Character aligment ID.
+.SH XML EXAMPLE
+.nf
+  <character id="charTest1"
+	level="18"
+	gender="genderMale"
+	race="raceHuman"
+	attitude="attFriendly"
+	alignment="aliLawfulGood">
+    <attributes strenght="1"
+		constitution="1"
+		dexterity="1"
+		inteligence="1"
+		wisdom="1"/>
+    <inventory>
+      <item id="iwIronSword"
+	    loot="true"/>
+      <item id="itemCopperCoin1"
+	    amount="10"
+	    loot="true"/>
+    </inventory>
+    <dialogs>
+      <dialog id="diaTest1"/>
+    </dialogs>
+  </character>
