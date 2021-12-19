@@ -36,12 +36,12 @@ import (
 // Main function.
 func main() {
 	// Import game module from file system.
-	modData, err := data.ImportModule("data/modules/test")
+	modData, err := data.ImportModuleDir("data/modules/test")
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
 	mod := flame.NewModule(modData)
-	// Create PC..
+	// Create PC.
 	pcData := res.CharacterData{
 		ID:        "pc",
 		Level:     1,

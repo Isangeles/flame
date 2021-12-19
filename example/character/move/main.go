@@ -37,7 +37,7 @@ import (
 // Main function.
 func main() {
 	// Import game module from file system.
-	modData, err := data.ImportModule("data/modules/test")
+	modData, err := data.ImportModuleDir("data/modules/test")
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
@@ -73,6 +73,7 @@ func update(mod *flame.Module) {
 		mod.Update(delta)
 		// Update time.
 		lastUpdate = time.Now()
+		time.Sleep(time.Duration(16) * time.Millisecond)
 	}
 }
 

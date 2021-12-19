@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <characters>
- <char id="char"
+ <character id="char"
         gender="genderMale"
         race="raceHuman"
         attitude="attHostile"
@@ -12,5 +12,5 @@
                 dexterity="3"
                 intelligence="1"
                 wisdom="0"/>
-  </char>
+  </character>
 </characters>
