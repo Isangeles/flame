@@ -102,6 +102,7 @@ func New(data res.CharacterData) *Character {
 		dialogs:    new(sync.Map),
 		flags:      new(sync.Map),
 		chatLog:    objects.NewLog(),
+		race:       NewRace(res.RaceData{}),
 	}
 	c.equipment = newEquipment(&c)
 	c.journal = quest.NewJournal(&c)
