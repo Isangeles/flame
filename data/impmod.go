@@ -26,7 +26,7 @@ package data
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -49,7 +49,7 @@ func ImportModule(path string) (res.ModuleData, error) {
 		return data, fmt.Errorf("unable to open file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return data, fmt.Errorf("unable to read file: %v", err)
 	}

@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -47,7 +47,7 @@ func ImportRaces(path string) ([]res.RaceData, error) {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -62,7 +62,7 @@ func ImportRaces(path string) ([]res.RaceData, error) {
 // ImportRacesDir imports all races from data files from
 // directory with specified path.
 func ImportRacesDir(path string) ([]res.RaceData, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}

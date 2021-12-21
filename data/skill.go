@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +48,7 @@ func ImportSkills(path string) ([]res.SkillData, error) {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -63,7 +63,7 @@ func ImportSkills(path string) ([]res.SkillData, error) {
 // ImportSkillsDir imports all skills from files in
 // specified directory.
 func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}

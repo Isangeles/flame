@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -50,7 +50,7 @@ func ImportArea(path string) (res.AreaData, error) {
 	}
 	defer file.Close()
 	// Unmarshal area file.
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return res.AreaData{}, fmt.Errorf("unable to read area file: %v", err)
 	}
@@ -64,7 +64,7 @@ func ImportArea(path string) (res.AreaData, error) {
 
 // ImportAreaDir imports all areas from directory with specified path.
 func ImportAreasDir(path string) ([]res.AreaData, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}

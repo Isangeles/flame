@@ -26,7 +26,6 @@ package data
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -58,7 +57,7 @@ func ImportLang(path string) ([]res.TranslationData, error) {
 // ImportLangDir imports all translation data from lang
 // files in directory with specified path.
 func ImportLangDir(path string) ([]res.TranslationData, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
@@ -82,7 +81,7 @@ func ImportLangDir(path string) ([]res.TranslationData, error) {
 // ImportLangDirs imports all translation data from child directories
 // of the directory with a specified path.
 func ImportLangDirs(path string) ([]res.TranslationBaseData, error) {
-	langDirs, err := ioutil.ReadDir(path)
+	langDirs, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("Unable to read lang directory: %v", err)
 	}

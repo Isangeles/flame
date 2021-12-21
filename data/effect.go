@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +48,7 @@ func ImportEffects(path string) ([]res.EffectData, error) {
 		return nil, fmt.Errorf("unable to open effects data file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -63,7 +63,7 @@ func ImportEffects(path string) ([]res.EffectData, error) {
 // ImportEffectsDir imports all effects from files in
 // specified directory.
 func ImportEffectsDir(dirPath string) ([]res.EffectData, error) {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}

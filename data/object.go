@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +48,7 @@ func ImportObjects(path string) ([]res.ObjectData, error) {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -63,7 +63,7 @@ func ImportObjects(path string) ([]res.ObjectData, error) {
 // ImportObjectsDataDir import all area objects data from
 // files in directory with specified path.
 func ImportObjectsDir(path string) ([]res.ObjectData, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}

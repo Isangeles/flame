@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -49,7 +49,7 @@ func ImportArmors(path string) ([]res.ArmorData, error) {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -63,7 +63,7 @@ func ImportArmors(path string) ([]res.ArmorData, error) {
 
 // ImportArmorsDir imports all armors data from files
 func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
@@ -92,7 +92,7 @@ func ImportWeapons(path string) ([]res.WeaponData, error) {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -107,7 +107,7 @@ func ImportWeapons(path string) ([]res.WeaponData, error) {
 // ImportWeaponsDir imports all weapons from files
 // in specified directory.
 func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
@@ -136,7 +136,7 @@ func ImportMiscItems(path string) ([]res.MiscItemData, error) {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
 	defer file.Close()
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -151,7 +151,7 @@ func ImportMiscItems(path string) ([]res.MiscItemData, error) {
 // ImportMiscItemsDir imports all miscellaneous items from files
 // in specified directory.
 func ImportMiscItemsDir(dirPath string) ([]res.MiscItemData, error) {
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}

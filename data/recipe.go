@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -47,7 +47,7 @@ func ImportRecipes(path string) ([]res.RecipeData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to open data file: %v", err)
 	}
-	buf, err := ioutil.ReadAll(file)
+	buf, err := io.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -63,7 +63,7 @@ func ImportRecipes(path string) ([]res.RecipeData, error) {
 // ImportRecipesDir imports all recipes from base files in
 // directory with specified path.
 func ImportRecipesDir(path string) ([]res.RecipeData, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}

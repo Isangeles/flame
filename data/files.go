@@ -1,7 +1,7 @@
 /*
  * files.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,14 @@ package data
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"regexp"
 )
 
 // DirFilesNames returns names of all files matching specified
 // file name pattern in directory with specified path.
 func DirFilesNames(path, pattern string) ([]string, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("fail to read dir: %v", err)
 	}

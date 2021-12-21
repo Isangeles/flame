@@ -1,7 +1,7 @@
 /*
  * char.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +48,7 @@ func ImportCharacters(path string) ([]res.CharacterData, error) {
 		return nil, fmt.Errorf("unable to open char base file: %v", err)
 	}
 	defer baseFile.Close()
-	buf, err := ioutil.ReadAll(baseFile)
+	buf, err := io.ReadAll(baseFile)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
@@ -63,7 +63,7 @@ func ImportCharacters(path string) ([]res.CharacterData, error) {
 // ImportCharactersDir imports all characters data from
 // files in directory with specified path.
 func ImportCharactersDir(path string) ([]res.CharacterData, error) {
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
