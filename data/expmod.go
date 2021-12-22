@@ -184,7 +184,7 @@ func exportChapterDir(path string, data res.ChapterData) error {
 	// Areas.
 	areasPath := filepath.Join(path, "areas")
 	for _, a := range data.Areas {
-		areaPath := filepath.Join(areasPath, a.ID)
+		areaPath := filepath.Join(areasPath, a.ID, "main")
 		err = ExportArea(areaPath, a)
 		if err != nil {
 			return fmt.Errorf("unable to export area: %s: %v", a.ID, err)
