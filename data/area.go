@@ -72,7 +72,8 @@ func ImportAreasDir(path string) ([]res.AreaData, error) {
 		areaPath := filepath.Join(path, areaDir.Name())
 		areaFiles, err := os.ReadDir(areaPath)
 		if err != nil {
-			log.Err.Printf("data: areas import: %s: unable to read area dir: %v", err)
+			log.Err.Printf("data: areas import: %s: unable to read area dir: %v",
+				areaPath, err)
 		}
 		for _, areaFile := range areaFiles {
 			if !strings.HasPrefix(areaFile.Name(), "main"+AreaFileExt) {
@@ -91,10 +92,11 @@ func ImportAreasDir(path string) ([]res.AreaData, error) {
 	return areas, nil
 }
 
-// ExportArea exports area to a new directory under specified
+// ExportArea exports area to a new file with specified
 // path.
 func ExportArea(path string, data res.AreaData) error {
-	err := os.MkdirAll(path, 0755)
+	dirPath := filepath.Dir(path)
+	err := os.MkdirAll(dirPath, 0755)
 	if err != nil {
 		return fmt.Errorf("unable to create area dir: %v", err)
 	}
@@ -102,8 +104,7 @@ func ExportArea(path string, data res.AreaData) error {
 	if err != nil {
 		return fmt.Errorf("unable to marshal area data: %v", err)
 	}
-	areaFilePath := filepath.Join(path, "main"+AreaFileExt)
-	areaFile, err := os.Create(areaFilePath)
+	areaFile, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("unable to create area file: %v", err)
 	}
