@@ -30,6 +30,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
@@ -39,12 +40,10 @@ const (
 	AreaFileExt = ".area"
 )
 
-// ImportArea imports area from area dir with specified path.
+// ImportArea imports area from area file with specified path.
 func ImportArea(path string) (res.AreaData, error) {
-	mainFilePath := filepath.FromSlash(fmt.Sprintf("%s/main%s",
-		path, AreaFileExt))
 	// Open area file.
-	file, err := os.Open(mainFilePath)
+	file, err := os.Open(path)
 	if err != nil {
 		return res.AreaData{}, fmt.Errorf("unable to open area file: %v", err)
 	}
@@ -69,15 +68,25 @@ func ImportAreasDir(path string) ([]res.AreaData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	areas := make([]res.AreaData, 0)
-	for _, file := range files {
-		areaPath := filepath.FromSlash(path + "/" + file.Name())
-		area, err := ImportArea(areaPath)
+	for _, areaDir := range files {
+		areaPath := filepath.Join(path, areaDir.Name())
+		areaFiles, err := os.ReadDir(areaPath)
 		if err != nil {
-			log.Err.Printf("data: areas import: %s: unable to import area: %v",
-				areaPath, err)
-			continue
+			log.Err.Printf("data: areas import: %s: unable to read area dir: %v", err)
 		}
-		areas = append(areas, area)
+		for _, areaFile := range areaFiles {
+			if !strings.HasPrefix(areaFile.Name(), "main"+AreaFileExt) {
+				continue
+			}
+			areaPath := filepath.Join(areaPath, areaFile.Name())
+			area, err := ImportArea(areaPath)
+			if err != nil {
+				log.Err.Printf("data: areas import: %s: unable to import area: %v",
+					areaPath, err)
+				continue
+			}
+			areas = append(areas, area)
+		}
 	}
 	return areas, nil
 }
