@@ -32,52 +32,7 @@ import (
 )
 
 // Test for exporting module to the single file.
-func TestExportModuleFile(t *testing.T) {
-	mod := flame.NewModule()
-	modData := res.ModuleData{
-		Config:  make(map[string][]string),
-		Chapter: res.ChapterData{Config: make(map[string][]string)},
-	}
-	modData.Config["id"] = []string{"test"}
-	modData.Config["chapter"] = []string{"ch1"}
-	modData.Chapter.Config["id"] = []string{"ch1"}
-	modData.Chapter.Config["start-area"] = []string{"a1"}
-	mod.Apply(modData)
-	area := area.New()
-	areaData := res.AreaData{
-		ID: "a1",
-	}
-	charData := res.CharacterData{
-		ID:        "char1",
-		AI:        true,
-		Level:     2,
-		Sex:       "genderMale",
-		Race:      "raceHuman",
-		Attitude:  "attFriendly",
-		Guild:     "guildID",
-		Alignment: "aliTrueNeutral",
-	}
-	charData.Attributes = res.AttributesData{
-		Str:       2,
-		Con:       3,
-		Dex:       4,
-		Int:       5,
-		Wis:       6,
-	}
-	res.Characters = append(res.Characters, charData)
-	areaCharData := res.AreaCharData{ID: charData.ID}
-	areaData.Characters = append(areaData.Characters, areaCharData)
-	area.Apply(areaData)
-	mod.Chapter().AddAreas(area)
-	err := ExportModuleFile("testexp", mod.Data())
-	if err != nil {
-		t.Errorf("Unable to export module file: %v", err)
-	}
-}
-
-// Test for exporting module.
 func TestExportModule(t *testing.T) {
-	mod := flame.NewModule()
 	modData := res.ModuleData{
 		Config:  make(map[string][]string),
 		Chapter: res.ChapterData{Config: make(map[string][]string)},
@@ -86,14 +41,13 @@ func TestExportModule(t *testing.T) {
 	modData.Config["chapter"] = []string{"ch1"}
 	modData.Chapter.Config["id"] = []string{"ch1"}
 	modData.Chapter.Config["start-area"] = []string{"a1"}
-	mod.Apply(modData)
+	mod := flame.NewModule(modData)
 	area := area.New()
 	areaData := res.AreaData{
 		ID: "a1",
 	}
 	charData := res.CharacterData{
 		ID:        "char1",
-		AI:        true,
 		Level:     2,
 		Sex:       "genderMale",
 		Race:      "raceHuman",
@@ -114,6 +68,48 @@ func TestExportModule(t *testing.T) {
 	area.Apply(areaData)
 	mod.Chapter().AddAreas(area)
 	err := ExportModule("testexp", mod.Data())
+	if err != nil {
+		t.Errorf("Unable to export module file: %v", err)
+	}
+}
+
+// Test for exporting module into the directory.
+func TestExportModuleDir(t *testing.T) {
+	modData := res.ModuleData{
+		Config:  make(map[string][]string),
+		Chapter: res.ChapterData{Config: make(map[string][]string)},
+	}
+	modData.Config["id"] = []string{"test"}
+	modData.Config["chapter"] = []string{"ch1"}
+	modData.Chapter.Config["id"] = []string{"ch1"}
+	modData.Chapter.Config["start-area"] = []string{"a1"}
+	mod := flame.NewModule(modData)
+	area := area.New()
+	areaData := res.AreaData{
+		ID: "a1",
+	}
+	charData := res.CharacterData{
+		ID:        "char1",
+		Level:     2,
+		Sex:       "genderMale",
+		Race:      "raceHuman",
+		Attitude:  "attFriendly",
+		Guild:     "guildID",
+		Alignment: "aliTrueNeutral",
+	}
+	charData.Attributes = res.AttributesData{
+		Str:       2,
+		Con:       3,
+		Dex:       4,
+		Int:       5,
+		Wis:       6,
+	}
+	res.Characters = append(res.Characters, charData)
+	areaCharData := res.AreaCharData{ID: charData.ID}
+	areaData.Characters = append(areaData.Characters, areaCharData)
+	area.Apply(areaData)
+	mod.Chapter().AddAreas(area)
+	err := ExportModuleDir("testexp", mod.Data())
 	if err != nil {
 		t.Errorf("Unable to export module: %v", err)
 	}
