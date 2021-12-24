@@ -69,17 +69,20 @@ func ImportAreasDir(path string) ([]res.AreaData, error) {
 	}
 	areas := make([]res.AreaData, 0)
 	for _, areaDir := range files {
-		areaPath := filepath.Join(path, areaDir.Name())
-		areaFiles, err := os.ReadDir(areaPath)
+		if !areaDir.IsDir() {
+			continue
+		}
+		areaDirPath := filepath.Join(path, areaDir.Name())
+		areaFiles, err := os.ReadDir(areaDirPath)
 		if err != nil {
 			log.Err.Printf("data: areas import: %s: unable to read area dir: %v",
-				areaPath, err)
+				areaDirPath, err)
 		}
 		for _, areaFile := range areaFiles {
 			if !strings.HasPrefix(areaFile.Name(), "main"+AreaFileExt) {
 				continue
 			}
-			areaPath := filepath.Join(areaPath, areaFile.Name())
+			areaPath := filepath.Join(areaDirPath, areaFile.Name())
 			area, err := ImportArea(areaPath)
 			if err != nil {
 				log.Err.Printf("data: areas import: %s: unable to import area: %v",
