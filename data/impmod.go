@@ -100,17 +100,17 @@ func ImportModuleDir(path string) (data res.ModuleData, err error) {
 		log.Err.Printf("Import module: unable to import effects: %v", err)
 	}
 	// Armors.
-	data.Resources.Armors, err = ImportArmorsDir(filepath.Join(path, "items"))
+	data.Resources.Armors, err = ImportArmorsDir(filepath.Join(path, "items/armors"))
 	if err != nil {
 		log.Err.Printf("Import module: unable to import armors: %v", err)
 	}
 	// Weapons.
-	data.Resources.Weapons, err = ImportWeaponsDir(filepath.Join(path, "items"))
+	data.Resources.Weapons, err = ImportWeaponsDir(filepath.Join(path, "items/weapons"))
 	if err != nil {
 		log.Err.Printf("Import module: unable to import weapons: %v", err)
 	}
 	// Miscs.
-	data.Resources.Miscs, err = ImportMiscItemsDir(filepath.Join(path, "items"))
+	data.Resources.Miscs, err = ImportMiscItemsDir(filepath.Join(path, "items/misc"))
 	if err != nil {
 		log.Err.Printf("Import module: unable to import misc items: %v", err)
 	}

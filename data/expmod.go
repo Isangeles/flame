@@ -102,18 +102,20 @@ func ExportModuleDir(path string, data res.ModuleData) error {
 		return fmt.Errorf("unable to export effects: %v", err)
 	}
 	// Armors.
-	itemsPath := filepath.Join(path, "items", "main")
-	err = ExportArmors(itemsPath, data.Resources.Armors...)
+	armorsPath := filepath.Join(path, "items/armors/main")
+	err = ExportArmors(armorsPath, data.Resources.Armors...)
 	if err != nil {
 		return fmt.Errorf("unable to export armors: %v", err)
 	}
 	// Weapons.
-	err = ExportWeapons(itemsPath, data.Resources.Weapons...)
+	weaponsPath := filepath.Join(path, "items/weapons/main")
+	err = ExportWeapons(weaponsPath, data.Resources.Weapons...)
 	if err != nil {
 		return fmt.Errorf("unable to export weapons: %v", err)
 	}
 	// Miscs.
-	err = ExportMiscItems(itemsPath, data.Resources.Miscs...)
+	miscPath := filepath.Join(path, "items/misc/main")
+	err = ExportMiscItems(miscPath, data.Resources.Miscs...)
 	if err != nil {
 		return fmt.Errorf("unable to export misc items: %v", err)
 	}
