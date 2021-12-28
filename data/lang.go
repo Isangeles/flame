@@ -87,6 +87,9 @@ func ImportLangDirs(path string) ([]res.TranslationBaseData, error) {
 	}
 	data := make([]res.TranslationBaseData, 0)
 	for _, langDir := range langDirs {
+		if !langDir.IsDir() {
+			continue
+		}
 		langDirPath := filepath.Join(path, langDir.Name())
 		langDirData, err := ImportLangDir(langDirPath)
 		if err != nil {
