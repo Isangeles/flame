@@ -30,16 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	ArmorsFileExt    = ".armors"
-	WeaponsFileExt   = ".weapons"
-	MiscItemsFileExt = ".misc"
 )
 
 // ImportArmors imports all XML armors from file with specified path.
@@ -68,15 +61,15 @@ func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	armors := make([]res.ArmorData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), ArmorsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		baseFilePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		impArmors, err := ImportArmors(baseFilePath)
+		filePath := filepath.FromSlash(dirPath + "/" + file.Name())
+		impArmors, err := ImportArmors(filePath)
 		if err != nil {
 			log.Err.Printf("data armors import: %s: unable to import base: %v",
-				baseFilePath, err)
+				filePath, err)
 			continue
 		}
 		armors = append(armors, impArmors...)
@@ -112,15 +105,15 @@ func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	weapons := make([]res.WeaponData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), WeaponsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		baseFilePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		impWeapons, err := ImportWeapons(baseFilePath)
+		filePath := filepath.FromSlash(dirPath + "/" + file.Name())
+		impWeapons, err := ImportWeapons(filePath)
 		if err != nil {
 			log.Err.Printf("data weapons import: %s: unable to import base: %v",
-				baseFilePath, err)
+				filePath, err)
 			continue
 		}
 		weapons = append(weapons, impWeapons...)
@@ -156,15 +149,15 @@ func ImportMiscItemsDir(dirPath string) ([]res.MiscItemData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	miscs := make([]res.MiscItemData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), MiscItemsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		baseFilePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		impMiscs, err := ImportMiscItems(baseFilePath)
+		filePath := filepath.FromSlash(dirPath + "/" + file.Name())
+		impMiscs, err := ImportMiscItems(filePath)
 		if err != nil {
 			log.Err.Printf("data misc items import: %s: unable to import base: %v",
-				baseFilePath, err)
+				filePath, err)
 			continue
 		}
 		miscs = append(miscs, impMiscs...)
@@ -178,15 +171,12 @@ func ExportArmors(path string, armors ...res.ArmorData) error {
 	for _, a := range armors {
 		data.Armors = append(data.Armors, a)
 	}
-	// Marshal races data.
+	// Marshal armors data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal armors: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, ArmorsFileExt) {
-		path += ArmorsFileExt
-	}
+	// Create armors file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
@@ -210,15 +200,12 @@ func ExportWeapons(path string, weapons ...res.WeaponData) error {
 	for _, w := range weapons {
 		data.Weapons = append(data.Weapons, w)
 	}
-	// Marshal races data.
+	// Marshal weapons data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal weapons: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, WeaponsFileExt) {
-		path += WeaponsFileExt
-	}
+	// Create weapons file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
@@ -242,15 +229,12 @@ func ExportMiscItems(path string, miscs ...res.MiscItemData) error {
 	for _, m := range miscs {
 		data.Miscs = append(data.Miscs, m)
 	}
-	// Marshal races data.
+	// Marshal misc items data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal misc items: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, MiscItemsFileExt) {
-		path += MiscItemsFileExt
-	}
+	// Create misc items file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

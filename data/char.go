@@ -30,14 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	CharsFileExt = ".characters"
 )
 
 // ImportCharacters import characters data from base file
@@ -68,15 +63,15 @@ func ImportCharactersDir(path string) ([]res.CharacterData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	chars := make([]res.CharacterData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), CharsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		basePath := filepath.FromSlash(path + "/" + finfo.Name())
-		impChars, err := ImportCharacters(basePath)
+		filePath := filepath.FromSlash(path + "/" + file.Name())
+		impChars, err := ImportCharacters(filePath)
 		if err != nil {
 			log.Err.Printf("data: import chars dir: %s: unable to parse char file: %v",
-				basePath, err)
+				filePath, err)
 			continue
 		}
 		chars = append(chars, impChars...)
@@ -94,10 +89,6 @@ func ExportCharacters(path string, chars ...res.CharacterData) error {
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal characters: %v", err)
-	}
-	// Create character file.
-	if !strings.HasSuffix(path, CharsFileExt) {
-		path += CharsFileExt
 	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)

@@ -36,10 +36,6 @@ import (
 	"github.com/isangeles/flame/log"
 )
 
-const (
-	AreaFileExt = ".area"
-)
-
 // ImportArea imports area from area file with specified path.
 func ImportArea(path string) (res.AreaData, error) {
 	// Open area file.
@@ -79,7 +75,7 @@ func ImportAreasDir(path string) ([]res.AreaData, error) {
 				areaDirPath, err)
 		}
 		for _, areaFile := range areaFiles {
-			if !strings.HasPrefix(areaFile.Name(), "main"+AreaFileExt) {
+			if !strings.HasPrefix(areaFile.Name(), "main") {
 				continue
 			}
 			areaPath := filepath.Join(areaDirPath, areaFile.Name())

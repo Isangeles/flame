@@ -30,14 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	QuestsFileExt = ".quests"
 )
 
 // ImportQuests imports all auests from base file with
@@ -68,15 +63,15 @@ func ImportQuestsDir(dirPath string) ([]res.QuestData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	quests := make([]res.QuestData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), QuestsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		impQuests, err := ImportQuests(basePath)
+		filePath := filepath.FromSlash(dirPath + "/" + file.Name())
+		impQuests, err := ImportQuests(filePath)
 		if err != nil {
 			log.Err.Printf("data quests import: %s: unable to import base: %v",
-				basePath, err)
+				filePath, err)
 		}
 		for _, q := range impQuests {
 			quests = append(quests, q)
@@ -91,15 +86,12 @@ func ExportQuests(path string, quests ...res.QuestData) error {
 	for _, q := range quests {
 		data.Quests = append(data.Quests, q)
 	}
-	// Marshal races data.
+	// Marshal quests data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal quests: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, QuestsFileExt) {
-		path += QuestsFileExt
-	}
+	// Create quests file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

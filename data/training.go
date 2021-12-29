@@ -30,15 +30,11 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
 
-const (
-	TrainingsFileExt = ".trainings"
-)
 
 // ImportTrainings imports all trainings from data file with
 // specified path.
@@ -68,15 +64,15 @@ func ImportTrainingsDir(path string) ([]res.TrainingData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	trainings := make([]res.TrainingData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), TrainingsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		basePath := filepath.FromSlash(path + "/" + finfo.Name())
-		dd, err := ImportTrainings(basePath)
+		filePath := filepath.FromSlash(path + "/" + file.Name())
+		dd, err := ImportTrainings(filePath)
 		if err != nil {
 			log.Err.Printf("data trainings import: %s: unable to import base: %v",
-				basePath, err)
+				filePath, err)
 		}
 		for _, d := range dd {
 			trainings = append(trainings, d)
@@ -91,15 +87,12 @@ func ExportTrainings(path string, trainings ...res.TrainingData) error {
 	for _, t := range trainings {
 		data.Trainings = append(data.Trainings, t)
 	}
-	// Marshal races data.
+	// Marshal trainings data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal trainings: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, TrainingsFileExt) {
-		path += TrainingsFileExt
-	}
+	// Create trainings file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

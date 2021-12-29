@@ -30,14 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	RacesFileExt = ".races"
 )
 
 // ImportRaces imports all reces from file with specified path.
@@ -67,11 +62,11 @@ func ImportRacesDir(path string) ([]res.RaceData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	races := make([]res.RaceData, 0)
-	for _, f := range files {
-		if !strings.HasSuffix(f.Name(), RacesFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		filePath := filepath.Join(path, f.Name())
+		filePath := filepath.Join(path, file.Name())
 		impRaces, err := ImportRaces(filePath)
 		if err != nil {
 			log.Err.Printf("data: import races dir: %s: unable to import file: %v",
@@ -95,9 +90,6 @@ func ExportRaces(path string, races ...res.RaceData) error {
 		return fmt.Errorf("unable to marshal races: %v", err)
 	}
 	// Create races file.
-	if !strings.HasSuffix(path, RacesFileExt) {
-		path += RacesFileExt
-	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

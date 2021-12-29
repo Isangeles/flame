@@ -30,15 +30,11 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
 
-const (
-	SkillsFileExt = ".skills"
-)
 
 // ImportSkills imports all XML skills data from skills base
 // with specified path.
@@ -68,15 +64,15 @@ func ImportSkillsDir(dirPath string) ([]res.SkillData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	skills := make([]res.SkillData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), SkillsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		impSkills, err := ImportSkills(basePath)
+		filePath := filepath.FromSlash(dirPath + "/" + file.Name())
+		impSkills, err := ImportSkills(filePath)
 		if err != nil {
 			log.Err.Printf("data: skills import: %s: unable to import base: %v",
-				basePath, err)
+				filePath, err)
 			continue
 		}
 		for _, s := range impSkills {
@@ -92,15 +88,12 @@ func ExportSkills(path string, skills ...res.SkillData) error {
 	for _, s := range skills {
 		data.Skills = append(data.Skills, s)
 	}
-	// Marshal races data.
+	// Marshal skills data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal skills: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, SkillsFileExt) {
-		path += SkillsFileExt
-	}
+	// Create skills file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

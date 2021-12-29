@@ -30,14 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	ObjectsFileExt = ".objects"
 )
 
 // ImportObjectsData imports area objects data from base
@@ -65,18 +60,18 @@ func ImportObjects(path string) ([]res.ObjectData, error) {
 func ImportObjectsDir(path string) ([]res.ObjectData, error) {
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("fail to read dir: %v", err)
+		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	objects := make([]res.ObjectData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), ObjectsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		basePath := filepath.FromSlash(path + "/" + finfo.Name())
-		impObjects, err := ImportObjects(basePath)
+		filePath := filepath.FromSlash(path + "/" + file.Name())
+		impObjects, err := ImportObjects(filePath)
 		if err != nil {
 			log.Err.Printf("data: import objects dir: %s: unable to import objects file: %v",
-				basePath, err)
+				filePath, err)
 			continue
 		}
 		objects = append(objects, impObjects...)
@@ -97,9 +92,6 @@ func ExportObjects(path string, objects ...res.ObjectData) error {
 		return fmt.Errorf("unable to marshal objects: %v", err)
 	}
 	// Create objects file.
-	if !strings.HasSuffix(path, ObjectsFileExt) {
-		path += ObjectsFileExt
-	}
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

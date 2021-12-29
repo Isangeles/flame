@@ -28,15 +28,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/data/text"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	LangFileExt = ".lang"
 )
 
 // ImportLang imports all translation data from file with
@@ -62,11 +57,11 @@ func ImportLangDir(path string) ([]res.TranslationData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	data := make([]res.TranslationData, 0)
-	for _, fileInfo := range files {
-		if !strings.HasSuffix(fileInfo.Name(), LangFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		filePath := filepath.FromSlash(path + "/" + fileInfo.Name())
+		filePath := filepath.FromSlash(path + "/" + file.Name())
 		impData, err := ImportLang(filePath)
 		if err != nil {
 			log.Err.Printf("data: import lang dir: %s: unable to import lang file: %v",
@@ -108,9 +103,6 @@ func ImportLangDirs(path string) ([]res.TranslationBaseData, error) {
 // ExportLang exports translation data to a new file with specified path.
 func ExportLang(path string, data ...res.TranslationData) error {
 	txt := text.MarshalLangData(data)
-	if !strings.HasSuffix(path, LangFileExt) {
-		path += LangFileExt
-	}
 	err := os.MkdirAll(filepath.Dir(path), 0755)
 	if err != nil {
 		return fmt.Errorf("unable to create lang file directory: %v", err)

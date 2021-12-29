@@ -30,14 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	DialogsFileExt = ".dialogs"
 )
 
 // ImportDialogs imports all dialogs from data file with
@@ -68,15 +63,12 @@ func ImportDialogsDir(path string) ([]res.DialogData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	dialogs := make([]res.DialogData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), DialogsFileExt) {
-			continue
-		}
-		basePath := filepath.FromSlash(path + "/" + finfo.Name())
-		dd, err := ImportDialogs(basePath)
+	for _, file := range files {
+		filePath := filepath.FromSlash(path + "/" + file.Name())
+		dd, err := ImportDialogs(filePath)
 		if err != nil {
 			log.Err.Printf("data dialogs import: %s: unable to import base: %v",
-				basePath, err)
+				filePath, err)
 		}
 		for _, d := range dd {
 			dialogs = append(dialogs, d)
@@ -91,15 +83,12 @@ func ExportDialogs(path string, dialogs ...res.DialogData) error {
 	for _, d := range dialogs {
 		data.Dialogs = append(data.Dialogs, d)
 	}
-	// Marshal races data.
+	// Marshal dialogs data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal dialogs: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, DialogsFileExt) {
-		path += DialogsFileExt
-	}
+	// Create dialogs data file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

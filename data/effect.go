@@ -30,14 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	EffectsFileExt = ".effects"
 )
 
 // ImportEffects imports all XML effects data from effects base
@@ -68,15 +63,15 @@ func ImportEffectsDir(dirPath string) ([]res.EffectData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	effects := make([]res.EffectData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), EffectsFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		basePath := filepath.FromSlash(dirPath + "/" + finfo.Name())
-		effs, err := ImportEffects(basePath)
+		filePath := filepath.FromSlash(dirPath + "/" + file.Name())
+		effs, err := ImportEffects(filePath)
 		if err != nil {
 			log.Err.Printf("data: effects import: %s: unable to import base: %v",
-				basePath, err)
+				filePath, err)
 			continue
 		}
 		for _, e := range effs {
@@ -92,15 +87,12 @@ func ExportEffects(path string, effects ...res.EffectData) error {
 	for _, e := range effects {
 		data.Effects = append(data.Effects, e)
 	}
-	// Marshal races data.
+	// Marshal effect data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal effects: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, EffectsFileExt) {
-		path += EffectsFileExt
-	}
+	// Create effect file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {

@@ -30,14 +30,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-)
-
-const (
-	RecipesFileExt = ".recipes"
 )
 
 // ImportRecipes imports all recipes from base file with
@@ -68,11 +63,11 @@ func ImportRecipesDir(path string) ([]res.RecipeData, error) {
 		return nil, fmt.Errorf("unable to read dir: %v", err)
 	}
 	recipes := make([]res.RecipeData, 0)
-	for _, finfo := range files {
-		if !strings.HasSuffix(finfo.Name(), RecipesFileExt) {
+	for _, file := range files {
+		if file.IsDir() {
 			continue
 		}
-		basePath := filepath.FromSlash(path + "/" + finfo.Name())
+		basePath := filepath.FromSlash(path + "/" + file.Name())
 		rd, err := ImportRecipes(basePath)
 		if err != nil {
 			log.Err.Printf("data recipes import: %s: unable to import base: %v",
@@ -91,15 +86,12 @@ func ExportRecipes(path string, recipes ...res.RecipeData) error {
 	for _, r := range recipes {
 		data.Recipes = append(data.Recipes, r)
 	}
-	// Marshal races data.
+	// Marshal recipes data.
 	xml, err := xml.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal recipes: %v", err)
 	}
-	// Create races file.
-	if !strings.HasSuffix(path, RecipesFileExt) {
-		path += RecipesFileExt
-	}
+	// Create recipes file.
 	dirPath := filepath.Dir(path)
 	err = os.MkdirAll(dirPath, 0755)
 	if err != nil {
