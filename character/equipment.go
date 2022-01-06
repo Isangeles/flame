@@ -1,7 +1,7 @@
 /*
  * equipment.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -122,7 +122,7 @@ func (eq *Equipment) Apply(data res.EquipmentData) {
 	}
 	// Equip items.
 	for _, itData := range data.Items {
-		it := eq.char.Inventory().Item(itData.ID, itData.Serial)
+		it := inventoryItem(eq.char.Inventory(), itData.ID, itData.Serial)
 		if it == nil {
 			log.Err.Printf("character: %s %s: eq: unable to retrieve item from inventory: %s",
 				eq.char.ID(), eq.char.Serial(), itData.ID)
@@ -202,4 +202,18 @@ func (eq *Equipment) newEquipmentSlot(slotType item.Slot) *EquipmentSlot {
 	}
 	s.id = len(slots)
 	return s
+}
+
+// inventoryItem returns an item with specified ID and serial from
+// the inventory or any item with specified ID if serial is empty.
+func inventoryItem(inv *item.Inventory, id string, serial string) item.Item {
+	if len(serial) > 0 {
+		return inv.Item(id, serial)
+	}
+	for _, it := range inv.Items() {
+		if it.ID() == id {
+			return it
+		}
+	}
+	return nil
 }
