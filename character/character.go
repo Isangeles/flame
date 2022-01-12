@@ -283,6 +283,9 @@ func (c *Character) AttitudeFor(o serial.Serialer) Attitude {
 	if !ok || !obChar.Live() {
 		return Neutral
 	}
+	if obChar.Guild().ID() == c.Guild().ID() {
+		return Friendly
+	}
 	if obChar.Attitude() == Hostile {
 		return Hostile
 	}
