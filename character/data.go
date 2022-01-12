@@ -54,6 +54,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.Crafting().Apply(data.Crafting)
 	c.ChatLog().Apply(data.ChatLog)
 	c.SetAreaID(data.Area)
+	c.SetGuild(NewGuild(data.Guild))
 	c.moveCooldown = data.MoveCooldown
 	c.casted = data.Casted
 	c.targets = data.Targets

@@ -289,6 +289,11 @@ func (c *Character) AttitudeFor(o serial.Serialer) Attitude {
 	return c.Attitude()
 }
 
+// SetGuild sets character guild.
+func (c *Character) SetGuild(guild Guild) {
+	c.guild = guild
+}
+
 // Guild returns character guild.
 func (c *Character) Guild() Guild {
 	return c.guild
