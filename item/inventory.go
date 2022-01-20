@@ -1,7 +1,7 @@
 /*
  * inventory.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,10 +34,11 @@ import (
 
 // Struct for container with items.
 type Inventory struct {
-	items      map[string]Item
-	lootItems  []Item
-	tradeItems []*TradeItem
-	cap        int
+	items         map[string]Item
+	lootItems     []Item
+	tradeItems    []*TradeItem
+	cap           int
+	onItemRemoved func(i Item)
 }
 
 // Interface for objects with inventory.
@@ -113,6 +114,9 @@ func (i *Inventory) AddItem(it Item) error {
 // RemoveItem removes specified item from inventory.
 func (i *Inventory) RemoveItem(it Item) {
 	delete(i.items, it.ID()+it.Serial())
+	if i.onItemRemoved != nil {
+		i.onItemRemoved(it)
+	}
 }
 
 // TradeItems returns all items for trade
@@ -162,6 +166,12 @@ func (i *Inventory) SetCapacity(c int) {
 // capacity.
 func (i *Inventory) Capacity() int {
 	return i.cap
+}
+
+// SetOnItemRemoved sets function to trigger  after
+// removing item from the inventory.
+func (i *Inventory) SetOnItemRemovedFunc(f func(i Item)) {
+	i.onItemRemoved = f
 }
 
 // Apply applies specified data on the inventory.
