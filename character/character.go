@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -107,6 +107,7 @@ func New(data res.CharacterData) *Character {
 	c.equipment = newEquipment(&c)
 	c.journal = quest.NewJournal(&c)
 	c.crafting = craft.NewCrafting(&c)
+	c.Inventory().SetOnItemRemovedFunc(c.removeItem)
 	c.Apply(data)
 	// Register serial.
 	serial.Register(&c)
@@ -710,4 +711,11 @@ func (c *Character) buildEffects(effectsData ...res.EffectData) []*effect.Effect
 		effects = append(effects, e)
 	}
 	return effects
+}
+
+// removeItem removes specific item from usage.
+func (c *Character) removeItem(it item.Item) {
+	if eqIt, ok := it.(item.Equiper); ok {
+		c.Equipment().Unequip(eqIt)
+	}
 }
