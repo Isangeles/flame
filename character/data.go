@@ -272,31 +272,31 @@ func (c *Character) clearOldObjects(data res.CharacterData) {
 			c.RemoveEffect(e)
 		}
 	}
-	for k, s := range c.Skills() {
+	for _, s := range c.Skills() {
 		found := false
 		for _, sd := range data.Skills {
 			found = s.ID() == sd.ID
 		}
 		if !found {
-			c.skills.Delete(k)
+			c.RemoveSkill(s)
 		}
 	}
-	for k, d := range c.Dialogs() {
+	for _, d := range c.Dialogs() {
 		found := false
 		for _, dd := range data.Dialogs {
 			found = d.ID() == dd.ID
 		}
 		if !found {
-			c.dialogs.Delete(k)
+			c.dialogs.Delete(d.ID())
 		}
 	}
-	for k, m := range c.Memory() {
+	for _, m := range c.Memory() {
 		found := false
 		for _, md := range data.Memory {
 			found = m.TargetID == md.ObjectID && m.TargetSerial == md.ObjectSerial
 		}
 		if !found {
-			c.memory.Delete(k)
+			c.memory.Delete(m.TargetID+m.TargetSerial)
 		}
 	}
 }
