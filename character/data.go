@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -135,8 +135,9 @@ func (c *Character) Apply(data res.CharacterData) {
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
-		e := c.effects[charEffectData.ID+charEffectData.Serial]
-		if e != nil {
+		ob, _ := c.effects.Load(charEffectData.ID+charEffectData.Serial)
+		e, ok := ob.(*effect.Effect)
+		if ok {
 			continue
 		}
 		effectData := res.Effect(charEffectData.ID)
@@ -262,13 +263,13 @@ func (c *Character) Data() res.CharacterData {
 // clearOldData clears all effects, skills, dialogs, and memory
 // targets not present in specified data.
 func (c *Character) clearOldObjects(data res.CharacterData) {
-	for k, e := range c.effects {
+	for _, e := range c.Effects() {
 		found := false
 		for _, ed := range data.Effects {
 			found = e.ID() == ed.ID && e.Serial() == ed.Serial
 		}
 		if !found {
-			delete(c.effects, k)
+			c.RemoveEffect(e)
 		}
 	}
 	for k, s := range c.Skills() {

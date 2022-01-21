@@ -71,7 +71,7 @@ type Character struct {
 	crafting         *craft.Crafting
 	targets          []res.SerialObjectData
 	kills            []res.KillData
-	effects          map[string]*effect.Effect
+	effects          *sync.Map
 	skills           *sync.Map
 	memory           *sync.Map
 	dialogs          *sync.Map
@@ -96,7 +96,7 @@ func New(data res.CharacterData) *Character {
 	c := Character{
 		attributes: new(Attributes),
 		inventory:  item.NewInventory(),
-		effects:    make(map[string]*effect.Effect),
+		effects:    new(sync.Map),
 		skills:     new(sync.Map),
 		memory:     new(sync.Map),
 		dialogs:    new(sync.Map),
@@ -164,11 +164,11 @@ func (c *Character) Update(delta int64) {
 		s.Update(delta)
 	}
 	// Effects.
-	for serial, e := range c.effects {
+	for _, e := range c.Effects() {
 		e.Update(delta)
 		// Remove expired effects.
 		if e.Time() <= 0 && !e.Infinite() {
-			delete(c.effects, serial)
+			c.effects.Delete(e.ID()+e.Serial())
 		}
 	}
 	// Recipes.
@@ -403,23 +403,27 @@ func (c *Character) SetSerial(serial string) {
 }
 
 // Effects returns character all effects.
-func (c *Character) Effects() []*effect.Effect {
-	effs := make([]*effect.Effect, 0)
-	for _, e := range c.effects {
-		effs = append(effs, e)
+func (c *Character) Effects() (effects []*effect.Effect) {
+	addEffect := func(k, v interface{}) bool {
+		e, ok := v.(*effect.Effect)
+		if ok {
+			effects = append(effects, e)
+		}
+		return true
 	}
-	return effs
+	c.effects.Range(addEffect)
+	return
 }
 
 // AddEffect add specified effect to character effects.
 func (c *Character) AddEffect(e *effect.Effect) {
 	e.SetTarget(c)
-	c.effects[e.ID()+e.Serial()] = e
+	c.effects.Store(e.ID()+e.Serial(), e)
 }
 
 // RemoveEffect removes effect from character.
 func (c *Character) RemoveEffect(e *effect.Effect) {
-	delete(c.effects, e.ID()+e.Serial())
+	c.effects.Delete(e.ID()+e.Serial())
 }
 
 // Skills return all character skills.
