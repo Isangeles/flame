@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -135,8 +135,9 @@ func (c *Character) Apply(data res.CharacterData) {
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
-		e := c.effects[charEffectData.ID+charEffectData.Serial]
-		if e != nil {
+		ob, _ := c.effects.Load(charEffectData.ID+charEffectData.Serial)
+		e, ok := ob.(*effect.Effect)
+		if ok {
 			continue
 		}
 		effectData := res.Effect(charEffectData.ID)
@@ -262,40 +263,40 @@ func (c *Character) Data() res.CharacterData {
 // clearOldData clears all effects, skills, dialogs, and memory
 // targets not present in specified data.
 func (c *Character) clearOldObjects(data res.CharacterData) {
-	for k, e := range c.effects {
+	for _, e := range c.Effects() {
 		found := false
 		for _, ed := range data.Effects {
 			found = e.ID() == ed.ID && e.Serial() == ed.Serial
 		}
 		if !found {
-			delete(c.effects, k)
+			c.RemoveEffect(e)
 		}
 	}
-	for k, s := range c.Skills() {
+	for _, s := range c.Skills() {
 		found := false
 		for _, sd := range data.Skills {
 			found = s.ID() == sd.ID
 		}
 		if !found {
-			c.skills.Delete(k)
+			c.RemoveSkill(s)
 		}
 	}
-	for k, d := range c.Dialogs() {
+	for _, d := range c.Dialogs() {
 		found := false
 		for _, dd := range data.Dialogs {
 			found = d.ID() == dd.ID
 		}
 		if !found {
-			c.dialogs.Delete(k)
+			c.dialogs.Delete(d.ID())
 		}
 	}
-	for k, m := range c.Memory() {
+	for _, m := range c.Memory() {
 		found := false
 		for _, md := range data.Memory {
 			found = m.TargetID == md.ObjectID && m.TargetSerial == md.ObjectSerial
 		}
 		if !found {
-			c.memory.Delete(k)
+			c.memory.Delete(m.TargetID+m.TargetSerial)
 		}
 	}
 }
