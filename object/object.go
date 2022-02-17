@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
 package object
 
 import (
+	"sync"
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/flag"
@@ -43,7 +45,7 @@ type Object struct {
 	respawn         int64
 	action          *useaction.UseAction
 	inventory       *item.Inventory
-	effects         map[string]*effect.Effect
+	effects         *sync.Map
 	flags           map[string]flag.Flag
 	chatlog         *objects.Log
 	onEffectTaken   func(e *effect.Effect)
@@ -55,7 +57,7 @@ type Object struct {
 func New(data res.ObjectData) *Object {
 	o := Object{
 		inventory: item.NewInventory(),
-		effects:   make(map[string]*effect.Effect),
+		effects:   new(sync.Map),
 		flags:     make(map[string]flag.Flag),
 		chatlog:   objects.NewLog(),
 	}
@@ -69,11 +71,11 @@ func New(data res.ObjectData) *Object {
 // Update updates object.
 func (ob *Object) Update(delta int64) {
 	// Effects.
-	for serial, e := range ob.effects {
+	for _, e := range ob.Effects() {
 		e.Update(delta)
 		// Remove expired effects.
 		if e.Time() <= 0 && !e.Infinite() {
-			delete(ob.effects, serial)
+			ob.effects.Delete(e.ID() + e.Serial())
 		}
 	}
 	// Inventory.
@@ -202,21 +204,25 @@ func (ob *Object) Inventory() *item.Inventory {
 // AddEffects adds specified effect to objects.
 func (ob *Object) AddEffect(e *effect.Effect) {
 	e.SetTarget(ob)
-	ob.effects[e.ID()+e.Serial()] = e
+	ob.effects.Store(e.ID()+e.Serial(), e)
 }
 
 // RemoveEffect removes specified effect from objects.
 func (ob *Object) RemoveEffect(e *effect.Effect) {
-	delete(ob.effects, e.ID()+e.Serial())
+	ob.effects.Delete(e.ID() + e.Serial())
 }
 
 // Effects returns all obejct effects.
-func (ob *Object) Effects() []*effect.Effect {
-	effects := make([]*effect.Effect, 0)
-	for _, e := range ob.effects {
-		effects = append(effects, e)
+func (ob *Object) Effects() (effects []*effect.Effect) {
+	addEffect := func(k, v interface{}) bool {
+		e, ok := v.(*effect.Effect)
+		if ok {
+			effects = append(effects, e)
+		}
+		return true
 	}
-	return effects
+	ob.effects.Range(addEffect)
+	return
 }
 
 // AddFlag adds specified flag.
