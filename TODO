@@ -15,6 +15,7 @@ MAJOR:
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
+* Critical hits
 * Refactor chapter's SetOnAreaAddedFunc to AddOnAreaAddedFunc, i.e. adding event functions,
   not just handling and overriding one function
 * Use sync.Map for: area object flags
