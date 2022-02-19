@@ -18,7 +18,6 @@ MINOR:
 * Critical hits
 * Refactor chapter's SetOnAreaAddedFunc to AddOnAreaAddedFunc, i.e. adding event functions,
   not just handling and overriding one function
-* Use sync.Map for: area object flags
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for data package
 * Use action for armors and weapons
