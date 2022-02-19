@@ -29,7 +29,6 @@ import (
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
-	"github.com/isangeles/flame/flag"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/serial"
@@ -46,7 +45,6 @@ type Object struct {
 	action          *useaction.UseAction
 	inventory       *item.Inventory
 	effects         *sync.Map
-	flags           map[string]flag.Flag
 	chatlog         *objects.Log
 	onEffectTaken   func(e *effect.Effect)
 	onModifierTaken func(m effect.Modifier)
@@ -58,7 +56,6 @@ func New(data res.ObjectData) *Object {
 	o := Object{
 		inventory: item.NewInventory(),
 		effects:   new(sync.Map),
-		flags:     make(map[string]flag.Flag),
 		chatlog:   objects.NewLog(),
 	}
 	o.Apply(data)
@@ -222,19 +219,6 @@ func (ob *Object) Effects() (effects []*effect.Effect) {
 		return true
 	}
 	ob.effects.Range(addEffect)
-	return
-}
-
-// AddFlag adds specified flag.
-func (ob *Object) AddFlag(f flag.Flag) {
-	ob.flags[f.ID()] = f
-}
-
-// Flags returns all object flags.
-func (ob *Object) Flags() (flags []flag.Flag) {
-	for _, f := range ob.flags {
-		flags = append(flags, f)
-	}
 	return
 }
 
