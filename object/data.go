@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ package object
 import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
-	"github.com/isangeles/flame/useaction"
 	"github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/useaction"
 )
 
 // Apply applies specifed data on the object.
@@ -47,13 +47,18 @@ func (o *Object) Apply(data res.ObjectData) {
 	o.clearOldObjects(data)
 	// Add effects.
 	for _, data := range data.Effects {
+		ob, _ := o.effects.Load(data.ID + data.Serial)
+		eff, ok := ob.(*effect.Effect)
+		if ok {
+			continue
+		}
 		effData := res.Effect(data.ID)
 		if effData == nil {
 			log.Err.Printf("Object: %s: Apply: effect data not found: %s",
 				o.ID(), data.ID)
 			continue
 		}
-		eff := effect.New(*effData)
+		eff = effect.New(*effData)
 		eff.SetSerial(data.Serial)
 		eff.SetTime(data.Time)
 		eff.SetSource(data.SourceID, data.SourceSerial)
@@ -87,13 +92,13 @@ func (o *Object) Data() res.ObjectData {
 
 // clearOldObjects clears all effects not present in specified data.
 func (o *Object) clearOldObjects(data res.ObjectData) {
-	for k, e := range o.effects {
+	for _, e := range o.Effects() {
 		found := false
 		for _, ed := range data.Effects {
 			found = e.ID() == ed.ID && e.Serial() == ed.Serial
 		}
 		if !found {
-			delete(o.effects, k)
+			o.RemoveEffect(e)
 		}
 	}
 }
