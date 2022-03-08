@@ -12,6 +12,7 @@ MAJOR:
 * Currently, the kill requirement is checked against all of the character kill records,
   this is a problem while creating a quest that requires to kill something after accepting the
   quest(kill records could already be present and the quest stage will be completed immediately)
+* Add use action to characters and remove object.Object struct, so all area objects can be characters
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
