@@ -58,6 +58,7 @@ type Character struct {
 	guild            Guild
 	attributes       *Attributes
 	resilience       objects.Resilience
+	action           *useaction.UseAction
 	posX, posY       float64
 	destX, destY     float64
 	defX, defY       float64
@@ -168,7 +169,7 @@ func (c *Character) Update(delta int64) {
 		e.Update(delta)
 		// Remove expired effects.
 		if e.Time() <= 0 && !e.Infinite() {
-			c.effects.Delete(e.ID()+e.Serial())
+			c.effects.Delete(e.ID() + e.Serial())
 		}
 	}
 	// Recipes.
@@ -183,6 +184,10 @@ func (c *Character) Update(delta int64) {
 			c.useCasted(ob)
 			c.casted.ID = ""
 		}
+	}
+	// Use action.
+	if c.UseAction() != nil {
+		c.UseAction().Update(delta)
 	}
 }
 
@@ -423,7 +428,7 @@ func (c *Character) AddEffect(e *effect.Effect) {
 
 // RemoveEffect removes effect from character.
 func (c *Character) RemoveEffect(e *effect.Effect) {
-	c.effects.Delete(e.ID()+e.Serial())
+	c.effects.Delete(e.ID() + e.Serial())
 }
 
 // Skills return all character skills.
@@ -475,6 +480,11 @@ func (c *Character) SetTarget(t effect.Target) {
 	}
 	tarData := res.SerialObjectData{t.ID(), t.Serial()}
 	c.targets = []res.SerialObjectData{tarData}
+}
+
+// Action returns character use action.
+func (c *Character) UseAction() *useaction.UseAction {
+	return c.action
 }
 
 // Moving checks whether character is moving.

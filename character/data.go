@@ -33,6 +33,7 @@ import (
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/skill"
 	"github.com/isangeles/flame/training"
+	"github.com/isangeles/flame/useaction"
 )
 
 // Apply applies specified data on the character.
@@ -55,6 +56,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.ChatLog().Apply(data.ChatLog)
 	c.SetAreaID(data.Area)
 	c.SetGuild(NewGuild(data.Guild))
+	c.action = useaction.New(data.Action)
 	c.moveCooldown = data.MoveCooldown
 	c.casted = data.Casted
 	c.targets = data.Targets
@@ -135,7 +137,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
-		ob, _ := c.effects.Load(charEffectData.ID+charEffectData.Serial)
+		ob, _ := c.effects.Load(charEffectData.ID + charEffectData.Serial)
 		e, ok := ob.(*effect.Effect)
 		if ok {
 			continue
@@ -214,6 +216,9 @@ func (c *Character) Data() res.CharacterData {
 	}
 	if c.Race() != nil {
 		data.Race = c.Race().ID()
+	}
+	if c.UseAction() != nil {
+		data.Action = c.UseAction().Data()
 	}
 	data.PosX, data.PosY = c.Position()
 	data.DefX, data.DefY = c.DefaultPosition()
@@ -296,7 +301,7 @@ func (c *Character) clearOldObjects(data res.CharacterData) {
 			found = m.TargetID == md.ObjectID && m.TargetSerial == md.ObjectSerial
 		}
 		if !found {
-			c.memory.Delete(m.TargetID+m.TargetSerial)
+			c.memory.Delete(m.TargetID + m.TargetSerial)
 		}
 	}
 }
