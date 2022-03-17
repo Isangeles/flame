@@ -1,7 +1,7 @@
 /*
  * expmod.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ func ExportModuleDir(path string, data res.ModuleData) error {
 		return fmt.Errorf("unable to create module dir: %v", err)
 	}
 	// Config.
-	confPath := filepath.Join(path, "mod.conf")
+	confPath := filepath.Join(path, ".module")
 	err = exportConfig(confPath, data.Config)
 	if err != nil {
 		return fmt.Errorf("unable to create config file: %v", err)
@@ -154,7 +154,7 @@ func exportChapterDir(path string, data res.ChapterData) error {
 		return fmt.Errorf("unable to create chapter dir: %v", err)
 	}
 	// Config.
-	confPath := filepath.Join(path, "chapter.conf")
+	confPath := filepath.Join(path, ".chapter")
 	err = exportConfig(confPath, data.Config)
 	if err != nil {
 		return fmt.Errorf("unable to create config file: %v", err)
