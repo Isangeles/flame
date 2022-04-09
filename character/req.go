@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,12 +106,12 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 			}
 		}
 		return false
-	case *req.Health:
+	case *req.HealthPercent:
 		hp := (c.Health() * 100) / c.MaxHealth()
 		if r.Less() {
-			return hp < r.Percent()
+			return hp < r.Value()
 		}
-		return hp >= r.Percent()
+		return hp >= r.Value()
 	case *req.Mana:
 		mp := (c.Mana() * 100) / c.MaxMana()
 		if r.Less() {

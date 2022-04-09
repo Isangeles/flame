@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,18 +29,18 @@ import (
 
 // Struct for reqs data.
 type ReqsData struct {
-	XMLName         xml.Name             `xml:"reqs" json:"-"`
-	LevelReqs       []LevelReqData       `xml:"level-req" json:"level-reqs"`
-	GenderReqs      []GenderReqData      `xml:"gender-req" json:"gender-reqs"`
-	FlagReqs        []FlagReqData        `xml:"flag-req" json:"flag-reqs"`
-	ItemReqs        []ItemReqData        `xml:"item-req" json:"item-reqs"`
-	CurrencyReqs    []CurrencyReqData    `xml:"currency-req" json:"currency-req"`
-	TargetRangeReqs []TargetRangeReqData `xml:"target-range-req" json:"target-range-req"`
-	KillReqs        []KillReqData        `xml:"kill-req" json:"kill-req"`
-	QuestReqs       []QuestReqData       `xml:"quest-req" json:"quest-req"`
-	HealthReqs      []HealthReqData      `xml:"health-req" json:"health-req"`
-	ManaReqs        []ManaReqData        `xml:"mana-req" json:"mana-req"`
-	CombatReqs      []CombatReqData      `xml:"combat-req" json:"combat-req"`
+	XMLName           xml.Name               `xml:"reqs" json:"-"`
+	LevelReqs         []LevelReqData         `xml:"level-req" json:"level-reqs"`
+	GenderReqs        []GenderReqData        `xml:"gender-req" json:"gender-reqs"`
+	FlagReqs          []FlagReqData          `xml:"flag-req" json:"flag-reqs"`
+	ItemReqs          []ItemReqData          `xml:"item-req" json:"item-reqs"`
+	CurrencyReqs      []CurrencyReqData      `xml:"currency-req" json:"currency-req"`
+	TargetRangeReqs   []TargetRangeReqData   `xml:"target-range-req" json:"target-range-req"`
+	KillReqs          []KillReqData          `xml:"kill-req" json:"kill-req"`
+	QuestReqs         []QuestReqData         `xml:"quest-req" json:"quest-req"`
+	HealthPercentReqs []HealthPercentReqData `xml:"health-percent-req" json:"health-percent-req"`
+	ManaReqs          []ManaReqData          `xml:"mana-req" json:"mana-req"`
+	CombatReqs        []CombatReqData        `xml:"combat-req" json:"combat-req"`
 }
 
 // Struct for level requirement data.
@@ -90,10 +90,10 @@ type QuestReqData struct {
 	Completed bool   `xml:"completed,attr" json:"completed"`
 }
 
-// Struct for health requirement data.
-type HealthReqData struct {
-	Percent int  `xml:"percent,attr" json:"percent"`
-	Less    bool `xml:"less,attr" json:"less"`
+// Struct for health percent requirement data.
+type HealthPercentReqData struct {
+	Value int  `xml:"value,attr" json:"value"`
+	Less  bool `xml:"less,attr" json:"less"`
 }
 
 // Struct for mana requirement data.

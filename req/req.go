@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,8 +76,8 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		qreq := NewQuest(d)
 		reqs = append(reqs, qreq)
 	}
-	for _, d := range data.HealthReqs {
-		hreq := NewHealth(d)
+	for _, d := range data.HealthPercentReqs {
+		hreq := NewHealthPercent(d)
 		reqs = append(reqs, hreq)
 	}
 	for _, d := range data.ManaReqs {
@@ -119,9 +119,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Quest:
 			d := r.Data()
 			data.QuestReqs = append(data.QuestReqs, d)
-		case *Health:
+		case *HealthPercent:
 			d := r.Data()
-			data.HealthReqs = append(data.HealthReqs, d)
+			data.HealthPercentReqs = append(data.HealthPercentReqs, d)
 		case *Mana:
 			d := r.Data()
 			data.ManaReqs = append(data.ManaReqs, d)

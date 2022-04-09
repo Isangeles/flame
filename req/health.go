@@ -1,7 +1,7 @@
 /*
  * health.go
  *
- * Copyright 2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2021-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,48 +27,48 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-// Struct for health requirement.
-type Health struct {
-	percent int
-	less    bool
-	meet    bool
+// Struct for health percent requirement.
+type HealthPercent struct {
+	value int
+	less  bool
+	meet  bool
 }
 
 // NewHealth creates new health requirement.
-func NewHealth(data res.HealthReqData) *Health {
-	hr := Health{
-		percent: data.Percent,
-		less:    data.Less,
+func NewHealthPercent(data res.HealthPercentReqData) *HealthPercent {
+	hpr := HealthPercent{
+		value: data.Value,
+		less:  data.Less,
 	}
-	return &hr
+	return &hpr
 }
 
 // Percent retuns required health percentage value.
-func (hr *Health) Percent() int {
-	return hr.percent
+func (hpr *HealthPercent) Value() int {
+	return hpr.value
 }
 
 // Less checks if actual health percentage should be
 // less then requirement health value.
-func (hr *Health) Less() bool {
-	return hr.less
+func (hpr *HealthPercent) Less() bool {
+	return hpr.less
 }
 
 // Meet checks if requirement is set as met.
-func (hr *Health) Meet() bool {
-	return hr.meet
+func (hpr *HealthPercent) Meet() bool {
+	return hpr.meet
 }
 
 // SetMeet sets requirements as meet/not meet.
-func (hr *Health) SetMeet(meet bool) {
-	hr.meet = meet
+func (hpr *HealthPercent) SetMeet(meet bool) {
+	hpr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (hr *Health) Data() res.HealthReqData {
-	data := res.HealthReqData{
-		Percent: hr.percent,
-		Less:    hr.less,
+func (hpr *HealthPercent) Data() res.HealthPercentReqData {
+	data := res.HealthPercentReqData{
+		Value: hpr.value,
+		Less:  hpr.less,
 	}
 	return data
 }
