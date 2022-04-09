@@ -1,0 +1,22 @@
+.TH health-percent
+.SH NAME
+health-percent-req
+.SH DESCRIPTION
+The health percent requirement specifies the required percentage for the health of the object.
+.SH PARAMETERS
+.P
+* value
+.br
+Specifies the percentage value of required health points.
+.P
+* less
+.br
+Specifies wheter actual health percentage should be less(true) or more(false) then percentage in the requirement.
+.SH XML EXAMPLE
+.nf
+<reqs>
+	<health-percent-req value="10"
+		            less="false"/>
+</reqs>
+.SH SEE ALSO
+requirements
