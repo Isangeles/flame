@@ -1,7 +1,7 @@
 /*
- * mana.go
+ * manapercent.go
  *
- * Copyright 2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2021-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,47 +28,47 @@ import (
 )
 
 // Struct for mana requirement.
-type Mana struct {
-	percent int
-	less    bool
-	meet    bool
+type ManaPercent struct {
+	value int
+	less  bool
+	meet  bool
 }
 
-// NewMana creates new mana requirement.
-func NewMana(data res.ManaReqData) *Mana {
-	mr := Mana{
-		percent: data.Percent,
-		less:    data.Less,
+// NewManaPercent creates new mana percent requirement.
+func NewManaPercent(data res.ManaPercentReqData) *ManaPercent {
+	mpr := ManaPercent{
+		value: data.Value,
+		less:  data.Less,
 	}
-	return &mr
+	return &mpr
 }
 
-// Percent retuns required mana percentage value.
-func (mr *Mana) Percent() int {
-	return mr.percent
+// Value retuns required mana percentage value.
+func (mpr *ManaPercent) Value() int {
+	return mpr.value
 }
 
 // Less checks if actual mana percentage should be
-// less then requirement mana value.
-func (mr *Mana) Less() bool {
-	return mr.less
+// less then requirement mana percent.
+func (mpr *ManaPercent) Less() bool {
+	return mpr.less
 }
 
 // Meet checks if requirement is set as met.
-func (mr *Mana) Meet() bool {
-	return mr.meet
+func (mpr *ManaPercent) Meet() bool {
+	return mpr.meet
 }
 
 // SetMeet sets requirements as meet/not meet.
-func (mr *Mana) SetMeet(meet bool) {
-	mr.meet = meet
+func (mpr *ManaPercent) SetMeet(meet bool) {
+	mpr.meet = meet
 }
 
 // Data returns data resource for requirement.
-func (mr *Mana) Data() res.ManaReqData {
-	data := res.ManaReqData{
-		Percent: mr.percent,
-		Less:    mr.less,
+func (mpr *ManaPercent) Data() res.ManaPercentReqData {
+	data := res.ManaPercentReqData{
+		Value: mpr.value,
+		Less:  mpr.less,
 	}
 	return data
 }

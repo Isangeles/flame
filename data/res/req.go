@@ -39,7 +39,7 @@ type ReqsData struct {
 	KillReqs          []KillReqData          `xml:"kill-req" json:"kill-req"`
 	QuestReqs         []QuestReqData         `xml:"quest-req" json:"quest-req"`
 	HealthPercentReqs []HealthPercentReqData `xml:"health-percent-req" json:"health-percent-req"`
-	ManaReqs          []ManaReqData          `xml:"mana-req" json:"mana-req"`
+	ManaPercentReqs   []ManaPercentReqData   `xml:"mana-percent-req" json:"mana-percent-req"`
 	CombatReqs        []CombatReqData        `xml:"combat-req" json:"combat-req"`
 }
 
@@ -96,10 +96,10 @@ type HealthPercentReqData struct {
 	Less  bool `xml:"less,attr" json:"less"`
 }
 
-// Struct for mana requirement data.
-type ManaReqData struct {
-	Percent int  `xml:"percent,attr" json:"percent"`
-	Less    bool `xml:"less,attr" json"less"`
+// Struct for mana percent requirement data.
+type ManaPercentReqData struct {
+	Value int  `xml:"value,attr" json:"value"`
+	Less  bool `xml:"less,attr" json"less"`
 }
 
 // Struct for combat requirement data.

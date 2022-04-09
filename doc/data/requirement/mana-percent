@@ -1,0 +1,22 @@
+.TH mana-percent
+.SH NAME
+mana-percent-req
+.SH DESCRIPTION
+The mana percent requirement specifies the required percentage for the mana of the object.
+.SH PARAMETERS
+.P
+* value
+.br
+Specifies the percentage value of required mana points.
+.P
+* less
+.br
+Specifies wheter actual mana percentage should be less(true) or more(false) then percentage in the requirement.
+.SH XML EXAMPLE
+.nf
+<reqs>
+	<mana-percent-req value="10"
+		          less="false"/>
+</reqs>
+.SH SEE ALSO
+requirements
