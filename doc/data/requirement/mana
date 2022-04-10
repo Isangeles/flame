@@ -1,0 +1,26 @@
+.TH mana
+.SH NAME
+mana-req
+.SH DESCRIPTION
+The mana requirement specifies the required value for the mana for the object.
+.SH PARAMETERS
+.P
+* value
+.br
+Specifies the required value of  mana points.
+.P
+* less
+.br
+Specifies wheter actual mana value should be less(true) or more(false) then value in the requirement.
+.SH JSON EXAMPLE
+.nf
+{
+    "value":100,
+    "less":true
+}
+.SH XML EXAMPLE
+.nf
+<mana-req value="100"
+	  less="true"/>
+.SH SEE ALSO
+requirements, requirement/mana-percent

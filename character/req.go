@@ -112,6 +112,11 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 			return hp < r.Value()
 		}
 		return hp >= r.Value()
+	case *req.Mana:
+		if r.Less() {
+			return c.Mana() < r.Value()
+		}
+		return c.Mana() >= r.Value()
 	case *req.ManaPercent:
 		mp := (c.Mana() * 100) / c.MaxMana()
 		if r.Less() {
