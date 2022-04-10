@@ -1,0 +1,32 @@
+<reqs>
+  <level-req min="10"
+	     max="20"/>
+  <level-req min="10"
+	     max="20"/>
+  <gender-req type="gender1"/>
+  <gender-req type="gender2"/>
+  <flag-req id="flag1"/>
+  <flag-req id="flag1"/>
+  <item-req id="item1"
+	    amount="1"/>
+  <item-req id="item2"
+	    amount="1"/>
+  <currency-req amount="100"/>
+  <currency-req amount="100"/>
+  <target-range-req min-range="100"/>
+  <target-range-req min-range="100"/>
+  <kill-req id="char1"
+	    amount="1"/>
+  <kill-req id="char2"
+	    amount="1"/>
+  <quest-req id="quest1"/>
+  <quest-req id="quest2"/>
+  <health-percent-req value="100"/>
+  <health-percent-req value="100"/>
+  <mana-req value="100"/>
+  <mana-req value="100"/>
+  <mana-percent-req value="100"/>
+  <mana-percent-req value="100"/>
+  <combat-req combat="true"/>
+  <combat-req combat="true"/>
+</reqs>
