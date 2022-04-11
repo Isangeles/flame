@@ -1,7 +1,7 @@
 /*
  * lang_test.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package data
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/isangeles/flame/data/res"
@@ -39,7 +40,8 @@ func TestExportLang(t *testing.T) {
 		ID:    "item2",
 		Texts: []string{"Item 2", "Item description 2"},
 	}
-	err := ExportLang("testlang", data1, data2)
+	path := filepath.Join(t.TempDir(), "testlang")
+	err := ExportLang(path, data1, data2)
 	if err != nil {
 		t.Errorf("Unable to export translation data: %v", err)
 	}
@@ -59,7 +61,7 @@ func TestExportLangDirs(t *testing.T) {
 		Texts: []string{"水", "两水"},
 	}
 	data2.Translations = append(data1.Translations, trans)
-	err := ExportLangDirs("testlangdir", data1, data2)
+	err := ExportLangDirs(t.TempDir(), data1, data2)
 	if err != nil {
 		t.Errorf("Unable to export translation data: %v", err)
 	}

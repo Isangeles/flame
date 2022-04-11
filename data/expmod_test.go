@@ -1,7 +1,7 @@
 /*
  * expmod_test.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,12 @@
 package data
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/area"
+	"github.com/isangeles/flame/data/res"
 )
 
 // Test for exporting module to the single file.
@@ -56,18 +57,19 @@ func TestExportModule(t *testing.T) {
 		Alignment: "aliTrueNeutral",
 	}
 	charData.Attributes = res.AttributesData{
-		Str:       2,
-		Con:       3,
-		Dex:       4,
-		Int:       5,
-		Wis:       6,
+		Str: 2,
+		Con: 3,
+		Dex: 4,
+		Int: 5,
+		Wis: 6,
 	}
 	res.Characters = append(res.Characters, charData)
 	areaCharData := res.AreaCharData{ID: charData.ID}
 	areaData.Characters = append(areaData.Characters, areaCharData)
 	area.Apply(areaData)
 	mod.Chapter().AddAreas(area)
-	err := ExportModule("testexp", mod.Data())
+	path := filepath.Join(t.TempDir(), "testexp")
+	err := ExportModule(path, mod.Data())
 	if err != nil {
 		t.Errorf("Unable to export module file: %v", err)
 	}
@@ -98,18 +100,18 @@ func TestExportModuleDir(t *testing.T) {
 		Alignment: "aliTrueNeutral",
 	}
 	charData.Attributes = res.AttributesData{
-		Str:       2,
-		Con:       3,
-		Dex:       4,
-		Int:       5,
-		Wis:       6,
+		Str: 2,
+		Con: 3,
+		Dex: 4,
+		Int: 5,
+		Wis: 6,
 	}
 	res.Characters = append(res.Characters, charData)
 	areaCharData := res.AreaCharData{ID: charData.ID}
 	areaData.Characters = append(areaData.Characters, areaCharData)
 	area.Apply(areaData)
 	mod.Chapter().AddAreas(area)
-	err := ExportModuleDir("testexp", mod.Data())
+	err := ExportModuleDir(t.TempDir(), mod.Data())
 	if err != nil {
 		t.Errorf("Unable to export module: %v", err)
 	}
