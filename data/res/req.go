@@ -34,14 +34,14 @@ type ReqsData struct {
 	GenderReqs        []GenderReqData        `xml:"gender-req" json:"gender-reqs"`
 	FlagReqs          []FlagReqData          `xml:"flag-req" json:"flag-reqs"`
 	ItemReqs          []ItemReqData          `xml:"item-req" json:"item-reqs"`
-	CurrencyReqs      []CurrencyReqData      `xml:"currency-req" json:"currency-req"`
-	TargetRangeReqs   []TargetRangeReqData   `xml:"target-range-req" json:"target-range-req"`
-	KillReqs          []KillReqData          `xml:"kill-req" json:"kill-req"`
-	QuestReqs         []QuestReqData         `xml:"quest-req" json:"quest-req"`
-	HealthPercentReqs []HealthPercentReqData `xml:"health-percent-req" json:"health-percent-req"`
-	ManaReqs          []ManaReqData          `xml:"mana-req" json:"mana-req"`
-	ManaPercentReqs   []ManaPercentReqData   `xml:"mana-percent-req" json:"mana-percent-req"`
-	CombatReqs        []CombatReqData        `xml:"combat-req" json:"combat-req"`
+	CurrencyReqs      []CurrencyReqData      `xml:"currency-req" json:"currency-reqs"`
+	TargetRangeReqs   []TargetRangeReqData   `xml:"target-range-req" json:"target-range-reqs"`
+	KillReqs          []KillReqData          `xml:"kill-req" json:"kill-reqs"`
+	QuestReqs         []QuestReqData         `xml:"quest-req" json:"quest-reqs"`
+	HealthPercentReqs []HealthPercentReqData `xml:"health-percent-req" json:"health-percent-reqs"`
+	ManaReqs          []ManaReqData          `xml:"mana-req" json:"mana-reqs"`
+	ManaPercentReqs   []ManaPercentReqData   `xml:"mana-percent-req" json:"mana-percent-reqs"`
+	CombatReqs        []CombatReqData        `xml:"combat-req" json:"combat-reqs"`
 }
 
 // Struct for level requirement data.
