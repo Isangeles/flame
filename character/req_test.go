@@ -31,9 +31,30 @@ import (
 )
 
 var (
-	charData    = res.CharacterData{ID: "char"}
-	manaReqData = res.ManaReqData{10, false}
+	charData      = res.CharacterData{ID: "char"}
+	healthReqData = res.HealthReqData{10, false}
+	manaReqData   = res.ManaReqData{10, false}
 )
+
+// TestMeetReqHealth tests meet requirement check functions
+// for health requirement.
+func TestMeetReqHealth(t *testing.T) {
+	// Meet
+	char := New(charData)
+	char.SetHealth(15)
+	healthReq := req.NewHealth(healthReqData)
+	if !char.MeetReq(healthReq) {
+		t.Errorf("Requirement should be meet: required health: %d, character health: %d",
+			healthReq.Value(), char.Health())
+	}
+	// Not meet.
+	char.SetHealth(5)
+	healthReq = req.NewHealth(healthReqData)
+	if char.MeetReq(healthReq) {
+		t.Errorf("Requirement should not be meet: required health: %d, character health: %d",
+			healthReq.Value(), char.Health())
+	}
+}
 
 // TestMeetReqManaMeet tests meet requirement check function
 // for mana requirement.
@@ -43,14 +64,14 @@ func TestMeetReqMana(t *testing.T) {
 	char.SetMana(15)
 	manaReq := req.NewMana(manaReqData)
 	if !char.MeetReq(manaReq) {
-		t.Errorf("Mana requirement should be meet: required mana: %d, character mana: %d",
+		t.Errorf("Requirement should be meet: required mana: %d, character mana: %d",
 			manaReq.Value(), char.Mana())
 	}
 	// Not meet.
 	char.SetMana(5)
 	manaReq = req.NewMana(manaReqData)
 	if char.MeetReq(manaReq) {
-		t.Errorf("Mana requirement should not be meet: required mana: %d, character mana: %d",
+		t.Errorf("Requirement should not be meet: required mana: %d, character mana: %d",
 			manaReq.Value(), char.Mana())
 	}
 }
