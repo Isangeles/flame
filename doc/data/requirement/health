@@ -1,0 +1,26 @@
+.TH health
+.SH NAME
+health-req
+.SH DESCRIPTION
+The health requirement specifies the required value for the health for the object.
+.SH PARAMETERS
+.P
+* value
+.br
+Specifies the required value of health points.
+.P
+* less
+.br
+Specifies whether actual health value should be less(true) or more(false) then value in the requirement.
+.SH JSON EXAMPLE
+.nf
+{
+    "value":100,
+    "less":true
+}
+.SH XML EXAMPLE
+.nf
+<health-req value="100"
+	    less="true"/>
+.SH SEE ALSO
+requirements, requirement/health-percent

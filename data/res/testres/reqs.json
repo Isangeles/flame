@@ -77,6 +77,16 @@
 	    "completed":true
 	}
     ],
+    "health-reqs":[
+	{
+	    "value":100,
+	    "less":true
+	},
+	{
+	    "value":100,
+	    "less":true
+	}
+    ],
     "health-percent-reqs":[
 	{
 	    "value":100,

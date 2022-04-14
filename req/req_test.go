@@ -43,6 +43,7 @@ func TestNewRequirements(t *testing.T) {
 		targetRangeReqs       = 0
 		killReqs              = 0
 		questReqs             = 0
+		healthReqs            = 0
 		healthPercentReqs     = 0
 		manaReqs              = 0
 		manaPercentReqs       = 0
@@ -66,6 +67,8 @@ func TestNewRequirements(t *testing.T) {
 			killReqs++
 		case *Quest:
 			questReqs++
+		case *Health:
+			healthReqs++
 		case *HealthPercent:
 			healthPercentReqs++
 		case *Mana:
@@ -99,6 +102,9 @@ func TestNewRequirements(t *testing.T) {
 	}
 	if questReqs != 2 {
 		t.Errorf("Invalid number of quest requirements: %d != 2", questReqs)
+	}
+	if healthReqs != 2 {
+		t.Errorf("Invalid number of health requirements: %d != 2", healthReqs)
 	}
 	if healthPercentReqs != 2 {
 		t.Errorf("Invalid number of health percent requirements: %d != 2", healthPercentReqs)
@@ -156,6 +162,10 @@ func TestRequirementsData(t *testing.T) {
 		t.Errorf("Invalid number of kill requirements: %d != %d", len(data.KillReqs),
 			len(expectedData.KillReqs))
 	}
+	if len(data.HealthReqs) != len(expectedData.HealthReqs) {
+		t.Errorf("Invalid number of health requirements: %d != %d", len(data.HealthReqs),
+			len(expectedData.HealthReqs))
+	}
 	if len(data.HealthPercentReqs) != len(expectedData.HealthPercentReqs) {
 		t.Errorf("Invalid number of health percent requirements: %d != %d", len(data.HealthPercentReqs),
 			len(expectedData.HealthPercentReqs))
@@ -209,6 +219,10 @@ func testReqsData() res.ReqsData {
 		res.QuestReqData{"quest1", false},
 		res.QuestReqData{"quest2", true},
 	}
+	healthReqs := []res.HealthReqData{
+		res.HealthReqData{100, false},
+		res.HealthReqData{50, true},
+	}
 	healthPercentReqs := []res.HealthPercentReqData{
 		res.HealthPercentReqData{100, false},
 		res.HealthPercentReqData{50, true},
@@ -234,6 +248,7 @@ func testReqsData() res.ReqsData {
 		TargetRangeReqs:   targetRangeReqs,
 		KillReqs:          killReqs,
 		QuestReqs:         questReqs,
+		HealthReqs:        healthReqs,
 		HealthPercentReqs: healthPercentReqs,
 		ManaReqs:          manaReqs,
 		ManaPercentReqs:   manaPercentReqs,

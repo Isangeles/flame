@@ -64,6 +64,9 @@ func TestReqsDataJson(t *testing.T) {
 	if len(reqs.QuestReqs) != 2 {
 		t.Errorf("Inavlid number of quest requirements: %d != 2", len(reqs.QuestReqs))
 	}
+	if len(reqs.HealthReqs) != 2 {
+		t.Errorf("Invalid number of health requirements: %d != 2", len(reqs.HealthReqs))
+	}
 	if len(reqs.HealthPercentReqs) != 2 {
 		t.Errorf("Inavlid number of health percent requirements: %d != 2", len(reqs.HealthPercentReqs))
 	}
@@ -113,6 +116,9 @@ func TestReqsDataXml(t *testing.T) {
 	if len(reqs.QuestReqs) != 2 {
 		t.Errorf("Inavlid number of quest requirements: %d != 2", len(reqs.QuestReqs))
 	}
+	if len(reqs.HealthReqs) != 2 {
+		t.Errorf("Invalid number of health requirements: %d != 2", len(reqs.HealthReqs))
+	}
 	if len(reqs.HealthPercentReqs) != 2 {
 		t.Errorf("Inavlid number of health percent requirements: %d != 2", len(reqs.HealthPercentReqs))
 	}
@@ -124,6 +130,43 @@ func TestReqsDataXml(t *testing.T) {
 	}
 	if len(reqs.CombatReqs) != 2 {
 		t.Errorf("Inavlid number of combat requirements: %d != 2", len(reqs.CombatReqs))
+	}
+}
+// TestHealthReqDataJson tests health requirement data JSON mappings.
+func TestHealthReqDataJson(t *testing.T) {
+	data, err := testData("healthreq.json")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(HealthReqData)
+	err = json.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal JSON data: %v", err)
+	}
+	if req.Value != 100 {
+		t.Errorf("Inavlid health value: %d != 100", req.Value)
+	}
+	if !req.Less {
+		t.Errorf("Inavlid health less value: %v != true", req.Less)
+	}
+}
+
+// TestHealthReqDataXml tests health requirement data XML mappings.
+func TestHealthReqDataXml(t *testing.T) {
+	data, err := testData("healthreq.xml")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(HealthReqData)
+	err = xml.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal XML data: %v", err)
+	}
+	if req.Value != 100 {
+		t.Errorf("Inavlid health value: %d != 100", req.Value)
+	}
+	if !req.Less {
+		t.Errorf("Inavlid health less value: %v != true", req.Less)
 	}
 }
 

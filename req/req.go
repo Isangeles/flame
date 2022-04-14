@@ -76,9 +76,13 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		qreq := NewQuest(d)
 		reqs = append(reqs, qreq)
 	}
-	for _, d := range data.HealthPercentReqs {
-		hreq := NewHealthPercent(d)
+	for _, d := range data.HealthReqs {
+		hreq := NewHealth(d)
 		reqs = append(reqs, hreq)
+	}
+	for _, d := range data.HealthPercentReqs {
+		hpreq := NewHealthPercent(d)
+		reqs = append(reqs, hpreq)
 	}
 	for _, d := range data.ManaReqs {
 		mreq := NewMana(d)
@@ -123,6 +127,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Quest:
 			d := r.Data()
 			data.QuestReqs = append(data.QuestReqs, d)
+		case *Health:
+			d := r.Data()
+			data.HealthReqs = append(data.HealthReqs, d)
 		case *HealthPercent:
 			d := r.Data()
 			data.HealthPercentReqs = append(data.HealthPercentReqs, d)

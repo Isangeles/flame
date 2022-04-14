@@ -21,6 +21,8 @@
 	    amount="1"/>
   <quest-req id="quest1"/>
   <quest-req id="quest2"/>
+  <health-req value="100"/>
+  <health-req value="100"/>
   <health-percent-req value="100"/>
   <health-percent-req value="100"/>
   <mana-req value="100"/>
