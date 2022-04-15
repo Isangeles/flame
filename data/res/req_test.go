@@ -132,6 +132,51 @@ func TestReqsDataXml(t *testing.T) {
 		t.Errorf("Inavlid number of combat requirements: %d != 2", len(reqs.CombatReqs))
 	}
 }
+
+// TestItemReqDataJson tests item requirement data JSON mappings.
+func TestItemReqDataJson(t *testing.T) {
+	data, err := testData("itemreq.json")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(ItemReqData)
+	err = json.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal test data: %v", err)
+	}
+	if req.ID != "item1" {
+		t.Errorf("Invalid item ID: %s != item1", req.ID)
+	}
+	if req.Amount != 1 {
+		t.Errorf("Invalid amount value: %d != 1", req.Amount)
+	}
+	if !req.Charge {
+		t.Errorf("Invalid charge value: %v != true", req.Charge)
+	}
+}
+
+// TestItemReqDataXml tests item requirement data XML mappings.
+func TestItemReqDataXml(t *testing.T) {
+	data, err := testData("itemreq.xml")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(ItemReqData)
+	err = xml.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal test data: %v", err)
+	}
+	if req.ID != "item1" {
+		t.Errorf("Invalid item ID: %s != item1", req.ID)
+	}
+	if req.Amount != 1 {
+		t.Errorf("Invalid amount value: %d != 1", req.Amount)
+	}
+	if !req.Charge {
+		t.Errorf("Invalid charge value: %v != true", req.Charge)
+	}
+}
+
 // TestHealthReqDataJson tests health requirement data JSON mappings.
 func TestHealthReqDataJson(t *testing.T) {
 	data, err := testData("healthreq.json")
