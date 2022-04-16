@@ -145,6 +145,9 @@ func (c *Character) ChargeReq(r req.Requirement) {
 	}
 	switch r := r.(type) {
 	case *req.Item:
+		if !r.Charge() {
+			break
+		}
 		for i := 0; i < r.ItemAmount(); i++ {
 			for _, i := range c.Inventory().Items() {
 				if i.ID() != r.ItemID() {

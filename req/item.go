@@ -1,7 +1,7 @@
 /*
  * item.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import (
 type Item struct {
 	itemID string
 	amount int
+	charge bool
 	meet   bool
 }
 
@@ -39,6 +40,7 @@ func NewItem(data res.ItemReqData) *Item {
 	ir := new(Item)
 	ir.itemID = data.ID
 	ir.amount = data.Amount
+	ir.charge = data.Charge
 	return ir
 }
 
@@ -52,9 +54,16 @@ func (ir *Item) ItemAmount() int {
 	return ir.amount
 }
 
+// Charge checks if required items should be
+// taken from the object after requirement
+// check.
+func (ir *Item) Charge() bool {
+	return ir.charge
+}
+
 // Meet checks wheter requirement is set as meet.
 func (ir *Item) Meet() bool {
-	return ir.meet 
+	return ir.meet
 }
 
 // SetMeet sets requirement as meet/not meet.
@@ -67,6 +76,7 @@ func (ir *Item) Data() res.ItemReqData {
 	data := res.ItemReqData{
 		ID:     ir.ItemID(),
 		Amount: ir.ItemAmount(),
+		Charge: ir.Charge(),
 	}
 	return data
 }
