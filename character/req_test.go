@@ -27,13 +27,15 @@ import (
 	"testing"
 
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/req"
 )
 
 var (
-	charData      = res.CharacterData{ID: "char"}
+	charData      = res.CharacterData{ID: "char", Attributes: res.AttributesData{5, 5, 5, 5, 5}}
 	healthReqData = res.HealthReqData{10, false}
 	manaReqData   = res.ManaReqData{10, false}
+	itemReqData   = res.ItemReqData{"item1", 1, true}
 )
 
 // TestMeetReqHealth tests meet requirement check functions
@@ -73,5 +75,34 @@ func TestMeetReqMana(t *testing.T) {
 	if char.MeetReq(manaReq) {
 		t.Errorf("Requirement should not be meet: required mana: %d, character mana: %d",
 			manaReq.Value(), char.Mana())
+	}
+}
+
+// TestChargeReqItem tests charge requirement function
+// for item requirement.
+func TestChargeReqItem(t *testing.T) {
+	// Charge.
+	char := New(charData)
+	char.Update(1)
+	item := item.NewMisc(res.MiscItemData{ID: "item1"})
+	err := char.Inventory().AddItem(item)
+	if err != nil {
+		t.Fatalf("Unable to add item to the inventory: %v", err)
+	}
+	itemReq := req.NewItem(itemReqData)
+	char.ChargeReq(itemReq)
+	if char.Inventory().Item("item1", "0") != nil {
+		t.Errorf("Required item should be removed from the inventory")
+	}
+	// No charge.
+	err = char.Inventory().AddItem(item)
+	if err != nil {
+		t.Fatalf("Unable to add item to the inventory: %v", err)
+	}
+	itemReqData.Charge = false
+	itemReq = req.NewItem(itemReqData)
+	char.ChargeReq(itemReq)
+	if char.Inventory().Item("item1", "0") == nil {
+		t.Errorf("Required item should not be removed from the inventory")
 	}
 }
