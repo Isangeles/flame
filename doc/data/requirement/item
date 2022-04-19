@@ -1,0 +1,30 @@
+.TH item
+.SH NAME
+item-req
+.SH DESCRIPTION
+The item requirement specifies the required item for the object.
+.SH PARAMETERS
+.P
+* id
+.br
+Specifies the ID of required item.
+* amount
+.br
+Specifies the amount of required items.
+* charge
+.br
+Specifies whether the required items should be removed from the object inventory after requirement check.
+.SH JSON EXAMPLE
+.nf
+{
+    "id":"item1",
+    "amount":1,
+    "charge":true
+}
+.SH XML EXAMPLE
+.nf
+<item-req id="item1"
+	  amount="1"
+	  charge="true"/>
+.SH SEE ALSO
+requirements
