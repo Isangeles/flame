@@ -143,9 +143,6 @@ func (c *Character) meetReq(r req.Requirement) bool {
 // this character meet specified 'chargeable' requirement.
 // Does nothing if character don't meet requirement.
 func (c *Character) chargeReq(r req.Chargeable) {
-	if !c.meetReq(r) {
-		return
-	}
 	switch r := r.(type) {
 	case *req.Item:
 		for i := 0; i < r.ItemAmount(); i++ {
