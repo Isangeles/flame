@@ -41,6 +41,13 @@ type RequirementsTarget interface {
 	ChargeReqs(reqs ...Requirement)
 }
 
+// Interface for requirements that can
+// be charged.
+type Chargeable interface {
+	Requirement
+	Charge() bool
+}
+
 // NewRequirements creates new requirements from
 // specified data.
 func NewRequirements(data res.ReqsData) (reqs []Requirement) {

@@ -41,11 +41,15 @@ func (c *Character) MeetReqs(reqs ...req.Requirement) bool {
 	return true
 }
 
-// ChargeReqs takes from character all things that makes
-// him to meet specified requirements.
+// ChargeReqs takes from character all things that make
+// the character meet specified requirements.
+// All requirements that are not 'chargeable' will be
+// ignored.
 func (c *Character) ChargeReqs(reqs ...req.Requirement) {
 	for _, r := range reqs {
-		c.ChargeReq(r)
+		if r := r.(req.Chargeable); r.Charge() {
+			c.ChargeReq(r)
+		}
 	}
 }
 
@@ -135,19 +139,15 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 	}
 }
 
-// ChargeReq takes from character all things that makes
-// him to meet specified requirement. Does nothing if
-// character don't meet requirement or requirement is
-// not 'chargeable'.
-func (c *Character) ChargeReq(r req.Requirement) {
+// ChargeReq takes from character all things that make
+// this character meet specified 'chargeable' requirement.
+// Does nothing if character don't meet requirement.
+func (c *Character) ChargeReq(r req.Chargeable) {
 	if !c.MeetReq(r) {
 		return
 	}
 	switch r := r.(type) {
 	case *req.Item:
-		if !r.Charge() {
-			break
-		}
 		for i := 0; i < r.ItemAmount(); i++ {
 			for _, i := range c.Inventory().Items() {
 				if i.ID() != r.ItemID() {

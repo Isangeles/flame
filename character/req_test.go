@@ -78,9 +78,9 @@ func TestMeetReqMana(t *testing.T) {
 	}
 }
 
-// TestChargeReqItem tests charge requirement function
+// TestChargeReqsItem tests charge requirements function
 // for item requirement.
-func TestChargeReqItem(t *testing.T) {
+func TestChargeReqsItem(t *testing.T) {
 	// Charge.
 	char := New(charData)
 	char.Update(1)
@@ -90,7 +90,7 @@ func TestChargeReqItem(t *testing.T) {
 		t.Fatalf("Unable to add item to the inventory: %v", err)
 	}
 	itemReq := req.NewItem(itemReqData)
-	char.ChargeReq(itemReq)
+	char.ChargeReqs(itemReq)
 	if char.Inventory().Item("item1", "0") != nil {
 		t.Errorf("Required item should be removed from the inventory")
 	}
@@ -101,7 +101,7 @@ func TestChargeReqItem(t *testing.T) {
 	}
 	itemReqData.Charge = false
 	itemReq = req.NewItem(itemReqData)
-	char.ChargeReq(itemReq)
+	char.ChargeReqs(itemReq)
 	if char.Inventory().Item("item1", "0") == nil {
 		t.Errorf("Required item should not be removed from the inventory")
 	}
