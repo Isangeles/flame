@@ -38,7 +38,30 @@ var (
 	itemReqData   = res.ItemReqData{"item1", 1, true}
 )
 
-// TestMeetReqsHealth tests meet requirement check functions
+
+// TestMeetReqsItem tests meet requiremet check function
+// for item requirement.
+func TestMeetReqsItem(t *testing.T) {
+	// Meet
+	char := New(charData)
+	char.Update(1)
+	item := item.NewMisc(res.MiscItemData{ID: "item1"})
+	err := char.Inventory().AddItem(item)
+	if err != nil {
+		t.Fatalf("Unable to add item to the inventory: %v", err)
+	}
+	itemReq := req.NewItem(itemReqData)
+	if !char.MeetReqs(itemReq) {
+		t.Errorf("Requirement should be meet: %s not in inventory", itemReq.ItemID())
+	}
+	// Not meet.
+	char.Inventory().RemoveItem(item)
+	if char.MeetReqs(itemReq) {
+		t.Errorf("Requirement should not be meet: %s in inventory", itemReq.ItemID())
+	}
+}
+
+// TestMeetReqsHealth tests meet requirement check function
 // for health requirement.
 func TestMeetReqsHealth(t *testing.T) {
 	// Meet
@@ -91,7 +114,7 @@ func TestChargeReqsItem(t *testing.T) {
 	}
 	itemReq := req.NewItem(itemReqData)
 	char.ChargeReqs(itemReq)
-	if char.Inventory().Item("item1", "0") != nil {
+	if char.Inventory().Item(item.ID(), item.Serial()) != nil {
 		t.Errorf("Required item should be removed from the inventory")
 	}
 	// No charge.
@@ -102,7 +125,7 @@ func TestChargeReqsItem(t *testing.T) {
 	itemReqData.Charge = false
 	itemReq = req.NewItem(itemReqData)
 	char.ChargeReqs(itemReq)
-	if char.Inventory().Item("item1", "0") == nil {
+	if char.Inventory().Item(item.ID(), item.Serial()) == nil {
 		t.Errorf("Required item should not be removed from the inventory")
 	}
 }
