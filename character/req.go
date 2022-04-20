@@ -34,7 +34,7 @@ import (
 // are meet by character.
 func (c *Character) MeetReqs(reqs ...req.Requirement) bool {
 	for _, r := range reqs {
-		if !c.MeetReq(r) {
+		if !c.meetReq(r) {
 			return false
 		}
 	}
@@ -48,14 +48,14 @@ func (c *Character) MeetReqs(reqs ...req.Requirement) bool {
 func (c *Character) ChargeReqs(reqs ...req.Requirement) {
 	for _, r := range reqs {
 		if r := r.(req.Chargeable); r.Charge() {
-			c.ChargeReq(r)
+			c.chargeReq(r)
 		}
 	}
 }
 
-// ReqMeet checks whether character meets
+// meetReq checks whether character meets
 // specified requirement.
-func (c *Character) MeetReq(r req.Requirement) bool {
+func (c *Character) meetReq(r req.Requirement) bool {
 	switch r := r.(type) {
 	case *req.Level:
 		return c.Level() >= r.MinLevel()
@@ -139,11 +139,11 @@ func (c *Character) MeetReq(r req.Requirement) bool {
 	}
 }
 
-// ChargeReq takes from character all things that make
+// chargeReq takes from character all things that make
 // this character meet specified 'chargeable' requirement.
 // Does nothing if character don't meet requirement.
-func (c *Character) ChargeReq(r req.Chargeable) {
-	if !c.MeetReq(r) {
+func (c *Character) chargeReq(r req.Chargeable) {
+	if !c.meetReq(r) {
 		return
 	}
 	switch r := r.(type) {
