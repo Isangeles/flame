@@ -47,7 +47,7 @@ func (c *Character) MeetReqs(reqs ...req.Requirement) bool {
 // ignored.
 func (c *Character) ChargeReqs(reqs ...req.Requirement) {
 	for _, r := range reqs {
-		if r := r.(req.Chargeable); r.Charge() {
+		if r, ok := r.(req.Chargeable); ok && r.Charge() {
 			c.chargeReq(r)
 		}
 	}

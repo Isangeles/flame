@@ -36,6 +36,7 @@ var (
 	healthReqData = res.HealthReqData{10, false}
 	manaReqData   = res.ManaReqData{10, false, true}
 	itemReqData   = res.ItemReqData{"item1", 1, true}
+	combatReqData = res.CombatReqData{true}
 )
 
 
@@ -99,6 +100,17 @@ func TestMeetReqsMana(t *testing.T) {
 		t.Errorf("Requirement should not be meet: required mana: %d, character mana: %d",
 			manaReq.Value(), char.Mana())
 	}
+}
+
+// TestChargeReqs tests charge requirements function.
+func TestChargeReqs(t *testing.T) {
+	// Handle mixed reqs(chargeable and non chargeable)
+	char := New(charData)
+	reqs := make([]req.Requirement, 3)
+	reqs = append(reqs, req.NewMana(manaReqData))
+	reqs = append(reqs, req.NewItem(itemReqData))
+	reqs = append(reqs, req.NewCombat(combatReqData))
+	char.ChargeReqs(reqs...)
 }
 
 // TestChargeReqsMana tests charge requrements function
