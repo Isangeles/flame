@@ -106,8 +106,9 @@ type HealthPercentReqData struct {
 
 // Struct for mana requirement data.
 type ManaReqData struct {
-	Value int  `xml:"value,attr" json:"value"`
-	Less  bool `xml:"less,attr" json:"less"`
+	Value  int  `xml:"value,attr" json:"value"`
+	Less   bool `xml:"less,attr" json:"less"`
+	Charge bool `xml:"charge,attr" json:"charge"`
 }
 
 // Struct for mana percent requirement data.

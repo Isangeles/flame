@@ -76,7 +76,6 @@ func (c *Character) meetReq(r req.Requirement) bool {
 		}
 		return count >= r.ItemAmount()
 	case *req.Currency:
-		// TODO: currency check.
 		val := 0
 		for _, it := range c.Inventory().Items() {
 			misc, ok := it.(*item.Misc)
@@ -152,6 +151,8 @@ func (c *Character) chargeReq(r req.Chargeable) {
 				c.Inventory().RemoveItem(i)
 			}
 		}
+	case *req.Mana:
+		c.SetMana(c.Mana()-r.Value())
 	case *req.Currency:
 		// TODO: charge currency items.
 	}

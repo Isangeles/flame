@@ -29,16 +29,18 @@ import (
 
 // Struct for mana requirement.
 type Mana struct {
-	less  bool
-	meet  bool
-	value int
+	less   bool
+	charge bool
+	meet   bool
+	value  int
 }
 
 // NewMana creates new mana requirement.
 func NewMana(data res.ManaReqData) *Mana {
 	m := Mana{
-		less:  data.Less,
-		value: data.Value,
+		less:   data.Less,
+		charge: data.Charge,
+		value:  data.Value,
 	}
 	return &m
 }
@@ -54,6 +56,13 @@ func (m *Mana) Less() bool {
 	return m.less
 }
 
+// Charge checks if required mana value should
+// be taken from object mana pool after
+// requirement check.
+func (m *Mana) Charge() bool {
+	return m.charge
+}
+
 // Meet checks if requirement is set as met.
 func (m *Mana) Meet() bool {
 	return m.meet
@@ -67,8 +76,9 @@ func (m *Mana) SetMeet(meet bool) {
 // Data returns data resource for mana requiremnt.
 func (m *Mana) Data() res.ManaReqData {
 	data := res.ManaReqData{
-		Less:  m.less,
-		Value: m.value,
+		Less:   m.less,
+		Charge: m.charge,
+		Value:  m.value,
 	}
 	return data
 }

@@ -29,16 +29,19 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-var manaReqData = res.ManaReqData{100, true}
+var manaReqData = res.ManaReqData{100, true, true}
 
 // TestNewMana tests creating new mana requirement.
 func TestNewMana(t *testing.T) {
 	req := NewMana(manaReqData)
 	if req.Value() != 100 {
-		t.Errorf("Inavlid mana value: %d != 100", req.Value())
+		t.Errorf("Invalid mana value: %d != 100", req.Value())
 	}
 	if !req.Less() {
-		t.Errorf("Inavlid less value: %v != true", req.Less())
+		t.Errorf("Invalid less value: %v != true", req.Less())
+	}
+	if !req.Charge() {
+		t.Errorf("Invalid charge value: %v != true", req.Charge())
 	}
 }
 
@@ -48,6 +51,6 @@ func TestManaData(t *testing.T) {
 	req := NewMana(manaReqData)
 	reqData := req.Data()
 	if reqData != manaReqData {
-		t.Errorf("Inavlid requirement data: %v != %v", reqData, manaReqData)
+		t.Errorf("Invalid requirement data: %v != %v", reqData, manaReqData)
 	}
 }

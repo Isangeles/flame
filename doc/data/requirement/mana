@@ -12,15 +12,21 @@ Specifies the required value of  mana points.
 * less
 .br
 Specifies wheter actual mana value should be less(true) or more(false) then value in the requirement.
+.P
+* charge
+.br
+Specifies wheter required mana value should be taken from object mana pool after requirement check.
 .SH JSON EXAMPLE
 .nf
 {
     "value":100,
-    "less":true
+    "less":true,
+    "charge:false
 }
 .SH XML EXAMPLE
 .nf
 <mana-req value="100"
-	  less="true"/>
+	  less="true"
+	  charge="false"/>
 .SH SEE ALSO
 requirements, requirement/mana-percent

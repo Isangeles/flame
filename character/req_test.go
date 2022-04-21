@@ -34,7 +34,7 @@ import (
 var (
 	charData      = res.CharacterData{ID: "char", Attributes: res.AttributesData{5, 5, 5, 5, 5}}
 	healthReqData = res.HealthReqData{10, false}
-	manaReqData   = res.ManaReqData{10, false}
+	manaReqData   = res.ManaReqData{10, false, true}
 	itemReqData   = res.ItemReqData{"item1", 1, true}
 )
 
@@ -98,6 +98,27 @@ func TestMeetReqsMana(t *testing.T) {
 	if char.MeetReqs(manaReq) {
 		t.Errorf("Requirement should not be meet: required mana: %d, character mana: %d",
 			manaReq.Value(), char.Mana())
+	}
+}
+
+// TestChargeReqsMana tests charge requrements function
+// for mana requirement.
+func TestChargeReqsMana(t *testing.T) {
+	// Charge.
+	char := New(charData)
+	char.SetMana(15)
+	manaReq := req.NewMana(manaReqData)
+	char.ChargeReqs(manaReq)
+	if char.Mana() != 5 {
+		t.Errorf("Invalid mana value after charge: %d != 5", char.Mana())
+	}
+	// No charge.
+	char.SetMana(15)
+	manaReqData.Charge = false
+	manaReq = req.NewMana(manaReqData)
+	char.ChargeReqs(manaReq)
+	if char.Mana() != 15 {
+		t.Errorf("Mana value should not change: %d != 20", char.Mana())
 	}
 }
 

@@ -228,8 +228,8 @@ func testReqsData() res.ReqsData {
 		res.HealthPercentReqData{50, true},
 	}
 	manaReqs := []res.ManaReqData{
-		res.ManaReqData{10, false},
-		res.ManaReqData{5, true},
+		res.ManaReqData{10, false, false},
+		res.ManaReqData{5, true, true},
 	}
 	manaPercentReqs := []res.ManaPercentReqData{
 		res.ManaPercentReqData{100, false},

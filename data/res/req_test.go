@@ -41,43 +41,43 @@ func TestReqsDataJson(t *testing.T) {
 		t.Fatalf("Unable to unmarshal JSON data: %v", err)
 	}
 	if len(reqs.LevelReqs) != 2 {
-		t.Errorf("Inavlid number of level requirements: %d != 2", len(reqs.LevelReqs))
+		t.Errorf("Invalid number of level requirements: %d != 2", len(reqs.LevelReqs))
 	}
 	if len(reqs.GenderReqs) != 2 {
-		t.Errorf("Inavlid number of gender requirements: %d != 2", len(reqs.GenderReqs))
+		t.Errorf("Invalid number of gender requirements: %d != 2", len(reqs.GenderReqs))
 	}
 	if len(reqs.FlagReqs) != 2 {
-		t.Errorf("Inavlid number of flag requirements: %d != 2", len(reqs.FlagReqs))
+		t.Errorf("Invalid number of flag requirements: %d != 2", len(reqs.FlagReqs))
 	}
 	if len(reqs.ItemReqs) != 2 {
-		t.Errorf("Inavlid number of item requirements: %d != 2", len(reqs.ItemReqs))
+		t.Errorf("Invalid number of item requirements: %d != 2", len(reqs.ItemReqs))
 	}
 	if len(reqs.CurrencyReqs) != 2 {
-		t.Errorf("Inavlid number of currency requirements: %d != 2", len(reqs.CurrencyReqs))
+		t.Errorf("Invalid number of currency requirements: %d != 2", len(reqs.CurrencyReqs))
 	}
 	if len(reqs.TargetRangeReqs) != 2 {
-		t.Errorf("Inavlid number of target range requirements: %d != 2", len(reqs.TargetRangeReqs))
+		t.Errorf("Invalid number of target range requirements: %d != 2", len(reqs.TargetRangeReqs))
 	}
 	if len(reqs.KillReqs) != 2 {
-		t.Errorf("Inavlid number of kill requirements: %d != 2", len(reqs.KillReqs))
+		t.Errorf("Invalid number of kill requirements: %d != 2", len(reqs.KillReqs))
 	}
 	if len(reqs.QuestReqs) != 2 {
-		t.Errorf("Inavlid number of quest requirements: %d != 2", len(reqs.QuestReqs))
+		t.Errorf("Invalid number of quest requirements: %d != 2", len(reqs.QuestReqs))
 	}
 	if len(reqs.HealthReqs) != 2 {
 		t.Errorf("Invalid number of health requirements: %d != 2", len(reqs.HealthReqs))
 	}
 	if len(reqs.HealthPercentReqs) != 2 {
-		t.Errorf("Inavlid number of health percent requirements: %d != 2", len(reqs.HealthPercentReqs))
+		t.Errorf("Invalid number of health percent requirements: %d != 2", len(reqs.HealthPercentReqs))
 	}
 	if len(reqs.ManaReqs) != 2 {
-		t.Errorf("Inavlid number of mana requirements: %d != 2", len(reqs.ManaReqs))
+		t.Errorf("Invalid number of mana requirements: %d != 2", len(reqs.ManaReqs))
 	}
 	if len(reqs.ManaPercentReqs) != 2 {
-		t.Errorf("Inavlid number of mana percent requirements: %d != 2", len(reqs.ManaPercentReqs))
+		t.Errorf("Invalid number of mana percent requirements: %d != 2", len(reqs.ManaPercentReqs))
 	}
 	if len(reqs.CombatReqs) != 2 {
-		t.Errorf("Inavlid number of combat requirements: %d != 2", len(reqs.CombatReqs))
+		t.Errorf("Invalid number of combat requirements: %d != 2", len(reqs.CombatReqs))
 	}
 }
 
@@ -93,43 +93,43 @@ func TestReqsDataXml(t *testing.T) {
 		t.Fatalf("Unable to unmarshal XML data: %v", err)
 	}
 	if len(reqs.LevelReqs) != 2 {
-		t.Errorf("Inavlid number of level requirements: %d != 2", len(reqs.LevelReqs))
+		t.Errorf("Invalid number of level requirements: %d != 2", len(reqs.LevelReqs))
 	}
 	if len(reqs.GenderReqs) != 2 {
-		t.Errorf("Inavlid number of gender requirements: %d != 2", len(reqs.GenderReqs))
+		t.Errorf("Invalid number of gender requirements: %d != 2", len(reqs.GenderReqs))
 	}
 	if len(reqs.FlagReqs) != 2 {
-		t.Errorf("Inavlid number of flag requirements: %d != 2", len(reqs.FlagReqs))
+		t.Errorf("Invalid number of flag requirements: %d != 2", len(reqs.FlagReqs))
 	}
 	if len(reqs.ItemReqs) != 2 {
-		t.Errorf("Inavlid number of item requirements: %d != 2", len(reqs.ItemReqs))
+		t.Errorf("Invalid number of item requirements: %d != 2", len(reqs.ItemReqs))
 	}
 	if len(reqs.CurrencyReqs) != 2 {
-		t.Errorf("Inavlid number of currency requirements: %d != 2", len(reqs.CurrencyReqs))
+		t.Errorf("Invalid number of currency requirements: %d != 2", len(reqs.CurrencyReqs))
 	}
 	if len(reqs.TargetRangeReqs) != 2 {
-		t.Errorf("Inavlid number of target range requirements: %d != 2", len(reqs.TargetRangeReqs))
+		t.Errorf("Invalid number of target range requirements: %d != 2", len(reqs.TargetRangeReqs))
 	}
 	if len(reqs.KillReqs) != 2 {
-		t.Errorf("Inavlid number of kill requirements: %d != 2", len(reqs.KillReqs))
+		t.Errorf("Invalid number of kill requirements: %d != 2", len(reqs.KillReqs))
 	}
 	if len(reqs.QuestReqs) != 2 {
-		t.Errorf("Inavlid number of quest requirements: %d != 2", len(reqs.QuestReqs))
+		t.Errorf("Invalid number of quest requirements: %d != 2", len(reqs.QuestReqs))
 	}
 	if len(reqs.HealthReqs) != 2 {
 		t.Errorf("Invalid number of health requirements: %d != 2", len(reqs.HealthReqs))
 	}
 	if len(reqs.HealthPercentReqs) != 2 {
-		t.Errorf("Inavlid number of health percent requirements: %d != 2", len(reqs.HealthPercentReqs))
+		t.Errorf("Invalid number of health percent requirements: %d != 2", len(reqs.HealthPercentReqs))
 	}
 	if len(reqs.ManaReqs) != 2 {
-		t.Errorf("Inavlid number of mana requirements: %d != 2", len(reqs.ManaReqs))
+		t.Errorf("Invalid number of mana requirements: %d != 2", len(reqs.ManaReqs))
 	}
 	if len(reqs.ManaPercentReqs) != 2 {
-		t.Errorf("Inavlid number of mana percent requirements: %d != 2", len(reqs.ManaPercentReqs))
+		t.Errorf("Invalid number of mana percent requirements: %d != 2", len(reqs.ManaPercentReqs))
 	}
 	if len(reqs.CombatReqs) != 2 {
-		t.Errorf("Inavlid number of combat requirements: %d != 2", len(reqs.CombatReqs))
+		t.Errorf("Invalid number of combat requirements: %d != 2", len(reqs.CombatReqs))
 	}
 }
 
@@ -189,10 +189,10 @@ func TestHealthReqDataJson(t *testing.T) {
 		t.Fatalf("Unable to unmarshal JSON data: %v", err)
 	}
 	if req.Value != 100 {
-		t.Errorf("Inavlid health value: %d != 100", req.Value)
+		t.Errorf("Invalid health value: %d != 100", req.Value)
 	}
 	if !req.Less {
-		t.Errorf("Inavlid health less value: %v != true", req.Less)
+		t.Errorf("Invalid health less value: %v != true", req.Less)
 	}
 }
 
@@ -208,10 +208,10 @@ func TestHealthReqDataXml(t *testing.T) {
 		t.Fatalf("Unable to unmarshal XML data: %v", err)
 	}
 	if req.Value != 100 {
-		t.Errorf("Inavlid health value: %d != 100", req.Value)
+		t.Errorf("Invalid health value: %d != 100", req.Value)
 	}
 	if !req.Less {
-		t.Errorf("Inavlid health less value: %v != true", req.Less)
+		t.Errorf("Invalid health less value: %v != true", req.Less)
 	}
 }
 
@@ -227,10 +227,13 @@ func TestManaReqDataJson(t *testing.T) {
 		t.Fatalf("Unable to unmarshal JSON data: %v", err)
 	}
 	if req.Value != 100 {
-		t.Errorf("Inavlid mana value: %d != 100", req.Value)
+		t.Errorf("Invalid mana value: %d != 100", req.Value)
 	}
 	if !req.Less {
-		t.Errorf("Inavlid mana less value: %v != true", req.Less)
+		t.Errorf("Invalid less value: %v != true", req.Less)
+	}
+	if !req.Charge {
+		t.Errorf("Invalid charge value: %v != true", req.Charge)
 	}
 }
 
@@ -246,9 +249,12 @@ func TestManaReqDataXml(t *testing.T) {
 		t.Fatalf("Unable to unmarshal XML data: %v", err)
 	}
 	if req.Value != 100 {
-		t.Errorf("Inavlid mana value: %d != 100", req.Value)
+		t.Errorf("Invalid mana value: %d != 100", req.Value)
 	}
 	if !req.Less {
-		t.Errorf("Inavlid mana less value: %v != true", req.Less)
+		t.Errorf("Invalid less value: %v != true", req.Less)
+	}
+	if !req.Charge {
+		t.Errorf("Invalid charge value: %v != true", req.Charge)
 	}
 }
