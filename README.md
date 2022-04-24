@@ -30,9 +30,16 @@
   ### Example games:
   #### Arena ####
 
-  Description: simple demo game based on [Arena](https://github.com/isangeles/arena) module with [Mural GUI](https://github.com/isangeles/mural) support.
+  Simple demo game based on [Arena](https://github.com/isangeles/arena) module with [Mural GUI](https://github.com/isangeles/mural) support.
 
-  Download: [Linux](https://my.opendesktop.org/s/xmxszBXyMQCK5xB), [Windows](https://my.opendesktop.org/s/gcKQmFRdTj8sBdp), [macOS](https://my.opendesktop.org/s/5omoYQYMHGLXkfJ)
+  Download: [Linux](https://my.opendesktop.org/s/xmxszBXyMQCK5xB), [macOS](https://my.opendesktop.org/s/5omoYQYMHGLXkfJ), [Windows](https://my.opendesktop.org/s/gcKQmFRdTj8sBdp)
+  #### OpenElwynn ####
+
+  2D Game that recreates the Elwynn Forest area from WoW, with multiplayer support.
+
+  Download: [Linux](https://my.opendesktop.org/s/ctjfGeFAtjBHEXa), [macOS](https://my.opendesktop.org/s/FXyfCYqndaLPCf3), [Windows](https://my.opendesktop.org/s/q52jJCZtpJdy3bb)
+
+  Repository: [GitHub](https://github.com/Isangeles-Softworks/openelwynn)
 
 ## Usage
 You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/example) package.
