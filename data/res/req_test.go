@@ -258,3 +258,35 @@ func TestManaReqDataXml(t *testing.T) {
 		t.Errorf("Invalid charge value: %v != true", req.Charge)
 	}
 }
+
+// TestCombatReqDataJson tests combat requirement data JSON mappings.
+func TestCombatReqDataJson(t *testing.T) {
+	data, err := testData("combatreq.json")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(CombatReqData)
+	err = json.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal JSON data: %v", err)
+	}
+	if !req.Combat {
+		t.Errorf("Invalid combat value: %v != true", req.Combat)
+	}
+}
+
+// TestCombatReqDataXml tests combat requirement data XML mappings.
+func TestCombatReqDataXml(t *testing.T) {
+	data, err := testData("combatreq.xml")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(CombatReqData)
+	err = xml.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal XML data: %v", err)
+	}
+	if !req.Combat {
+		t.Errorf("Invalid combat value: %v != true", req.Combat)
+	}
+}

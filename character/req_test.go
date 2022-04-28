@@ -102,6 +102,26 @@ func TestMeetReqsMana(t *testing.T) {
 	}
 }
 
+// TestMeetReqsCombat test meet requirement check function
+// for combat requirement.
+func TestMeetReqsCombat(t *testing.T) {
+	// Meet.
+	char := New(charData)
+	hostileCharData := charData
+	hostileCharData.Attitude = string(Hostile)
+	hostileChar := New(hostileCharData)
+	char.SetTarget(hostileChar)
+	combatReq := req.NewCombat(combatReqData)
+	if !char.MeetReqs(combatReq) {
+		t.Errorf("Requirement should be meet: character in combat: %v", char.Fighting())
+	}
+	// Not Meet.
+	char.SetTarget(nil)
+	if char.MeetReqs(combatReq) {
+		t.Errorf("Requirement should not be meet: character in combat: %v", char.Fighting())
+	}
+}
+
 // TestChargeReqs tests charge requirements function.
 func TestChargeReqs(t *testing.T) {
 	// Handle mixed reqs(chargeable and non chargeable)
