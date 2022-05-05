@@ -194,6 +194,9 @@ func TestHealthReqDataJson(t *testing.T) {
 	if !req.Less {
 		t.Errorf("Invalid health less value: %v != true", req.Less)
 	}
+	if !req.Charge {
+		t.Errorf("Invalid charge value: %v != true", req.Charge)
+	}
 }
 
 // TestHealthReqDataXml tests health requirement data XML mappings.
@@ -212,6 +215,9 @@ func TestHealthReqDataXml(t *testing.T) {
 	}
 	if !req.Less {
 		t.Errorf("Invalid health less value: %v != true", req.Less)
+	}
+	if !req.Charge {
+		t.Errorf("Invalid charge value: %v != true", req.Charge)
 	}
 }
 

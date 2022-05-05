@@ -153,6 +153,8 @@ func (c *Character) chargeReq(r req.Chargeable) {
 		}
 	case *req.Mana:
 		c.SetMana(c.Mana()-r.Value())
+	case *req.Health:
+		c.SetHealth(c.Health()-r.Value())
 	case *req.Currency:
 		// TODO: charge currency items.
 	}

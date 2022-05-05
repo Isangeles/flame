@@ -29,7 +29,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-var healthReqData = res.HealthReqData{100, true}
+var healthReqData = res.HealthReqData{100, true, true}
 
 // TestNewHealth tests creating new health requirement.
 func TestNewHealth(t *testing.T) {
@@ -39,6 +39,9 @@ func TestNewHealth(t *testing.T) {
 	}
 	if !req.Less() {
 		t.Errorf("Invalid less value: %v != true", req.Less())
+	}
+	if !req.Charge() {
+		t.Errorf("Invalid charge value: %v != true", req.Charge())
 	}
 }
 

@@ -29,16 +29,18 @@ import (
 
 // Struct for health requirement.
 type Health struct {
-	less  bool
-	meet  bool
-	value int
+	less   bool
+	charge bool
+	meet   bool
+	value  int
 }
 
 // NewHealth creates new health requirement.
 func NewHealth(data res.HealthReqData) *Health {
 	h := Health{
-		less:  data.Less,
-		value: data.Value,
+		less:   data.Less,
+		charge: data.Charge,
+		value:  data.Value,
 	}
 	return &h
 }
@@ -54,6 +56,13 @@ func (h *Health) Less() bool {
 	return h.less
 }
 
+// Charge checks if required health value should
+// be taken from object health pool after
+// requirement check.
+func (h *Health) Charge() bool {
+	return h.charge
+}
+
 // Meet checks if requirement is set as met.
 func (h *Health) Meet() bool {
 	return h.meet
@@ -67,8 +76,9 @@ func (h *Health) SetMeet(meet bool) {
 // Data returns data resource for health requiremnt.
 func (h *Health) Data() res.HealthReqData {
 	data := res.HealthReqData{
-		Less:  h.less,
-		Value: h.value,
+		Less:   h.less,
+		Charge: h.charge,
+		Value:  h.value,
 	}
 	return data
 }

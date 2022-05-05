@@ -12,15 +12,21 @@ Specifies the required value of health points.
 * less
 .br
 Specifies whether actual health value should be less(true) or more(false) then value in the requirement.
+.P
+* charge
+.br
+Specifies wheter required health value should be taken from object health pool after requirement check.
 .SH JSON EXAMPLE
 .nf
 {
     "value":100,
-    "less":true
+    "less":true,
+    "charge":true
 }
 .SH XML EXAMPLE
 .nf
 <health-req value="100"
-	    less="true"/>
+	    less="true"
+	    charge="true"/>
 .SH SEE ALSO
 requirements, requirement/health-percent

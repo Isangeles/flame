@@ -94,8 +94,9 @@ type QuestReqData struct {
 
 // Struct for health requirement data.
 type HealthReqData struct {
-	Value int  `xml:"value,attr" json:"value"`
-	Less  bool `xml:"less,attr" json:"less"`
+	Value  int  `xml:"value,attr" json:"value"`
+	Less   bool `xml:"less,attr" json:"less"`
+	Charge bool `xml:"charge,attr" json:"charge"`
 }
 
 // Struct for health percent requirement data.

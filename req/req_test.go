@@ -220,8 +220,8 @@ func testReqsData() res.ReqsData {
 		res.QuestReqData{"quest2", true},
 	}
 	healthReqs := []res.HealthReqData{
-		res.HealthReqData{100, false},
-		res.HealthReqData{50, true},
+		res.HealthReqData{100, false, false},
+		res.HealthReqData{50, true, true},
 	}
 	healthPercentReqs := []res.HealthPercentReqData{
 		res.HealthPercentReqData{100, false},

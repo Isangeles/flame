@@ -33,7 +33,7 @@ import (
 
 var (
 	charData      = res.CharacterData{ID: "char", Attributes: res.AttributesData{5, 5, 5, 5, 5}}
-	healthReqData = res.HealthReqData{10, false}
+	healthReqData = res.HealthReqData{10, false, true}
 	manaReqData   = res.ManaReqData{10, false, true}
 	itemReqData   = res.ItemReqData{"item1", 1, true}
 	combatReqData = res.CombatReqData{true}
@@ -150,7 +150,28 @@ func TestChargeReqsMana(t *testing.T) {
 	manaReq = req.NewMana(manaReqData)
 	char.ChargeReqs(manaReq)
 	if char.Mana() != 15 {
-		t.Errorf("Mana value should not change: %d != 20", char.Mana())
+		t.Errorf("Mana value should not change: %d != 15", char.Mana())
+	}
+}
+
+// TestChargeReqsHealth tests charge requrements function
+// for health requirement.
+func TestChargeReqsHealth(t *testing.T) {
+	// Charge.
+	char := New(charData)
+	char.SetHealth(15)
+	healthReq := req.NewHealth(healthReqData)
+	char.ChargeReqs(healthReq)
+	if char.Health() != 5 {
+		t.Errorf("Invalid health value after charge: %d != 5", char.Health())
+	}
+	// No charge.
+	char.SetHealth(15)
+	healthReqData.Charge = false
+	healthReq = req.NewHealth(healthReqData)
+	char.ChargeReqs(healthReq)
+	if char.Health() != 15 {
+		t.Errorf("Health value should not change: %d != 15", char.Health())
 	}
 }
 
