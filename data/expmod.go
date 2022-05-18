@@ -1,7 +1,7 @@
 /*
  * expmod.go
  *
- * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -185,7 +185,7 @@ func exportChapterDir(path string, data res.ChapterData) error {
 	}
 	// Areas.
 	areasPath := filepath.Join(path, "areas")
-	for _, a := range data.Areas {
+	for _, a := range data.Resources.Areas {
 		areaPath := filepath.Join(areasPath, a.ID, "main")
 		err = ExportArea(areaPath, a)
 		if err != nil {

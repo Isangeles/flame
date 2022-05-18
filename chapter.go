@@ -1,7 +1,7 @@
 /*
  * chapter.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -249,9 +249,6 @@ func (c *Chapter) Data() res.ChapterData {
 	data.Config["start-skills"] = c.Conf().StartSkills
 	data.Config["start-attrs"] = []string{fmt.Sprintf("%d", c.Conf().StartAttrs)}
 	data.Config["start-level"] = []string{fmt.Sprintf("%d", c.Conf().StartLevel)}
-	for _, a := range c.Areas() {
-		data.Areas = append(data.Areas, a.Data())
-	}
 	data.Resources = *c.res
 	// Remove old characters and objects from resources, besides basic ones.
 	data.Resources.Characters = make([]res.CharacterData, 0)

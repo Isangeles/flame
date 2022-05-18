@@ -1,7 +1,7 @@
 /*
  * module.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ type ModuleData struct {
 type ChapterData struct {
 	ID        string              `xml:"id,attr" json:"id"`
 	Config    map[string][]string `xml:"config" json:"config"`
-	Areas     []AreaData          `xml:"areas>area" json:"areas"`
 	Resources ResourcesData       `xml:"resources" json:"resources"`
 }
 
