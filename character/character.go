@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ type Character struct {
 const (
 	baseExp = 1000
 	useCD   = 2000 // millis
-	moveCD  = 10   // millis
+	moveCD  = 15   // millis
 )
 
 // New creates new character from specified data.
