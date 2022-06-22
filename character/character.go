@@ -543,6 +543,11 @@ func (c *Character) Interrupt() {
 	c.casted.ID = ""
 }
 
+// Cooldown returns character cooldown in milliseconds.
+func (c *Character) Cooldown() int64 {
+	return c.useCooldown
+}
+
 // Dialog returns dialog for specified character.
 func (c *Character) Dialog(char Character) (dial *dialog.Dialog) {
 	// TODO: find proper dialog for specified character.
