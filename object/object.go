@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,12 +35,17 @@ import (
 	"github.com/isangeles/flame/useaction"
 )
 
+const (
+	BaseSightRange = 300.0
+)
+
 // Struct for area objects.
 type Object struct {
 	id, serial      string
 	hp, maxHP       int
 	resilience      objects.Resilience
 	posX, posY      float64
+	sightRange      float64
 	respawn         int64
 	action          *useaction.UseAction
 	inventory       *item.Inventory
@@ -220,6 +225,11 @@ func (ob *Object) Effects() (effects []*effect.Effect) {
 	}
 	ob.effects.Range(addEffect)
 	return
+}
+
+// SightRange returns object sight range.
+func (ob *Object) SightRange() float64 {
+	return ob.sightRange
 }
 
 // SetOnEffectTakenFunc sets function triggered on taking new effect.

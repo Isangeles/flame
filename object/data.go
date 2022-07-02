@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ func (o *Object) Apply(data res.ObjectData) {
 	o.SetMaxHealth(data.MaxHP)
 	o.SetHealth(o.MaxHealth())
 	o.SetPosition(data.PosX, data.PosY)
+	o.sightRange = BaseSightRange
 	o.Inventory().Apply(data.Inventory)
 	o.action = useaction.New(data.UseAction)
 	o.SetSerial(data.Serial)
