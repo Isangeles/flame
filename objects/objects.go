@@ -1,7 +1,7 @@
 /*
  * objects.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,6 +87,7 @@ type AreaObject interface {
 	Positioner
 	AreaID() string
 	SetAreaID(s string)
+	SightRange() float64
 }
 
 // Struct for object effect

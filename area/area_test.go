@@ -26,21 +26,22 @@ package area
 import (
 	"testing"
 
-	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/character"
+	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/objects"
 )
 
 var charData = res.CharacterData{ID: "char"}
 
-// TestNearObjects function for retrieving near objects.
+// TestNearObjects tests function for retrieving near objects.
 func TestNearObjects(t *testing.T) {
 	// Create objects & area.
 	char1 := character.New(charData)
-	char1.SetPosition(10, 10)
+	char1.SetPosition(30, 50)
 	char2 := character.New(charData)
 	char2.SetPosition(10, 15)
 	char3 := character.New(charData)
-	char3.SetPosition(30, 50)
+	char3.SetPosition(10, 10)
 	area := New()
 	area.AddCharacter(char1)
 	area.AddCharacter(char2)
@@ -50,5 +51,59 @@ func TestNearObjects(t *testing.T) {
 	if len(objects) != 2 {
 		t.Errorf("Invalid number of objects returned: %d", len(objects))
 	}
+	if containsObject(char1.ID(), char1.Serial(), objects...) {
+		t.Errorf("Object should not be among returned objects: %s %s",
+			char1.ID(), char1.Serial())
+	}
+	if !containsObject(char2.ID(), char2.Serial(), objects...) {
+		t.Errorf("Object should be among returned objects: %s %s",
+			char2.ID(), char2.Serial())
+	}
+	if !containsObject(char3.ID(), char3.Serial(), objects...) {
+		t.Errorf("Object should be among returned objects: %s %s",
+			char3.ID(), char3.Serial())
+	}
 }
 
+// TestSightRangeObjects tests function for retrieving
+// objects with specified XY position in range.
+func TestSightRangeObjects(t *testing.T) {
+	// Create objects & area.
+	char1 := character.New(charData)
+	char1.SetPosition(0, 0)
+	char2 := character.New(charData)
+	char2.SetPosition(10, 15)
+	char3 := character.New(charData)
+	char3.SetPosition(30, 50)
+	area := New()
+	area.AddCharacter(char1)
+	area.AddCharacter(char2)
+	area.AddCharacter(char3)
+	// Test
+	objects := area.SightRangeObjects(220, 220)
+	if len(objects) != 2 {
+		t.Errorf("Invalid number of objects returned: %d", len(objects))
+	}
+	if containsObject(char1.ID(), char1.Serial(), objects...) {
+		t.Errorf("Object should not be among returned objects: %s %s",
+			char1.ID(), char1.Serial())
+	}
+	if !containsObject(char2.ID(), char2.Serial(), objects...) {
+		t.Errorf("Object should be among returned objects: %s %s",
+			char2.ID(), char2.Serial())
+	}
+	if !containsObject(char3.ID(), char3.Serial(), objects...) {
+		t.Errorf("Object should be among returned objects: %s %s",
+			char3.ID(), char3.Serial())
+	}
+}
+
+// containsObject checks if object with specified ID and serial
+func containsObject(id, serial string, obs ...objects.Positioner) bool {
+	for _, ob := range obs {
+		if ob.ID() == id && ob.Serial() == serial {
+			return true
+		}
+	}
+	return false
+}

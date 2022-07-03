@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -214,6 +214,25 @@ func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
 		posX, posY := o.Position()
 		if ok && math.Hypot(posX-x, posY-y) <= maxrange {
 			obs = append(obs, o)
+		}
+		return true
+	}
+	a.chars.Range(addObject)
+	a.objects.Range(addObject)
+	return
+}
+
+// SightRangeObjects retuns all objects that have specified XY position
+// in their sight range.
+func (a *Area) SightRangeObjects(x, y float64) (obs []objects.Positioner) {
+	addObject := func(k, v interface{}) bool {
+		ob, ok := v.(objects.AreaObject)
+		if !ok {
+			return true
+		}
+		obX, obY := ob.Position()
+		if math.Hypot(obX-x, obY-y) <= ob.SightRange() {
+			obs = append(obs, ob)
 		}
 		return true
 	}
