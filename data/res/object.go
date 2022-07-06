@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ type ObjectData struct {
 	HP        int                `xml:"hp,attr" json:"hp"`
 	PosX      float64            `xml:"pos-x,attr" json:"pos-x"`
 	PosY      float64            `xml:"pos-y,attr" json:"pos-y"`
+	Area      string             `xml:"area" json:"area"`
 	Restore   bool               `xml:"restore,attr" json:"restore"`
 	UseAction UseActionData      `xml:"action" json:"use-action"`
 	Inventory InventoryData      `xml:"inventory" json:"inventory"`

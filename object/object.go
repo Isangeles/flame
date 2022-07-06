@@ -47,6 +47,7 @@ type Object struct {
 	posX, posY      float64
 	sightRange      float64
 	respawn         int64
+	areaID          string
 	action          *useaction.UseAction
 	inventory       *item.Inventory
 	effects         *sync.Map
@@ -191,6 +192,16 @@ func (ob *Object) Experience() int {
 // not have experience. Function to satisfy
 // effect targer interface.
 func (ob *Object) SetExperience(v int) {
+}
+
+// SetAreaID sets area ID for object.
+func (ob *Object) SetAreaID(id string) {
+	ob.areaID = id
+}
+
+// AreaID returns ID of object area.
+func (ob *Object) AreaID() string {
+	return ob.areaID
 }
 
 // UseAction returns object use action.

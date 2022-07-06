@@ -36,6 +36,7 @@ func (o *Object) Apply(data res.ObjectData) {
 	o.SetMaxHealth(data.MaxHP)
 	o.SetHealth(o.MaxHealth())
 	o.SetPosition(data.PosX, data.PosY)
+	o.SetAreaID(data.Area)
 	o.sightRange = BaseSightRange
 	o.Inventory().Apply(data.Inventory)
 	o.action = useaction.New(data.UseAction)
@@ -74,6 +75,7 @@ func (o *Object) Data() res.ObjectData {
 		Serial:    o.Serial(),
 		MaxHP:     o.MaxHealth(),
 		HP:        o.Health(),
+		Area:      o.AreaID(),
 		Inventory: o.Inventory().Data(),
 		UseAction: o.UseAction().Data(),
 		Restore:   true,

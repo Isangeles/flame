@@ -95,6 +95,7 @@ func (a *Area) RemoveCharacter(c *character.Character) {
 // AddObjects adds specified object to object.
 func (a *Area) AddObject(o *object.Object) {
 	a.objects.Store(o.ID()+o.Serial(), o)
+	o.SetAreaID(a.ID())
 }
 
 func (a *Area) RemoveObject(o *object.Object) {
