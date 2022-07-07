@@ -34,7 +34,6 @@ import (
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/object"
-	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/serial"
 )
 
@@ -199,20 +198,6 @@ func (a *Area) Time() time.Time {
 // Weather retuns area weather.
 func (a *Area) Weather() *Weather {
 	return a.weather
-}
-
-// NearTargets returns all targets near specified position.
-func (a *Area) NearTargets(pos objects.Positioner, maxrange float64) (targets []effect.Target) {
-	addTar := func(k, v interface{}) bool {
-		t, ok := v.(effect.Target)
-		if ok && objects.Range(t, pos) <= maxrange {
-			targets = append(targets, t)
-		}
-		return true
-	}
-	a.chars.Range(addTar)
-	a.objects.Range(addTar)
-	return
 }
 
 // NearObjects returns all objects within specified range from specified
