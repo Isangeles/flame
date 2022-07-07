@@ -82,14 +82,6 @@ type Logger interface {
 	ChatLog() *Log
 }
 
-// Interface for area objects.
-type AreaObject interface {
-	Positioner
-	AreaID() string
-	SetAreaID(s string)
-	SightRange() float64
-}
-
 // Struct for object effect
 // types.
 type Element string

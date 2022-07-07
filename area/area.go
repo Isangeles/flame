@@ -49,6 +49,14 @@ type Area struct {
 	subareas *sync.Map
 }
 
+// Interface for area objects.
+type Object interface {
+	effect.Target
+	AreaID() string
+	SetAreaID(s string)
+	SightRange() float64
+}
+
 // New creates new area.
 func New() *Area {
 	a := new(Area)
@@ -209,9 +217,9 @@ func (a *Area) NearTargets(pos objects.Positioner, maxrange float64) (targets []
 
 // NearObjects returns all objects within specified range from specified
 // XY position.
-func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
+func (a *Area) NearObjects(x, y, maxrange float64) (obs []Object) {
 	addObject := func(k, v interface{}) bool {
-		o, ok := v.(objects.Positioner)
+		o, ok := v.(Object)
 		posX, posY := o.Position()
 		if ok && math.Hypot(posX-x, posY-y) <= maxrange {
 			obs = append(obs, o)
@@ -225,9 +233,9 @@ func (a *Area) NearObjects(x, y, maxrange float64) (obs []objects.Positioner) {
 
 // SightRangeObjects retuns all objects that have specified XY position
 // in their sight range.
-func (a *Area) SightRangeObjects(x, y float64) (obs []objects.Positioner) {
+func (a *Area) SightRangeObjects(x, y float64) (obs []Object) {
 	addObject := func(k, v interface{}) bool {
-		ob, ok := v.(objects.AreaObject)
+		ob, ok := v.(Object)
 		if !ok {
 			return true
 		}

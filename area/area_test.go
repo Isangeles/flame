@@ -28,7 +28,6 @@ import (
 
 	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/objects"
 )
 
 var charData = res.CharacterData{ID: "char"}
@@ -99,7 +98,7 @@ func TestSightRangeObjects(t *testing.T) {
 }
 
 // containsObject checks if object with specified ID and serial
-func containsObject(id, serial string, obs ...objects.Positioner) bool {
+func containsObject(id, serial string, obs ...Object) bool {
 	for _, ob := range obs {
 		if ob.ID() == id && ob.Serial() == serial {
 			return true
