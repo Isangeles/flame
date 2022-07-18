@@ -1,7 +1,7 @@
 /*
  * use.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 package character
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
@@ -33,10 +33,17 @@ import (
 	"github.com/isangeles/flame/useaction"
 )
 
+var (
+	REQS_NOT_MEET = errors.New("requirements not meet")
+	NOT_READY_YET = errors.New("not ready yet")
+	IN_MOVE       = errors.New("impossible while moving")
+)
+
 // Use checks requirements and starts cast action for
 // specified usable object.
-// Returns an error if use requirements are not meet,
-// cooldown is active, or character is currently moving.
+// Returns an error if use requirements are not
+// meet(REQS_NOT_MEET), if cooldown is active(NOT_READY_YET),
+// or if character is currently moving(IN_MOVE).
 func (c *Character) Use(ob useaction.Usable) error {
 	if !c.Live() || ob.UseAction() == nil {
 		return nil
@@ -46,9 +53,14 @@ func (c *Character) Use(ob useaction.Usable) error {
 		reqs = t.Requirements()
 	}
 	// Check requirements and cooldown.
-	if !c.MeetReqs(reqs...) || c.useCooldown > 0 ||
-		ob.UseAction().Cooldown() > 0 || c.Moving() {
-		return fmt.Errorf("cant cast action")
+	if !c.MeetReqs(reqs...) {
+		return REQS_NOT_MEET
+	}
+	if c.useCooldown > 0 || ob.UseAction().Cooldown() > 0 {
+		return NOT_READY_YET
+	}
+	if c.Moving() {
+		return IN_MOVE
 	}
 	c.casted = res.CastedObjectData{ID: ob.ID()}
 	if ob.UseAction().Owner() != nil {
