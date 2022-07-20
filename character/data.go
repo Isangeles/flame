@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetAreaID(data.Area)
 	c.SetGuild(NewGuild(data.Guild))
 	c.action = useaction.New(data.Action)
+	c.useCooldown = data.UseCooldown
 	c.moveCooldown = data.MoveCooldown
 	c.casted = data.Casted
 	c.targets = data.Targets
@@ -212,6 +213,7 @@ func (c *Character) Data() res.CharacterData {
 		Kills:        c.kills,
 		Restore:      true,
 		Area:         c.AreaID(),
+		UseCooldown:  c.useCooldown,
 		MoveCooldown: c.moveCooldown,
 	}
 	if c.Race() != nil {
