@@ -32,7 +32,6 @@ import (
 )
 
 var (
-	charData      = res.CharacterData{ID: "char", Attributes: res.AttributesData{5, 5, 5, 5, 5}}
 	healthReqData = res.HealthReqData{10, false, true}
 	manaReqData   = res.ManaReqData{10, false, true}
 	itemReqData   = res.ItemReqData{"item1", 1, true}

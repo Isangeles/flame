@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2019-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,6 +56,7 @@ type CharacterData struct {
 	Restore      bool                  `xml:"restore,attr" json:"restore"`
 	Action       UseActionData         `xml:"action" json:"action"`
 	Area         string                `xml:"area,attr" json:"area"`
+	UseCooldown  int64                 `xml:"use-cooldown,attr" json:"use-cooldown"`
 	MoveCooldown int64                 `xml:"move-cooldown,attr" json:"move-cooldown"`
 	Attributes   AttributesData        `xml:"attributes" json:"attributes"`
 	Inventory    InventoryData         `xml:"inventory" json:"inventory"`
