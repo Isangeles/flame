@@ -1,7 +1,7 @@
 /*
  * skill.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,9 @@ type Skill struct {
 func New(data res.SkillData) *Skill {
 	s := new(Skill)
 	s.id = data.ID
-	s.useAction = useaction.New(data.UseAction)
+	if hasUseActionData(data.UseAction) {
+		s.useAction = useaction.New(data.UseAction)
+	}
 	s.passiveReqs = req.NewRequirements(data.Passive.Requirements)
 	for _, ed := range data.Passive.Effects {
 		data := res.Effect(ed.ID)
@@ -104,4 +106,18 @@ func (s *Skill) PassiveEffects() []res.EffectData {
 func (s *Skill) SetOwner(owner User) {
 	s.UseAction().SetOwner(owner)
 	s.owner = owner
+}
+
+// hasUseActionData checks if specified use action
+// data contains any effects or modifiers.
+func hasUseActionData(data res.UseActionData) bool {
+	userMods := effect.NewModifiers(data.UserMods)
+	objectMods := effect.NewModifiers(data.ObjectMods)
+	targetMods := effect.NewModifiers(data.TargetMods)
+	targetUserMods := effect.NewModifiers(data.TargetUserMods)
+	mods := len(userMods) + len(objectMods) + len(targetMods) +
+		len(targetUserMods)
+	effects := len(data.UserEffects) + len(data.ObjectEffects) +
+		len(data.TargetEffects) + len(data.TargetUserEffects)
+	return effects + mods > 0
 }
