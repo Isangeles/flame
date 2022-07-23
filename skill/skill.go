@@ -62,7 +62,9 @@ func New(data res.SkillData) *Skill {
 
 // Update updates skill.
 func (s *Skill) Update(delta int64) {
-	s.UseAction().Update(delta)
+	if s.UseAction() != nil {
+		s.UseAction().Update(delta)
+	}
 	if s.owner == nil {
 		return
 	}
@@ -104,7 +106,9 @@ func (s *Skill) PassiveEffects() []res.EffectData {
 
 // SetOwner sets specified skill user as skill owner.
 func (s *Skill) SetOwner(owner User) {
-	s.UseAction().SetOwner(owner)
+	if s.UseAction() != nil {
+		s.UseAction().SetOwner(owner)
+	}
 	s.owner = owner
 }
 
