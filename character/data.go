@@ -96,7 +96,9 @@ func (c *Character) Apply(data res.CharacterData) {
 			continue
 		}
 		s = skill.New(*skillData)
-		s.UseAction().SetCooldown(charSkillData.Cooldown)
+		if s.UseAction() != nil {
+			s.UseAction().SetCooldown(charSkillData.Cooldown)
+		}
 		c.AddSkill(s)
 	}
 	// Add racial skills.

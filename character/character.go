@@ -397,7 +397,9 @@ func (c *Character) SetSerial(serial string) {
 	c.serial = serial
 	// Update ownerships.
 	for _, s := range c.Skills() {
-		s.UseAction().SetOwner(c)
+		if s.UseAction() != nil {
+			s.UseAction().SetOwner(c)
+		}
 	}
 	for _, r := range c.Crafting().Recipes() {
 		r.UseAction().SetOwner(c)
