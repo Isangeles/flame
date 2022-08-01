@@ -31,7 +31,11 @@ import (
 )
 
 var (
-	skillData = res.SkillData{ID: "skill"}
+	healthModData = res.HealthModData{1, 10}
+	useActionData = res.UseActionData{TargetMods: res.ModifiersData{
+		HealthMods: []res.HealthModData{healthModData},
+	}}
+	skillData = res.SkillData{ID: "skill", UseAction: useActionData}
 )
 
 // TestUse tests use function.
