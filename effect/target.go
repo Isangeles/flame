@@ -1,7 +1,7 @@
 /*
  * target.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ type Target interface {
 	objects.Positioner
 	Effects() []*Effect
 	HitEffects() []*Effect
+	HitModifiers() []Modifier
 	TakeEffect(e *Effect)
 	RemoveEffect(e *Effect)
 	TakeModifiers(s serial.Serialer, m ...Modifier)

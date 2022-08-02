@@ -1,7 +1,7 @@
 /*
  * combat.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,8 +83,8 @@ func (c *Character) DamageType() objects.Element {
 	return objects.ElementNone
 }
 
-// DamageEffects returns character damage effects.
-func (c *Character) DamageEffects() []*effect.Effect {
+// HitEffects returns character hit effects.
+func (c *Character) HitEffects() []*effect.Effect {
 	effects := make([]*effect.Effect, 0)
 	var rightHandItem item.Equiper
 	for _, s := range c.Equipment().Slots() {
@@ -103,21 +103,14 @@ func (c *Character) DamageEffects() []*effect.Effect {
 	return effects
 }
 
-// HitEffects returns all character hit effects.
-func (c *Character) HitEffects() []*effect.Effect {
+// HitModifiers returns character hit modifiers.
+func (c *Character) HitModifiers() []effect.Modifier {
 	dmgMin, dmgMax := c.Damage()
 	healthMod := res.HealthModData{-dmgMin, -dmgMax}
 	mods := res.ModifiersData{
 		HealthMods: []res.HealthModData{healthMod},
 	}
-	hitData := res.EffectData{
-		ID:        c.ID() + c.Serial() + "_hit",
-		Modifiers: mods,
-	}
-	hitEffect := c.buildEffects(hitData)
-	effects := c.DamageEffects()
-	effects = append(effects, hitEffect...)
-	return effects
+	return effect.NewModifiers(mods)
 }
 
 // takeEffects adds specified effects
@@ -135,6 +128,7 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 		for _, e := range s.HitEffects() {
 			c.TakeEffect(e)
 		}
+		c.TakeModifiers(s, s.HitModifiers()...)
 	}
 	if c.onEffectTaken != nil {
 		c.onEffectTaken(e)

@@ -1,7 +1,7 @@
 /*
  * combat.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,12 @@ package object
 import (
 	"github.com/isangeles/flame/effect"
 )
+
+// HitModifiers returns all object hit modifiers.
+func (ob *Object) HitModifiers() []effect.Modifier {
+	modifiers := make([]effect.Modifier, 0)
+	return modifiers
+}
 
 // HitEffects returns all object hit effects.
 func (ob *Object) HitEffects() []*effect.Effect {
