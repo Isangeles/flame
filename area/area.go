@@ -43,7 +43,6 @@ type Area struct {
 	time     time.Time
 	weather  *Weather
 	respawn  *Respawn
-	chars    *sync.Map
 	objects  *sync.Map
 	subareas *sync.Map
 }
@@ -59,7 +58,6 @@ type Object interface {
 // New creates new area.
 func New() *Area {
 	a := new(Area)
-	a.chars = new(sync.Map)
 	a.objects = new(sync.Map)
 	a.subareas = new(sync.Map)
 	a.weather = newWeather(a)
@@ -90,13 +88,13 @@ func (a *Area) ID() string {
 
 // AddCharacter adds specified character to object.
 func (a *Area) AddCharacter(c *character.Character) {
-	a.chars.Store(c.ID()+c.Serial(), c)
+	a.objects.Store(c.ID()+c.Serial(), c)
 	c.SetAreaID(a.ID())
 }
 
 // RemoveCharacter removes specified character from object.
 func (a *Area) RemoveCharacter(c *character.Character) {
-	a.chars.Delete(c.ID() + c.Serial())
+	a.objects.Delete(c.ID() + c.Serial())
 }
 
 // AddObjects adds specified object to object.
@@ -129,7 +127,7 @@ func (a *Area) Characters() (chars []*character.Character) {
 		}
 		return true
 	}
-	a.chars.Range(addChar)
+	a.objects.Range(addChar)
 	return
 }
 
@@ -211,7 +209,6 @@ func (a *Area) NearObjects(x, y, maxrange float64) (obs []Object) {
 		}
 		return true
 	}
-	a.chars.Range(addObject)
 	a.objects.Range(addObject)
 	return
 }
@@ -230,7 +227,6 @@ func (a *Area) SightRangeObjects(x, y float64) (obs []Object) {
 		}
 		return true
 	}
-	a.chars.Range(addObject)
 	a.objects.Range(addObject)
 	return
 }
@@ -252,11 +248,11 @@ func (a *Area) Apply(data res.AreaData) {
 			}
 		}
 		if !found {
-			a.chars.Delete(key)
+			a.objects.Delete(key)
 		}
 		return true
 	}
-	a.chars.Range(removeChars)
+	a.objects.Range(removeChars)
 	// Characters.
 	for _, areaCharData := range data.Characters {
 		// Retireve char data.
@@ -271,7 +267,7 @@ func (a *Area) Apply(data res.AreaData) {
 		if ok {
 			// Apply data and add to area if not present already.
 			char.Apply(*charData)
-			_, inArea := a.chars.Load(areaCharData.ID + areaCharData.Serial)
+			_, inArea := a.objects.Load(areaCharData.ID + areaCharData.Serial)
 			if !inArea {
 				a.AddCharacter(char)
 			}

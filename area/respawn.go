@@ -89,13 +89,12 @@ func (r *Respawn) Update() {
 func (r *Respawn) Apply(data res.RespawnData) {
 	r.queue = new(sync.Map)
 	for _, ob := range data.Queue {
-		char, _ := r.area.chars.Load(ob.ID + ob.Serial)
-		if char, ok := char.(*character.Character); ok {
-			r.queue.Store(time.Unix(ob.Time, 0), char)
+		areaOb, _ := r.area.objects.Load(ob.ID + ob.Serial)
+		if _, ok := areaOb.(*character.Character); ok {
+			r.queue.Store(time.Unix(ob.Time, 0), areaOb)
 			continue
 		}
-		areaOb, _ := r.area.objects.Load(ob.ID + ob.Serial)
-		if areaOb, ok := areaOb.(*object.Object); ok {
+		if _, ok := areaOb.(*object.Object); ok {
 			r.queue.Store(time.Unix(ob.Time, 0), areaOb)
 		}
 	}
