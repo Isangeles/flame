@@ -1,7 +1,7 @@
 /*
  * respawn.go
  *
- * Copyright 2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2021-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,13 +51,6 @@ func newRespawn(area *Area) *Respawn {
 
 // Update updates respawn.
 func (r *Respawn) Update() {
-	for _, char := range r.area.Characters() {
-		_, inQueue := r.queue.Load(char)
-		if inQueue || char.Live() || char.Respawn() < 1 {
-			continue
-		}
-		r.queue.Store(char, r.area.time.Add(time.Duration(char.Respawn())*time.Millisecond))
-	}
 	for _, ob := range r.area.Objects() {
 		_, inQueue := r.queue.Load(ob)
 		if inQueue || ob.Live() || ob.Respawn() < 1 {
@@ -134,8 +127,8 @@ func (r *Respawn) respawnChar(char *character.Character) {
 	for _, f := range char.Flags() {
 		newChar.AddFlag(f)
 	}
-	r.area.AddCharacter(newChar)
-	r.area.RemoveCharacter(char)
+	r.area.AddObject(newChar)
+	r.area.RemoveObject(char)
 }
 
 // respawnObject respawns specified object.

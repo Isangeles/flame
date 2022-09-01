@@ -50,6 +50,9 @@ type Area struct {
 // Interface for area objects.
 type Object interface {
 	effect.Target
+	Update(d int64)
+	Live() bool
+	Respawn() int64
 	AreaID() string
 	SetAreaID(s string)
 	SightRange() float64
@@ -69,9 +72,6 @@ func New() *Area {
 func (a *Area) Update(delta int64) {
 	a.time = a.time.Add(time.Duration(delta) * time.Millisecond)
 	a.Weather().update()
-	for _, c := range a.Characters() {
-		c.Update(delta)
-	}
 	for _, o := range a.Objects() {
 		o.Update(delta)
 	}
@@ -86,24 +86,14 @@ func (a *Area) ID() string {
 	return a.id
 }
 
-// AddCharacter adds specified character to object.
-func (a *Area) AddCharacter(c *character.Character) {
-	a.objects.Store(c.ID()+c.Serial(), c)
-	c.SetAreaID(a.ID())
-}
-
-// RemoveCharacter removes specified character from object.
-func (a *Area) RemoveCharacter(c *character.Character) {
-	a.objects.Delete(c.ID() + c.Serial())
-}
-
-// AddObjects adds specified object to object.
-func (a *Area) AddObject(o *object.Object) {
+// AddObjects adds specified object to area.
+func (a *Area) AddObject(o Object) {
 	a.objects.Store(o.ID()+o.Serial(), o)
 	o.SetAreaID(a.ID())
 }
 
-func (a *Area) RemoveObject(o *object.Object) {
+// RemoveObject removes specified object from area.
+func (a *Area) RemoveObject(o Object) {
 	a.objects.Delete(o.ID() + o.Serial())
 }
 
@@ -117,35 +107,11 @@ func (a *Area) RemoveSubarea(sa *Area) {
 	a.subareas.Delete(sa.ID())
 }
 
-// Chracters returns list with characters in
-// area(excluding subareas).
-func (a *Area) Characters() (chars []*character.Character) {
-	addChar := func(k, v interface{}) bool {
-		c, ok := v.(*character.Character)
-		if ok {
-			chars = append(chars, c)
-		}
-		return true
-	}
-	a.objects.Range(addChar)
-	return
-}
-
-// AllCharacters returns list with all characters in
-// area and subareas.
-func (a *Area) AllCharacters() (chars []*character.Character) {
-	chars = a.Characters()
-	for _, sa := range a.Subareas() {
-		chars = append(chars, sa.AllCharacters()...)
-	}
-	return
-}
-
 // Objects returns list with all objects in
 // area(excluding subareas).
-func (a *Area) Objects() (objects []*object.Object) {
+func (a *Area) Objects() (objects []Object) {
 	addObject := func(k, v interface{}) bool {
-		o, ok := v.(*object.Object)
+		o, ok := v.(Object)
 		if ok {
 			objects = append(objects, o)
 		}
@@ -157,7 +123,7 @@ func (a *Area) Objects() (objects []*object.Object) {
 
 // AllObjects retuns list with all objects in
 // area and subareas.
-func (a *Area) AllObjects() (objects []*object.Object) {
+func (a *Area) AllObjects() (objects []Object) {
 	objects = a.Objects()
 	for _, sa := range a.Subareas() {
 		objects = append(objects, sa.AllObjects()...)
@@ -237,7 +203,7 @@ func (a *Area) Apply(data res.AreaData) {
 	a.time, _ = time.Parse(time.Kitchen, data.Time)
 	a.weather.conditions = Conditions(data.Weather)
 	a.respawn.Apply(data.Respawn)
-	// Remove characters not present anymore.
+	// Remove objects not present anymore.
 	removeChars := func(key, value interface{}) bool {
 		key, _ = key.(string)
 		found := false
@@ -269,13 +235,13 @@ func (a *Area) Apply(data res.AreaData) {
 			char.Apply(*charData)
 			_, inArea := a.objects.Load(areaCharData.ID + areaCharData.Serial)
 			if !inArea {
-				a.AddCharacter(char)
+				a.AddObject(char)
 			}
 		} else {
 			// Add new character to area.
 			charData.Flags = append(charData.Flags, areaCharData.Flags...)
 			char = character.New(*charData)
-			a.AddCharacter(char)
+			a.AddObject(char)
 		}
 		char.SetRespawn(areaCharData.Respawn)
 		// Set position.
@@ -336,7 +302,11 @@ func (a *Area) Data() res.AreaData {
 		Time:    a.Time().Format(time.Kitchen),
 		Respawn: a.respawn.Data(),
 	}
-	for _, c := range a.Characters() {
+	for _, o := range a.Objects() {
+		c, ok := o.(*character.Character)
+		if !ok {
+			continue
+		}
 		charData := res.AreaCharData{
 			ID:     c.ID(),
 			Serial: c.Serial(),
@@ -348,6 +318,10 @@ func (a *Area) Data() res.AreaData {
 		data.Characters = append(data.Characters, charData)
 	}
 	for _, o := range a.Objects() {
+		o, ok := o.(*object.Object)
+		if !ok {
+			continue
+		}
 		obData := res.AreaObjectData{
 			ID:     o.ID(),
 			Serial: o.Serial(),

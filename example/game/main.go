@@ -1,7 +1,7 @@
 /*
  * main.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ func main() {
 		panic(fmt.Errorf("Start area not found: %s",
 			chapterConf.StartArea))
 	}
-	startArea.AddCharacter(pc)
+	startArea.AddObject(pc)
 	pc.SetPosition(chapterConf.StartPosX, chapterConf.StartPosY)
 	// Print game info.
 	fmt.Printf("Game started\n")

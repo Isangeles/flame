@@ -42,9 +42,9 @@ func TestNearObjects(t *testing.T) {
 	char3 := character.New(charData)
 	char3.SetPosition(10, 10)
 	area := New()
-	area.AddCharacter(char1)
-	area.AddCharacter(char2)
-	area.AddCharacter(char3)
+	area.AddObject(char1)
+	area.AddObject(char2)
+	area.AddObject(char3)
 	// Test.
 	objects := area.NearObjects(0, 0, 20)
 	if len(objects) != 2 {
@@ -75,9 +75,9 @@ func TestSightRangeObjects(t *testing.T) {
 	char3 := character.New(charData)
 	char3.SetPosition(30, 50)
 	area := New()
-	area.AddCharacter(char1)
-	area.AddCharacter(char2)
-	area.AddCharacter(char3)
+	area.AddObject(char1)
+	area.AddObject(char2)
+	area.AddObject(char3)
 	// Test
 	objects := area.SightRangeObjects(220, 220)
 	if len(objects) != 2 {
