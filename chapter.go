@@ -171,18 +171,18 @@ func (c *Chapter) Object(id, serial string) serial.Serialer {
 	return nil
 }
 
-// CharacterArea returns area where specified character
+// ObjectArea returns area where specified area object
 // is present, or nil if no such area was found.
-func (c *Chapter) CharacterArea(char *character.Character) *area.Area {
+func (c *Chapter) ObjectArea(ob area.Object) *area.Area {
 	for _, a := range c.areas {
 		for _, o := range a.Objects() {
-			if o.ID() == char.ID() && o.Serial() == char.Serial() {
+			if o.ID() == ob.ID() && o.Serial() == ob.Serial() {
 				return a
 			}
 		}
 		for _, a := range a.AllSubareas() {
 			for _, o := range a.Objects() {
-				if o.ID() == char.ID() && o.Serial() == char.Serial() {
+				if o.ID() == ob.ID() && o.Serial() == ob.Serial() {
 					return a
 				}
 			}
@@ -284,7 +284,7 @@ func (c *Chapter) Data() res.ChapterData {
 // proper areas, if needed.
 func (c *Chapter) updateObjectsArea() {
 	for _, char := range c.Characters() {
-		currentArea := c.CharacterArea(char)
+		currentArea := c.ObjectArea(char)
 		if currentArea != nil && currentArea.ID() == char.AreaID() {
 			continue
 		}
