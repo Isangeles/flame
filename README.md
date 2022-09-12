@@ -74,7 +74,7 @@ Note that documentation of data files is still incomplete.
 ## Contributing
 You are welcome to contribute to project development.
 
-If you looking for things to do, then check [TODO file](https://github.com/Isangeles/flame/blob/master/TODO) or contact me(dev@isangeles.pl).
+If you looking for things to do, then check [TODO file](https://github.com/Isangeles/flame/blob/master/TODO) or contact maintainer(ds@isangeles.dev).
 
 When you find something to do, create a new branch for your feature.
 After you finish, open a pull request to merge your changes with master branch.
