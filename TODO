@@ -28,7 +28,6 @@ MINOR:
 * Movement speed modifier
 * Handling requirements for area objects
 * Handling area objects in chapter updateObjectsArea function
-* Character: remove onSkillActivated event(remove completely or replace with onUse)
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module

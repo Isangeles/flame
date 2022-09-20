@@ -80,7 +80,6 @@ type Character struct {
 	trainings        []*training.TrainerTraining
 	casted           res.CastedObjectData
 	chatLog          *objects.Log
-	onSkillActivated func(s *skill.Skill)
 	onChatSent       func(t string)
 	onModifierTaken  func(m effect.Modifier)
 	onEffectTaken    func(e *effect.Effect)
@@ -513,12 +512,6 @@ func (c *Character) Fighting() bool {
 // ChatLog returns character speech log channel.
 func (c *Character) ChatLog() *objects.Log {
 	return c.chatLog
-}
-
-// SetOnSkillActivatedFunc sets function triggered after
-// activation one of character skills.
-func (c *Character) SetOnSkillActivatedFunc(f func(s *skill.Skill)) {
-	c.onSkillActivated = f
 }
 
 // SetOnChatSentFunc sets function triggered after sending text

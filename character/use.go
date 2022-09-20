@@ -28,7 +28,6 @@ import (
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
-	"github.com/isangeles/flame/skill"
 	"github.com/isangeles/flame/training"
 	"github.com/isangeles/flame/useaction"
 )
@@ -114,9 +113,6 @@ func (c *Character) useCasted(ob useaction.Usable) {
 			e.SetSource(c.ID(), c.Serial())
 			c.TakeEffect(e)
 		}
-	}
-	if s, ok := ob.(*skill.Skill); ok && c.onSkillActivated != nil {
-		c.onSkillActivated(s)
 	}
 	ob.UseAction().SetCast(0)
 	ob.UseAction().SetCooldown(ob.UseAction().CooldownMax())
