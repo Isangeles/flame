@@ -1,7 +1,7 @@
 /*
  * log.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,13 +44,21 @@ type Message struct {
 
 // NewLog creates new log.
 func NewLog() *Log {
-	l := Log{channel: make(chan Message, 3)}
-	return &l
+	return &Log{channel: make(chan Message, 3)}
+}
+
+// NewMessage creates new message.
+// Message time will be set to current system time.
+func NewMessage(text string, translated bool) Message {
+	return Message{
+		Text:       text,
+		Translated: translated,
+		time:       time.Now(),
+	}
 }
 
 // Add adds new message to log.
 func (l *Log) Add(message Message) {
-	message.time = time.Now()
 	select {
 	case l.channel <- message:
 	default:
