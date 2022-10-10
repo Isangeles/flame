@@ -36,11 +36,7 @@ type Log struct {
 }
 
 // Struct for character log message.
-type Message struct {
-	Translated bool
-	Text       string
-	time       time.Time
-}
+type Message res.ObjectLogMessageData
 
 // NewLog creates new log.
 func NewLog() *Log {
@@ -53,7 +49,7 @@ func NewMessage(text string, translated bool) Message {
 	return Message{
 		Text:       text,
 		Translated: translated,
-		time:       time.Now(),
+		Time:       time.Now(),
 	}
 }
 
@@ -85,16 +81,14 @@ func (l *Log) Clear() {
 func (l *Log) Apply(data res.ObjectLogData) {
 	l.Clear()
 	for _, md := range data.Messages {
-		m := Message{md.Translated, md.Text, md.Time}
-		l.messages = append(l.messages, m)
+		l.messages = append(l.messages, Message(md))
 	}
 }
 
 // Data creates data resource for object log.
 func (l *Log) Data() (data res.ObjectLogData) {
 	for _, m := range l.Messages() {
-		md := res.ObjectLogMessageData{m.Translated, m.String(), m.Time()}
-		data.Messages = append(data.Messages, md)
+		data.Messages = append(data.Messages, res.ObjectLogMessageData(m))
 	}
 	return
 }
@@ -102,9 +96,4 @@ func (l *Log) Data() (data res.ObjectLogData) {
 // String returns message text.
 func (m Message) String() string {
 	return m.Text
-}
-
-// Time returns message time.
-func (m Message) Time() time.Time {
-	return m.time
 }
