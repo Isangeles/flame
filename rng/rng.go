@@ -1,7 +1,7 @@
 /*
  * rng.go
  *
- * Copyright 2019 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ func RollInt(min, max int) int {
 	if max < 1 {
 		max *= -1
 	}
-	roll := min + rng.Intn(max - min)
+	roll := min + rng.Intn(max - min + 1)
 	if neg {
 		return -roll
 	}
