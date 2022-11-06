@@ -36,16 +36,18 @@ var (
 	REQS_NOT_MEET = errors.New("requirements not meet")
 	NOT_READY_YET = errors.New("not ready yet")
 	IN_MOVE       = errors.New("impossible while moving")
+	CANT_USE      = errors.New("object can't be used")
 )
 
 // Use checks requirements and starts cast action for
 // specified usable object.
 // Returns an error if use requirements are not
 // meet(REQS_NOT_MEET), if cooldown is active(NOT_READY_YET),
-// or if character is currently moving(IN_MOVE).
+// if character is currently moving(IN_MOVE) or if character
+// is dead or specified usable has no use action(CANT_USE).
 func (c *Character) Use(ob useaction.Usable) error {
 	if !c.Live() || ob.UseAction() == nil {
-		return nil
+		return CANT_USE
 	}
 	reqs := ob.UseAction().Requirements()
 	if t, ok := ob.(*training.TrainerTraining); ok {

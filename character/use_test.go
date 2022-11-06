@@ -53,6 +53,44 @@ func TestUse(t *testing.T) {
 	}
 }
 
+// TestUseCharDead tests dead character error for
+// use function.
+func TestUseCharDead(t *testing.T) {
+	char := New(charData)
+	reqs := res.ReqsData{
+		ItemReqs: []res.ItemReqData{itemReqData},
+	}
+	var skillData = skillData
+	skillData.UseAction.Requirements = reqs
+	skill := skill.New(skillData)
+	char.AddSkill(skill)
+	char.SetHealth(0)
+	err := char.Use(skill)
+	if err == nil {
+		t.Fatalf("No error returned")
+	}
+	if err != CANT_USE {
+		t.Fatalf("Invalid error returned: %v", err)
+	}
+}
+
+// TestUseNoUseAction tests no object use action for
+// use function.
+func TestUseNoUseAction(t *testing.T) {
+	char := New(charData)
+	var skillData = skillData
+	skillData.UseAction = res.UseActionData{}
+	skill := skill.New(skillData)
+	char.AddSkill(skill)
+	err := char.Use(skill)
+	if err == nil {
+		t.Fatalf("No error returned")
+	}
+	if err != CANT_USE {
+		t.Fatalf("Invalid error returned: %v", err)
+	}
+}
+
 // TestUseReqsNotMeet tests requirements not meet
 // error for use function.
 func TestUseReqsNotMeet(t *testing.T) {
