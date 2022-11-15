@@ -133,6 +133,44 @@ func TestReqsDataXml(t *testing.T) {
 	}
 }
 
+// TestLevelReqDataXml tests level requirements data JSON mappings.
+func TestLevelReqDataJson(t *testing.T) {
+	data, err := testData("levelreq.json")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(LevelReqData)
+	err = json.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal test data: %v", err)
+	}
+	if req.Min != 1 {
+		t.Errorf("Invalid min value: %d != 1", req.Min)
+	}
+	if req.Max != 2 {
+		t.Errorf("Invalid max value: %d != 2", req.Max)
+	}
+}
+
+// TestLevelReqDataXml tests level requirements data XML mappings.
+func TestLevelReqDataXml(t *testing.T) {
+	data, err := testData("levelreq.xml")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(LevelReqData)
+	err = xml.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal test data: %v", err)
+	}
+	if req.Min != 1 {
+		t.Errorf("Invalid min value: %d != 1", req.Min)
+	}
+	if req.Max != 2 {
+		t.Errorf("Invalid max value: %d != 2", req.Max)
+	}
+}
+
 // TestItemReqDataJson tests item requirement data JSON mappings.
 func TestItemReqDataJson(t *testing.T) {
 	data, err := testData("itemreq.json")
