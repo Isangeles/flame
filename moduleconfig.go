@@ -1,7 +1,7 @@
 /*
  * moduleconfig.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,9 +84,4 @@ func (c ModuleConfig) RacesPath() string {
 // LangPath returns path to lang directory.
 func (c ModuleConfig) LangPath() string {
 	return filepath.Join(c.Path, "lang")
-}
-
-// SavesPath returns path to saves directory.
-func (c ModuleConfig) SavesPath() string {
-	return filepath.Join(c.Path, "saves")
 }
