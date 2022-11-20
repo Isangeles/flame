@@ -1,7 +1,7 @@
 /*
  * main.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,9 +80,10 @@ func update(mod *flame.Module) {
 // areaCharacter returns game character from specified area or nil if character
 // with such ID and serial value was not found.
 func areaCharacter(a *area.Area, id, serial string) *character.Character {
-	for _, c := range a.Characters() {
-		if c.ID() == id && c.Serial() == serial {
-			return c
+	for _, object := range a.Objects() {
+		if object.ID() == id && object.Serial() == serial {
+			char, _ := object.(*character.Character)
+			return char
 		}
 	}
 	return nil
