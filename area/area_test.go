@@ -30,7 +30,10 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-var charData = res.CharacterData{ID: "char"}
+var (
+	areaData = res.AreaData{ID: "area"}
+	charData = res.CharacterData{ID: "char"}
+)
 
 // TestNearObjects tests function for retrieving near objects.
 func TestNearObjects(t *testing.T) {
@@ -41,7 +44,7 @@ func TestNearObjects(t *testing.T) {
 	char2.SetPosition(10, 15)
 	char3 := character.New(charData)
 	char3.SetPosition(10, 10)
-	area := New()
+	area := New(areaData)
 	area.AddObject(char1)
 	area.AddObject(char2)
 	area.AddObject(char3)
@@ -74,7 +77,7 @@ func TestSightRangeObjects(t *testing.T) {
 	char2.SetPosition(10, 15)
 	char3 := character.New(charData)
 	char3.SetPosition(30, 50)
-	area := New()
+	area := New(areaData)
 	area.AddObject(char1)
 	area.AddObject(char2)
 	area.AddObject(char3)

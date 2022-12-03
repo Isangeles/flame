@@ -59,12 +59,13 @@ type Object interface {
 }
 
 // New creates new area.
-func New() *Area {
+func New(data res.AreaData) *Area {
 	a := new(Area)
 	a.objects = new(sync.Map)
 	a.subareas = new(sync.Map)
 	a.weather = newWeather(a)
 	a.respawn = newRespawn(a)
+	a.Apply(data)
 	return a
 }
 
@@ -287,8 +288,7 @@ func (a *Area) Apply(data res.AreaData) {
 		v, _ := a.subareas.Load(subareaData.ID)
 		subarea, _ := v.(*Area)
 		if subarea == nil {
-			subarea = New()
-			subarea.Apply(subareaData)
+			subarea = New(subareaData)
 			a.AddSubarea(subarea)
 		}
 		subarea.Apply(subareaData)

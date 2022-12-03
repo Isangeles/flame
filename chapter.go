@@ -212,8 +212,7 @@ func (c *Chapter) Apply(data res.ChapterData) {
 	for _, ad := range data.Resources.Areas {
 		a := c.Area(ad.ID)
 		if a == nil {
-			a = area.New()
-			a.Apply(ad)
+			a = area.New(ad)
 			c.AddAreas(a)
 			continue
 		}
@@ -296,8 +295,7 @@ func (c *Chapter) updateObjectsArea() {
 				char.SetAreaID(currentArea.ID())
 				return
 			}
-			newArea = area.New()
-			newArea.Apply(*areaData)
+			newArea = area.New(*areaData)
 			c.AddAreas(newArea)
 		}
 		newArea.AddObject(char)
