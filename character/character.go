@@ -395,6 +395,9 @@ func (c *Character) SetDefaultPosition(x, y float64) {
 func (c *Character) SetSerial(serial string) {
 	c.serial = serial
 	// Update ownerships.
+	if c.UseAction() != nil {
+		c.UseAction().SetOwner(c)
+	}
 	for _, s := range c.Skills() {
 		if s.UseAction() != nil {
 			s.UseAction().SetOwner(c)
