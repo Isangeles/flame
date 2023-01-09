@@ -1,7 +1,7 @@
 /*
  * module.go
  *
- * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@ type ChapterData struct {
 // Struct for module resouces data.
 type ResourcesData struct {
 	Characters       []CharacterData       `xml:"characters>character" json:"characters"`
-	Objects          []ObjectData          `xml:"objects>object" json:"objects"`
 	Effects          []EffectData          `xml:"effects>effect" json:"effects"`
 	Skills           []SkillData           `xml:"skills>skill" json:"skills"`
 	Armors           []ArmorData           `xml:"armors>armor" json:"armors"`

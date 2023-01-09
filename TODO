@@ -12,7 +12,6 @@ MAJOR:
 * Currently, the kill requirement is checked against all of the character kill records,
   this is a problem while creating a quest that requires to kill something after accepting the
   quest(kill records could already be present and the quest stage will be completed immediately)
-* Remove object.Object struct, all area objects can be characters
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
@@ -26,8 +25,6 @@ MINOR:
 * Apply function for UseAction struct
 * Appearance struct for game character
 * Movement speed modifier
-* Handling requirements for area objects
-* Handling area objects in chapter updateObjectsArea function
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module

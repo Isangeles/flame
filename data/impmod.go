@@ -1,7 +1,7 @@
 /*
  * impmod.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2023 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,11 +84,6 @@ func ImportModuleDir(path string) (data res.ModuleData, err error) {
 	if err != nil {
 		log.Err.Printf("Import module: unable to imports races: %v", err)
 	}
-	// Objects.
-	data.Resources.Objects, err = ImportObjectsDir(filepath.Join(path, "objects"))
-	if err != nil {
-		log.Err.Printf("Import module: unable to import objects: %v", err)
-	}
 	// Skills.
 	data.Resources.Skills, err = ImportSkillsDir(filepath.Join(path, "skills"))
 	if err != nil {
@@ -159,11 +154,6 @@ func ImportChapterDir(path string) (data res.ChapterData, err error) {
 	data.Resources.Characters, err = ImportCharactersDir(filepath.Join(path, "characters"))
 	if err != nil {
 		log.Err.Printf("Import chapter: unable to import characters: %v", err)
-	}
-	// Objects.
-	data.Resources.Objects, err = ImportObjectsDir(filepath.Join(path, "objects"))
-	if err != nil {
-		log.Err.Printf("Import chapter: unable to import objects: %v", err)
 	}
 	// Quests.
 	data.Resources.Quests, err = ImportQuestsDir(filepath.Join(path, "quests"))

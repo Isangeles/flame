@@ -1,7 +1,7 @@
 /*
  * flame.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -130,17 +130,11 @@ func (m *Module) Data() res.ModuleData {
 	data.Config["chapter"] = []string{m.Chapter().Conf().ID}
 	data.Chapter = m.Chapter().Data()
 	data.Resources = *m.res
-	// Remove old characters and objects from resources, besides basic ones.
+	// Remove old characters from resources, besides basic ones.
 	data.Resources.Characters = make([]res.CharacterData, 0)
 	for _, c := range m.Resources().Characters {
 		if len(c.Serial) < 1 {
 			data.Resources.Characters = append(data.Resources.Characters, c)
-		}
-	}
-	data.Resources.Objects = make([]res.ObjectData, 0)
-	for _, o := range m.Resources().Objects {
-		if len(o.Serial) < 1 {
-			data.Resources.Objects = append(data.Resources.Objects, o)
 		}
 	}
 	return data

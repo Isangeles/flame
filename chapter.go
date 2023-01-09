@@ -1,7 +1,7 @@
 /*
  * chapter.go
  *
- * Copyright 2018-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import (
 	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-	"github.com/isangeles/flame/object"
 )
 
 // Chapter struct represents module chapter.
@@ -234,28 +233,15 @@ func (c *Chapter) Data() res.ChapterData {
 	data.Config["start-attrs"] = []string{fmt.Sprintf("%d", c.Conf().StartAttrs)}
 	data.Config["start-level"] = []string{fmt.Sprintf("%d", c.Conf().StartLevel)}
 	data.Resources = *c.res
-	// Remove old characters and objects from resources, besides basic ones.
+	// Remove old characters from resources, besides basic ones.
 	data.Resources.Characters = make([]res.CharacterData, 0)
 	for _, c := range c.Resources().Characters {
 		if len(c.Serial) < 1 {
 			data.Resources.Characters = append(data.Resources.Characters, c)
 		}
 	}
-	data.Resources.Objects = make([]res.ObjectData, 0)
-	for _, o := range c.Resources().Objects {
-		if len(o.Serial) < 1 {
-			data.Resources.Objects = append(data.Resources.Objects, o)
-		}
-	}
 	for _, c := range c.Characters() {
 		data.Resources.Characters = append(data.Resources.Characters, c.Data())
-	}
-	for _, o := range c.AreaObjects() {
-		o, ok := o.(*object.Object)
-		if !ok {
-			continue
-		}
-		data.Resources.Objects = append(data.Resources.Objects, o.Data())
 	}
 	data.Resources.Areas = make([]res.AreaData, 0)
 	for _, a := range c.Areas() {

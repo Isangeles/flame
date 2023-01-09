@@ -1,7 +1,7 @@
 /*
  * respawn.go
  *
- * Copyright 2021-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2021-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import (
 	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
-	"github.com/isangeles/flame/object"
 	"github.com/isangeles/flame/serial"
 )
 
@@ -68,9 +67,6 @@ func (r *Respawn) Update() {
 			if char, ok := ob.(*character.Character); ok && !char.Live() {
 				r.respawnChar(char)
 			}
-			if ob, ok := ob.(*object.Object); ok && !ob.Live() {
-				r.respawnObject(ob)
-			}
 			r.queue.Delete(ob)
 		}
 		return true
@@ -86,9 +82,6 @@ func (r *Respawn) Apply(data res.RespawnData) {
 		if _, ok := areaOb.(*character.Character); ok {
 			r.queue.Store(time.Unix(ob.Time, 0), areaOb)
 			continue
-		}
-		if _, ok := areaOb.(*object.Object); ok {
-			r.queue.Store(time.Unix(ob.Time, 0), areaOb)
 		}
 	}
 }
@@ -129,19 +122,4 @@ func (r *Respawn) respawnChar(char *character.Character) {
 	}
 	r.area.AddObject(newChar)
 	r.area.RemoveObject(char)
-}
-
-// respawnObject respawns specified object.
-func (r *Respawn) respawnObject(ob *object.Object) {
-	obData := res.Object(ob.ID(), "")
-	if obData == nil {
-		log.Err.Printf("Area: %s: respawn: %s: object data not found",
-			r.area.ID(), ob.ID())
-		return
-	}
-	newOb := object.New(*obData)
-	newOb.SetRespawn(ob.Respawn())
-	newOb.SetPosition(ob.Position())
-	r.area.AddObject(newOb)
-	r.area.RemoveObject(ob)
 }

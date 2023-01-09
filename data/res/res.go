@@ -1,7 +1,7 @@
 /*
  * res.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2023 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ var (
 	Weapons          []WeaponData
 	Miscs            []MiscItemData
 	Characters       []CharacterData
-	Objects          []ObjectData
 	Dialogs          []DialogData
 	Quests           []QuestData
 	Recipes          []RecipeData
@@ -120,17 +119,6 @@ func Character(id, serial string) *CharacterData {
 	return nil
 }
 
-// Object returns skill data for specified ID and
-// serial value.
-func Object(id, serial string) *ObjectData {
-	for _, d := range Objects {
-		if d.ID == id && d.Serial == serial {
-			return &d
-		}
-	}
-	return nil
-}
-
 // Dialog returns dialog data for specified ID.
 func Dialog(id string) *DialogData {
 	for _, d := range Dialogs {
@@ -209,7 +197,6 @@ func Clear() {
 	Weapons = make([]WeaponData, 0)
 	Miscs = make([]MiscItemData, 0)
 	Characters = make([]CharacterData, 0)
-	Objects = make([]ObjectData, 0)
 	Dialogs = make([]DialogData, 0)
 	Quests = make([]QuestData, 0)
 	Recipes = make([]RecipeData, 0)
@@ -224,7 +211,6 @@ func Clear() {
 func Add(r ResourcesData) {
 	Characters = append(Characters, r.Characters...)
 	Races = append(Races, r.Races...)
-	Objects = append(Objects, r.Objects...)
 	Effects = append(Effects, r.Effects...)
 	Skills = append(Skills, r.Skills...)
 	Armors = append(Armors, r.Armors...)

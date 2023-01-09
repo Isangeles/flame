@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,31 +24,8 @@
 package res
 
 import (
-	"encoding/xml"
 	"time"
 )
-
-// Struct for objects data.
-type ObjectsData struct {
-	XMLName xml.Name     `xml:"objects" json:"-"`
-	Objects []ObjectData `xml:"object" json:"objects"`
-}
-
-// Struct for object data.
-type ObjectData struct {
-	XMLName   xml.Name           `xml:"object" json:"-"`
-	ID        string             `xml:"id,attr" json:"id"`
-	Serial    string             `xml:"serial,attr" json:"serial"`
-	MaxHP     int                `xml:"max-hp,attr" json:"max-hp"`
-	HP        int                `xml:"hp,attr" json:"hp"`
-	PosX      float64            `xml:"pos-x,attr" json:"pos-x"`
-	PosY      float64            `xml:"pos-y,attr" json:"pos-y"`
-	Area      string             `xml:"area" json:"area"`
-	Restore   bool               `xml:"restore,attr" json:"restore"`
-	UseAction UseActionData      `xml:"action" json:"use-action"`
-	Inventory InventoryData      `xml:"inventory" json:"inventory"`
-	Effects   []ObjectEffectData `xml:"effects>effect" json:"effects"`
-}
 
 // Struct for object effects data.
 type ObjectEffectData struct {

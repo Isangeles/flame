@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2018-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/log"
-	"github.com/isangeles/flame/object"
 	"github.com/isangeles/flame/serial"
 )
 
@@ -256,33 +255,6 @@ func (a *Area) Apply(data res.AreaData) {
 		char.SetDestPoint(areaCharData.DestX, areaCharData.DestY)
 		char.SetDefaultPosition(areaCharData.DefX, areaCharData.DefY)
 	}
-	// Objects.
-	for _, areaObData := range data.Objects {
-		// Retrieve object data.
-		obData := res.Object(areaObData.ID, areaObData.Serial)
-		if obData == nil {
-			log.Err.Printf("area %s: object data not found: %s",
-				a.ID(), areaObData.ID)
-			continue
-		}
-		ob := serial.Object(areaObData.ID, areaObData.Serial)
-		areaOb, ok := ob.(*object.Object)
-		if ok {
-			// Apply data and add to area if not present already.
-			areaOb.Apply(*obData)
-			_, inArea := a.objects.Load(areaObData.ID + areaObData.Serial)
-			if !inArea {
-				a.AddObject(areaOb)
-			}
-		} else {
-			// Add new object to area.
-			areaOb = object.New(*obData)
-			a.AddObject(areaOb)
-		}
-		areaOb.SetRespawn(areaObData.Respawn)
-		// Set position.
-		areaOb.SetPosition(areaObData.PosX, areaObData.PosY)
-	}
 	// Subareas.
 	for _, subareaData := range data.Subareas {
 		v, _ := a.subareas.Load(subareaData.ID)
@@ -316,18 +288,6 @@ func (a *Area) Data() res.AreaData {
 		charData.DefX, charData.DefY = c.DefaultPosition()
 		charData.Respawn = c.Respawn()
 		data.Characters = append(data.Characters, charData)
-	}
-	for _, o := range a.Objects() {
-		o, ok := o.(*object.Object)
-		if !ok {
-			continue
-		}
-		obData := res.AreaObjectData{
-			ID:     o.ID(),
-			Serial: o.Serial(),
-		}
-		obData.PosX, obData.PosY = o.Position()
-		data.Objects = append(data.Objects, obData)
 	}
 	for _, sa := range a.Subareas() {
 		data.Subareas = append(data.Subareas, sa.Data())

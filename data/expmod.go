@@ -1,7 +1,7 @@
 /*
  * expmod.go
  *
- * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,12 +83,6 @@ func ExportModuleDir(path string, data res.ModuleData) error {
 	if err != nil {
 		return fmt.Errorf("unable to export races: %v", err)
 	}
-	// Objects.
-	objectsPath := filepath.Join(path, "objects", "main")
-	err = ExportObjects(objectsPath, data.Resources.Objects...)
-	if err != nil {
-		return fmt.Errorf("unable to export objects: %v", err)
-	}
 	// Skills.
 	skillsPath := filepath.Join(path, "skills", "main")
 	err = ExportSkills(skillsPath, data.Resources.Skills...)
@@ -164,12 +158,6 @@ func exportChapterDir(path string, data res.ChapterData) error {
 	err = ExportCharacters(charsPath, data.Resources.Characters...)
 	if err != nil {
 		return fmt.Errorf("unable to export characters: %v", err)
-	}
-	// Objects.
-	objectsPath := filepath.Join(path, "objects", "main")
-	err = ExportObjects(objectsPath, data.Resources.Objects...)
-	if err != nil {
-		return fmt.Errorf("unable to export objects: %v", err)
 	}
 	// Quests.
 	questsPath := filepath.Join(path, "quests", "main")
