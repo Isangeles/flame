@@ -49,7 +49,7 @@ Modules contain all game data in the form of textual files. Modules are divided 
 
 Modules are stored by default in `data/modules` directory.
 
-Module data are available across all chapters, data files are placed in sub-directories(`/items`, `/objects`, etc.) in the module directory.
+Module data are available across all chapters, data files are placed in sub-directories(`/items`, `/characters`, etc.) in the module directory.
 
 Chapter data are available only when a specific chapter is active, data files are placed in sub-directories(`/characters`, `/dialogs`, etc.) in chapter directory(in `[module]/chapters`).
 
