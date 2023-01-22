@@ -39,7 +39,7 @@ import (
 // Area struct represents game world area.
 type Area struct {
 	id       string
-	time     time.Time
+	Time     time.Time
 	weather  *Weather
 	respawn  *Respawn
 	objects  *sync.Map
@@ -70,7 +70,7 @@ func New(data res.AreaData) *Area {
 
 // Update updates area.
 func (a *Area) Update(delta int64) {
-	a.time = a.time.Add(time.Duration(delta) * time.Millisecond)
+	a.Time = a.Time.Add(time.Duration(delta) * time.Millisecond)
 	a.Weather().update()
 	for _, o := range a.Objects() {
 		o.Update(delta)
@@ -154,11 +154,6 @@ func (a *Area) AllSubareas() (subareas []*Area) {
 	return
 }
 
-// Time returns area time.
-func (a *Area) Time() time.Time {
-	return a.time
-}
-
 // Weather retuns area weather.
 func (a *Area) Weather() *Weather {
 	return a.weather
@@ -200,7 +195,7 @@ func (a *Area) SightRangeObjects(x, y float64) (obs []Object) {
 // Apply applies specified data on the area.
 func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
-	a.time, _ = time.Parse(time.Kitchen, data.Time)
+	a.Time, _ = time.Parse(time.Kitchen, data.Time)
 	a.weather.conditions = Conditions(data.Weather)
 	a.respawn.Apply(data.Respawn)
 	// Remove objects not present anymore.
@@ -271,7 +266,7 @@ func (a *Area) Apply(data res.AreaData) {
 func (a *Area) Data() res.AreaData {
 	data := res.AreaData{
 		ID:      a.ID(),
-		Time:    a.Time().Format(time.Kitchen),
+		Time:    a.Time.Format(time.Kitchen),
 		Respawn: a.respawn.Data(),
 	}
 	for _, o := range a.Objects() {

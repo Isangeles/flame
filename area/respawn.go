@@ -55,13 +55,13 @@ func (r *Respawn) Update() {
 		if inQueue || ob.Live() || ob.Respawn() < 1 {
 			continue
 		}
-		r.queue.Store(ob, r.area.time.Add(time.Duration(ob.Respawn())*time.Millisecond))
+		r.queue.Store(ob, r.area.Time.Add(time.Duration(ob.Respawn())*time.Millisecond))
 	}
 	respObject := func(k, v interface{}) bool {
 		ob, keyOk := k.(serial.Serialer)
 		respTime, valueOk := v.(time.Time)
 		if keyOk && valueOk {
-			if respTime.Unix() > r.area.time.Unix() {
+			if respTime.Unix() > r.area.Time.Unix() {
 				return true
 			}
 			if char, ok := ob.(*character.Character); ok && !char.Live() {

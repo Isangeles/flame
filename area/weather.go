@@ -1,7 +1,7 @@
 /*
  * weather.go
  *
- * Copyright 2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2021-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,10 +62,10 @@ func (w *Weather) update() {
 		w.changeWeather()
 	}
 	if w.lastChange.IsZero() {
-		w.lastChange = w.area.Time()
+		w.lastChange = w.area.Time
 		return
 	}
-	if w.area.Time().Sub(w.lastChange).Minutes() < conditionsTimer {
+	if w.area.Time.Sub(w.lastChange).Minutes() < conditionsTimer {
 		return
 	}
 	w.changeWeather()
@@ -80,5 +80,5 @@ func (w *Weather) changeWeather() {
 	case 3:
 		w.conditions = Rain
 	}
-	w.lastChange = w.area.Time()
+	w.lastChange = w.area.Time
 }
