@@ -2,7 +2,7 @@
 .SH NAME
 [module ID] - directory with module data, named after module ID
 .SH DESCRIPTION
-Module directory stores all module data, i.e. characters, effects, items, objects, recipes, skills, chapters.
+Module directory stores all module data, i.e. characters, effects, items, recipes, skills, chapters.
 .br
 Module data are available across all chapters.
 .SH FILES & SUBDIRECTORIES
@@ -17,7 +17,6 @@ chapters \- directory with module chapters
 effects \- directory with effects data files
 lang \- directory with translation files for effects, characters, skills recipes, items
 items \- directory with items data files
-objects \- directory with objects data files
 recipes \- directory with recpies data files
 skills \- directory with quests data files
 characters \- directory with exported characters
@@ -30,9 +29,8 @@ characters \- directory with exported characters
 	effects
 	items
 	lang
-	objects
 	recipes
 	skills
 .SH SEE ALSO
 data/dir/chatpers, data/dir/effects, data/dir/items, data/dir/characters, data/dir/lang,
-data/dir/objects, data/dir/recipes, data/dir/skills, data/file/conf/.module
+data/dir/recipes, data/dir/skills, data/file/conf/.module
