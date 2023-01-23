@@ -32,7 +32,7 @@ import (
 // Struct for area weather.
 type Weather struct {
 	area       *Area
-	conditions Conditions
+	Conditions Conditions
 	lastChange time.Time
 }
 
@@ -51,14 +51,9 @@ func newWeather(area *Area) *Weather {
 	return &w
 }
 
-// Conditions retuns weather conditions.
-func (w *Weather) Conditions() Conditions {
-	return w.conditions
-}
-
 // update updates weather.
 func (w *Weather) update() {
-	if len(w.conditions) < 1 {
+	if len(w.Conditions) < 1 {
 		w.changeWeather()
 	}
 	if w.lastChange.IsZero() {
@@ -76,9 +71,9 @@ func (w *Weather) changeWeather() {
 	roll := rng.RollInt(1, 4)
 	switch roll {
 	case 1, 2:
-		w.conditions = Sunny
+		w.Conditions = Sunny
 	case 3:
-		w.conditions = Rain
+		w.Conditions = Rain
 	}
 	w.lastChange = w.area.Time
 }

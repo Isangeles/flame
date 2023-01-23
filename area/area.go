@@ -196,7 +196,7 @@ func (a *Area) SightRangeObjects(x, y float64) (obs []Object) {
 func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
 	a.Time, _ = time.Parse(time.Kitchen, data.Time)
-	a.weather.conditions = Conditions(data.Weather)
+	a.weather.Conditions = Conditions(data.Weather)
 	a.respawn.Apply(data.Respawn)
 	// Remove objects not present anymore.
 	removeChars := func(key, value interface{}) bool {
