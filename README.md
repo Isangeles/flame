@@ -5,7 +5,7 @@
   
   Flame is able to create all game objects from textual data, this guarantees that game data is easy to modify and extend.
   
-  This repository contains engine core API, which allows to load game module data from textual format, create and modify game objects, and export game module data back into textual format.
+  This repository contains engine core API, which allows to load game module data from textual format, create and modify game objects, and export game module data back into textual format(ie. basic game flow load game -> play -> save game).
 
   Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or use some existing one.
 
@@ -66,7 +66,7 @@ You can easily view documentation pages with `man` command.
 
 For example to display documentation page for character data files:
 ```
-$ man doc/characters
+man doc/characters
 ```
 
 Note that documentation of data files is still incomplete.
