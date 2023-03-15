@@ -1,7 +1,7 @@
 /*
  * use.go
  *
- * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,8 +91,8 @@ func (c *Character) useCasted(ob useaction.Usable) {
 		c.TakeEffect(e)
 	}
 	if tar, ok := ob.(effect.Target); ok {
-		tar.TakeModifiers(c, ob.UseAction().UserMods()...)
-		for _, e := range ob.UseAction().UserEffects() {
+		tar.TakeModifiers(c, ob.UseAction().ObjectMods()...)
+		for _, e := range ob.UseAction().ObjectEffects() {
 			e.SetSource(c.ID(), c.Serial())
 			tar.TakeEffect(e)
 		}
