@@ -1,7 +1,7 @@
 /*
  * expmod_test.go
  *
- * Copyright 2020-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ func TestExportModule(t *testing.T) {
 	modData.Chapter.Config["id"] = []string{"ch1"}
 	modData.Chapter.Config["start-area"] = []string{"a1"}
 	mod := flame.NewModule(modData)
-	area := area.New()
 	areaData := res.AreaData{
 		ID: "a1",
 	}
@@ -66,8 +65,8 @@ func TestExportModule(t *testing.T) {
 	res.Characters = append(res.Characters, charData)
 	areaCharData := res.AreaCharData{ID: charData.ID}
 	areaData.Characters = append(areaData.Characters, areaCharData)
-	area.Apply(areaData)
-	mod.Chapter().AddAreas(area)
+	ar := area.New(areaData)
+	mod.Chapter().AddAreas(ar)
 	path := filepath.Join(t.TempDir(), "testexp")
 	err := ExportModule(path, mod.Data())
 	if err != nil {
@@ -86,7 +85,6 @@ func TestExportModuleDir(t *testing.T) {
 	modData.Chapter.Config["id"] = []string{"ch1"}
 	modData.Chapter.Config["start-area"] = []string{"a1"}
 	mod := flame.NewModule(modData)
-	area := area.New()
 	areaData := res.AreaData{
 		ID: "a1",
 	}
@@ -109,8 +107,8 @@ func TestExportModuleDir(t *testing.T) {
 	res.Characters = append(res.Characters, charData)
 	areaCharData := res.AreaCharData{ID: charData.ID}
 	areaData.Characters = append(areaData.Characters, areaCharData)
-	area.Apply(areaData)
-	mod.Chapter().AddAreas(area)
+	ar := area.New(areaData)
+	mod.Chapter().AddAreas(ar)
 	err := ExportModuleDir(t.TempDir(), mod.Data())
 	if err != nil {
 		t.Errorf("Unable to export module: %v", err)
