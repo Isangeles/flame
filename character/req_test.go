@@ -1,7 +1,7 @@
 /*
  * req_test.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2022-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,12 +32,13 @@ import (
 )
 
 var (
-	healthReqData = res.HealthReqData{10, false, true}
-	manaReqData   = res.ManaReqData{10, false, true}
-	itemReqData   = res.ItemReqData{"item1", 1, true}
-	combatReqData = res.CombatReqData{true}
+	healthReqData        = res.HealthReqData{10, false, true}
+	manaReqData          = res.ManaReqData{10, false, true}
+	healthPercentReqData = res.HealthPercentReqData{100, false}
+	manaPercentReqData   = res.ManaPercentReqData{100, false}
+	itemReqData          = res.ItemReqData{"item1", 1, true}
+	combatReqData        = res.CombatReqData{true}
 )
-
 
 // TestMeetReqsItem tests meet requiremet check function
 // for item requirement.
@@ -78,6 +79,44 @@ func TestMeetReqsHealth(t *testing.T) {
 	if char.MeetReqs(healthReq) {
 		t.Errorf("Requirement should not be meet: required health: %d, character health: %d",
 			healthReq.Value(), char.Health())
+	}
+}
+
+// TestMeetReqsHealthPercent tests meet requirement check function
+// for health percent requirement.
+func TestMeetReqsHealthPercent(t *testing.T) {
+	// Meet
+	char := New(charData)
+	healthPercentReq := req.NewHealthPercent(healthPercentReqData)
+	if !char.MeetReqs(healthPercentReq) {
+		t.Errorf("Requirement should be meet: required health percent: %d, character health: %d/%d",
+			healthPercentReq.Value(), char.Health(), char.MaxHealth())
+	}
+	// Not meet.
+	char.SetHealth(5)
+	healthPercentReq = req.NewHealthPercent(healthPercentReqData)
+	if char.MeetReqs(healthPercentReq) {
+		t.Errorf("Requirement should not be meet: required health percent: %d, character health: %d/%d",
+			healthPercentReq.Value(), char.Health(), char.MaxHealth())
+	}
+}
+
+// TestMeetReqsManaPercent tests meet requirement check function
+// for health percent requirement.
+func TestMeetReqsManaPercent(t *testing.T) {
+	// Meet
+	char := New(charData)
+	manaPercentReq := req.NewManaPercent(manaPercentReqData)
+	if !char.MeetReqs(manaPercentReq) {
+		t.Errorf("Requirement should be meet: required mana percent: %d, character mana: %d/%d",
+			manaPercentReq.Value(), char.Mana(), char.MaxMana())
+	}
+	// Not meet.
+	char.SetMana(5)
+	manaPercentReq = req.NewManaPercent(manaPercentReqData)
+	if char.MeetReqs(manaPercentReq) {
+		t.Errorf("Requirement should not be meet: required mana percent: %d, character mana: %d/%d",
+			manaPercentReq.Value(), char.Mana(), char.MaxMana())
 	}
 }
 
