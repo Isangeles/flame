@@ -1,0 +1,6 @@
+<item id="item1"
+      serial="0"
+      loot="true"
+      trade="true"
+      trade-value="10"
+      random="0.5"/>

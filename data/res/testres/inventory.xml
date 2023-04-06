@@ -1,0 +1,4 @@
+<inventory cap="10">
+  <item id="item1"/>
+  <item id="item2"/>
+</inventory>
