@@ -1,7 +1,7 @@
 /*
  * req_test.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2022-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -259,6 +259,44 @@ func TestHealthReqDataXml(t *testing.T) {
 	}
 }
 
+// TestHealthPercentReqDataJson tests health percent requirement data JSON mappings.
+func TestHealthPercentReqDataJson(t *testing.T) {
+	data, err := testData("healthpercentreq.json")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(HealthPercentReqData)
+	err = json.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal JSON data: %v", err)
+	}
+	if req.Value != 100 {
+		t.Errorf("Invalid health value: %d != 100", req.Value)
+	}
+	if !req.Less {
+		t.Errorf("Invalid health less value: %v != true", req.Less)
+	}
+}
+
+// TestHealthPercentReqDataXml tests health percent requirement data XML mappings.
+func TestHealthPercentReqDataXml(t *testing.T) {
+	data, err := testData("healthpercentreq.xml")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(HealthPercentReqData)
+	err = xml.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal XML data: %v", err)
+	}
+	if req.Value != 100 {
+		t.Errorf("Invalid health value: %d != 100", req.Value)
+	}
+	if !req.Less {
+		t.Errorf("Invalid health less value: %v != true", req.Less)
+	}
+}
+
 // TestManaReqDataJson tests mana requirement data JSON mappings.
 func TestManaReqDataJson(t *testing.T) {
 	data, err := testData("manareq.json")
@@ -300,6 +338,44 @@ func TestManaReqDataXml(t *testing.T) {
 	}
 	if !req.Charge {
 		t.Errorf("Invalid charge value: %v != true", req.Charge)
+	}
+}
+
+// TestManaPercentReqDataJson tests mana percent requirement data JSON mappings.
+func TestManaPercentReqDataJson(t *testing.T) {
+	data, err := testData("manapercentreq.json")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(ManaPercentReqData)
+	err = json.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal JSON data: %v", err)
+	}
+	if req.Value != 100 {
+		t.Errorf("Invalid mana value: %d != 100", req.Value)
+	}
+	if !req.Less {
+		t.Errorf("Invalid less value: %v != true", req.Less)
+	}
+}
+
+// TestManaPercnetReqDataXml tests mana percent requirement data XML mappings.
+func TestManaPercentReqDataXml(t *testing.T) {
+	data, err := testData("manapercentreq.xml")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	req := new(ManaPercentReqData)
+	err = xml.Unmarshal(data, req)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal XML data: %v", err)
+	}
+	if req.Value != 100 {
+		t.Errorf("Invalid mana value: %d != 100", req.Value)
+	}
+	if !req.Less {
+		t.Errorf("Invalid less value: %v != true", req.Less)
 	}
 }
 
