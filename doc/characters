@@ -7,27 +7,63 @@ Characters can have inventory, skills, trainings, effects, dialogs, quests.
 .P
 * id
 .br
+Type: text
+.br
 Unique ID for the character.
 .P
 * level
+.br
+Type: number
 .br
 Character level of experience.
 .P
 * gender
 .br
+Type: text
+.br
 Character gender ID.
+.br
+Available values: genderMale, genderFemale
 .P
 * race
 .br
-Character race ID.
+Type: text
+.br
+ID of already defined race in the races data file(see races page).
 .P
 * attitude
 .br
+Type: text
+.br
 Character attitude ID.
+.br
+Available values: attFriendly, attNeutral, attHostile
 .P
 * alignment
 .br
+Type: text
+.br
 Character aligment ID.
+.br
+Available values: aliChaoticGood, aliLawfulGood, aliNeutralGood, aliTrueNeutral, aliLawfulNeutral, aliLawfulEvil, aliNeutralEvil, aliChaoticEvil
+.P
+* attributes
+.br
+Type: struct
+.br
+Value for character attributes(see attributes page).
+.P
+* inventory
+.br
+Type: struct
+.br
+Value for character inventory struct(see inventory page).
+.P
+* dialogs
+.br
+Type: struct
+.br
+Value for character dialogs struct(see dialogs pages).
 .SH XML EXAMPLE
 .nf
   <character id="charTest1"
@@ -52,3 +88,5 @@ Character aligment ID.
       <dialog id="diaTest1"/>
     </dialogs>
   </character>
+.SH SEE ALSO
+inventory, attributes, dialogs
