@@ -1,0 +1,66 @@
+.TH inventory-item
+.SH NAME
+inventory-item
+.SH DESCRIPTION
+Inventory items represents the item stored in object inventory.
+.br
+All items in inventory need to be first defined in items base(see items page).
+.SH PARAMETERS
+.P
+* id
+.br
+Type: text
+.br
+ID of the already definied item from items base.
+.P
+* serial
+.br
+Type: text
+.br
+Serial value to assign to this the specific item(no value will generate new serial value).
+.P
+* loot
+.br
+Type: boolean(true/false)
+.br
+Flag to determine if item can be looted from the inventory, no value will set it to false.
+.P
+* trade
+.br
+Type: boolean(true/false)
+.br
+Flag to determine if item can be traded, no value will set it to false.
+.P
+* trade-value
+.br
+Type: number
+.br
+Trade value of the item.
+.P
+* random
+.br
+Type: floating-point number
+.br
+Value for chance of spawning the item in the inventory, no value will set 100% chance(1.0).
+.br
+0.1 = 10%, 1.0 = 100%.
+.SH JSON EXAMPLE
+.nf
+{
+    "id": "item",
+    "serial": "0",
+    "loot": true,
+    "trade": true,
+    "trade-value": 10,
+    "random": 0.5
+}
+.SH XML EXAMPLE
+.nf
+<item id="item"
+      serial="0"
+      loot="true"
+      trade="true"
+      trade-value="10"
+      random="0.5"/>
+.SH SEE ALSO
+inventory, items, characters

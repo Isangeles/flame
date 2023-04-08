@@ -1,0 +1,44 @@
+.TH inventory
+.SH NAME
+inventory
+.SH DESCRIPTION
+Inventory is a container for all items owned by the object.
+.br
+Inventory is part of character struct(see characters page).
+.br
+All items in inventory need to be first defined in items base(see items page).
+.SH PARAMETERS
+.P
+* cap
+.br
+Type: number
+.br
+Value for maximum number of items that can be strored in the inventory.
+.P
+* items
+.br
+Type: list
+.br
+List with all items in the inventory(see inventory-item page).
+.SH JSON EXAMPLE
+.nf
+{
+    "cap": 10,
+    "items": [
+	{
+	    "id": "item1"
+	},
+	{
+	    "id": "item2"
+	}
+    ]
+}
+.SH XML EXAMPLE
+.nf
+<inventory cap="10">
+  <item id="item1"/>
+  <item id="item2"/>
+</inventory>
+.SH SEE ALSO
+inventory-items, items, characters
+
