@@ -31,7 +31,7 @@ import (
 
 var (
 	invItemData = res.InventoryItemData{ID: "item", Serial: "0", Trade: true, TradeValue: 10, Loot: true}
-	invData     = res.InventoryData{Cap: 10, Items: []res.InventoryItemData{invItemData}}
+	invData     = res.InventoryData{Items: []res.InventoryItemData{invItemData}}
 )
 
 // TestInventoryApply tests inventory data apply function.
@@ -43,9 +43,6 @@ func TestInventoryApply(t *testing.T) {
 	invData.Items = append(invData.Items, res.InventoryItemData{ID: "item"})
 	// Test.
 	inv.Apply(invData)
-	if inv.Capacity() != 10 {
-		t.Errorf("Invalid capacity: %d != 10", inv.Capacity())
-	}
 	if len(inv.Items()) != 2 {
 		t.Errorf("Invalid amount of items: %d != 2", len(inv.Items()))
 	}
