@@ -98,7 +98,6 @@ type ItemSlotData struct {
 
 // Struct for inventory data.
 type InventoryData struct {
-	Cap   int                 `xml:"cap,attr" json:"cap"`
 	Items []InventoryItemData `xml:"item" json:"items"`
 }
 

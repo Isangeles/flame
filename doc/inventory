@@ -9,12 +9,6 @@ Inventory is part of character struct(see characters page).
 All items in inventory need to be first defined in items base(see items page).
 .SH PARAMETERS
 .P
-* cap
-.br
-Type: number
-.br
-Value for maximum number of items that can be strored in the inventory.
-.P
 * items
 .br
 Type: list
@@ -23,7 +17,6 @@ List with all items in the inventory(see inventory-item page).
 .SH JSON EXAMPLE
 .nf
 {
-    "cap": 10,
     "items": [
 	{
 	    "id": "item1"
@@ -35,7 +28,7 @@ List with all items in the inventory(see inventory-item page).
 }
 .SH XML EXAMPLE
 .nf
-<inventory cap="10">
+<inventory>
   <item id="item1"/>
   <item id="item2"/>
 </inventory>

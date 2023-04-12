@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -158,7 +158,6 @@ func (c *Character) Update(delta int64) {
 	// Journal && inventory.
 	c.Journal().Update(delta)
 	c.Inventory().Update(delta)
-	c.Inventory().SetCapacity(c.Attributes().Lift())
 	// Skills.
 	for _, s := range c.Skills() {
 		s.Update(delta)

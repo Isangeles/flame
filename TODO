@@ -25,6 +25,7 @@ MINOR:
 * Apply function for UseAction struct
 * Appearance struct for game character
 * Movement speed modifier
+* Items weight and inventory capacity based on total weight of the items
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module

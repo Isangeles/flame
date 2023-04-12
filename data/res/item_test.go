@@ -40,9 +40,6 @@ func TestInventoryDataJson(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Unable to unmarshal JSON data: %v", err)
 	}
-	if inv.Cap != 10 {
-		t.Errorf("Invalid inventory cap: %d != 10", inv.Cap)
-	}
 	if len(inv.Items) != 2 {
 		t.Errorf("Invalid amount of inventory items: %d != 2",
 			len(inv.Items))
@@ -59,9 +56,6 @@ func TestInventoryDataXml(t *testing.T) {
 	err = xml.Unmarshal(data, inv)
 	if err != nil {
 		t.Fatalf("Unable to unmarshal XML data: %v", err)
-	}
-	if inv.Cap != 10 {
-		t.Errorf("Invalid inventory cap: %d != 10", inv.Cap)
 	}
 	if len(inv.Items) != 2 {
 		t.Errorf("Invalid amount of inventory items: %d != 2",

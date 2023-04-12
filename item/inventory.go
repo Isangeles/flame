@@ -1,7 +1,7 @@
 /*
  * inventory.go
  *
- * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,6 @@
 package item
 
 import (
-	"fmt"
-
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/rng"
@@ -37,7 +35,6 @@ type Inventory struct {
 	items         map[string]Item
 	lootItems     []Item
 	tradeItems    []*TradeItem
-	cap           int
 	onItemRemoved func(i Item)
 }
 
@@ -104,9 +101,6 @@ func (i *Inventory) AddItem(it Item) error {
 	if i.items[it.ID()+it.Serial()] != nil {
 		return nil
 	}
-	if len(i.items) >= i.Capacity() {
-		return fmt.Errorf("no_inv_space")
-	}
 	i.items[it.ID()+it.Serial()] = it
 	return nil
 }
@@ -155,17 +149,6 @@ func (i *Inventory) AddLootItem(it Item) error {
 // in inventory.
 func (i *Inventory) Size() int {
 	return len(i.items)
-}
-
-// SetCapacity sets maximal capacity.
-func (i *Inventory) SetCapacity(c int) {
-	i.cap = c
-}
-
-// Capacity returns maximal inventory
-// capacity.
-func (i *Inventory) Capacity() int {
-	return i.cap
 }
 
 // SetOnItemRemoved sets function to trigger  after
@@ -233,14 +216,11 @@ func (i *Inventory) Apply(data res.InventoryData) {
 			}
 		}
 	}
-	i.cap = data.Cap
 }
 
 // Data creates data resource for inventory.
 func (i *Inventory) Data() res.InventoryData {
-	data := res.InventoryData{
-		Cap: i.Capacity(),
-	}
+	data := res.InventoryData{}
 	for _, it := range i.Items() {
 		// Build item data.
 		invItemData := res.InventoryItemData{
