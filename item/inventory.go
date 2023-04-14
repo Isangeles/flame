@@ -24,6 +24,8 @@
 package item
 
 import (
+	"fmt"
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/rng"
@@ -177,44 +179,28 @@ func (i *Inventory) Apply(data res.InventoryData) {
 	// Add/update items.
 	for _, invItData := range data.Items {
 		it := i.Item(invItData.ID, invItData.Serial)
-		if it == nil {
-			if invItData.Random > 0 && !rng.RollChance(invItData.Random) {
-				continue
-			}
-			itData := res.Item(invItData.ID)
-			if itData == nil {
-				log.Err.Printf("Inventory: Apply: item: %s: data not found", invItData.ID)
-				continue
-			}
-			it = New(itData)
-			if it == nil {
-				log.Err.Printf("Inventory: Apply: item: %s: unable to create item from data",
-					invItData.ID)
-				continue
-			}
-			if len(invItData.Serial) > 0 {
-				it.SetSerial(invItData.Serial)
-			}
-			i.items[it.ID()+it.Serial()] = it
-		}
-		if invItData.Trade {
-			ti := TradeItem{
-				Item:  it,
-				Price: invItData.TradeValue,
-			}
-			err := i.AddTradeItem(&ti)
+		if it != nil {
+			err := i.updateItem(it, invItData)
 			if err != nil {
-				log.Err.Printf("Inventory: Apply: item: %s: unable to add trade item: %v",
-					invItData.ID, err)
+				log.Err.Printf("Inventory: Apply: unable to update item: %s %s: %v",
+					it.ID(), it.Serial(), err)
 			}
+			continue
 		}
-		if invItData.Loot {
-			err := i.AddLootItem(it)
+		if len(invItData.Serial) > 0 {
+			err := i.restoreItem(invItData)
 			if err != nil {
-				log.Err.Printf("Inventory: Apply: item: %s: unable to add loot item: %v",
-					invItData.ID, err)
+				log.Err.Printf("Inventory: Apply: unable to restore item: %s %s: %v",
+					invItData.ID, invItData.Serial, err)
 			}
+			continue
 		}
+		err := i.spawnItem(invItData)
+		if err != nil {
+			log.Err.Printf("Inventory: Apply: unable to spawn item: %s: %v",
+				invItData.ID, err)
+		}
+
 	}
 }
 
@@ -237,4 +223,72 @@ func (i *Inventory) Data() res.InventoryData {
 		data.Items = append(data.Items, invItemData)
 	}
 	return data
+}
+
+// Update item updates item with specified item inventory data.
+func (i *Inventory) updateItem(it Item, data res.InventoryItemData) error {
+	if len(data.Serial) > 0 {
+		it.SetSerial(data.Serial)
+	}
+	if data.Trade {
+		ti := TradeItem{
+			Item:  it,
+			Price: data.TradeValue,
+		}
+		err := i.AddTradeItem(&ti)
+		if err != nil {
+			return fmt.Errorf("Unable to add trade item: %v", err)
+		}
+	}
+	if data.Loot {
+		err := i.AddLootItem(it)
+		if err != nil {
+			return fmt.Errorf("Unable to add loot item: %v", err)
+		}
+	}
+	return nil
+}
+
+// spawnItem spawns specified amount of items in the inventory.
+func (i *Inventory) spawnItem(data res.InventoryItemData) error {
+	if data.Random > 0 && !rng.RollChance(data.Random) {
+		return nil
+	}
+	itData := res.Item(data.ID)
+	if itData == nil {
+		return fmt.Errorf("Item data not found: %s", data.ID)
+	}
+	if data.Amount == 0 {
+		data.Amount = 1
+	}
+	for itemNumber := 0; itemNumber < data.Amount; itemNumber++ {
+		it := New(itData)
+		if it == nil {
+			return fmt.Errorf("Item not created: %s", data.ID)
+		}
+		err := i.updateItem(it, data)
+		if err != nil {
+			return fmt.Errorf("Unable to update item: %v", err)
+		}
+		i.items[it.ID()+it.Serial()] = it
+	}
+	return nil
+}
+
+// restoreItem restores inventory item for specified data.
+func (i *Inventory) restoreItem(data res.InventoryItemData) error {
+	itData := res.Item(data.ID)
+	if itData == nil {
+		return fmt.Errorf("Item data not found: %s", data.ID)
+	}
+	it := New(itData)
+	if it == nil {
+		return fmt.Errorf("Item not created: %s", data.ID)
+	}
+	err := i.updateItem(it, data)
+	if err != nil {
+		return fmt.Errorf("Unable to update item: %v", err)
+	}
+	i.items[it.ID()+it.Serial()] = it
+	return nil
 }

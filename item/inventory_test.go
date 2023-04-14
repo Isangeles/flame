@@ -40,11 +40,11 @@ func TestInventoryApply(t *testing.T) {
 	res.Miscs = append(res.Miscs, res.MiscItemData{ID: "item"})
 	// Create inventory.
 	inv := NewInventory()
-	invData.Items = append(invData.Items, res.InventoryItemData{ID: "item"})
+	invData.Items = append(invData.Items, res.InventoryItemData{ID: "item", Amount: 2})
 	// Test.
 	inv.Apply(invData)
-	if len(inv.Items()) != 2 {
-		t.Errorf("Invalid amount of items: %d != 2", len(inv.Items()))
+	if len(inv.Items()) != 3 {
+		t.Errorf("Invalid amount of items: %d != 3", len(inv.Items()))
 	}
 	item := inv.Item(invItemData.ID, invItemData.Serial)
 	if item == nil {

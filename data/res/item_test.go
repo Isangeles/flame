@@ -80,6 +80,9 @@ func TestInventoryItemDataJson(t *testing.T) {
 	if item.Serial != "0" {
 		t.Errorf("Invalid serial: %s != 0", item.Serial)
 	}
+	if item.Amount != 5 {
+		t.Errorf("Invalid amount: %d != 5", item.Amount)
+	}
 	if !item.Loot {
 		t.Errorf("Loot flag false")
 	}
@@ -110,6 +113,9 @@ func TestInventoryItemDataXml(t *testing.T) {
 	}
 	if item.Serial != "0" {
 		t.Errorf("Invalid serial: %s != 0", item.Serial)
+	}
+	if item.Amount != 5 {
+		t.Errorf("Invalid amount: %d != 5", item.Amount)
 	}
 	if !item.Loot {
 		t.Errorf("Loot flag false")

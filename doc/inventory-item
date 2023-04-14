@@ -17,7 +17,13 @@ ID of the already definied item from items base.
 .br
 Type: text
 .br
-Serial value to assign to this the specific item(no value will generate new serial value).
+Serial value to assign to this the specific item, no value will generate new serial value.
+.P
+* amount
+.br
+Type: number
+.br
+Value for number of items to be spawned in the inventory, no value spawn only one item.
 .P
 * loot
 .br
@@ -49,6 +55,7 @@ Value for chance of spawning the item in the inventory, no value will set 100% c
 {
     "id": "item",
     "serial": "0",
+    "amount": 1,
     "loot": true,
     "trade": true,
     "trade-value": 10,
@@ -58,6 +65,7 @@ Value for chance of spawning the item in the inventory, no value will set 100% c
 .nf
 <item id="item"
       serial="0"
+      amount="1"
       loot="true"
       trade="true"
       trade-value="10"
