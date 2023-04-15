@@ -99,12 +99,8 @@ func (i *Inventory) LootItem(id, serial string) Item {
 }
 
 // AddItems add specified item to inventory.
-func (i *Inventory) AddItem(it Item) error {
-	if i.items[it.ID()+it.Serial()] != nil {
-		return nil
-	}
+func (i *Inventory) AddItem(it Item) {
 	i.items[it.ID()+it.Serial()] = it
-	return nil
 }
 
 // RemoveItem removes specified item from inventory.
@@ -122,13 +118,9 @@ func (i *Inventory) TradeItems() []*TradeItem {
 }
 
 // AddTradeItems adds specified trade item to inventory.
-func (i *Inventory) AddTradeItem(it *TradeItem) error {
-	err := i.AddItem(it)
-	if err != nil {
-		return err
-	}
+func (i *Inventory) AddTradeItem(it *TradeItem) {
+	i.AddItem(it)
 	i.tradeItems = append(i.tradeItems, it)
-	return nil
 }
 
 // LootItems returns all 'lootable' items from inventory.
@@ -138,13 +130,9 @@ func (i *Inventory) LootItems() []Item {
 
 // AddLootItem adds specified 'lootable' item to
 // the inventory.
-func (i *Inventory) AddLootItem(it Item) error {
-	err := i.AddItem(it)
-	if err != nil {
-		return err
-	}
+func (i *Inventory) AddLootItem(it Item) {
+	i.AddItem(it)
 	i.lootItems = append(i.lootItems, it)
-	return nil
 }
 
 // Size returns current amount of items
@@ -180,11 +168,7 @@ func (i *Inventory) Apply(data res.InventoryData) {
 	for _, invItData := range data.Items {
 		it := i.Item(invItData.ID, invItData.Serial)
 		if it != nil {
-			err := i.updateItem(it, invItData)
-			if err != nil {
-				log.Err.Printf("Inventory: Apply: unable to update item: %s %s: %v",
-					it.ID(), it.Serial(), err)
-			}
+			i.updateItem(it, invItData)
 			continue
 		}
 		if len(invItData.Serial) > 0 {
@@ -226,7 +210,7 @@ func (i *Inventory) Data() res.InventoryData {
 }
 
 // Update item updates item with specified item inventory data.
-func (i *Inventory) updateItem(it Item, data res.InventoryItemData) error {
+func (i *Inventory) updateItem(it Item, data res.InventoryItemData) {
 	if len(data.Serial) > 0 {
 		it.SetSerial(data.Serial)
 	}
@@ -235,18 +219,11 @@ func (i *Inventory) updateItem(it Item, data res.InventoryItemData) error {
 			Item:  it,
 			Price: data.TradeValue,
 		}
-		err := i.AddTradeItem(&ti)
-		if err != nil {
-			return fmt.Errorf("Unable to add trade item: %v", err)
-		}
+		i.AddTradeItem(&ti)
 	}
 	if data.Loot {
-		err := i.AddLootItem(it)
-		if err != nil {
-			return fmt.Errorf("Unable to add loot item: %v", err)
-		}
+		i.AddLootItem(it)
 	}
-	return nil
 }
 
 // spawnItem spawns specified amount of items in the inventory.
@@ -266,10 +243,7 @@ func (i *Inventory) spawnItem(data res.InventoryItemData) error {
 		if it == nil {
 			return fmt.Errorf("Item not created: %s", data.ID)
 		}
-		err := i.updateItem(it, data)
-		if err != nil {
-			return fmt.Errorf("Unable to update item: %v", err)
-		}
+		i.updateItem(it, data)
 		i.items[it.ID()+it.Serial()] = it
 	}
 	return nil
@@ -285,10 +259,7 @@ func (i *Inventory) restoreItem(data res.InventoryItemData) error {
 	if it == nil {
 		return fmt.Errorf("Item not created: %s", data.ID)
 	}
-	err := i.updateItem(it, data)
-	if err != nil {
-		return fmt.Errorf("Unable to update item: %v", err)
-	}
+	i.updateItem(it, data)
 	i.items[it.ID()+it.Serial()] = it
 	return nil
 }
