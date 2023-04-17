@@ -25,6 +25,7 @@ package item
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
@@ -34,7 +35,7 @@ import (
 
 // Struct for container with items.
 type Inventory struct {
-	items         map[string]Item
+	items         *sync.Map
 	lootItems     []Item
 	tradeItems    []*TradeItem
 	onItemRemoved func(i Item)
@@ -48,7 +49,7 @@ type Container interface {
 
 // NewInventory creates new inventory.
 func NewInventory() *Inventory {
-	i := Inventory{items: make(map[string]Item)}
+	i := Inventory{items: new(sync.Map)}
 	return &i
 }
 
@@ -61,9 +62,14 @@ func (i *Inventory) Update(delta int64) {
 
 // Items returns all items in inventory.
 func (i *Inventory) Items() (items []Item) {
-	for _, it := range i.items {
-		items = append(items, it)
+	addItem := func(k, v interface{}) bool {
+		it, ok := v.(Item)
+		if ok {
+			items = append(items, it)
+		}
+		return true
 	}
+	i.items.Range(addItem)
 	return
 }
 
@@ -71,7 +77,11 @@ func (i *Inventory) Items() (items []Item) {
 // from the inventory or nil if no such item was
 // found.
 func (i *Inventory) Item(id, serial string) Item {
-	return i.items[id+serial]
+	val, _ := i.items.Load(id + serial)
+	if val == nil {
+		return nil
+	}
+	return val.(Item)
 }
 
 // TradeItem returns 'tradable' item with specified ID
@@ -100,12 +110,12 @@ func (i *Inventory) LootItem(id, serial string) Item {
 
 // AddItems add specified item to inventory.
 func (i *Inventory) AddItem(it Item) {
-	i.items[it.ID()+it.Serial()] = it
+	i.items.Store(it.ID()+it.Serial(), it)
 }
 
 // RemoveItem removes specified item from inventory.
 func (i *Inventory) RemoveItem(it Item) {
-	delete(i.items, it.ID()+it.Serial())
+	i.items.Delete(it.ID() + it.Serial())
 	if i.onItemRemoved != nil {
 		i.onItemRemoved(it)
 	}
@@ -138,7 +148,7 @@ func (i *Inventory) AddLootItem(it Item) {
 // Size returns current amount of items
 // in inventory.
 func (i *Inventory) Size() int {
-	return len(i.items)
+	return len(i.Items())
 }
 
 // SetOnItemRemoved sets function to trigger  after
@@ -161,7 +171,7 @@ func (i *Inventory) Apply(data res.InventoryData) {
 			}
 		}
 		if !found {
-			delete(i.items, it.ID()+it.Serial())
+			i.items.Delete(it.ID() + it.Serial())
 		}
 	}
 	// Add/update items.
@@ -244,7 +254,7 @@ func (i *Inventory) spawnItem(data res.InventoryItemData) error {
 			return fmt.Errorf("Item not created: %s", data.ID)
 		}
 		i.updateItem(it, data)
-		i.items[it.ID()+it.Serial()] = it
+		i.items.Store(it.ID()+it.Serial(), it)
 	}
 	return nil
 }
@@ -260,6 +270,6 @@ func (i *Inventory) restoreItem(data res.InventoryItemData) error {
 		return fmt.Errorf("Item not created: %s", data.ID)
 	}
 	i.updateItem(it, data)
-	i.items[it.ID()+it.Serial()] = it
+	i.items.Store(it.ID()+it.Serial(), it)
 	return nil
 }
