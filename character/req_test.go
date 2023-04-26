@@ -47,10 +47,7 @@ func TestMeetReqsItem(t *testing.T) {
 	char := New(charData)
 	char.Update(1)
 	item := item.NewMisc(res.MiscItemData{ID: "item1"})
-	err := char.Inventory().AddItem(item)
-	if err != nil {
-		t.Fatalf("Unable to add item to the inventory: %v", err)
-	}
+	char.Inventory().AddItem(item)
 	itemReq := req.NewItem(itemReqData)
 	if !char.MeetReqs(itemReq) {
 		t.Errorf("Requirement should be meet: %s not in inventory", itemReq.ItemID())
@@ -220,20 +217,14 @@ func TestChargeReqsItem(t *testing.T) {
 	char := New(charData)
 	char.Update(1)
 	item := item.NewMisc(res.MiscItemData{ID: "item1"})
-	err := char.Inventory().AddItem(item)
-	if err != nil {
-		t.Fatalf("Unable to add item to the inventory: %v", err)
-	}
+	char.Inventory().AddItem(item)
 	itemReq := req.NewItem(itemReqData)
 	char.ChargeReqs(itemReq)
 	if char.Inventory().Item(item.ID(), item.Serial()) != nil {
 		t.Errorf("Required item should be removed from the inventory")
 	}
 	// No charge.
-	err = char.Inventory().AddItem(item)
-	if err != nil {
-		t.Fatalf("Unable to add item to the inventory: %v", err)
-	}
+	char.Inventory().AddItem(item)
 	itemReqData.Charge = false
 	itemReq = req.NewItem(itemReqData)
 	char.ChargeReqs(itemReq)
