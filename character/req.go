@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,10 +152,38 @@ func (c *Character) chargeReq(r req.Chargeable) {
 			}
 		}
 	case *req.Mana:
-		c.SetMana(c.Mana()-r.Value())
+		c.SetMana(c.Mana() - r.Value())
 	case *req.Health:
-		c.SetHealth(c.Health()-r.Value())
+		c.SetHealth(c.Health() - r.Value())
 	case *req.Currency:
-		// TODO: charge currency items.
+		c.chargeCurrency(r.Amount())
+	}
+}
+
+// chargeCurrency searches character inventory for currency items,
+// if enough items were found that combined value satisfy specified
+// value then all these items are removed from the inventory,
+// otherwise no item wil be removed.
+func (c *Character) chargeCurrency(value int) {
+	var items []item.Item
+	for _, it := range c.Inventory().Items() {
+		misc, ok := it.(*item.Misc)
+		if !ok {
+			continue
+		}
+		if !misc.Currency() {
+			continue
+		}
+		value -= misc.Value()
+		items = append(items, misc)
+		if value < 1 {
+			break
+		}
+	}
+	if value > 0 {
+		return
+	}
+	for _, currencyIt := range items {
+		c.Inventory().RemoveItem(currencyIt)
 	}
 }

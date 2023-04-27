@@ -21,7 +21,6 @@ MINOR:
 * Rename quest.Journal to QuestLog(quest.Log?), journal could be something else
 * Tests for data package
 * Use action for armors and weapons
-* Character: remove currency items in ChargeReq function
 * Apply function for UseAction struct
 * Appearance struct for game character
 * Movement speed modifier
