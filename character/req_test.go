@@ -38,6 +38,7 @@ var (
 	manaPercentReqData   = res.ManaPercentReqData{100, false}
 	itemReqData          = res.ItemReqData{"item1", 1, true}
 	combatReqData        = res.CombatReqData{true}
+	currencyReqData      = res.CurrencyReqData{10, true}
 )
 
 // TestMeetReqsItem tests meet requiremet check function
@@ -157,6 +158,27 @@ func TestMeetReqsCombat(t *testing.T) {
 	}
 }
 
+// TestMeetReqsCurrency tests meet requirement check function
+// for currency requirement.
+func TestMeetReqsCurrency(t *testing.T) {
+	// Create object & requirement.
+	char := New(charData)
+	item1 := item.NewMisc(res.MiscItemData{ID: "item", Value: 5, Currency: true})
+	item2 := item.NewMisc(res.MiscItemData{ID: "item", Value: 5, Currency: true})
+	char.Inventory().AddItem(item1)
+	char.Inventory().AddItem(item2)
+	currencyReq := req.NewCurrency(currencyReqData)
+	// Meet.
+	if !char.MeetReqs(currencyReq) {
+		t.Errorf("Requirement should be meet")
+	}
+	// Not meet.
+	char.Inventory().RemoveItem(item1)
+	if char.MeetReqs(currencyReq) {
+		t.Errorf("Requirement should not be meet")
+	}
+}
+
 // TestChargeReqs tests charge requirements function.
 func TestChargeReqs(t *testing.T) {
 	// Handle mixed reqs(chargeable and non chargeable)
@@ -230,5 +252,37 @@ func TestChargeReqsItem(t *testing.T) {
 	char.ChargeReqs(itemReq)
 	if char.Inventory().Item(item.ID(), item.Serial()) == nil {
 		t.Errorf("Required item should not be removed from the inventory")
+	}
+}
+
+// TestChargeReqsCurrency tests charge requirements function
+// for currency requirement.
+func TestChargeReqsCurrency(t *testing.T) {
+	// Create object & requirement.
+	char := New(charData)
+	item1 := item.NewMisc(res.MiscItemData{ID: "item", Value: 5, Currency: true})
+	item2 := item.NewMisc(res.MiscItemData{ID: "item", Value: 5, Currency: true})
+	item3 := item.NewMisc(res.MiscItemData{ID: "item", Value: 5, Currency: true})
+	char.Inventory().AddItem(item1)
+	char.Inventory().AddItem(item2)
+	char.Inventory().AddItem(item3)
+	currencyReq := req.NewCurrency(currencyReqData)
+	// Charge.
+	char.ChargeReqs(currencyReq)
+	if len(char.Inventory().Items()) != 1 {
+		t.Errorf("Invalid amount of items in the inventory after charge: %d != 1",
+			len(char.Inventory().Items()))
+	}
+	// No charge.
+	currencyReqData.Charge = false
+	currencyReq = req.NewCurrency(currencyReqData)
+	char.Inventory().AddItem(item1)
+	char.Inventory().AddItem(item2)
+	char.ChargeReqs(currencyReq)
+	if char.Inventory().Item(item1.ID(), item1.Serial()) == nil {
+		t.Errorf("Currency requirement item 1 should not be removed from the inventory")
+	}
+	if char.Inventory().Item(item2.ID(), item2.Serial()) == nil {
+		t.Errorf("Currency requirement item 2 should not be removed from the inventory")
 	}
 }
