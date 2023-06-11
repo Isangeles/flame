@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2022-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import (
 
 var (
 	areaData = res.AreaData{ID: "area"}
-	charData = res.CharacterData{ID: "char"}
+	charData = res.CharacterData{ID: "char", Level: 1}
 )
 
 // TestNearObjects tests function for retrieving near objects.
