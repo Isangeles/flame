@@ -1,7 +1,7 @@
 /*
  * character_test.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2022-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,13 +33,45 @@ var charData = res.CharacterData{ID: "char", Level: 1, Attributes: res.Attribute
 
 // TestLive tests live check function.
 func TestLive(t *testing.T) {
-	char := New(charData)
-	if !char.Live() {
-		t.Errorf("Character should be live: %v != true", char.Live())
+	// Test live.
+	ob := New(charData)
+	if !ob.Live() {
+		t.Errorf("Character is not live with full health")
 	}
-	char.SetHealth(0)
-	char.Update(1)
-	if char.Live() {
-		t.Errorf("Character should be dead: %v != false", char.Live())
+	// Test no live.
+	ob.SetHealth(0)
+	if ob.Live() {
+		t.Errorf("Character is live with no health")
+	}
+}
+
+// TestFighting tests fighting check function.
+func TestFighting(t *testing.T) {
+	// Create test objects.
+	ob := New(charData)
+	tar := New(charData)
+	// Test no target.
+	if ob.Fighting() {
+		t.Errorf("Character in the combat with no target")
+	}
+	// Test attitude.
+	ob.SetTarget(tar)
+	if ob.Fighting() {
+		t.Errorf("Character in the combat with non hostile target")
+	}
+	tar.SetAttitude(Hostile)
+	if !ob.Fighting() {
+		t.Errorf("Character not in the combat with hostile target")
+	}
+	// Test range.
+	tar.SetPosition(ob.Attributes().Sight()+1, ob.Attributes().Sight()+1)
+	if ob.Fighting() {
+		t.Errorf("Character in the combat with out of range target")
+	}
+	// Test dead target.
+	tar.SetPosition(0, 0)
+	tar.SetHealth(0)
+	if ob.Fighting() {
+		t.Errorf("Character in the combat with dead target")
 	}
 }

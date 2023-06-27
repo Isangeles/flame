@@ -497,18 +497,14 @@ func (c *Character) Moving() bool {
 
 // Fighting checks if character is in combat.
 func (c *Character) Fighting() bool {
-	if len(c.Targets()) > 0 {
-		tar := c.Targets()[0]
-		if c.AttitudeFor(tar) != Hostile {
-			return false
-		}
-		tarPos, ok := tar.(objects.Positioner)
-		if !ok {
-			return false
-		}
-		return objects.Range(c, tarPos) <= c.SightRange()
+	if len(c.Targets()) < 1 {
+		return false
 	}
-	return false
+	tar := c.Targets()[0]
+	if c.AttitudeFor(tar) != Hostile {
+		return false
+	}
+	return objects.Range(c, tar) <= c.SightRange()
 }
 
 // ChatLog returns character speech log channel.
