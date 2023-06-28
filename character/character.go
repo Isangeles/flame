@@ -277,20 +277,29 @@ func (c *Character) SetAttitude(att Attitude) {
 }
 
 // AttitudeFor returns attitude for specified object.
+// For dead objects returns neutral attitude.
+// For memorized targets returns memorized attitude.
+// For not memorized objects from the same guild returns
+// friendly attitude.
+// For not memorized hostile objects returns hostile attitude.
+// For other cases returns character attitude.
 func (c *Character) AttitudeFor(o serial.Serialer) Attitude {
+	char, ok := o.(*Character)
+	if ok && !char.Live() {
+		return Neutral
+	}
 	ob, _ := c.memory.Load(o.ID() + o.Serial())
 	mem, ok := ob.(*TargetMemory)
 	if ok {
 		return mem.Attitude
 	}
-	obChar, ok := o.(*Character)
-	if !ok || !obChar.Live() {
-		return Neutral
+	if char == nil {
+		return c.Attitude()
 	}
-	if len(obChar.Guild().ID()) > 0 && obChar.Guild().ID() == c.Guild().ID() {
+	if len(char.Guild().ID()) > 0 && char.Guild().ID() == c.Guild().ID() {
 		return Friendly
 	}
-	if obChar.Attitude() == Hostile {
+	if char.Attitude() == Hostile {
 		return Hostile
 	}
 	return c.Attitude()
