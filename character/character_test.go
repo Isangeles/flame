@@ -75,3 +75,47 @@ func TestFighting(t *testing.T) {
 		t.Errorf("Character in the combat with dead target")
 	}
 }
+
+// TestAttitudeFor tests function for checking attitude towards specific object.
+func TestAttitudeFor(t *testing.T) {
+	// Create test objects.
+	ob := New(charData)
+	tar := New(charData)
+	// Test no memory.
+	att := ob.AttitudeFor(tar)
+	if att != tar.Attitude() {
+		t.Errorf("Attitude is not target default attitude: %v != %v", att, tar.Attitude())
+	}
+	// Test memory.
+	tarMem := TargetMemory{tar.ID(), tar.Serial(), Hostile}
+	ob.MemorizeTarget(&tarMem)
+	att = ob.AttitudeFor(tar)
+	if att != Hostile {
+		t.Errorf("Invalid attitude for memorized target: %v != %v", att, Hostile)
+	}
+	// Test dead target.
+	tar.SetHealth(0)
+	att = ob.AttitudeFor(tar)
+	if att != Neutral {
+		t.Errorf("Invalid attitude for dead target: %v != %v", att, Neutral)
+	}
+	// Test hostile for same guild.
+	tar.SetHealth(1)
+	ob.memory.Delete(tar.ID()+tar.Serial())
+	ob.SetAttitude(Hostile)
+	tar.SetAttitude(Hostile)
+	guild := Guild{"test"}
+	ob.SetGuild(guild)
+	tar.SetGuild(guild)
+	att = ob.AttitudeFor(tar)
+	if att != Friendly {
+		t.Errorf("Invalid attitude of hostile object for same guild target: %v != %v", att, Friendly)
+	}
+	// Test hostile object.
+	tar.SetGuild(Guild{})
+	tar.SetAttitude(Friendly)
+	att = ob.AttitudeFor(tar)
+	if att != Hostile {
+		t.Errorf("Invalid attitude of hostile object for friendly target: %v != %v", att, Hostile)
+	}
+}
