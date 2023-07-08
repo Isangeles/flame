@@ -30,7 +30,7 @@ import (
 )
 
 var (
-	invItemData = res.InventoryItemData{ID: "item", Serial: "0", Trade: true, TradeValue: 10, Loot: true}
+	invItemData = res.InventoryItemData{ID: "item", Serial: "0", TradeValue: 10, Loot: true}
 	invData     = res.InventoryData{Items: []res.InventoryItemData{invItemData}}
 )
 

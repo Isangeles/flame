@@ -86,8 +86,8 @@ func TestInventoryItemDataJson(t *testing.T) {
 	if !item.Loot {
 		t.Errorf("Loot flag false")
 	}
-	if !item.Trade {
-		t.Errorf("Trade flag false")
+	if !item.NoTrade {
+		t.Errorf("No trade flag false")
 	}
 	if item.TradeValue != 10 {
 		t.Errorf("Invalid trade value: %d != 10", item.TradeValue)
@@ -120,8 +120,8 @@ func TestInventoryItemDataXml(t *testing.T) {
 	if !item.Loot {
 		t.Errorf("Loot flag false")
 	}
-	if !item.Trade {
-		t.Errorf("Trade flag false")
+	if !item.NoTrade {
+		t.Errorf("No trade flag false")
 	}
 	if item.TradeValue != 10 {
 		t.Errorf("Invalid trade value: %d != 10", item.TradeValue)

@@ -1,7 +1,7 @@
 /*
  * item.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ type InventoryItemData struct {
 	Serial     string  `xml:"serial,attr" json:"serial"`
 	Amount     int     `xml:"amount,attr" json:"amount"`
 	Loot       bool    `xml:"loot,attr" json:"loot"`
-	Trade      bool    `xml:"trade,attr" json:"trade"`
+	NoTrade    bool    `xml:"no-trade,attr" json:"no-trade"`
 	TradeValue int     `xml:"trade-value,attr" json:"trade-value"`
 	Random     float64 `xml:"random,attr" json:"random"`
 }

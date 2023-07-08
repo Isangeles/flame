@@ -207,8 +207,8 @@ func (i *Inventory) Data() res.InventoryData {
 			ID:     it.ID(),
 			Serial: it.Serial(),
 		}
-		if it := i.TradeItem(it.ID(), it.Serial()); it != nil {
-			invItemData.Trade = true
+		if it := i.TradeItem(it.ID(), it.Serial()); it == nil {
+			invItemData.NoTrade = true
 			invItemData.TradeValue = it.Price
 		}
 		if i.LootItem(it.ID(), it.Serial()) != nil {
@@ -224,7 +224,7 @@ func (i *Inventory) updateItem(it Item, data res.InventoryItemData) {
 	if len(data.Serial) > 0 {
 		it.SetSerial(data.Serial)
 	}
-	if data.Trade {
+	if !data.NoTrade {
 		ti := TradeItem{
 			Item:  it,
 			Price: data.TradeValue,
