@@ -83,8 +83,8 @@ func TestInventoryItemDataJson(t *testing.T) {
 	if item.Amount != 5 {
 		t.Errorf("Invalid amount: %d != 5", item.Amount)
 	}
-	if !item.Loot {
-		t.Errorf("Loot flag false")
+	if !item.NoLoot {
+		t.Errorf("No loot flag false")
 	}
 	if !item.NoTrade {
 		t.Errorf("No trade flag false")
@@ -117,8 +117,8 @@ func TestInventoryItemDataXml(t *testing.T) {
 	if item.Amount != 5 {
 		t.Errorf("Invalid amount: %d != 5", item.Amount)
 	}
-	if !item.Loot {
-		t.Errorf("Loot flag false")
+	if !item.NoLoot {
+		t.Errorf("No loot flag false")
 	}
 	if !item.NoTrade {
 		t.Errorf("No trade flag false")

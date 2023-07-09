@@ -212,7 +212,7 @@ func (i *Inventory) Data() res.InventoryData {
 			invItemData.TradeValue = it.Price
 		}
 		if i.LootItem(it.ID(), it.Serial()) != nil {
-			invItemData.Loot = true
+			invItemData.NoLoot = true
 		}
 		data.Items = append(data.Items, invItemData)
 	}
@@ -231,7 +231,7 @@ func (i *Inventory) updateItem(it Item, data res.InventoryItemData) {
 		}
 		i.AddTradeItem(&ti)
 	}
-	if data.Loot {
+	if !data.NoLoot {
 		i.AddLootItem(it)
 	}
 }

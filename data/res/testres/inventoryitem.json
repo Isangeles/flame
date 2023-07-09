@@ -2,7 +2,7 @@
     "id": "item1",
     "serial": "0",
     "amount": 5,
-    "loot": true,
+    "no-loot": true,
     "no-trade": true,
     "trade-value": 10,
     "random": 0.5

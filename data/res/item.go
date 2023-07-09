@@ -107,7 +107,7 @@ type InventoryItemData struct {
 	ID         string  `xml:"id,attr" json:"id"`
 	Serial     string  `xml:"serial,attr" json:"serial"`
 	Amount     int     `xml:"amount,attr" json:"amount"`
-	Loot       bool    `xml:"loot,attr" json:"loot"`
+	NoLoot     bool    `xml:"no-loot,attr" json:"no-loot"`
 	NoTrade    bool    `xml:"no-trade,attr" json:"no-trade"`
 	TradeValue int     `xml:"trade-value,attr" json:"trade-value"`
 	Random     float64 `xml:"random,attr" json:"random"`
