@@ -50,17 +50,13 @@ func TestInventoryApply(t *testing.T) {
 	if item == nil {
 		t.Errorf("No item in inventory")
 	}
-	if inv.LootItem(invItemData.ID, invItemData.Serial) == nil {
+	if !item.Loot {
 		t.Errorf("No loot item in inventory")
 	}
-	tradeItem := inv.TradeItem(invItemData.ID, invItemData.Serial)
-	if tradeItem == nil {
+	if !item.Trade {
 		t.Errorf("No trade item in inventory")
 	}
-	if tradeItem.Item != item {
-		t.Errorf("Invalid trade item")
-	}
-	if tradeItem.Price != 10 {
-		t.Errorf("Invalid trade value: %d != 10", tradeItem.Value())
+	if item.Price != 10 {
+		t.Errorf("Invalid trade value: %d != 10", item.Price)
 	}
 }
