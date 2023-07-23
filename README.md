@@ -60,16 +60,16 @@ The example module is available [here](https://github.com/Isangeles/arena).
 ## Documentation
 Source code documentation can be easily browsed with `go doc` command.
 
-Documentation of configuration files and data files in the form of Troff pages is available under `doc` directory.
+Documentation of configuration files and data structures in the form of Troff pages is available under `doc` directory.
 
 You can easily view documentation pages with `man` command.
 
-For example to display documentation page for character data files:
+For example to display documentation page for character data structure:
 ```
 man doc/characters
 ```
 
-Note that documentation of data files is still incomplete.
+Note that documentation of data structures is still incomplete.
 
 ## Contributing
 You are welcome to contribute to project development.
