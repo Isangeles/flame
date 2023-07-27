@@ -124,20 +124,20 @@ func (eq *Equipment) Apply(data res.EquipmentData) {
 	for _, itData := range data.Items {
 		it := inventoryItem(eq.char.Inventory(), itData.ID, itData.Serial)
 		if it == nil {
-			log.Err.Printf("character: %s %s: eq: unable to retrieve item from inventory: %s",
-				eq.char.ID(), eq.char.Serial(), itData.ID)
+			log.Err.Printf("character: %s %s: eq: unable to retrieve item from inventory: %s %s",
+				eq.char.ID(), eq.char.Serial(), itData.ID, itData.Serial)
 			continue
 		}
 		eqItem, ok := it.Item.(item.Equiper)
 		if !ok {
-			log.Err.Printf("character: %s %s: eq: not eqipable item: %s",
-				eq.char.ID(), eq.char.Serial(), it.ID())
+			log.Err.Printf("character: %s %s: eq: not eqipable item: %s %s",
+				eq.char.ID(), eq.char.Serial(), it.ID(), it.Serial())
 			continue
 		}
 		// Equip.
 		if !eq.char.MeetReqs(eqItem.EquipReqs()...) {
-			log.Err.Printf("character: %s %s: eq: equip reqs not meet: %s",
-				eq.char.ID(), eq.char.Serial(), it.ID())
+			log.Err.Printf("character: %s %s: eq: equip reqs not meet: %s %s",
+				eq.char.ID(), eq.char.Serial(), it.ID(), it.Serial())
 			continue
 		}
 		slot := item.Slot(itData.Slot)
