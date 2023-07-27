@@ -162,11 +162,11 @@ func (i *Inventory) Data() res.InventoryData {
 	for _, it := range i.Items() {
 		// Build item data.
 		invItemData := res.InventoryItemData{
-			ID:     it.ID(),
-			Serial: it.Serial(),
-			TradeValue:  it.Price,
-			NoTrade: !it.Trade,
-			NoLoot:  !it.Loot,
+			ID:         it.ID(),
+			Serial:     it.Serial(),
+			TradeValue: it.Price,
+			NoTrade:    !it.Trade,
+			NoLoot:     !it.Loot,
 		}
 		data.Items = append(data.Items, invItemData)
 	}
@@ -206,6 +206,7 @@ func (i *Inventory) restoreItem(data res.InventoryItemData) error {
 	if it == nil {
 		return fmt.Errorf("Item not created: %s", data.ID)
 	}
+	it.SetSerial(data.Serial)
 	invIt := InventoryItem{it, data.TradeValue, !data.NoTrade, !data.NoLoot}
 	i.items.Store(it.ID()+it.Serial(), &invIt)
 	return nil
