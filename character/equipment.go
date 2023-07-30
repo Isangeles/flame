@@ -1,7 +1,7 @@
 /*
  * equipment.go
  *
- * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@ func (eq *Equipment) Apply(data res.EquipmentData) {
 				eq.char.ID(), eq.char.Serial(), itData.ID, itData.Serial)
 			continue
 		}
-		eqItem, ok := it.Item.(item.Equiper)
+		eqItem, ok := it.(item.Equiper)
 		if !ok {
 			log.Err.Printf("character: %s %s: eq: not eqipable item: %s %s",
 				eq.char.ID(), eq.char.Serial(), it.ID(), it.Serial())
@@ -206,7 +206,7 @@ func (eq *Equipment) newEquipmentSlot(slotType item.Slot) *EquipmentSlot {
 
 // inventoryItem returns an item with specified ID and serial from
 // the inventory or any item with specified ID if serial is empty.
-func inventoryItem(inv *item.Inventory, id string, serial string) *item.InventoryItem {
+func inventoryItem(inv *item.Inventory, id string, serial string) item.Item {
 	if len(serial) > 0 {
 		return inv.Item(id, serial)
 	}
