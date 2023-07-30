@@ -78,7 +78,7 @@ func (c *Character) meetReq(r req.Requirement) bool {
 	case *req.Currency:
 		val := 0
 		for _, it := range c.Inventory().Items() {
-			misc, ok := it.Item.(*item.Misc)
+			misc, ok := it.(*item.Misc)
 			if !ok {
 				continue
 			}
@@ -167,7 +167,7 @@ func (c *Character) chargeReq(r req.Chargeable) {
 func (c *Character) chargeCurrency(value int) {
 	var items []item.Item
 	for _, it := range c.Inventory().Items() {
-		misc, ok := it.Item.(*item.Misc)
+		misc, ok := it.(*item.Misc)
 		if !ok {
 			continue
 		}

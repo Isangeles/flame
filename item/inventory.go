@@ -36,15 +36,9 @@ import (
 // Struct for container with items.
 type Inventory struct {
 	items         *sync.Map
+	lootItems     []Item
+	tradeItems    []*TradeItem
 	onItemRemoved func(i Item)
-}
-
-// Struct for inventory items.
-type InventoryItem struct {
-	Item
-	Price int
-	Trade bool
-	Loot  bool
 }
 
 // Interface for objects with inventory.
@@ -67,9 +61,9 @@ func (i *Inventory) Update(delta int64) {
 }
 
 // Items returns all items in inventory.
-func (i *Inventory) Items() (items []*InventoryItem) {
+func (i *Inventory) Items() (items []Item) {
 	addItem := func(k, v interface{}) bool {
-		it, ok := v.(*InventoryItem)
+		it, ok := v.(Item)
 		if ok {
 			items = append(items, it)
 		}
@@ -82,20 +76,41 @@ func (i *Inventory) Items() (items []*InventoryItem) {
 // Item returns item with specified ID and serial
 // from the inventory or nil if no such item was
 // found.
-func (i *Inventory) Item(id, serial string) *InventoryItem {
+func (i *Inventory) Item(id, serial string) Item {
 	val, _ := i.items.Load(id + serial)
 	if val == nil {
 		return nil
 	}
-	return val.(*InventoryItem)
+	return val.(Item)
+}
+
+// TradeItem returns 'tradable' item with specified ID
+// and serial from the inventory or nil if no such item
+// was found.
+func (i *Inventory) TradeItem(id, serial string) *TradeItem {
+	for _, it := range i.TradeItems() {
+		if it.ID() == id && it.Serial() == serial {
+			return it
+		}
+	}
+	return nil
+}
+
+// LootItem returns 'lootable' item with specified ID
+// and serial from the inventory or nil if no such
+// item was found.
+func (i *Inventory) LootItem(id, serial string) Item {
+	for _, it := range i.LootItems() {
+		if it.ID() == id && it.Serial() == serial {
+			return it
+		}
+	}
+	return nil
 }
 
 // AddItems add specified item to inventory.
-// Item will be marked as tradeable and lootable inside the inventory.
-// Trade value will be set as the same as item value.
 func (i *Inventory) AddItem(it Item) {
-	invIt := InventoryItem{it, it.Value(), true, true}
-	i.items.Store(it.ID()+it.Serial(), &invIt)
+	i.items.Store(it.ID()+it.Serial(), it)
 }
 
 // RemoveItem removes specified item from inventory.
@@ -104,6 +119,30 @@ func (i *Inventory) RemoveItem(it Item) {
 	if i.onItemRemoved != nil {
 		i.onItemRemoved(it)
 	}
+}
+
+// TradeItems returns all items for trade
+// from inventory.
+func (i *Inventory) TradeItems() []*TradeItem {
+	return i.tradeItems
+}
+
+// AddTradeItems adds specified trade item to inventory.
+func (i *Inventory) AddTradeItem(it *TradeItem) {
+	i.AddItem(it)
+	i.tradeItems = append(i.tradeItems, it)
+}
+
+// LootItems returns all 'lootable' items from inventory.
+func (i *Inventory) LootItems() []Item {
+	return i.lootItems
+}
+
+// AddLootItem adds specified 'lootable' item to
+// the inventory.
+func (i *Inventory) AddLootItem(it Item) {
+	i.AddItem(it)
+	i.lootItems = append(i.lootItems, it)
 }
 
 // Size returns current amount of items
@@ -121,6 +160,8 @@ func (i *Inventory) SetOnItemRemovedFunc(f func(i Item)) {
 // Apply applies specified data on the inventory.
 func (i *Inventory) Apply(data res.InventoryData) {
 	// Clear removed items.
+	i.tradeItems = make([]*TradeItem, 0)
+	i.lootItems = make([]Item, 0)
 	for _, it := range i.Items() {
 		found := false
 		for _, invItData := range data.Items {
@@ -137,6 +178,7 @@ func (i *Inventory) Apply(data res.InventoryData) {
 	for _, invItData := range data.Items {
 		it := i.Item(invItData.ID, invItData.Serial)
 		if it != nil {
+			i.updateItem(it, invItData)
 			continue
 		}
 		if len(invItData.Serial) > 0 {
@@ -164,13 +206,34 @@ func (i *Inventory) Data() res.InventoryData {
 		invItemData := res.InventoryItemData{
 			ID:     it.ID(),
 			Serial: it.Serial(),
-			TradeValue:  it.Price,
-			NoTrade: !it.Trade,
-			NoLoot:  !it.Loot,
+		}
+		if it := i.TradeItem(it.ID(), it.Serial()); it == nil {
+			invItemData.NoTrade = true
+			invItemData.TradeValue = it.Price
+		}
+		if i.LootItem(it.ID(), it.Serial()) != nil {
+			invItemData.NoLoot = true
 		}
 		data.Items = append(data.Items, invItemData)
 	}
 	return data
+}
+
+// Update item updates item with specified item inventory data.
+func (i *Inventory) updateItem(it Item, data res.InventoryItemData) {
+	if len(data.Serial) > 0 {
+		it.SetSerial(data.Serial)
+	}
+	if !data.NoTrade {
+		ti := TradeItem{
+			Item:  it,
+			Price: data.TradeValue,
+		}
+		i.AddTradeItem(&ti)
+	}
+	if !data.NoLoot {
+		i.AddLootItem(it)
+	}
 }
 
 // spawnItem spawns specified amount of items in the inventory.
@@ -190,8 +253,8 @@ func (i *Inventory) spawnItem(data res.InventoryItemData) error {
 		if it == nil {
 			return fmt.Errorf("Item not created: %s", data.ID)
 		}
-		invIt := InventoryItem{it, data.TradeValue, !data.NoTrade, !data.NoLoot}
-		i.items.Store(it.ID()+it.Serial(), &invIt)
+		i.updateItem(it, data)
+		i.items.Store(it.ID()+it.Serial(), it)
 	}
 	return nil
 }
@@ -206,7 +269,7 @@ func (i *Inventory) restoreItem(data res.InventoryItemData) error {
 	if it == nil {
 		return fmt.Errorf("Item not created: %s", data.ID)
 	}
-	invIt := InventoryItem{it, data.TradeValue, !data.NoTrade, !data.NoLoot}
-	i.items.Store(it.ID()+it.Serial(), &invIt)
+	i.updateItem(it, data)
+	i.items.Store(it.ID()+it.Serial(), it)
 	return nil
 }
