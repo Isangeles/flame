@@ -1,7 +1,7 @@
 /*
  * equipment.go
  *
- * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,6 +127,9 @@ func (eq *Equipment) Apply(data res.EquipmentData) {
 			log.Err.Printf("character: %s %s: eq: unable to retrieve item from inventory: %s %s",
 				eq.char.ID(), eq.char.Serial(), itData.ID, itData.Serial)
 			continue
+		}
+		if tradeIt, ok := it.(*item.TradeItem); ok {
+			it = tradeIt.Item
 		}
 		eqItem, ok := it.(item.Equiper)
 		if !ok {

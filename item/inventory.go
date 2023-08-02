@@ -224,7 +224,7 @@ func (i *Inventory) updateItem(it Item, data res.InventoryItemData) {
 	if len(data.Serial) > 0 {
 		it.SetSerial(data.Serial)
 	}
-	if !data.NoTrade {
+	if _, ok := it.(*TradeItem); !ok && !data.NoTrade {
 		ti := TradeItem{
 			Item:  it,
 			Price: data.TradeValue,
