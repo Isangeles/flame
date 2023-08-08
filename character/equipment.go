@@ -128,10 +128,7 @@ func (eq *Equipment) Apply(data res.EquipmentData) {
 				eq.char.ID(), eq.char.Serial(), itData.ID, itData.Serial)
 			continue
 		}
-		if tradeIt, ok := it.(*item.TradeItem); ok {
-			it = tradeIt.Item
-		}
-		eqItem, ok := it.(item.Equiper)
+		eqItem, ok := it.Item.(item.Equiper)
 		if !ok {
 			log.Err.Printf("character: %s %s: eq: not eqipable item: %s %s",
 				eq.char.ID(), eq.char.Serial(), it.ID(), it.Serial())
@@ -209,7 +206,7 @@ func (eq *Equipment) newEquipmentSlot(slotType item.Slot) *EquipmentSlot {
 
 // inventoryItem returns an item with specified ID and serial from
 // the inventory or any item with specified ID if serial is empty.
-func inventoryItem(inv *item.Inventory, id string, serial string) item.Item {
+func inventoryItem(inv *item.Inventory, id string, serial string) *item.InventoryItem {
 	if len(serial) > 0 {
 		return inv.Item(id, serial)
 	}
