@@ -200,8 +200,8 @@ func (i *Inventory) spawnItem(data res.InventoryItemData) error {
 		if it == nil {
 			return fmt.Errorf("Item not created: %s", data.ID)
 		}
-		invIt := InventoryItem{it, data.TradeValue, !data.NoTrade, !data.NoLoot}
-		i.items.Store(it.ID()+it.Serial(), &invIt)
+		invIt := newInventoryItem(it, data)
+		i.items.Store(it.ID()+it.Serial(), invIt)
 	}
 	return nil
 }
@@ -217,7 +217,16 @@ func (i *Inventory) restoreItem(data res.InventoryItemData) error {
 		return fmt.Errorf("Item not created: %s", data.ID)
 	}
 	it.SetSerial(data.Serial)
-	invIt := InventoryItem{it, data.TradeValue, !data.NoTrade, !data.NoLoot}
-	i.items.Store(it.ID()+it.Serial(), &invIt)
+	invIt := newInventoryItem(it, data)
+	i.items.Store(it.ID()+it.Serial(), invIt)
 	return nil
+}
+
+// newInventoryItem creates new item for the inventory.
+func newInventoryItem(it Item, data res.InventoryItemData) *InventoryItem {
+	invIt := InventoryItem{it, data.TradeValue, !data.NoTrade, !data.NoLoot}
+	if invIt.Price == 0 {
+		invIt.Price = it.Value()
+	}
+	return &invIt
 }
