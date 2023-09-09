@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@ package res
 
 import (
 	"encoding/xml"
+
+	"github.com/salviati/go-tmx/tmx"
 )
 
 // Struct for area data.
@@ -33,6 +35,7 @@ type AreaData struct {
 	ID         string           `xml:"id,attr" json:"id"`
 	Time       string           `xml:"time,attr" json:"time"`
 	Weather    string           `xml:"weather,attr" json:"weather"`
+	Map        *tmx.Map         `xml:"map" json:"map"`
 	Respawn    RespawnData      `xml:"respawn" json:"respawn"`
 	Characters []AreaCharData   `xml:"characters>character" json:"character"`
 	Objects    []AreaObjectData `xml:"objects>object" json:"objects"`

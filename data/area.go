@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/salviati/go-tmx/tmx"
+
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"
 )
@@ -53,6 +55,20 @@ func ImportArea(path string) (res.AreaData, error) {
 	err = xml.Unmarshal(buf, &data)
 	if err != nil {
 		return data, fmt.Errorf("unable to unmarshal XML data: %v", err)
+	}
+	// Import area map.
+	mapPath := strings.Replace(path, filepath.Base(path), data.ID, 1)
+	data.Map, err = importTmxMap(mapPath)
+	if err != nil {
+		return data, fmt.Errorf("unable to import TMX area map: %v", err)
+	}
+	// Import subareas maps.
+	for i := 0; i < len(data.Subareas); i++ {
+		mapPath = strings.Replace(path, filepath.Base(path), data.Subareas[i].ID, 1)
+		data.Subareas[i].Map, err = importTmxMap(mapPath)
+		if err != nil {
+			return data, fmt.Errorf("unable to import TMX subarea map: %v", err)
+		}
 	}
 	return data, nil
 }
@@ -112,4 +128,17 @@ func ExportArea(path string, data res.AreaData) error {
 	w.Write(xmlData)
 	w.Flush()
 	return nil
+}
+
+// importTmxMap imports tiled map from file with specified path.
+func importTmxMap(path string) (*tmx.Map, error) {
+	tmxFile, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("unable to open TMX file: %v", err)
+	}
+	tmxMap, err := tmx.Read(tmxFile)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read TMX file: %v", err)
+	}
+	return tmxMap, nil
 }
