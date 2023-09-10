@@ -41,6 +41,7 @@ type Area struct {
 	id       string
 	Time     time.Time
 	weather  *Weather
+	areaMap  Map
 	respawn  *Respawn
 	objects  *sync.Map
 	subareas *sync.Map
@@ -84,6 +85,11 @@ func (a *Area) Update(delta int64) {
 // ID returns area ID.
 func (a *Area) ID() string {
 	return a.id
+}
+
+// Map returns area map.
+func (a *Area) Map() Map {
+	return a.areaMap
 }
 
 // AddObjects adds specified object to area.
@@ -197,6 +203,9 @@ func (a *Area) Apply(data res.AreaData) {
 	a.id = data.ID
 	a.Time, _ = time.Parse(time.Kitchen, data.Time)
 	a.weather.Conditions = Conditions(data.Weather)
+	if data.Map != nil {
+		a.areaMap = newMap(data.Map)
+	}
 	a.respawn.Apply(data.Respawn)
 	// Remove objects not present anymore.
 	removeChars := func(key, value interface{}) bool {
@@ -268,6 +277,7 @@ func (a *Area) Data() res.AreaData {
 		ID:      a.ID(),
 		Time:    a.Time.Format(time.Kitchen),
 		Respawn: a.respawn.Data(),
+		Map:     a.areaMap.Data(),
 	}
 	for _, o := range a.Objects() {
 		c, ok := o.(*character.Character)
