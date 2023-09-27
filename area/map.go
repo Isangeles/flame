@@ -24,7 +24,7 @@
 package area
 
 import (
-	"github.com/salviati/go-tmx/tmx"
+	"github.com/isangeles/tmx"
 )
 
 // Struct for area map.

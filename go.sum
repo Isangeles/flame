@@ -1,2 +1,2 @@
-github.com/salviati/go-tmx v0.0.0-20180901011116-8dae25beffeb h1:xnT9hS4WTIDoD5dKlbDpBANISLHbW4JCEp4C5Mb4RLY=
-github.com/salviati/go-tmx v0.0.0-20180901011116-8dae25beffeb/go.mod h1:MHMSHqNIP7nhf3dSczdtzy/1mKyYaQP7sHbXwmXvvaA=
+github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b h1:TfKHKtfJnlSIe2OZ8QaPLBskYJ5LE7Sf/dVDhDEFZxs=
+github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b/go.mod h1:HQTF1Ct50epzMRfRAG8Pg6Fzy84J/w8ZFvR4id62X2g=

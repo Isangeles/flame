@@ -32,7 +32,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/salviati/go-tmx/tmx"
+	"github.com/isangeles/tmx"
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/log"

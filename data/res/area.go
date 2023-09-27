@@ -26,7 +26,7 @@ package res
 import (
 	"encoding/xml"
 
-	"github.com/salviati/go-tmx/tmx"
+	"github.com/isangeles/tmx"
 )
 
 // Struct for area data.
