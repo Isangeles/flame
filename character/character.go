@@ -134,23 +134,6 @@ func (c *Character) Update(delta int64) {
 	if c.moveCooldown > 0 {
 		c.moveCooldown -= delta
 	}
-	// Move to dest point.
-	if c.Moving() && c.moveCooldown <= 0 {
-		c.Interrupt() // interrupt current action
-		if c.posX < c.destX {
-			c.posX += 1
-		}
-		if c.posX > c.destX {
-			c.posX -= 1
-		}
-		if c.posY < c.destY {
-			c.posY += 1
-		}
-		if c.posY > c.destY {
-			c.posY -= 1
-		}
-		c.moveCooldown = moveCD
-	}
 	// Check experience value.
 	if c.Experience() >= c.MaxExperience() {
 		c.levelup()
@@ -397,6 +380,7 @@ func (c *Character) SetDefaultPosition(x, y float64) {
 	c.defX, c.defY = x, y
 }
 
+
 // SetSerial sets specified serial value for this
 // character.
 func (c *Character) SetSerial(serial string) {
@@ -547,6 +531,24 @@ func (c *Character) Interrupt() {
 // Cooldown returns character cooldown in milliseconds.
 func (c *Character) Cooldown() int64 {
 	return c.useCooldown
+}
+
+// BaseMoveCooldown returns character base movement
+// cooldown in milliseconds.
+func (c *Character) BaseMoveCooldown() int64 {
+	return moveCD
+}
+
+// MoveCooldown returns character movement cooldown in
+// milliseconds.
+func (c *Character) MoveCooldown() int64 {
+	return c.moveCooldown
+}
+
+// SetMoveCooldown sets character movement cooldown to
+// the specified value(in milliseconds).
+func (c *Character) SetMoveCooldown(cooldown int64) {
+	c.moveCooldown = cooldown
 }
 
 // Dialog returns dialog for specified character.

@@ -56,6 +56,12 @@ type Object interface {
 	AreaID() string
 	SetAreaID(s string)
 	SightRange() float64
+	Moving() bool
+	DestPoint() (float64, float64)
+	Interrupt()
+	BaseMoveCooldown() int64
+	MoveCooldown() int64
+	SetMoveCooldown(c int64)
 }
 
 // New creates new area.
@@ -75,6 +81,11 @@ func (a *Area) Update(delta int64) {
 	a.Weather().update()
 	for _, o := range a.Objects() {
 		o.Update(delta)
+		// Move to dest point.
+		if o.Moving() {
+			x, y := o.DestPoint()
+			moveObject(o, x, y)
+		}
 	}
 	for _, sa := range a.Subareas() {
 		sa.Update(delta)
@@ -298,4 +309,25 @@ func (a *Area) Data() res.AreaData {
 		data.Subareas = append(data.Subareas, sa.Data())
 	}
 	return data
+}
+
+// moveObject moves object towards speicifed
+// XY position.
+func moveObject(ob Object, x, y float64) {
+	ob.Interrupt()
+	obX, obY := ob.Position()
+	if obX < x {
+		obX += 1
+	}
+	if obX > x {
+		obX -= 1
+	}
+	if obY < y {
+		obY += 1
+	}
+	if obY > y {
+		obY -= 1
+	}
+	ob.SetPosition(obX, obY)
+	ob.SetMoveCooldown(ob.BaseMoveCooldown())
 }

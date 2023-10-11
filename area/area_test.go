@@ -100,6 +100,28 @@ func TestSightRangeObjects(t *testing.T) {
 	}
 }
 
+// TestCharacterMove tests moving objects to their
+// destination points.
+func TestCharacterMove(t *testing.T) {
+	// Creates object & area.
+	ob := character.New(charData)
+	area := New(areaData)
+	area.AddObject(ob)
+	// Test.
+	x, y := ob.Position()
+	if x != 0.0 || y != 0.0 {
+		t.Errorf("Invalid starting position: %f %f", x, y)
+	}
+	ob.SetDestPoint(2, 2)
+	area.Update(1)
+	area.Update(1000)
+	x, y = ob.Position()
+	if x != 2 || y != 2 {
+		t.Errorf("Object not moved to destination point: %f %f != 2 2",
+			x, y)
+	}
+}
+
 // containsObject checks if object with specified ID and serial
 func containsObject(id, serial string, obs ...Object) bool {
 	for _, ob := range obs {
