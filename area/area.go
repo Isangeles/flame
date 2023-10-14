@@ -36,6 +36,10 @@ import (
 	"github.com/isangeles/flame/serial"
 )
 
+// List with names of the map layers on which the
+// area objects can move.
+var PassableMapLayers = []string{"ground"}
+
 // Area struct represents game world area.
 type Area struct {
 	id       string
@@ -84,7 +88,7 @@ func (a *Area) Update(delta int64) {
 		// Move to dest point.
 		if o.Moving() {
 			x, y := o.DestPoint()
-			moveObject(o, x, y)
+			a.moveObject(o, x, y)
 		}
 	}
 	for _, sa := range a.Subareas() {
@@ -313,21 +317,36 @@ func (a *Area) Data() res.AreaData {
 
 // moveObject moves object towards speicifed
 // XY position.
-func moveObject(ob Object, x, y float64) {
+func (a *Area) moveObject(ob Object, x, y float64) {
 	ob.Interrupt()
 	obX, obY := ob.Position()
-	if obX < x {
+	if obX < x && a.passable(obX+1, obY) {
 		obX += 1
 	}
-	if obX > x {
+	if obX > x && a.passable(obX-1, obY) {
 		obX -= 1
 	}
-	if obY < y {
+	if obY < y && a.passable(obX, obY+1) {
 		obY += 1
 	}
-	if obY > y {
+	if obY > y && a.passable(obX, obY-1) {
 		obY -= 1
 	}
 	ob.SetPosition(obX, obY)
 	ob.SetMoveCooldown(ob.BaseMoveCooldown())
+}
+
+// passable checks if specified XY position is passable
+// i.e. is withing on of passable layers of the area map.
+func (a *Area) passable(x, y float64) bool {
+	layer := a.Map().PositionLayer(x, y)
+	if len(layer.Name()) < 1 {
+		return true
+	}
+	for _, l := range PassableMapLayers {
+		if l == layer.Name() {
+			return true
+		}
+	}
+	return false
 }
