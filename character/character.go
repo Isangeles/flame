@@ -80,9 +80,7 @@ type Character struct {
 	trainings        []*training.TrainerTraining
 	casted           res.CastedObjectData
 	chatLog          *objects.Log
-	onChatSent       func(t string)
 	onModifierTaken  func(m effect.Modifier)
-	onEffectTaken    func(e *effect.Effect)
 }
 
 const (
@@ -504,22 +502,10 @@ func (c *Character) ChatLog() *objects.Log {
 	return c.chatLog
 }
 
-// SetOnChatSentFunc sets function triggered after sending text
-// on character chat channel.
-func (c *Character) SetOnChatSentFunc(f func(t string)) {
-	c.onChatSent = f
-}
-
 // SetOnModifierTakenFunc sets function triggered after receiving new
 // modifier.
 func (c *Character) SetOnModifierTakenFunc(f func(m effect.Modifier)) {
 	c.onModifierTaken = f
-}
-
-// SetOnEffectTakenFunc sets function triggered after taking new
-// effect.
-func (c *Character) SetOnEffectTakenFunc(f func(e *effect.Effect)) {
-	c.onEffectTaken = f
 }
 
 // Interrupt stops any acction(like skill

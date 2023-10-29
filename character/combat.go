@@ -1,7 +1,7 @@
 /*
  * combat.go
  *
- * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -129,8 +129,5 @@ func (c *Character) TakeEffect(e *effect.Effect) {
 			c.TakeEffect(e)
 		}
 		c.TakeModifiers(s, s.HitModifiers()...)
-	}
-	if c.onEffectTaken != nil {
-		c.onEffectTaken(e)
 	}
 }
