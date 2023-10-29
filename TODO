@@ -1,5 +1,5 @@
 MAJOR:
-* Switching chapters
+* Switching chapters(modifier to trigger chapter change?)
 * Item materials
 * Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
