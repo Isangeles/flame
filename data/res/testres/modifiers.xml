@@ -1,0 +1,22 @@
+<modifiers>
+  <health-mod/>
+  <health-mod/>
+  <mana-mod/>
+  <mana-mod/>
+  <flag-mod/>
+  <flag-mod/>
+  <quest-mod/>
+  <quest-mod/>
+  <area-mod/>
+  <area-mod/>
+  <add-item-mod/>
+  <add-item-mod/>
+  <add-skill-mod/>
+  <add-skill-mod/>
+  <remove-item-mod/>
+  <remove-item-mod/>
+  <attribute-mod/>
+  <attribute-mod/>
+  <memory-mod/>
+  <memory-mod/>
+</modifiers>

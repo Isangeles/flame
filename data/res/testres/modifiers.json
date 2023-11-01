@@ -1,0 +1,12 @@
+{
+    "health-mods": [ {}, {} ],
+    "mana-mods": [ {}, {} ],
+    "flag-mods": [ {}, {} ],
+    "quest-mods": [ {}, {} ],
+    "area-mods": [ {}, {} ],
+    "add-item-mods": [ {}, {} ],
+    "add-skill-mods": [ {}, {} ],
+    "remove-item-mods": [ {}, {} ],
+    "attribute-mods": [ {}, {} ],
+    "memory-mods": [ {}, {} ]
+}
