@@ -39,7 +39,6 @@ type Chapter struct {
 	conf        *ChapterConfig
 	mod         *Module
 	areas       map[string]*area.Area
-	onAreaAdded func(s *area.Area)
 }
 
 // NewChapter creates new module chapter.
@@ -96,9 +95,6 @@ func (c *Chapter) Areas() (areas []*area.Area) {
 func (c *Chapter) AddAreas(areas ...*area.Area) {
 	for _, a := range areas {
 		c.areas[a.ID()] = a
-		if c.onAreaAdded != nil {
-			c.onAreaAdded(a)
-		}
 	}
 }
 
@@ -173,12 +169,6 @@ func (c *Chapter) ObjectArea(ob area.Object) *area.Area {
 		}
 	}
 	return nil
-}
-
-// SetOnAreaAddedFunc sets function triggered after adding
-// new area to chapter.
-func (c *Chapter) SetOnAreaAddedFunc(f func(s *area.Area)) {
-	c.onAreaAdded = f
 }
 
 // Apply applies specified data on the chapter.
