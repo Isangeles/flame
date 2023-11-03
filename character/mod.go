@@ -1,7 +1,7 @@
 /*
  * mod.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 		}
 		c.MemorizeTarget(&tar)
 	}
-	if c.onModifierTaken != nil {
-		c.onModifierTaken(m)
+	for _, event := range c.onModifierEvents {
+		event(m)
 	}
 }

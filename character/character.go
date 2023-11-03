@@ -80,7 +80,7 @@ type Character struct {
 	trainings        []*training.TrainerTraining
 	casted           res.CastedObjectData
 	chatLog          *objects.Log
-	onModifierTaken  func(m effect.Modifier)
+	onModifierEvents []func(m effect.Modifier)
 }
 
 const (
@@ -378,7 +378,6 @@ func (c *Character) SetDefaultPosition(x, y float64) {
 	c.defX, c.defY = x, y
 }
 
-
 // SetSerial sets specified serial value for this
 // character.
 func (c *Character) SetSerial(serial string) {
@@ -502,10 +501,12 @@ func (c *Character) ChatLog() *objects.Log {
 	return c.chatLog
 }
 
-// SetOnModifierTakenFunc sets function triggered after receiving new
-// modifier.
-func (c *Character) SetOnModifierTakenFunc(f func(m effect.Modifier)) {
-	c.onModifierTaken = f
+// AddOnModifierEvent adds specified function to be triggered after
+// receiving a new modifier.
+// The event function will be called for every recieved modifier
+// after it was handled by the character.
+func (c *Character) AddOnModifierEvent(f func(m effect.Modifier)) {
+	c.onModifierEvents = append(c.onModifierEvents, f)
 }
 
 // Interrupt stops any acction(like skill
