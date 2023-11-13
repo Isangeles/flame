@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,17 +45,18 @@ type EffectData struct {
 
 // Struct for modifiers data resource.
 type ModifiersData struct {
-	XMLName        xml.Name            `xml:"modifiers" json:"-"`
-	HealthMods     []HealthModData     `xml:"health-mod" json:"health-mods"`
-	ManaMods       []ManaModData       `xml:"mana-mod" json:"mana-mods"`
-	FlagMods       []FlagModData       `xml:"flag-mod" json:"flag-mods"`
-	QuestMods      []QuestModData      `xml:"quest-mod" json:"quest-mods"`
-	AreaMods       []AreaModData       `xml:"area-mod" json:"area-mods"`
-	AddItemMods    []AddItemModData    `xml:"add-item-mod" json:"add-item-mods"`
-	AddSkillMods   []AddSkillModData   `xml:"add-skill-mod" json:"add-skill-mods"`
-	RemoveItemMods []RemoveItemModData `xml:"remove-item-mod" json:"remove-item-mods"`
-	AttributeMods  []AttributeModData  `xml:"attribute-mod" json:"attribute-mods"`
-	MemoryMods     []MemoryModData     `xml:"memory-mod" json:"memory-mods"`
+	XMLName           xml.Name               `xml:"modifiers" json:"-"`
+	HealthMods        []HealthModData        `xml:"health-mod" json:"health-mods"`
+	ManaMods          []ManaModData          `xml:"mana-mod" json:"mana-mods"`
+	FlagMods          []FlagModData          `xml:"flag-mod" json:"flag-mods"`
+	QuestMods         []QuestModData         `xml:"quest-mod" json:"quest-mods"`
+	AreaMods          []AreaModData          `xml:"area-mod" json:"area-mods"`
+	AddItemMods       []AddItemModData       `xml:"add-item-mod" json:"add-item-mods"`
+	AddSkillMods      []AddSkillModData      `xml:"add-skill-mod" json:"add-skill-mods"`
+	RemoveItemMods    []RemoveItemModData    `xml:"remove-item-mod" json:"remove-item-mods"`
+	AttributeMods     []AttributeModData     `xml:"attribute-mod" json:"attribute-mods"`
+	MemoryMods        []MemoryModData        `xml:"memory-mod" json:"memory-mods"`
+	ChangeChapterMods []ChangeChapterModData `xml:"change-chapter-mod" json:"change-chapter-mods"`
 }
 
 // Struct for health modifier data.
@@ -110,4 +111,9 @@ type AttributeModData AttributesData
 // Struct for memory modifier data.
 type MemoryModData struct {
 	Attitude string `xml:"attitude,attr" json:"attitude"`
+}
+
+// Struct for chapter change modifier.
+type ChangeChapterModData struct {
+	Chapter string `xml:"chapter,attr" json:"chapter"`
 }

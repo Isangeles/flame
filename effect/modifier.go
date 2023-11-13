@@ -1,7 +1,7 @@
 /*
  * modifier.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,6 +72,10 @@ func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 		memoryMod := NewMemoryMod(md)
 		mods = append(mods, memoryMod)
 	}
+	for _, md := range data.ChangeChapterMods {
+		changeChapterMod := NewChangeChapterMod(md)
+		mods = append(mods, changeChapterMod)
+	}
 	return
 }
 
@@ -99,6 +103,8 @@ func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
 			data.AttributeMods = append(data.AttributeMods, m.Data())
 		case *MemoryMod:
 			data.MemoryMods = append(data.MemoryMods, m.Data())
+		case *ChangeChapterMod:
+			data.ChangeChapterMods = append(data.ChangeChapterMods, m.Data())
 		}
 	}
 	return

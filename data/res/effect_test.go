@@ -172,6 +172,10 @@ func TestModifiersDataJson(t *testing.T) {
 		t.Errorf("Invalid number of memory mods: %d != 2",
 			len(mods.MemoryMods))
 	}
+	if len(mods.ChangeChapterMods) != 2 {
+		t.Errorf("Invalid number of change chapter mods: %d != 2",
+			len(mods.ChangeChapterMods))
+	}
 }
 
 // TestModifiersDataXml tests modifiers data XML mappings.
@@ -227,6 +231,10 @@ func TestModifiersDataXml(t *testing.T) {
 		t.Errorf("Invalid number of memory mods: %d != 2",
 			len(mods.MemoryMods))
 	}
+	if len(mods.ChangeChapterMods) != 2 {
+		t.Errorf("Invalid number of change chapter mods: %d != 2",
+			len(mods.ChangeChapterMods))
+	}
 }
 
 // TestHealthModDataJson tests health modifier data JSON mappings.
@@ -268,5 +276,43 @@ func TestHealthModDataXml(t *testing.T) {
 	}
 	if mod.Max != 10 {
 		t.Errorf("Invalid max value: %d != 10", mod.Max)
+	}
+}
+
+// TestChangeChapterModDataJson tests chapter change modifier data
+// JSON mappings.
+func TestChangeChapterModDataJson(t *testing.T) {
+	// Create test modifier
+	data, err := testData("changechaptermod.json")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	mod := new(ChangeChapterModData)
+	err = json.Unmarshal(data, mod)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal JSON data: %v", err)
+	}
+	// Test
+	if mod.Chapter != "ch1" {
+		t.Errorf("Invalid chapter value: %s != 'ch1'", mod.Chapter)
+	}
+}
+
+// TestChangeChapterModDataXml tests chapter change modifier data
+// XML mapping.
+func TestChangeChapterModDataXml(t *testing.T) {
+	// Create test modifier
+	data, err := testData("changechaptermod.xml")
+	if err != nil {
+		t.Fatalf("Unable to retrieve test data: %v", err)
+	}
+	mod := new(ChangeChapterModData)
+	err = xml.Unmarshal(data, mod)
+	if err != nil {
+		t.Fatalf("Unable to unmarshal XML data: %v", err)
+	}
+	// Test
+	if mod.Chapter != "ch1" {
+		t.Errorf("Invalid chapter value: %s != 'ch1'", mod.Chapter)
 	}
 }
