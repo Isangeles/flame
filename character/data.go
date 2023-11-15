@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.Crafting().Apply(data.Crafting)
 	c.ChatLog().Apply(data.ChatLog)
 	c.SetAreaID(data.Area)
+	c.SetChapterID(data.Chapter)
 	c.SetGuild(NewGuild(data.Guild))
 	c.action = useaction.New(data.Action)
 	c.useCooldown = data.UseCooldown
@@ -215,6 +216,7 @@ func (c *Character) Data() res.CharacterData {
 		Kills:        c.kills,
 		Restore:      true,
 		Area:         c.AreaID(),
+		Chapter:      c.ChapterID(),
 		UseCooldown:  c.useCooldown,
 		MoveCooldown: c.moveCooldown,
 	}

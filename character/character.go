@@ -66,6 +66,7 @@ type Character struct {
 	moveCooldown     int64 // millis
 	respawn          int64
 	areaID           string
+	chapterID        string
 	inventory        *item.Inventory
 	equipment        *Equipment
 	journal          *quest.Journal
@@ -632,6 +633,18 @@ func (c *Character) AreaID() string {
 // character area ID.
 func (c *Character) SetAreaID(areaID string) {
 	c.areaID = areaID
+}
+
+// ChapterID returns ID of the chapter that this
+// character should be in.
+func (c *Character) ChapterID() string {
+	return c.chapterID
+}
+
+// SetChapterID sets specified chapter ID as character
+// chapter ID.
+func (c *Character) SetChapterID(chapterID string) {
+	c.chapterID = chapterID
 }
 
 // SetRespawn sets character respawn time in milliseconds.
