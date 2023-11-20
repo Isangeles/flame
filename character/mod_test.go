@@ -46,7 +46,7 @@ func TestTakeModifiersArea(t *testing.T) {
 			ob.AreaID(), mod.AreaID())
 	}
 	obPosX, obPosY := ob.Position()
-	entryPosX, entryPosY := mod.EntryPosition()
+	entryPosX, entryPosY := mod.EnterPosition()
 	if obPosX != entryPosX || obPosY != entryPosY {
 		t.Errorf("Invalid character position: %fx%f != %fx%f",
 			obPosX, obPosY, entryPosX, entryPosY)
