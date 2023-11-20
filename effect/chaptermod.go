@@ -1,5 +1,5 @@
 /*
- * changechaptermod.go
+ * chaptermod.go
  *
  * Copyright 2023 Dariusz Sikora <ds@isangeles.dev>
  *
@@ -27,21 +27,22 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-// Struct for change chapter modifier.
-type ChangeChapterMod struct {
+// Struct for chapter modifier.
+type ChapterMod struct {
 	chapterID string
 }
 
-// NewChangeChapterMod creates new change chapter modifier.
-func NewChangeChapterMod(data res.ChangeChapterModData) *ChangeChapterMod {
-	return &ChangeChapterMod{data.Chapter}
+// NewChapterMod creates new chapter modifier.
+func NewChapterMod(data res.ChapterModData) *ChapterMod {
+	return &ChapterMod{data.ID}
 }
 
 // ChapterID returns ID of chapter to change to.
-func (ccm *ChangeChapterMod) ChapterID() string {
-	return ccm.chapterID
+func (cm *ChapterMod) ChapterID() string {
+	return cm.chapterID
 }
 
-func (ccm *ChangeChapterMod) Data() res.ChangeChapterModData {
-	return res.ChangeChapterModData{ccm.ChapterID()}
+// Data returns data resource for chapter modifier.
+func (cm *ChapterMod) Data() res.ChapterModData {
+	return res.ChapterModData{cm.ChapterID()}
 }

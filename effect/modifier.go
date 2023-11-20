@@ -52,6 +52,10 @@ func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 		areaMod := NewAreaMod(md)
 		mods = append(mods, areaMod)
 	}
+	for _, md := range data.ChapterMods {
+		chapterMod := NewChapterMod(md)
+		mods = append(mods, chapterMod)
+	}
 	for _, md := range data.AddItemMods {
 		addItemMod := NewAddItemMod(md)
 		mods = append(mods, addItemMod)
@@ -72,10 +76,6 @@ func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 		memoryMod := NewMemoryMod(md)
 		mods = append(mods, memoryMod)
 	}
-	for _, md := range data.ChangeChapterMods {
-		changeChapterMod := NewChangeChapterMod(md)
-		mods = append(mods, changeChapterMod)
-	}
 	return
 }
 
@@ -93,6 +93,8 @@ func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
 			data.QuestMods = append(data.QuestMods, m.Data())
 		case *AreaMod:
 			data.AreaMods = append(data.AreaMods, m.Data())
+		case *ChapterMod:
+			data.ChapterMods = append(data.ChapterMods, m.Data())
 		case *AddItemMod:
 			data.AddItemMods = append(data.AddItemMods, m.Data())
 		case *AddSkillMod:
@@ -103,8 +105,6 @@ func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
 			data.AttributeMods = append(data.AttributeMods, m.Data())
 		case *MemoryMod:
 			data.MemoryMods = append(data.MemoryMods, m.Data())
-		case *ChangeChapterMod:
-			data.ChangeChapterMods = append(data.ChangeChapterMods, m.Data())
 		}
 	}
 	return

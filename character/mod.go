@@ -116,7 +116,7 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 			Attitude:     Attitude(m.Attitude()),
 		}
 		c.MemorizeTarget(&tar)
-	case *effect.ChangeChapterMod:
+	case *effect.ChapterMod:
 		c.SetChapterID(m.ChapterID())
 	}
 	for _, event := range c.onModifierEvents {

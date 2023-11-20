@@ -9,6 +9,8 @@
   <quest-mod/>
   <area-mod/>
   <area-mod/>
+  <chapter-mod/>
+  <chapter-mod/>
   <add-item-mod/>
   <add-item-mod/>
   <add-skill-mod/>
@@ -19,6 +21,4 @@
   <attribute-mod/>
   <memory-mod/>
   <memory-mod/>
-  <change-chapter-mod/>
-  <change-chapter-mod/>
 </modifiers>

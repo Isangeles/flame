@@ -45,18 +45,18 @@ type EffectData struct {
 
 // Struct for modifiers data resource.
 type ModifiersData struct {
-	XMLName           xml.Name               `xml:"modifiers" json:"-"`
-	HealthMods        []HealthModData        `xml:"health-mod" json:"health-mods"`
-	ManaMods          []ManaModData          `xml:"mana-mod" json:"mana-mods"`
-	FlagMods          []FlagModData          `xml:"flag-mod" json:"flag-mods"`
-	QuestMods         []QuestModData         `xml:"quest-mod" json:"quest-mods"`
-	AreaMods          []AreaModData          `xml:"area-mod" json:"area-mods"`
-	AddItemMods       []AddItemModData       `xml:"add-item-mod" json:"add-item-mods"`
-	AddSkillMods      []AddSkillModData      `xml:"add-skill-mod" json:"add-skill-mods"`
-	RemoveItemMods    []RemoveItemModData    `xml:"remove-item-mod" json:"remove-item-mods"`
-	AttributeMods     []AttributeModData     `xml:"attribute-mod" json:"attribute-mods"`
-	MemoryMods        []MemoryModData        `xml:"memory-mod" json:"memory-mods"`
-	ChangeChapterMods []ChangeChapterModData `xml:"change-chapter-mod" json:"change-chapter-mods"`
+	XMLName        xml.Name            `xml:"modifiers" json:"-"`
+	HealthMods     []HealthModData     `xml:"health-mod" json:"health-mods"`
+	ManaMods       []ManaModData       `xml:"mana-mod" json:"mana-mods"`
+	FlagMods       []FlagModData       `xml:"flag-mod" json:"flag-mods"`
+	QuestMods      []QuestModData      `xml:"quest-mod" json:"quest-mods"`
+	AreaMods       []AreaModData       `xml:"area-mod" json:"area-mods"`
+	ChapterMods    []ChapterModData    `xml:"chapter-mod" json:"chapter-mods"`
+	AddItemMods    []AddItemModData    `xml:"add-item-mod" json:"add-item-mods"`
+	AddSkillMods   []AddSkillModData   `xml:"add-skill-mod" json:"add-skill-mods"`
+	RemoveItemMods []RemoveItemModData `xml:"remove-item-mod" json:"remove-item-mods"`
+	AttributeMods  []AttributeModData  `xml:"attribute-mod" json:"attribute-mods"`
+	MemoryMods     []MemoryModData     `xml:"memory-mod" json:"memory-mods"`
 }
 
 // Struct for health modifier data.
@@ -91,6 +91,11 @@ type AreaModData struct {
 	EnterY float64 `xml:"enter-pos-y,attr" json:"enter-pos-y"`
 }
 
+// Struct for chapter modifier.
+type ChapterModData struct {
+	ID string `xml:"id,attr" json:"id"`
+}
+
 // Struct for add item modifier data.
 type AddItemModData struct {
 	ItemID string `xml:"item-id,attr" json:"item-id"`
@@ -111,9 +116,4 @@ type AttributeModData AttributesData
 // Struct for memory modifier data.
 type MemoryModData struct {
 	Attitude string `xml:"attitude,attr" json:"attitude"`
-}
-
-// Struct for chapter change modifier.
-type ChangeChapterModData struct {
-	Chapter string `xml:"chapter,attr" json:"chapter"`
 }

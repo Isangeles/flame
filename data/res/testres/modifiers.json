@@ -4,10 +4,10 @@
     "flag-mods": [ {}, {} ],
     "quest-mods": [ {}, {} ],
     "area-mods": [ {}, {} ],
+    "chapter-mods": [ {}, {} ],
     "add-item-mods": [ {}, {} ],
     "add-skill-mods": [ {}, {} ],
     "remove-item-mods": [ {}, {} ],
     "attribute-mods": [ {}, {} ],
-    "memory-mods": [ {}, {} ],
-    "change-chapter-mods": [ {}, {} ]
+    "memory-mods": [ {}, {} ]
 }

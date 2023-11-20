@@ -31,8 +31,8 @@ import (
 )
 
 var (
-	areaModData          = res.AreaModData{"testArea", 10, 10}
-	changeChapterModData = res.ChangeChapterModData{"testChapter"}
+	areaModData    = res.AreaModData{"testArea", 10, 10}
+	chapterModData = res.ChapterModData{"testChapter"}
 )
 
 // TestTakeModifiersArea tests handling of area
@@ -53,11 +53,11 @@ func TestTakeModifiersArea(t *testing.T) {
 	}
 }
 
-// TestTakeModifiersChapterChange tests handling of
-// chapter change modifier.
-func TestTakeModifiersChapterChange(t *testing.T) {
+// TestTakeModifiersChapter tests handling of chapter
+// modifier.
+func TestTakeModifiersChapter(t *testing.T) {
 	ob := New(charData)
-	mod := effect.NewChangeChapterMod(changeChapterModData)
+	mod := effect.NewChapterMod(chapterModData)
 	ob.TakeModifiers(nil, mod)
 	if ob.ChapterID() != mod.ChapterID() {
 		t.Errorf("Invalid chapter ID: '%s' != '%s'",
