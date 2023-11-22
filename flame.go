@@ -25,20 +25,21 @@
 package flame
 
 import (
+	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/serial"
 )
 
 const (
-	Name, Version  = "Flame", "0.1.0-dev"
+	Name, Version = "Flame", "0.1.0-dev"
 )
 
 // Module struct represents game module.
 type Module struct {
-	res              *res.ResourcesData
-	conf             *ModuleConfig
-	chapter          *Chapter
-	onChapterChanged func(c *Chapter)
+	res                   *res.ResourcesData
+	conf                  *ModuleConfig
+	chapter               *Chapter
+	chapterChangeEvents []func(ob *character.Character)
 }
 
 // NewModule creates new game module from specified data.
@@ -51,17 +52,22 @@ func NewModule(data res.ModuleData) *Module {
 
 // Update updates module.
 func (m *Module) Update(delta int64) {
-	if m.Chapter() != nil {
-		m.Chapter().Update(delta)
+	if m.Chapter() == nil {
+		return
+	}
+	m.Chapter().Update(delta)
+	for _, c := range m.Chapter().Characters() {
+		if len(c.ChapterID()) > 0 && c.ChapterID() != m.Chapter().ID() {
+			for _, ev := range m.chapterChangeEvents {
+				ev(c)
+			}
+		}
 	}
 }
 
 // SetChapter sets specified chapter as current chapter.
 func (m *Module) SetChapter(chapter *Chapter) {
 	m.chapter = chapter
-	if m.onChapterChanged != nil {
-		m.onChapterChanged(m.Chapter())
-	}
 }
 
 // Chapter returns current module chapter.
@@ -93,9 +99,10 @@ func (m *Module) Resources() *res.ResourcesData {
 	return m.res
 }
 
-// SetOnChapterChangedFunc sets function triggered on chapter change.
-func (m *Module) SetOnChapterChangedFunc(f func(c *Chapter)) {
-	m.onChapterChanged = f
+// AddChapterChangeEvent adds function to trigger chapter
+// change is required.
+func (m *Module) AddChapterChangeEvent(event func(char *character.Character)) {
+	m.chapterChangeEvents = append(m.chapterChangeEvents, event)
 }
 
 // Apply applies specified data on the module.
