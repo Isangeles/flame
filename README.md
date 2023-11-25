@@ -9,7 +9,7 @@
 
   Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or use some existing one.
 
-  Flame modules are available for download [here](http://flame.isangeles.pl/mods).
+  Flame modules are available for download [here](https://flame.isangeles.dev/mods).
 
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
