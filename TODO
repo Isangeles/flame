@@ -1,5 +1,4 @@
 MAJOR:
-* Switching chapters(modifier to trigger chapter change?)
 * Item materials
 * Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
@@ -46,3 +45,4 @@ DONE:
 * In-game time
 * Area weather
 * Area respawn
+* Switching chapters
