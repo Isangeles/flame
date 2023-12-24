@@ -39,7 +39,7 @@ type Module struct {
 	res                   *res.ResourcesData
 	conf                  *ModuleConfig
 	chapter               *Chapter
-	chapterChangeEvents []func(ob *character.Character)
+	changeChapterEvents []func(ob *character.Character)
 }
 
 // NewModule creates new game module from specified data.
@@ -58,7 +58,7 @@ func (m *Module) Update(delta int64) {
 	m.Chapter().Update(delta)
 	for _, c := range m.Chapter().Characters() {
 		if len(c.ChapterID()) > 0 && c.ChapterID() != m.Chapter().ID() {
-			for _, ev := range m.chapterChangeEvents {
+			for _, ev := range m.changeChapterEvents {
 				ev(c)
 			}
 		}
@@ -99,10 +99,10 @@ func (m *Module) Resources() *res.ResourcesData {
 	return m.res
 }
 
-// AddChapterChangeEvent adds function to trigger chapter
+// AddChangeChapterEvent adds function to trigger when chapter
 // change is required.
-func (m *Module) AddChapterChangeEvent(event func(char *character.Character)) {
-	m.chapterChangeEvents = append(m.chapterChangeEvents, event)
+func (m *Module) AddChangeChapterEvent(event func(char *character.Character)) {
+	m.changeChapterEvents = append(m.changeChapterEvents, event)
 }
 
 // Apply applies specified data on the module.
