@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	}
 	// Set Race.
 	raceData := res.Race(data.Race)
-	if raceData != nil && (c.Race() == nil || c.Race().ID() != raceData.ID) {
+	if raceData != nil && c.Race().ID() != raceData.ID {
 		c.race = NewRace(*raceData)
 	}
 	// Clear old data.
@@ -220,9 +220,7 @@ func (c *Character) Data() res.CharacterData {
 		UseCooldown:  c.useCooldown,
 		MoveCooldown: c.moveCooldown,
 	}
-	if c.Race() != nil {
-		data.Race = c.Race().ID()
-	}
+	data.Race = c.Race().ID()
 	if c.UseAction() != nil {
 		data.Action = c.UseAction().Data()
 	}

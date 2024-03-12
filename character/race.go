@@ -1,7 +1,7 @@
 /*
  * race.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,25 +35,21 @@ type Race struct {
 }
 
 // NewRace creates new race.
-func NewRace(data res.RaceData) *Race {
-	r := new(Race)
-	r.id = data.ID
-	r.playable = data.Playable
-	r.skills = data.Skills
-	return r
+func NewRace(data res.RaceData) Race {
+	return Race{data.ID, data.Playable, data.Skills}
 }
 
 // ID retruns race ID.
-func (r *Race) ID() string {
+func (r Race) ID() string {
 	return r.id
 }
 
 // Playable checks if race is playable.
-func (r *Race) Playable() bool {
+func (r Race) Playable() bool {
 	return r.playable
 }
 
 // Skill return race skills.
-func (r *Race) Skills() []res.ObjectSkillData {
+func (r Race) Skills() []res.ObjectSkillData {
 	return r.skills
 }

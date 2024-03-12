@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ type Character struct {
 	live             bool
 	agony            bool
 	sex              Gender
-	race             *Race
+	race             Race
 	attitude         Attitude
 	alignment        Alignment
 	guild            Guild
@@ -244,7 +244,7 @@ func (c *Character) SetGender(gender Gender) {
 }
 
 // Race returns character race.
-func (c *Character) Race() *Race {
+func (c *Character) Race() Race {
 	return c.race
 }
 
