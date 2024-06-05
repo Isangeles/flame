@@ -46,7 +46,6 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetDefaultPosition(data.DefX, data.DefY)
 	c.SetDestPoint(data.DestX, data.DestY)
 	c.SetGender(Gender(data.Sex))
-	c.SetAttitude(Attitude(data.Attitude))
 	c.SetAlignment(Alignment(data.Alignment))
 	c.Attributes().Apply(data.Attributes)
 	c.Inventory().Apply(data.Inventory)
@@ -70,7 +69,12 @@ func (c *Character) Apply(data res.CharacterData) {
 		c.SetHealth(c.MaxHealth())
 		c.SetMana(c.MaxMana())
 	}
-	// Set Race.
+	// Attitude.
+	if len(data.Attitude) < 1 {
+		data.Attitude = string(Neutral)
+	}
+	c.SetAttitude(Attitude(data.Attitude))
+	// Race.
 	raceData := res.Race(data.Race)
 	if raceData != nil && c.Race().ID() != raceData.ID {
 		c.race = NewRace(*raceData)
