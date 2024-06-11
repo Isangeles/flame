@@ -56,12 +56,14 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.SetAreaID(data.Area)
 	c.SetChapterID(data.Chapter)
 	c.SetGuild(NewGuild(data.Guild))
-	c.action = useaction.New(data.Action)
 	c.useCooldown = data.UseCooldown
 	c.moveCooldown = data.MoveCooldown
 	c.casted = data.Casted
 	c.targets = data.Targets
 	c.kills = data.Kills
+	if useaction.HasData(data.Action) {
+		c.action = useaction.New(data.Action)
+	}
 	if data.Restore {
 		c.SetHealth(data.HP)
 		c.SetMana(data.Mana)
