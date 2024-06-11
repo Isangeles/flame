@@ -1,7 +1,7 @@
 /*
  * useaction.go
  *
- * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -254,4 +254,18 @@ func (ua *UseAction) Data() res.UseActionData {
 		data.TargetUserEffects = append(data.TargetUserEffects, ed)
 	}
 	return data
+}
+
+// HasData checks if specified use action
+// data contains any effects or modifiers.
+func HasData(data res.UseActionData) bool {
+	userMods := effect.NewModifiers(data.UserMods)
+	objectMods := effect.NewModifiers(data.ObjectMods)
+	targetMods := effect.NewModifiers(data.TargetMods)
+	targetUserMods := effect.NewModifiers(data.TargetUserMods)
+	mods := len(userMods) + len(objectMods) + len(targetMods) +
+		len(targetUserMods)
+	effects := len(data.UserEffects) + len(data.ObjectEffects) +
+		len(data.TargetEffects) + len(data.TargetUserEffects)
+	return effects + mods > 0
 }
