@@ -482,7 +482,7 @@ func (c *Character) UseAction() *useaction.UseAction {
 
 // Moving checks whether character is moving.
 func (c *Character) Moving() bool {
-	return c.Live() && (c.posX != c.destX || c.posY != c.destY)
+	return c.Live() && c.MoveCooldown() < 1 && (c.posX != c.destX || c.posY != c.destY)
 }
 
 // Fighting checks if character is in combat.
