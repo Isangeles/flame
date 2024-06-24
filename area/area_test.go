@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2022-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2022-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -101,7 +101,7 @@ func TestSightRangeObjects(t *testing.T) {
 }
 
 // TestCharacterMove tests moving objects to their
-// destination points.
+// destination points along with move cooldown.
 func TestCharacterMove(t *testing.T) {
 	// Creates object & area.
 	ob := character.New(charData)
@@ -114,11 +114,18 @@ func TestCharacterMove(t *testing.T) {
 	}
 	ob.SetDestPoint(2, 2)
 	area.Update(1)
-	area.Update(1000)
+	if ob.MoveCooldown() < 1 {
+		t.Errorf("Object has no move cooldown set")
+	}
+	area.Update(ob.MoveCooldown()-1)
+	x, y = ob.Position()
+	if x != 1 || y != 1 {
+		t.Errorf("Object moved on cooldown: %f %f != 1 1", x, y)
+	}
+	area.Update(1)
 	x, y = ob.Position()
 	if x != 2 || y != 2 {
-		t.Errorf("Object not moved to destination point: %f %f != 2 2",
-			x, y)
+		t.Errorf("Object not moved after cooldown")
 	}
 }
 
