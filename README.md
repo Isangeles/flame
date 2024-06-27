@@ -5,15 +5,13 @@
   
   Flame is able to create all game objects from textual data, this guarantees that game data is easy to modify and extend.
   
-  This repository contains engine core API, which allows to load game module data from textual format, create and modify game objects, and export game module data back into textual format(ie. basic game flow load game -> play -> save game).
+  This repository contains engine core API, which allows to load game module data from textual format, create and modify game objects, and export game module data back into textual format(i.e. basic game flow load game -> play -> save game).
 
   Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or use some existing one.
 
   Flame modules are available for download [here](https://flame.isangeles.dev/mods).
 
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
-
-  Currently in an early development stage.
 
   Flame as a project consists with many different repositories, some of them are independent and can be reused in other projects:
 
@@ -83,7 +81,7 @@ After you finish, open a pull request to merge your changes with master branch.
 * Isangeles <<ds@isangeles.dev>>
 
 ## License
-Copyright 2018-2023 Dariusz Sikora <<ds@isangeles.dev>>
+Copyright 2018-2024 Dariusz Sikora <<ds@isangeles.dev>>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
