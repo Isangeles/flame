@@ -1,7 +1,7 @@
 /*
  * skill.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -36,7 +36,7 @@ import (
 )
 
 
-// ImportSkills imports all XML skills data from skills base
+// ImportSkills imports all JSON skills data from skills base
 // with specified path.
 func ImportSkills(path string) ([]res.SkillData, error) {
 	file, err := os.Open(path)
@@ -49,9 +49,9 @@ func ImportSkills(path string) ([]res.SkillData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.SkillsData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
 	return data.Skills, nil
 }
@@ -89,7 +89,7 @@ func ExportSkills(path string, skills ...res.SkillData) error {
 		data.Skills = append(data.Skills, s)
 	}
 	// Marshal skills data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal skills: %v", err)
 	}
@@ -106,7 +106,7 @@ func ExportSkills(path string, skills ...res.SkillData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }

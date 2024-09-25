@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -48,9 +48,9 @@ func ImportDialogs(path string) ([]res.DialogData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.DialogsData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
 	return data.Dialogs, nil
 }
@@ -84,7 +84,7 @@ func ExportDialogs(path string, dialogs ...res.DialogData) error {
 		data.Dialogs = append(data.Dialogs, d)
 	}
 	// Marshal dialogs data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal dialogs: %v", err)
 	}
@@ -101,7 +101,7 @@ func ExportDialogs(path string, dialogs ...res.DialogData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }

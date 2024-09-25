@@ -1,7 +1,7 @@
 /*
  * char.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -48,9 +48,9 @@ func ImportCharacters(path string) ([]res.CharacterData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.CharactersData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal XML: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal JSON: %v", err)
 	}
 	return data.Characters, nil
 }
@@ -86,7 +86,7 @@ func ExportCharacters(path string, chars ...res.CharacterData) error {
 		data.Characters = append(data.Characters, c)
 	}
 	// Marshal character data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal characters: %v", err)
 	}
@@ -102,7 +102,7 @@ func ExportCharacters(path string, chars ...res.CharacterData) error {
 	defer file.Close()
 	// Write data to file.
 	w := bufio.NewWriter(file)
-	w.Write(xml)
+	w.Write(json)
 	w.Flush()
 	return nil
 }

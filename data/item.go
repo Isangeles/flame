@@ -1,7 +1,7 @@
 /*
  * item.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -35,7 +35,7 @@ import (
 	"github.com/isangeles/flame/log"
 )
 
-// ImportArmors imports all XML armors from file with specified path.
+// ImportArmors imports all JSON armors from file with specified path.
 func ImportArmors(path string) ([]res.ArmorData, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -47,9 +47,9 @@ func ImportArmors(path string) ([]res.ArmorData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.ArmorsData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal json data: %v", err)
 	}
 	return data.Armors, nil
 }
@@ -77,7 +77,7 @@ func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
 	return armors, nil
 }
 
-// ImportWeapons imports all XML weapons from file with specified
+// ImportWeapons imports all JSON weapons from file with specified
 // path.
 func ImportWeapons(path string) ([]res.WeaponData, error) {
 	file, err := os.Open(path)
@@ -90,9 +90,9 @@ func ImportWeapons(path string) ([]res.WeaponData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.WeaponsData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal json data: %v", err)
 	}
 	return data.Weapons, nil
 }
@@ -121,7 +121,7 @@ func ImportWeaponsDir(dirPath string) ([]res.WeaponData, error) {
 	return weapons, nil
 }
 
-// ImportMiscItems imports all XML miscellaneous items from file
+// ImportMiscItems imports all JSON miscellaneous items from file
 // with specified path.
 func ImportMiscItems(path string) ([]res.MiscItemData, error) {
 	file, err := os.Open(path)
@@ -134,9 +134,9 @@ func ImportMiscItems(path string) ([]res.MiscItemData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.MiscItemsData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal xml data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal json data: %v", err)
 	}
 	return data.Miscs, nil
 }
@@ -172,7 +172,7 @@ func ExportArmors(path string, armors ...res.ArmorData) error {
 		data.Armors = append(data.Armors, a)
 	}
 	// Marshal armors data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal armors: %v", err)
 	}
@@ -189,7 +189,7 @@ func ExportArmors(path string, armors ...res.ArmorData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }
@@ -201,7 +201,7 @@ func ExportWeapons(path string, weapons ...res.WeaponData) error {
 		data.Weapons = append(data.Weapons, w)
 	}
 	// Marshal weapons data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal weapons: %v", err)
 	}
@@ -218,7 +218,7 @@ func ExportWeapons(path string, weapons ...res.WeaponData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }
@@ -230,7 +230,7 @@ func ExportMiscItems(path string, miscs ...res.MiscItemData) error {
 		data.Miscs = append(data.Miscs, m)
 	}
 	// Marshal misc items data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal misc items: %v", err)
 	}
@@ -247,7 +247,7 @@ func ExportMiscItems(path string, miscs ...res.MiscItemData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }

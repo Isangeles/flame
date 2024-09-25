@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -52,9 +52,9 @@ func ImportArea(path string) (res.AreaData, error) {
 		return res.AreaData{}, fmt.Errorf("unable to read area file: %v", err)
 	}
 	data := res.AreaData{}
-	err = xml.Unmarshal(buf, &data)
+	err = json.Unmarshal(buf, &data)
 	if err != nil {
-		return data, fmt.Errorf("unable to unmarshal XML data: %v", err)
+		return data, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
 	// Import area map.
 	mapPath := strings.Replace(path, filepath.Base(path), data.ID, 1)
@@ -115,7 +115,7 @@ func ExportArea(path string, data res.AreaData) error {
 	if err != nil {
 		return fmt.Errorf("unable to create area dir: %v", err)
 	}
-	xmlData, err := xml.Marshal(data)
+	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal area data: %v", err)
 	}
@@ -125,7 +125,7 @@ func ExportArea(path string, data res.AreaData) error {
 	}
 	defer areaFile.Close()
 	w := bufio.NewWriter(areaFile)
-	w.Write(xmlData)
+	w.Write(jsonData)
 	w.Flush()
 	return nil
 }

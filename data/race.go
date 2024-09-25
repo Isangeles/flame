@@ -1,7 +1,7 @@
 /*
  * race.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -47,9 +47,9 @@ func ImportRaces(path string) ([]res.RaceData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.RacesData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
 	return data.Races, nil
 }
@@ -85,7 +85,7 @@ func ExportRaces(path string, races ...res.RaceData) error {
 		data.Races = append(data.Races, r)
 	}
 	// Marshal races data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal races: %v", err)
 	}
@@ -102,7 +102,7 @@ func ExportRaces(path string, races ...res.RaceData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }

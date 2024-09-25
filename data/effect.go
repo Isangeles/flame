@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -35,7 +35,7 @@ import (
 	"github.com/isangeles/flame/log"
 )
 
-// ImportEffects imports all XML effects data from effects base
+// ImportEffects imports all JSON effects data from effects base
 // with specified path.
 func ImportEffects(path string) ([]res.EffectData, error) {
 	file, err := os.Open(path)
@@ -48,7 +48,7 @@ func ImportEffects(path string) ([]res.EffectData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.EffectsData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal effects base: %v", err)
 	}
@@ -88,7 +88,7 @@ func ExportEffects(path string, effects ...res.EffectData) error {
 		data.Effects = append(data.Effects, e)
 	}
 	// Marshal effect data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal effects: %v", err)
 	}
@@ -105,7 +105,7 @@ func ExportEffects(path string, effects ...res.EffectData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }

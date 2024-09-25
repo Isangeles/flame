@@ -1,7 +1,7 @@
 /*
  * recipe.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ package data
 
 import (
 	"bufio"
-	"encoding/xml"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -48,9 +48,9 @@ func ImportRecipes(path string) ([]res.RecipeData, error) {
 	}
 	defer file.Close()
 	data := new(res.RecipesData)
-	err = xml.Unmarshal(buf, data)
+	err = json.Unmarshal(buf, data)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal XML data: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
 	return data.Recipes, nil
 }
@@ -87,7 +87,7 @@ func ExportRecipes(path string, recipes ...res.RecipeData) error {
 		data.Recipes = append(data.Recipes, r)
 	}
 	// Marshal recipes data.
-	xml, err := xml.Marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal recipes: %v", err)
 	}
@@ -104,7 +104,7 @@ func ExportRecipes(path string, recipes ...res.RecipeData) error {
 	defer file.Close()
 	// Write data to file.
 	writer := bufio.NewWriter(file)
-	writer.Write(xml)
+	writer.Write(json)
 	writer.Flush()
 	return nil
 }
