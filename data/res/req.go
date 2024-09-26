@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2019-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ type ManaReqData struct {
 // Struct for mana percent requirement data.
 type ManaPercentReqData struct {
 	Value int  `xml:"value,attr" json:"value"`
-	Less  bool `xml:"less,attr" json"less"`
+	Less  bool `xml:"less,attr" json:"less"`
 }
 
 // Struct for combat requirement data.
