@@ -1,7 +1,7 @@
 /*
  * skill.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 // Struct for skills data.
 type SkillsData struct {
 	XMLName xml.Name    `xml:"skills" json:"-"`
-	Skills  []SkillData `xml:"skill", json:"skills"`
+	Skills  []SkillData `xml:"skill" json:"skills"`
 }
 
 // Struct for skill data.
