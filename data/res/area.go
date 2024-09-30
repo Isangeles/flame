@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ type AreaData struct {
 	Map        *tmx.Map         `xml:"map" json:"map"`
 	Respawn    RespawnData      `xml:"respawn" json:"respawn"`
 	Characters []AreaCharData   `xml:"characters>character" json:"character"`
-	Objects    []AreaObjectData `xml:"objects>object" json:"objects"`
 	Subareas   []AreaData       `xml:"subareas>area" json:"subareas"`
 }
 
@@ -57,15 +56,6 @@ type AreaCharData struct {
 	Respawn int64      `xml:"respawn,attr" json:"respawn"`
 	AI      bool       `xml:"ai,attr" json:"ai"`
 	Flags   []FlagData `xml:"flags>flag" json:"flags"`
-}
-
-// Struct for area object data.
-type AreaObjectData struct {
-	ID      string  `xml:"id,attr" json:"id"`
-	Serial  string  `xml:"serial,attr" json:"serial"`
-	PosX    float64 `xml:"x,attr" json:"pos-x"`
-	PosY    float64 `xml:"y,attr" json:"pos-y"`
-	Respawn int64   `xml:"respawn,attr" json:"respawn"`
 }
 
 // Struct for area respawn data.
