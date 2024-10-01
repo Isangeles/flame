@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import (
 // Struct for dialogs data.
 type DialogsData struct {
 	XMLName xml.Name     `xml:"dialogs" json:"-"`
-	Dialogs []DialogData `xml:"dialog" json:"dialogs'`
+	Dialogs []DialogData `xml:"dialog" json:"dialogs"`
 }
 
 // Dialog data struct.
@@ -49,7 +49,7 @@ type DialogStageData struct {
 	Answers    []DialogAnswerData `xml:"answer" json:"answers"`
 	Reqs       ReqsData           `xml:"reqs" json:"reqs"`
 	TargetMods ModifiersData      `xml:"target>modifiers" json:"target-mods"`
-	OwnerMods  ModifiersData      `xml:"owner>modifiers" json:"owner-mods`
+	OwnerMods  ModifiersData      `xml:"owner>modifiers" json:"owner-mods"`
 }
 
 // Dialog answer data struct.
