@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -47,7 +46,7 @@ func ImportArmors(path string) ([]res.ArmorData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.ArmorsData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal json data: %v", err)
 	}
@@ -90,7 +89,7 @@ func ImportWeapons(path string) ([]res.WeaponData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.WeaponsData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal json data: %v", err)
 	}
@@ -134,7 +133,7 @@ func ImportMiscItems(path string) ([]res.MiscItemData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.MiscItemsData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal json data: %v", err)
 	}
@@ -172,7 +171,7 @@ func ExportArmors(path string, armors ...res.ArmorData) error {
 		data.Armors = append(data.Armors, a)
 	}
 	// Marshal armors data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal armors: %v", err)
 	}
@@ -201,7 +200,7 @@ func ExportWeapons(path string, weapons ...res.WeaponData) error {
 		data.Weapons = append(data.Weapons, w)
 	}
 	// Marshal weapons data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal weapons: %v", err)
 	}
@@ -230,7 +229,7 @@ func ExportMiscItems(path string, miscs ...res.MiscItemData) error {
 		data.Miscs = append(data.Miscs, m)
 	}
 	// Marshal misc items data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal misc items: %v", err)
 	}

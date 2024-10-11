@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -48,7 +47,7 @@ func ImportCharacters(path string) ([]res.CharacterData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.CharactersData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal JSON: %v", err)
 	}
@@ -86,7 +85,7 @@ func ExportCharacters(path string, chars ...res.CharacterData) error {
 		data.Characters = append(data.Characters, c)
 	}
 	// Marshal character data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal characters: %v", err)
 	}

@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -48,7 +47,7 @@ func ImportEffects(path string) ([]res.EffectData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.EffectsData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal effects base: %v", err)
 	}
@@ -88,7 +87,7 @@ func ExportEffects(path string, effects ...res.EffectData) error {
 		data.Effects = append(data.Effects, e)
 	}
 	// Marshal effect data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal effects: %v", err)
 	}

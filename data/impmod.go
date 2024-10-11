@@ -24,7 +24,6 @@
 package data
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -53,7 +52,7 @@ func ImportModule(path string) (res.ModuleData, error) {
 	if err != nil {
 		return data, fmt.Errorf("unable to read file: %v", err)
 	}
-	err = json.Unmarshal(buf, &data)
+	err = unmarshal(buf, &data)
 	if err != nil {
 		return data, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}

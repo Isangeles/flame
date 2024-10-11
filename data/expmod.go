@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -37,7 +36,7 @@ import (
 
 // ExportModule exports module data to the single file.
 func ExportModule(path string, data res.ModuleData) error {
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal module data: %v", err)
 	}

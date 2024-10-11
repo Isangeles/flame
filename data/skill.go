@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -49,7 +48,7 @@ func ImportSkills(path string) ([]res.SkillData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.SkillsData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
@@ -89,7 +88,7 @@ func ExportSkills(path string, skills ...res.SkillData) error {
 		data.Skills = append(data.Skills, s)
 	}
 	// Marshal skills data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal skills: %v", err)
 	}

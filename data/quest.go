@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -48,7 +47,7 @@ func ImportQuests(path string) ([]res.QuestData, error) {
 		return nil, fmt.Errorf("unable to read data file: %v", err)
 	}
 	data := new(res.QuestsData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
@@ -87,7 +86,7 @@ func ExportQuests(path string, quests ...res.QuestData) error {
 		data.Quests = append(data.Quests, q)
 	}
 	// Marshal quests data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal quests: %v", err)
 	}

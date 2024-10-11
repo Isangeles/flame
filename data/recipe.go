@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -48,7 +47,7 @@ func ImportRecipes(path string) ([]res.RecipeData, error) {
 	}
 	defer file.Close()
 	data := new(res.RecipesData)
-	err = json.Unmarshal(buf, data)
+	err = unmarshal(buf, data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
@@ -87,7 +86,7 @@ func ExportRecipes(path string, recipes ...res.RecipeData) error {
 		data.Recipes = append(data.Recipes, r)
 	}
 	// Marshal recipes data.
-	json, err := json.Marshal(data)
+	json, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal recipes: %v", err)
 	}

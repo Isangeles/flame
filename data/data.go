@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2018-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,11 +26,15 @@
 package data
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"path/filepath"
 
 	"github.com/isangeles/flame/data/res"
 )
+
+const jsonData = false
 
 // LoadTranslationData loads all lang files from
 // from directory with specified path.
@@ -47,4 +51,24 @@ func LoadTranslationData(path string) error {
 	}
 	base.Translations = append(base.Translations, langData...)
 	return nil
+}
+
+// unmarshal decodes specified data buffer with
+// XML or JSON decoder, depnding on value of jsonData
+// variable.
+func unmarshal(buffer []byte, dataStruct any) error {
+	if jsonData {
+		return json.Unmarshal(buffer, dataStruct)
+	}
+	return xml.Unmarshal(buffer, dataStruct)
+}
+
+// marshal encodes specified data into JSON or
+// XML format, depending on the value of jsonData
+// variable.
+func marshal(data any) ([]byte, error) {
+	if jsonData {
+		return json.Marshal(data)
+	}
+	return xml.Marshal(data)
 }

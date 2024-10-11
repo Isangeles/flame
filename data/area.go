@@ -25,7 +25,6 @@ package data
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -52,9 +51,9 @@ func ImportArea(path string) (res.AreaData, error) {
 		return res.AreaData{}, fmt.Errorf("unable to read area file: %v", err)
 	}
 	data := res.AreaData{}
-	err = json.Unmarshal(buf, &data)
+	err = unmarshal(buf, &data)
 	if err != nil {
-		return data, fmt.Errorf("unable to unmarshal JSON data: %v", err)
+		return data, fmt.Errorf("unable to unmarshal data: %v", err)
 	}
 	// Import area map.
 	mapPath := strings.Replace(path, filepath.Base(path), data.ID, 1)
@@ -115,7 +114,7 @@ func ExportArea(path string, data res.AreaData) error {
 	if err != nil {
 		return fmt.Errorf("unable to create area dir: %v", err)
 	}
-	jsonData, err := json.Marshal(data)
+	jsonData, err := marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal area data: %v", err)
 	}
