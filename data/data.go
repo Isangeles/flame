@@ -34,7 +34,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-const jsonData = false
+var jsonData = false
 
 // LoadTranslationData loads all lang files from
 // from directory with specified path.

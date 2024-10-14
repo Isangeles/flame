@@ -1,7 +1,7 @@
 /*
  * impmod.go
  *
- * Copyright 2018-2023 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,6 +70,9 @@ func ImportModuleDir(path string) (data res.ModuleData, err error) {
 	data.Config, err = text.UnmarshalConfig(file)
 	if err != nil {
 		return data, fmt.Errorf("unable to unmarshal config file: %v", err)
+	}
+	if len(data.Config["json-data"]) > 0 {
+		jsonData = data.Config["json-data"][0] == "true"
 	}
 	data.Config["id"] = []string{filepath.Base(path)}
 	data.Config["path"] = []string{path}
