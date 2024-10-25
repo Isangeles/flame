@@ -37,7 +37,7 @@ type AreaData struct {
 	Weather    string           `xml:"weather,attr" json:"weather"`
 	Map        *tmx.Map         `xml:"map" json:"map"`
 	Respawn    RespawnData      `xml:"respawn" json:"respawn"`
-	Characters []AreaCharData   `xml:"characters>character" json:"character"`
+	Characters []AreaCharData   `xml:"characters>character" json:"characters"`
 	Subareas   []AreaData       `xml:"subareas>area" json:"subareas"`
 }
 
