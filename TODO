@@ -22,6 +22,7 @@ MINOR:
 * Appearance struct for game character
 * Movement speed modifier
 * Items weight and inventory capacity based on total weight of the items
+* Remove json module flag for full switch to json data files
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
