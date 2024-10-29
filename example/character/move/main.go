@@ -1,7 +1,7 @@
 /*
  * main.go
  *
- * Copyright 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ import (
 // Main function.
 func main() {
 	// Import game module from file system.
-	modData, err := data.ImportModuleDir("data/modules/test")
+	modData, err := data.ImportModuleDir("module")
 	if err != nil {
 		panic(fmt.Errorf("Unable to import module: %v", err))
 	}
@@ -45,7 +45,7 @@ func main() {
 	// Create game and start game loop.
 	go update(mod)
 	// Retrieve chapter area.
-	charArea := mod.Chapter().Area("area1_main")
+	charArea := mod.Chapter().Area("area")
 	// Retrieve game character to move from area.
 	char := areaCharacter(charArea, "char", "0")
 	if char == nil {
