@@ -27,11 +27,11 @@ package main
 import (
 	"fmt"
 	"time"
-	
+
 	"github.com/isangeles/flame"
-	"github.com/isangeles/flame/data"
 	"github.com/isangeles/flame/area"
 	"github.com/isangeles/flame/character"
+	"github.com/isangeles/flame/data"
 )
 
 // Main function.
@@ -46,10 +46,13 @@ func main() {
 	go update(mod)
 	// Retrieve chapter area.
 	charArea := mod.Chapter().Area("area")
+	if charArea == nil {
+		panic(fmt.Errorf("Example area not found"))
+	}
 	// Retrieve game character to move from area.
 	char := areaCharacter(charArea, "char", "0")
 	if char == nil {
-		panic(fmt.Errorf("Character not found: char 0"))
+		panic(fmt.Errorf("Example character not found"))
 	}
 	// Set destination point for the character.
 	char.SetDestPoint(10, 10)
