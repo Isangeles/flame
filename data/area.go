@@ -101,6 +101,7 @@ func ImportAreasDir(path string) ([]res.AreaData, error) {
 				continue
 			}
 			areas = append(areas, area)
+			break
 		}
 	}
 	return areas, nil
