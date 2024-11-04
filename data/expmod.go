@@ -1,7 +1,7 @@
 /*
  * expmod.go
  *
- * Copyright 2020-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -36,7 +37,7 @@ import (
 
 // ExportModule exports module data to the single file.
 func ExportModule(path string, data res.ModuleData) error {
-	json, err := marshal(data)
+	json, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("unable to marshal module data: %v", err)
 	}
