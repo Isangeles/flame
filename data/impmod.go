@@ -82,7 +82,7 @@ func ImportModuleDir(path string) (data res.ModuleData, err error) {
 		log.Err.Printf("Import module: unable to import characters: %v", err)
 	}
 	// Races.
-	data.Resources.Races, err = ImportRacesDir(filepath.Join(path, "characters/races"))
+	data.Resources.Races, err = ImportRacesDir(filepath.Join(path, "races"))
 	if err != nil {
 		log.Err.Printf("Import module: unable to imports races: %v", err)
 	}

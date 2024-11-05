@@ -78,7 +78,7 @@ func ExportModuleDir(path string, data res.ModuleData) error {
 		return fmt.Errorf("unable to export characters: %v", err)
 	}
 	// Races.
-	racesPath := filepath.Join(path, "characters/races/main")
+	racesPath := filepath.Join(path, "races", "main")
 	err = ExportRaces(racesPath, data.Resources.Races...)
 	if err != nil {
 		return fmt.Errorf("unable to export races: %v", err)
