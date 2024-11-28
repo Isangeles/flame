@@ -2,7 +2,7 @@ MAJOR:
 * Item materials
 * Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
-* Documentation for XML data files: armors, skills, areas, objects, quests, recipes, effects, savegame
+* Documentation for data files: armors, skills, areas, objects, quests, recipes, effects, savegame
 * Documentation for directories: data, savegames, area, areas, area
 * Ability to place items on the ground
 * AOE effects

@@ -7,9 +7,9 @@
   
   This repository contains engine core API, which allows to load game module data from textual format, create and modify game objects, and export game module data back into textual format(i.e. basic game flow load game -> play -> save game).
 
-  Easiest way to create a game with Flame is to download some graphical or textual fronted(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create module or use some existing one.
+  Easiest way to create a game with Flame is to use some graphical or textual front-end(like [Mural](https://github.com/isangeles/mural) or [Burn Shell](https://github.com/isangeles/burnsh)) and create flame module containg game data files.
 
-  Flame modules are available for download [here](https://flame.isangeles.dev/mods).
+  Example Flame modules are available for download [here](https://flame.isangeles.dev/mods).
 
   The project idea is based on [Senlin](https://github.com/isangeles/senlin) game engine.
 
@@ -43,7 +43,7 @@
 You can find usage examples in [example](https://github.com/Isangeles/flame/tree/master/example) package.
 
 ## Modules
-Modules contain all game data in the form of textual files. Modules are divided into chapters, that's contains chapter-specific data.
+Modules contain all game data in the form of text files. Modules are divided into chapters containing chapter-specific data.
 
 Modules are stored by default in `data/modules` directory.
 
