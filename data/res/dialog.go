@@ -37,7 +37,7 @@ type DialogsData struct {
 type DialogData struct {
 	XMLName xml.Name          `xml:"dialog" json:"-"`
 	ID      string            `xml:"id,attr" json:"id"`
-	Stages  []DialogStageData `xml:"stage" json:"sages"`
+	Stages  []DialogStageData `xml:"stage" json:"stages"`
 	Reqs    ReqsData          `xml:"reqs" json:"reqs"`
 }
 
