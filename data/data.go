@@ -28,7 +28,9 @@ package data
 import (
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/isangeles/flame/data/res"
@@ -71,4 +73,10 @@ func marshal(data any) ([]byte, error) {
 		return json.Marshal(data)
 	}
 	return xml.Marshal(data)
+}
+
+// isExistingDataError checks if specified error is
+// different than os.ErrNotExist.
+func isExistingDataError(err error) bool {
+	return err != nil && !errors.Is(err, os.ErrNotExist)
 }

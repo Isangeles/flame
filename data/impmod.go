@@ -44,16 +44,16 @@ const (
 func ImportModule(path string) (res.ModuleData, error) {
 	data := res.ModuleData{}
 	file, err := os.Open(path)
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to open file: %v", err)
 	}
 	defer file.Close()
 	buf, err := io.ReadAll(file)
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to read file: %v", err)
 	}
 	err = unmarshal(buf, &data)
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to unmarshal JSON data: %v", err)
 	}
 	return data, nil
@@ -63,12 +63,12 @@ func ImportModule(path string) (res.ModuleData, error) {
 func ImportModuleDir(path string) (data res.ModuleData, err error) {
 	// Load module config file.
 	file, err := os.Open(filepath.Join(path, ModuleConfigFile))
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to open config file: %v", err)
 	}
 	defer file.Close()
 	data.Config, err = text.UnmarshalConfig(file)
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to unmarshal config file: %v", err)
 	}
 	if len(data.Config["json-data"]) > 0 {
@@ -78,52 +78,52 @@ func ImportModuleDir(path string) (data res.ModuleData, err error) {
 	data.Config["path"] = []string{path}
 	// Characters.
 	data.Resources.Characters, err = ImportCharactersDir(filepath.Join(path, "characters"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import characters: %v", err)
 	}
 	// Races.
 	data.Resources.Races, err = ImportRacesDir(filepath.Join(path, "races"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to imports races: %v", err)
 	}
 	// Skills.
 	data.Resources.Skills, err = ImportSkillsDir(filepath.Join(path, "skills"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import skills: %v", err)
 	}
 	// Effects.
 	data.Resources.Effects, err = ImportEffectsDir(filepath.Join(path, "effects"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import effects: %v", err)
 	}
 	// Armors.
 	data.Resources.Armors, err = ImportArmorsDir(filepath.Join(path, "items/armors"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import armors: %v", err)
 	}
 	// Weapons.
 	data.Resources.Weapons, err = ImportWeaponsDir(filepath.Join(path, "items/weapons"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import weapons: %v", err)
 	}
 	// Miscs.
 	data.Resources.Miscs, err = ImportMiscItemsDir(filepath.Join(path, "items/misc"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import misc items: %v", err)
 	}
 	// Recipes.
 	data.Resources.Recipes, err = ImportRecipesDir(filepath.Join(path, "recipes"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import recipes: %v", err)
 	}
 	// Trainings.
 	data.Resources.Trainings, err = ImportTrainingsDir(filepath.Join(path, "trainings"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import trainings: %v", err)
 	}
 	// Translations.
 	data.Resources.TranslationBases, err = ImportLangDirs(filepath.Join(path, "lang"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import module: unable to import translations: %v", err)
 	}
 	// Chapter.
@@ -132,7 +132,7 @@ func ImportModuleDir(path string) (data res.ModuleData, err error) {
 	}
 	chapterPath := filepath.Join(path, "chapters", data.Config["chapter"][0])
 	data.Chapter, err = ImportChapterDir(chapterPath)
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to import chapter: %v", err)
 	}
 	return data, nil
@@ -142,39 +142,39 @@ func ImportModuleDir(path string) (data res.ModuleData, err error) {
 func ImportChapterDir(path string) (data res.ChapterData, err error) {
 	// Load module config file.
 	file, err := os.Open(filepath.Join(path, ChapterConfigFile))
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to open config file: %v", err)
 	}
 	defer file.Close()
 	data.Config, err = text.UnmarshalConfig(file)
-	if err != nil {
+	if isExistingDataError(err) {
 		return data, fmt.Errorf("unable to unmarshal config file: %v", err)
 	}
 	data.Config["id"] = []string{filepath.Base(path)}
 	data.Config["path"] = []string{path}
 	// Characters.
 	data.Resources.Characters, err = ImportCharactersDir(filepath.Join(path, "characters"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import chapter: unable to import characters: %v", err)
 	}
 	// Quests.
 	data.Resources.Quests, err = ImportQuestsDir(filepath.Join(path, "quests"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import chapter: unable to import quests: %v", err)
 	}
 	// Dialogs.
 	data.Resources.Dialogs, err = ImportDialogsDir(filepath.Join(path, "dialogs"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import chapter: unable to import dialogs: %v", err)
 	}
 	// Areas.
 	data.Resources.Areas, err = ImportAreasDir(filepath.Join(path, "areas"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import chapter: unable to import areas: %v", err)
 	}
 	// Translations.
 	data.Resources.TranslationBases, err = ImportLangDirs(filepath.Join(path, "lang"))
-	if err != nil {
+	if isExistingDataError(err) {
 		log.Err.Printf("Import chapter: unable to import translations: %v", err)
 	}
 	return data, nil
