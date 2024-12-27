@@ -1,7 +1,7 @@
 /*
  * lang.go
  *
- * Copyright 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -39,7 +40,7 @@ import (
 func ImportLang(path string) ([]res.TranslationData, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open file: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to open file: %v", err))
 	}
 	defer file.Close()
 	data, err := text.UnmarshalLangData(file)
@@ -54,7 +55,7 @@ func ImportLang(path string) ([]res.TranslationData, error) {
 func ImportLangDir(path string) ([]res.TranslationData, error) {
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read dir: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to read dir: %v", err))
 	}
 	data := make([]res.TranslationData, 0)
 	for _, file := range files {

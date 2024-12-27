@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -38,7 +39,7 @@ import (
 func ImportArmors(path string) ([]res.ArmorData, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open data file: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to open data file: %v", err))
 	}
 	defer file.Close()
 	buf, err := io.ReadAll(file)
@@ -57,7 +58,7 @@ func ImportArmors(path string) ([]res.ArmorData, error) {
 func ImportArmorsDir(dirPath string) ([]res.ArmorData, error) {
 	files, err := os.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read dir: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to read dir: %v", err))
 	}
 	armors := make([]res.ArmorData, 0)
 	for _, file := range files {

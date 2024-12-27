@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,7 +40,7 @@ import (
 func ImportCharacters(path string) ([]res.CharacterData, error) {
 	baseFile, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open char base file: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to open char base file: %v", err))
 	}
 	defer baseFile.Close()
 	buf, err := io.ReadAll(baseFile)
@@ -59,7 +60,7 @@ func ImportCharacters(path string) ([]res.CharacterData, error) {
 func ImportCharactersDir(path string) ([]res.CharacterData, error) {
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read dir: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to read dir: %v", err))
 	}
 	chars := make([]res.CharacterData, 0)
 	for _, file := range files {

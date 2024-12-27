@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -38,7 +39,7 @@ import (
 func ImportRaces(path string) ([]res.RaceData, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open data file: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to open data file: %v", err))
 	}
 	defer file.Close()
 	buf, err := io.ReadAll(file)
@@ -58,7 +59,7 @@ func ImportRaces(path string) ([]res.RaceData, error) {
 func ImportRacesDir(path string) ([]res.RaceData, error) {
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read dir: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to read dir: %v", err))
 	}
 	races := make([]res.RaceData, 0)
 	for _, file := range files {

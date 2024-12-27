@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,7 +40,7 @@ import (
 func ImportRecipes(path string) ([]res.RecipeData, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open data file: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to open data file: %v", err))
 	}
 	buf, err := io.ReadAll(file)
 	if err != nil {
@@ -59,7 +60,7 @@ func ImportRecipes(path string) ([]res.RecipeData, error) {
 func ImportRecipesDir(path string) ([]res.RecipeData, error) {
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read dir: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to read dir: %v", err))
 	}
 	recipes := make([]res.RecipeData, 0)
 	for _, file := range files {

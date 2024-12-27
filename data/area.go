@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -42,7 +43,7 @@ func ImportArea(path string) (res.AreaData, error) {
 	// Open area file.
 	file, err := os.Open(path)
 	if err != nil {
-		return res.AreaData{}, fmt.Errorf("unable to open area file: %v", err)
+		return res.AreaData{}, errors.Join(err, fmt.Errorf("unable to open area file: %v", err))
 	}
 	defer file.Close()
 	// Unmarshal area file.
@@ -76,7 +77,7 @@ func ImportArea(path string) (res.AreaData, error) {
 func ImportAreasDir(path string) ([]res.AreaData, error) {
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read dir: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to read dir: %v", err))
 	}
 	areas := make([]res.AreaData, 0)
 	for _, areaDir := range files {

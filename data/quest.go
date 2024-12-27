@@ -25,6 +25,7 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,7 +40,7 @@ import (
 func ImportQuests(path string) ([]res.QuestData, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open data file: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to open data file: %v", err))
 	}
 	defer file.Close()
 	buf, err := io.ReadAll(file)
@@ -59,7 +60,7 @@ func ImportQuests(path string) ([]res.QuestData, error) {
 func ImportQuestsDir(dirPath string) ([]res.QuestData, error) {
 	files, err := os.ReadDir(dirPath)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read dir: %v", err)
+		return nil, errors.Join(err, fmt.Errorf("unable to read dir: %v", err))
 	}
 	quests := make([]res.QuestData, 0)
 	for _, file := range files {
