@@ -1,7 +1,7 @@
 /*
  * journal.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,6 +65,14 @@ func (j *Journal) Quests() (qs []*Quest) {
 // AddQuests adds specified quest.
 func (j *Journal) AddQuest(q *Quest) {
 	j.quests[q.ID()] = q
+	if q.ActiveStage() == nil || !q.ActiveStage().Start() {
+		return
+	}
+	if flager, ok := j.owner.(flag.Flagger); ok {
+		for _, f := range q.ActiveStage().StartFlags() {
+			flager.AddFlag(f)
+		}
+	}
 }
 
 // RemoveQuest removes specified quest.

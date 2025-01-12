@@ -1,7 +1,7 @@
 /*
  * stage.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ type Stage struct {
 	last          bool
 	next          string
 	objectives    []*Objective
+	startFlags    []flag.Flag
 	completeFlags []flag.Flag
 }
 
@@ -54,6 +55,10 @@ func NewStage(data res.QuestStageData) *Stage {
 		s.objectives = append(s.objectives, o)
 	}
 	// Flags.
+	for _, fd := range data.StartFlags {
+		f := flag.Flag(fd.ID)
+		s.startFlags = append(s.startFlags, f)
+	}
 	for _, fd := range data.CompleteFlags {
 		f := flag.Flag(fd.ID)
 		s.completeFlags = append(s.completeFlags, f)
@@ -111,6 +116,11 @@ func (s *Stage) Completed() bool {
 		}
 	}
 	return true
+}
+
+// StartFlags returns flags for starting stage.
+func (s *Stage) StartFlags() []flag.Flag {
+	return s.startFlags
 }
 
 // CompleteFlags returns flags for finishing stage.

@@ -47,6 +47,7 @@ type QuestStageData struct {
 	Start         bool                 `xml:"start,attr" json:"start"`
 	End           bool                 `xml:"end,attr" json:"end"`
 	Objectives    []QuestObjectiveData `xml:"objectives>objective" json:"objectives"`
+	StartFlags    []FlagData           `xml:"on-start>flags>flag" json:"start-flags"`
 	CompleteFlags []FlagData           `xml:"on-complete>flags>flag" json:"complete-flags"`
 }
 
