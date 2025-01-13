@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ type Character struct {
 	trainings        []*training.TrainerTraining
 	casted           res.CastedObjectData
 	chatLog          *objects.Log
-	onModifierEvents []func(m effect.Modifier)
+	onModifierTaken  func(m effect.Modifier)
 }
 
 const (
@@ -502,12 +502,12 @@ func (c *Character) ChatLog() *objects.Log {
 	return c.chatLog
 }
 
-// AddOnModifierEvent adds specified function to be triggered after
-// receiving a new modifier.
+// SetOnModifierTakenFunc sets function triggered after receiving new
+// modifier.
 // The event function will be called for every recieved modifier
 // after it was handled by the character.
-func (c *Character) AddOnModifierEvent(f func(m effect.Modifier)) {
-	c.onModifierEvents = append(c.onModifierEvents, f)
+func (c *Character) SetOnModifierTakenFunc(f func(m effect.Modifier)) {
+	c.onModifierTaken = f
 }
 
 // Interrupt stops any acction(like skill
