@@ -264,6 +264,7 @@ func (c *Character) SetAttitude(att Attitude) {
 // For not memorized objects from the same guild returns
 // friendly attitude.
 // For not memorized hostile objects returns hostile attitude.
+// For not memorized neutral objects returns neutral attitude.
 // For other cases returns character attitude.
 func (c *Character) AttitudeFor(o serial.Serialer) Attitude {
 	char, ok := o.(*Character)
@@ -280,6 +281,9 @@ func (c *Character) AttitudeFor(o serial.Serialer) Attitude {
 	}
 	if len(char.Guild().ID()) > 0 && char.Guild().ID() == c.Guild().ID() {
 		return Friendly
+	}
+	if char.Attitude() == Neutral {
+		return Neutral
 	}
 	if char.Attitude() == Hostile {
 		return Hostile
