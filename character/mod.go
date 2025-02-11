@@ -91,8 +91,15 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 			c.Inventory().AddItem(i)
 		}
 	case *effect.RemoveItemMod:
+		removed := 0
 		for _, it := range c.Inventory().Items() {
-			c.Inventory().RemoveItem(it)
+			if it.ID() == m.ItemID() {
+				c.Inventory().RemoveItem(it)
+				removed++
+			}
+			if removed >= m.Amount() {
+				break
+			}
 		}
 	case *effect.AddSkillMod:
 		data := res.Skill(m.SkillID())
