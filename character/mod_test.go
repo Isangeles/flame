@@ -1,7 +1,7 @@
 /*
  * mod_test.go
  *
- * Copyright 2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2023-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,11 +28,14 @@ import (
 
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
+	"github.com/isangeles/flame/item"
 )
 
 var (
-	areaModData    = res.AreaModData{"testArea", 10, 10}
-	chapterModData = res.ChapterModData{"testChapter"}
+	areaModData       = res.AreaModData{"testArea", 10, 10}
+	chapterModData    = res.ChapterModData{"testChapter"}
+	removeItemModData = res.RemoveItemModData{"testItem", 2}
+	miscItemData      = res.MiscItemData{ID: "testItem"}
 )
 
 // TestTakeModifiersArea tests handling of area
@@ -62,5 +65,21 @@ func TestTakeModifiersChapter(t *testing.T) {
 	if ob.ChapterID() != mod.ChapterID() {
 		t.Errorf("Invalid chapter ID: '%s' != '%s'",
 			ob.ChapterID(), mod.ChapterID())
+	}
+}
+
+// TestTakeModifiersRemoveItem tests handling of remove
+// item modifier.
+func TestTakeModifiersRemoveItem(t *testing.T) {
+	ob := New(charData)
+	for i := 0; i < 3; i ++ {
+		it := item.NewMisc(miscItemData)
+		ob.Inventory().AddItem(it)
+	}
+	mod := effect.NewRemoveItemMod(removeItemModData)
+	ob.TakeModifiers(nil, mod)
+	if ob.Inventory().Size() != 1 {
+		t.Errorf("Invalid amout of items after taking modifier: %d",
+			ob.Inventory().Size())
 	}
 }
