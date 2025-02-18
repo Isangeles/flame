@@ -1,7 +1,7 @@
 /*
  * additemmod.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,9 @@ func NewAddItemMod(data res.AddItemModData) *AddItemMod {
 	aim := AddItemMod{
 		itemID: data.ItemID,
 		amount: data.Amount,
+	}
+	if aim.amount < 1 {
+		aim.amount = 1
 	}
 	return &aim
 }

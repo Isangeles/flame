@@ -1,7 +1,7 @@
 /*
  * removeitemmod.go
  *
- * Copyright 2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2021-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,11 +32,14 @@ type RemoveItemMod AddItemMod
 
 // NewRemoveItemMod creates new remove item modifier.
 func NewRemoveItemMod(data res.RemoveItemModData) *RemoveItemMod {
-	im := RemoveItemMod{
+	rim := RemoveItemMod{
 		itemID: data.ItemID,
 		amount: data.Amount,
 	}
-	return &im
+	if rim.amount < 1 {
+		rim.amount = 1
+	}
+	return &rim
 }
 
 // ItemID returns ID of the item to remove.
