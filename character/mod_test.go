@@ -63,6 +63,25 @@ func TestTakeModifiersChapter(t *testing.T) {
 	}
 }
 
+// TestTakeModifiersAddItem tests handling of add item
+// modifier.
+func TestTakeModifiersAddItem(t *testing.T) {
+	ob := New(charData)
+	res.Miscs = append(res.Miscs, miscItemData)
+	mod := effect.NewAddItemMod(res.AddItemModData{"testItem", 2})
+	ob.TakeModifiers(nil, mod)
+	itemsCount := 0
+	for _, i := range ob.Inventory().Items() {
+		if i.ID() == mod.ItemID() {
+			itemsCount ++
+		}
+	}
+	if itemsCount != 2 {
+		t.Errorf("Invalid number of items after taking modifier: %d",
+			itemsCount)
+	}
+}
+
 // TestTakeModifiersRemoveItem tests handling of remove
 // item modifier.
 func TestTakeModifiersRemoveItem(t *testing.T) {
