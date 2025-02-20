@@ -31,18 +31,13 @@ import (
 	"github.com/isangeles/flame/item"
 )
 
-var (
-	areaModData       = res.AreaModData{"testArea", 10, 10}
-	chapterModData    = res.ChapterModData{"testChapter"}
-	removeItemModData = res.RemoveItemModData{"testItem", 2}
-	miscItemData      = res.MiscItemData{ID: "testItem"}
-)
+var miscItemData = res.MiscItemData{ID: "testItem"}
 
 // TestTakeModifiersArea tests handling of area
 // modifier.
 func TestTakeModifiersArea(t *testing.T) {
 	ob := New(charData)
-	mod := effect.NewAreaMod(areaModData)
+	mod := effect.NewAreaMod(res.AreaModData{"testArea", 10, 10})
 	ob.TakeModifiers(nil, mod)
 	if ob.AreaID() != mod.AreaID() {
 		t.Errorf("Invalid area ID: '%s' != '%s'",
@@ -60,7 +55,7 @@ func TestTakeModifiersArea(t *testing.T) {
 // modifier.
 func TestTakeModifiersChapter(t *testing.T) {
 	ob := New(charData)
-	mod := effect.NewChapterMod(chapterModData)
+	mod := effect.NewChapterMod(res.ChapterModData{"testChapter"})
 	ob.TakeModifiers(nil, mod)
 	if ob.ChapterID() != mod.ChapterID() {
 		t.Errorf("Invalid chapter ID: '%s' != '%s'",
@@ -72,11 +67,11 @@ func TestTakeModifiersChapter(t *testing.T) {
 // item modifier.
 func TestTakeModifiersRemoveItem(t *testing.T) {
 	ob := New(charData)
-	for i := 0; i < 3; i ++ {
+	for i := 0; i < 3; i++ {
 		it := item.NewMisc(miscItemData)
 		ob.Inventory().AddItem(it)
 	}
-	mod := effect.NewRemoveItemMod(removeItemModData)
+	mod := effect.NewRemoveItemMod(res.RemoveItemModData{"testItem", 2})
 	ob.TakeModifiers(nil, mod)
 	if ob.Inventory().Size() != 1 {
 		t.Errorf("Invalid amout of items after taking modifier: %d",
