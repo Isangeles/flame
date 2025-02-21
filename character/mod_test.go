@@ -31,7 +31,9 @@ import (
 	"github.com/isangeles/flame/item"
 )
 
-var miscItemData = res.MiscItemData{ID: "testItem"}
+var (
+	miscItemData = res.MiscItemData{ID: "testItem"}
+)
 
 // TestTakeModifiersArea tests handling of area
 // modifier.
@@ -95,5 +97,24 @@ func TestTakeModifiersRemoveItem(t *testing.T) {
 	if ob.Inventory().Size() != 1 {
 		t.Errorf("Invalid amout of items after taking modifier: %d",
 			ob.Inventory().Size())
+	}
+}
+
+// TestTakeModifiersAddSkill tests handling of add
+// skill modifier.
+func TestTakeModifiersAddSkill(t *testing.T) {
+	ob := New(charData)
+	res.Skills = append(res.Skills, skillData)
+	mod := effect.NewAddSkillMod(res.AddSkillModData{"skill"})
+	ob.TakeModifiers(nil, mod)
+	found := false
+	for _, s := range ob.Skills() {
+		if s.ID() == mod.SkillID() {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Skill not added")
 	}
 }
