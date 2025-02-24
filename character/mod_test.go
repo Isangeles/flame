@@ -100,6 +100,33 @@ func TestTakeModifiersRemoveItem(t *testing.T) {
 	}
 }
 
+// TestTakeModifiersTransferItem tests handling of
+// transfer item modifier.
+func TestTakeModifiersTransferItem(t *testing.T) {
+	ob1 := New(charData)
+	for i := 0; i < 3; i++ {
+		it := item.NewMisc(miscItemData)
+		ob1.Inventory().AddItem(it)
+	}
+	ob2 := New(charData)
+	mod := effect.NewTransferItemMod(res.TransferItemModData{"testItem", 2})
+	ob1.TakeModifiers(ob2, mod)
+	itemsCount := 0
+	for _, i := range ob2.Inventory().Items() {
+		if i.ID() == mod.ItemID() {
+			itemsCount ++
+		}
+	}
+	if itemsCount != 2 {
+		t.Errorf("Invalid number of items in source inventory: %d",
+			itemsCount)
+	}
+	if len(ob1.Inventory().Items()) != 1 {
+		t.Errorf("Invalid number od items in target inventory: %d",
+			itemsCount)
+	}
+}
+
 // TestTakeModifiersAddSkill tests handling of add
 // skill modifier.
 func TestTakeModifiersAddSkill(t *testing.T) {

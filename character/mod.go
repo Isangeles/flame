@@ -101,6 +101,24 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 				break
 			}
 		}
+	case *effect.TransferItemMod:
+		source, ok := s.(item.Container)
+		if !ok {
+			log.Err.Printf("char: %s %s: transfer item mod: source is not a container",
+				c.ID(), c.Serial())
+			break
+		}
+		transfered := 0
+		for _, it := range c.Inventory().Items() {
+			if it.ID() == m.ItemID() {
+				c.Inventory().RemoveItem(it)
+				source.Inventory().AddItem(it)
+				transfered++
+			}
+			if transfered >= m.Amount() {
+				break
+			}
+		}
 	case *effect.AddSkillMod:
 		data := res.Skill(m.SkillID())
 		if data == nil {
