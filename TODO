@@ -11,7 +11,6 @@ MAJOR:
   this is a problem while creating a quest that requires to kill something after accepting the
   quest(kill records could already be present and the quest stage will be completed immediately)
 * Better currency req charging strategy(currently it takes all currency items to satisfy the requirement even if value of the item exceeds the required value)
-* Transfer items modifier
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
