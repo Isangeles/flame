@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,6 +62,7 @@ type Object interface {
 	SightRange() float64
 	Moving() bool
 	DestPoint() (float64, float64)
+	SetDestPoint(x float64, y float64)
 	Interrupt()
 	BaseMoveCooldown() int64
 	MoveCooldown() int64
@@ -111,6 +112,8 @@ func (a *Area) Map() Map {
 func (a *Area) AddObject(o Object) {
 	a.objects.Store(o.ID()+o.Serial(), o)
 	o.SetAreaID(a.ID())
+	posX, posY := o.Position()
+	o.SetDestPoint(posX, posY)
 }
 
 // RemoveObject removes specified object from area.
