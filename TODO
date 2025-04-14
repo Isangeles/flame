@@ -2,8 +2,8 @@ MAJOR:
 * Item materials
 * Container items
 * Extend crafting struct to be something more than mere recipes container(proficiency points, etc.)
-* Documentation for data files: armors, skills, areas, objects, quests, recipes, effects, savegame
-* Documentation for directories: data, savegames, area, areas, area
+* Documentation for data files: armors, skills, areas, objects, quests, recipes, effects
+* Documentation for directories: data, area, areas, area
 * Ability to place items on the ground
 * AOE effects
 * Character visibility effect(for stealth skill, etc.)
@@ -26,6 +26,7 @@ MINOR:
 * Movement speed modifier
 * Items weight and inventory capacity based on total weight of the items
 * Remove json module flag for full switch to json data files
+* Handling dialog requirements
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
