@@ -544,7 +544,7 @@ func (c *Character) SetMoveCooldown(cooldown int64) {
 }
 
 // Dialog returns dialog for specified character.
-func (c *Character) Dialog(char Character) (dial *dialog.Dialog) {
+func (c *Character) Dialog(char *Character) (dial *dialog.Dialog) {
 	// TODO: find proper dialog for specified character.
 	findDialog := func(k, v interface{}) bool {
 		d, ok := v.(*dialog.Dialog)
