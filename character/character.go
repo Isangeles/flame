@@ -44,44 +44,44 @@ import (
 
 // Character struct represents game character.
 type Character struct {
-	id, serial       string
-	level            int
-	hp               int
-	mana             int
-	exp              int
-	live             bool
-	agony            bool
-	sex              Gender
-	race             Race
-	attitude         Attitude
-	alignment        Alignment
-	guild            Guild
-	attributes       *Attributes
-	resilience       objects.Resilience
-	action           *useaction.UseAction
-	posX, posY       float64
-	destX, destY     float64
-	defX, defY       float64
-	useCooldown      int64 // millis
-	moveCooldown     int64 // millis
-	respawn          int64
-	areaID           string
-	chapterID        string
-	inventory        *item.Inventory
-	equipment        *Equipment
-	journal          *quest.Journal
-	crafting         *craft.Crafting
-	targets          []res.SerialObjectData
-	kills            []res.KillData
-	effects          *sync.Map
-	skills           *sync.Map
-	memory           *sync.Map
-	dialogs          *sync.Map
-	flags            *sync.Map
-	trainings        []*training.TrainerTraining
-	casted           res.CastedObjectData
-	chatLog          *objects.Log
-	onModifierTaken  func(m effect.Modifier)
+	id, serial      string
+	level           int
+	hp              int
+	mana            int
+	exp             int
+	live            bool
+	agony           bool
+	sex             Gender
+	race            Race
+	attitude        Attitude
+	alignment       Alignment
+	guild           Guild
+	attributes      *Attributes
+	resilience      objects.Resilience
+	action          *useaction.UseAction
+	posX, posY      float64
+	destX, destY    float64
+	defX, defY      float64
+	useCooldown     int64 // millis
+	moveCooldown    int64 // millis
+	respawn         int64
+	areaID          string
+	chapterID       string
+	inventory       *item.Inventory
+	equipment       *Equipment
+	journal         *quest.Journal
+	crafting        *craft.Crafting
+	targets         []res.SerialObjectData
+	kills           []res.KillData
+	effects         *sync.Map
+	skills          *sync.Map
+	memory          *sync.Map
+	dialogs         *sync.Map
+	flags           *sync.Map
+	trainings       []*training.TrainerTraining
+	casted          res.CastedObjectData
+	chatLog         *objects.Log
+	onModifierTaken func(m effect.Modifier)
 }
 
 const (
@@ -528,7 +528,7 @@ func (c *Character) Cooldown() int64 {
 // BaseMoveCooldown returns character base movement
 // cooldown in milliseconds.
 func (c *Character) BaseMoveCooldown() int64 {
-	return moveCD - int64((1 + c.Attributes().Dex) / 4)
+	return moveCD - int64((1+c.Attributes().Dex)/4)
 }
 
 // MoveCooldown returns character movement cooldown in
