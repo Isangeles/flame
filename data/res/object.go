@@ -1,7 +1,7 @@
 /*
  * object.go
  *
- * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,8 +44,9 @@ type ObjectSkillData struct {
 
 // Struct for object dialog data.
 type ObjectDialogData struct {
-	ID    string `xml:"id,attr" json:"id"`
-	Stage string `xml:"stage,attr" json:"stage"`
+	ID        string `xml:"id,attr" json:"id"`
+	StartedID string `xml:started-id,attr" json:"started-id"`
+	Stage     string `xml:"stage,attr" json:"stage"`
 }
 
 // Struct for object log data.

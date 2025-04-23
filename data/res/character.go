@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,45 +35,46 @@ type CharactersData struct {
 
 // Struct for character data resource.
 type CharacterData struct {
-	XMLName      xml.Name              `xml:"character" json:"-"`
-	ID           string                `xml:"id,attr" json:"id"`
-	Serial       string                `xml:"serial,attr" json:"serial"`
-	Level        int                   `xml:"level,attr" json:"level"`
-	Sex          string                `xml:"gender,attr" json:"sex"`
-	Race         string                `xml:"race,attr" json:"race"`
-	Attitude     string                `xml:"attitude,attr" json:"attitude"`
-	Guild        string                `xml:"guild,attr" json:"guild"`
-	Alignment    string                `xml:"alignment,attr" json:"alignment"`
-	PosX         float64               `xml:"position-x,attr" json:"pos-x"`
-	PosY         float64               `xml:"position-y,attr" json:"pos-y"`
-	DefX         float64               `xml:"def-position-x,attr" json:"def-pos-x"`
-	DefY         float64               `xml:"def-position-y,attr" json:"def-pos-y"`
-	DestX        float64               `xml:"dest-point-x,attr" json:"dest-point-x"`
-	DestY        float64               `xml:"dest-point-y,attr" json:"dest-point-y"`
-	HP           int                   `xml:"hp,attr" json:"hp"`
-	Mana         int                   `xml:"mana,attr" json:"mana"`
-	Exp          int                   `xml:"exp,attr" json:"exp"`
-	Restore      bool                  `xml:"restore,attr" json:"restore"`
-	Action       UseActionData         `xml:"action" json:"action"`
-	Area         string                `xml:"area,attr" json:"area"`
-	Chapter      string                `xml:"chapter,attr" json:"chapter"`
-	UseCooldown  int64                 `xml:"use-cooldown,attr" json:"use-cooldown"`
-	MoveCooldown int64                 `xml:"move-cooldown,attr" json:"move-cooldown"`
-	Attributes   AttributesData        `xml:"attributes" json:"attributes"`
-	Inventory    InventoryData         `xml:"inventory" json:"inventory"`
-	Equipment    EquipmentData         `xml:"equipment" json:"equipment"`
-	QuestLog     QuestLogData          `xml:"quests" json:"quests"`
-	Crafting     CraftingData          `xml:"crafting" json:"crafting"`
-	ChatLog      ObjectLogData         `xml:"chat-log" json:"chat-log"`
-	Casted       CastedObjectData      `xml:"casted" json:"casted"`
-	Targets      []SerialObjectData    `xml:"targets" json:"targets"`
-	Kills        []KillData            `xml:"kills" json:"kills"`
-	Trainings    []TrainerTrainingData `xml:"trainings>training" json:"trainings"`
-	Flags        []FlagData            `xml:"flags>flag" json:"flags"`
-	Effects      []ObjectEffectData    `xml:"effects>effect" json:"effects"`
-	Skills       []ObjectSkillData     `xml:"skills>skill" json:"skills"`
-	Memory       []AttitudeMemoryData  `xml:"memory>target" json:"memory"`
-	Dialogs      []ObjectDialogData    `xml:"dialogs>dialog" json:"dialogs"`
+	XMLName        xml.Name              `xml:"character" json:"-"`
+	ID             string                `xml:"id,attr" json:"id"`
+	Serial         string                `xml:"serial,attr" json:"serial"`
+	Level          int                   `xml:"level,attr" json:"level"`
+	Sex            string                `xml:"gender,attr" json:"sex"`
+	Race           string                `xml:"race,attr" json:"race"`
+	Attitude       string                `xml:"attitude,attr" json:"attitude"`
+	Guild          string                `xml:"guild,attr" json:"guild"`
+	Alignment      string                `xml:"alignment,attr" json:"alignment"`
+	PosX           float64               `xml:"position-x,attr" json:"pos-x"`
+	PosY           float64               `xml:"position-y,attr" json:"pos-y"`
+	DefX           float64               `xml:"def-position-x,attr" json:"def-pos-x"`
+	DefY           float64               `xml:"def-position-y,attr" json:"def-pos-y"`
+	DestX          float64               `xml:"dest-point-x,attr" json:"dest-point-x"`
+	DestY          float64               `xml:"dest-point-y,attr" json:"dest-point-y"`
+	HP             int                   `xml:"hp,attr" json:"hp"`
+	Mana           int                   `xml:"mana,attr" json:"mana"`
+	Exp            int                   `xml:"exp,attr" json:"exp"`
+	Restore        bool                  `xml:"restore,attr" json:"restore"`
+	Action         UseActionData         `xml:"action" json:"action"`
+	Area           string                `xml:"area,attr" json:"area"`
+	Chapter        string                `xml:"chapter,attr" json:"chapter"`
+	UseCooldown    int64                 `xml:"use-cooldown,attr" json:"use-cooldown"`
+	MoveCooldown   int64                 `xml:"move-cooldown,attr" json:"move-cooldown"`
+	Attributes     AttributesData        `xml:"attributes" json:"attributes"`
+	Inventory      InventoryData         `xml:"inventory" json:"inventory"`
+	Equipment      EquipmentData         `xml:"equipment" json:"equipment"`
+	QuestLog       QuestLogData          `xml:"quests" json:"quests"`
+	Crafting       CraftingData          `xml:"crafting" json:"crafting"`
+	ChatLog        ObjectLogData         `xml:"chat-log" json:"chat-log"`
+	Casted         CastedObjectData      `xml:"casted" json:"casted"`
+	Targets        []SerialObjectData    `xml:"targets" json:"targets"`
+	Kills          []KillData            `xml:"kills" json:"kills"`
+	Trainings      []TrainerTrainingData `xml:"trainings>training" json:"trainings"`
+	Flags          []FlagData            `xml:"flags>flag" json:"flags"`
+	Effects        []ObjectEffectData    `xml:"effects>effect" json:"effects"`
+	Skills         []ObjectSkillData     `xml:"skills>skill" json:"skills"`
+	Memory         []AttitudeMemoryData  `xml:"memory>target" json:"memory"`
+	Dialogs        []ObjectDialogData    `xml:"dialogs>dialog" json:"dialogs"`
+	StartedDialogs []ObjectDialogData    `xml:"started-dialogs>dialog" json:"started-dialogs"`
 }
 
 // Struct for character attributes data.

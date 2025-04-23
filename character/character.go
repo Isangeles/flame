@@ -26,6 +26,7 @@
 package character
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/isangeles/flame/craft"
@@ -77,6 +78,7 @@ type Character struct {
 	skills          *sync.Map
 	memory          *sync.Map
 	dialogs         *sync.Map
+	startedDialogs  *sync.Map
 	flags           *sync.Map
 	trainings       []*training.TrainerTraining
 	casted          res.CastedObjectData
@@ -85,23 +87,25 @@ type Character struct {
 }
 
 const (
-	baseExp = 1000
-	useCD   = 2000 // millis
-	moveCD  = 15   // millis
+	baseExp               = 1000
+	useCD                 = 2000 // millis
+	moveCD                = 15   // millis
+	startedDialogIDFormat = "%s_%s#%s" // [dialog ID]_[object ID]#[object serial]
 )
 
 // New creates new character from specified data.
 func New(data res.CharacterData) *Character {
 	c := Character{
-		attributes: new(Attributes),
-		inventory:  item.NewInventory(),
-		effects:    new(sync.Map),
-		skills:     new(sync.Map),
-		memory:     new(sync.Map),
-		dialogs:    new(sync.Map),
-		flags:      new(sync.Map),
-		chatLog:    objects.NewLog(),
-		race:       NewRace(res.RaceData{}),
+		attributes:     new(Attributes),
+		inventory:      item.NewInventory(),
+		effects:        new(sync.Map),
+		skills:         new(sync.Map),
+		memory:         new(sync.Map),
+		dialogs:        new(sync.Map),
+		startedDialogs: new(sync.Map),
+		flags:          new(sync.Map),
+		chatLog:        objects.NewLog(),
+		race:           NewRace(res.RaceData{}),
 	}
 	c.equipment = newEquipment(&c)
 	c.journal = quest.NewJournal(&c)
@@ -140,6 +144,8 @@ func (c *Character) Update(delta int64) {
 	// Journal && inventory.
 	c.Journal().Update(delta)
 	c.Inventory().Update(delta)
+	// Dialogs.
+	c.startedDialogs.Range(c.removeFinishedDialog)
 	// Skills.
 	for _, s := range c.Skills() {
 		s.Update(delta)
@@ -544,25 +550,61 @@ func (c *Character) SetMoveCooldown(cooldown int64) {
 }
 
 // Dialog returns dialog for specified character.
+// If there is already dialog in-progress started by specified character,
+// then this dialog will be retruned, otherwise the new dialog will be returned.
 func (c *Character) Dialog(char *Character) (dial *dialog.Dialog) {
-	// TODO: find proper dialog for specified character.
 	findDialog := func(k, v interface{}) bool {
 		d, ok := v.(*dialog.Dialog)
-		if ok {
+		if ok && k == fmt.Sprintf(startedDialogIDFormat, d.ID(), char.ID(), char.Serial()) {
 			dial = d
+		}
+		return true
+
+	}
+	c.startedDialogs.Range(findDialog)
+	if dial != nil {
+		return
+	}
+	var dialogData res.DialogData
+	findDialog = func(k, v interface{}) bool {
+		d, ok := v.(res.DialogData)
+		// TODO: find proper dialog for specified character.
+		if ok {
+			dialogData = d
 		}
 		return true
 	}
 	c.dialogs.Range(findDialog)
+	if len(dialogData.ID) < 1 {
+		return
+	}
+	dial = dialog.New(dialogData)
+	dial.SetOwner(c)
+	dial.SetTarget(char)
+	id := fmt.Sprintf(startedDialogIDFormat, dial.ID(), char.ID(), char.Serial())
+	c.startedDialogs.Store(id, dial)
+	return
+}
+
+// StartedDialogs returns all character dialogs that are currently in-progress.
+func (c *Character) StartedDialogs() (dialogs []*dialog.Dialog) {
+	addDialog := func(k, v interface{}) bool {
+		d, ok := v.(*dialog.Dialog)
+		if ok {
+			dialogs = append(dialogs, d)
+		}
+		return true
+	}
+	c.startedDialogs.Range(addDialog)
 	return
 }
 
 // Dialogs returns all character dialogs.
-func (c *Character) Dialogs() (dls []*dialog.Dialog) {
+func (c *Character) Dialogs() (dialogs []res.DialogData) {
 	addDialog := func(k, v interface{}) bool {
-		d, ok := v.(*dialog.Dialog)
+		d, ok := v.(res.DialogData)
 		if ok {
-			dls = append(dls, d)
+			dialogs = append(dialogs, d)
 		}
 		return true
 	}
@@ -572,9 +614,8 @@ func (c *Character) Dialogs() (dls []*dialog.Dialog) {
 
 // AddDialog adds specified dialog to character and
 // sets character as dialog owner.
-func (c *Character) AddDialog(d *dialog.Dialog) {
-	d.SetOwner(c)
-	c.dialogs.Store(d.ID(), d)
+func (c *Character) AddDialog(d res.DialogData) {
+	c.dialogs.Store(d.ID, d)
 }
 
 // Flags returns all active flags.
@@ -744,4 +785,14 @@ func (c *Character) removeItem(it item.Item) {
 	if eqIt, ok := it.(item.Equiper); ok {
 		c.Equipment().Unequip(eqIt)
 	}
+}
+
+// removeFinishedDialog removes specified key-value pair from the started dialogs
+// map if it contains finished dialog or dialog without the target.
+func (c *Character) removeFinishedDialog(id, value interface{}) bool {
+	dialog, ok := value.(*dialog.Dialog)
+	if ok && (dialog.Finished() || dialog.Target() == nil) {
+		c.startedDialogs.Delete(id)
+	}
+	return true
 }

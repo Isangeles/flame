@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -124,8 +124,8 @@ func (c *Character) Apply(data res.CharacterData) {
 		s = skill.New(*skillData)
 		c.AddSkill(s)
 	}
-	// Add dialogs.
-	for _, charDialogData := range data.Dialogs {
+	// Started dialogs.
+	for _, charDialogData := range data.StartedDialogs {
 		ob, _ := c.dialogs.Load(charDialogData.ID)
 		d, ok := ob.(*dialog.Dialog)
 		if ok {
@@ -143,7 +143,7 @@ func (c *Character) Apply(data res.CharacterData) {
 				d.SetStage(s)
 			}
 		}
-		c.AddDialog(d)
+		c.startedDialogs.Store(charDialogData.StartedID, d)
 	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
@@ -264,12 +264,18 @@ func (c *Character) Data() res.CharacterData {
 	}
 	for _, d := range c.Dialogs() {
 		dialogData := res.ObjectDialogData{
+			ID: d.ID,
+		}
+		data.Dialogs = append(data.Dialogs, dialogData)
+	}
+	for _, d := range c.StartedDialogs() {
+		dialogData := res.ObjectDialogData{
 			ID: d.ID(),
 		}
 		if d.Stage() != nil {
 			dialogData.Stage = d.Stage().ID()
 		}
-		data.Dialogs = append(data.Dialogs, dialogData)
+		data.StartedDialogs = append(data.StartedDialogs, dialogData)
 	}
 	for _, t := range c.Trainings() {
 		data.Trainings = append(data.Trainings, t.Data())
@@ -301,10 +307,19 @@ func (c *Character) clearOldObjects(data res.CharacterData) {
 	for _, d := range c.Dialogs() {
 		found := false
 		for _, dd := range data.Dialogs {
+			found = d.ID == dd.ID
+		}
+		if !found {
+			c.dialogs.Delete(d.ID)
+		}
+	}
+	for _, d := range c.StartedDialogs() {
+		found := false
+		for _, dd := range data.StartedDialogs {
 			found = d.ID() == dd.ID
 		}
 		if !found {
-			c.dialogs.Delete(d.ID())
+			c.startedDialogs.Delete(d.ID())
 		}
 	}
 	for _, m := range c.Memory() {

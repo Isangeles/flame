@@ -29,7 +29,11 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-var charData = res.CharacterData{ID: "char", Level: 1, Attributes: res.AttributesData{5, 5, 5, 5, 5}}
+var (
+	charData        = res.CharacterData{ID: "char", Level: 1, Attributes: res.AttributesData{5, 5, 5, 5, 5}}
+	dialogStageData = res.DialogStageData{ID: "dialogStage", Start: true}
+	dialogData      = res.DialogData{ID: "dialog", Stages: []res.DialogStageData{dialogStageData}}
+)
 
 // TestLive tests live check function.
 func TestLive(t *testing.T) {
@@ -101,7 +105,7 @@ func TestAttitudeFor(t *testing.T) {
 	}
 	// Test hostile for same guild.
 	tar.SetHealth(1)
-	ob.memory.Delete(tar.ID()+tar.Serial())
+	ob.memory.Delete(tar.ID() + tar.Serial())
 	ob.SetAttitude(Hostile)
 	tar.SetAttitude(Hostile)
 	guild := Guild{"test"}
@@ -123,5 +127,29 @@ func TestAttitudeFor(t *testing.T) {
 	att = ob.AttitudeFor(tar)
 	if att != Hostile {
 		t.Errorf("Invalid attitude of hostile object for friendly target: %v != %v", att, Hostile)
+	}
+}
+
+// TestDialog tests function for retrieving dialog.
+func TestDialog(t *testing.T) {
+	// Create test objects
+	ob1 := New(charData)
+	ob2 := New(charData)
+	ob1.AddDialog(dialogData)
+	// Test
+	dialog := ob1.Dialog(ob2)
+	if dialog == nil {
+		t.Fatalf("New dialog was not returned")
+	}
+	startedDialog := ob1.Dialog(ob2)
+	if startedDialog == nil || startedDialog != dialog {
+		t.Fatalf("Previousely started dialog was not returned")
+	}
+	dialog.Restart()
+	dialog.SetTarget(nil)
+	ob1.Update(1) // update to trigger dialog cleanup
+	dialog = ob1.Dialog(ob2)
+	if dialog == nil || dialog == startedDialog {
+		t.Fatalf("New dialog was not returned after ending old one")
 	}
 }
