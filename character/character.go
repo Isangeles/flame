@@ -552,10 +552,10 @@ func (c *Character) SetMoveCooldown(cooldown int64) {
 // Dialog returns dialog for specified character.
 // If there is already dialog in-progress started by specified character,
 // then this dialog will be retruned, otherwise the new dialog will be returned.
-func (c *Character) Dialog(char *Character) (dial *dialog.Dialog) {
+func (c *Character) Dialog(ob dialog.Talker) (dial *dialog.Dialog) {
 	findDialog := func(k, v interface{}) bool {
 		d, ok := v.(*dialog.Dialog)
-		if ok && k == fmt.Sprintf(startedDialogIDFormat, d.ID(), char.ID(), char.Serial()) {
+		if ok && k == fmt.Sprintf(startedDialogIDFormat, d.ID(), ob.ID(), ob.Serial()) {
 			dial = d
 		}
 		return true
@@ -580,8 +580,8 @@ func (c *Character) Dialog(char *Character) (dial *dialog.Dialog) {
 	}
 	dial = dialog.New(dialogData)
 	dial.SetOwner(c)
-	dial.SetTarget(char)
-	id := fmt.Sprintf(startedDialogIDFormat, dial.ID(), char.ID(), char.Serial())
+	dial.SetTarget(ob)
+	id := fmt.Sprintf(startedDialogIDFormat, dial.ID(), ob.ID(), ob.Serial())
 	c.startedDialogs.Store(id, dial)
 	return
 }

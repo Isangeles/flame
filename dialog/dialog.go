@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,6 +56,7 @@ type Dialog struct {
 // Interface for objects with dialogs.
 type Talker interface {
 	objects.Logger
+	Dialog(ob Talker) *Dialog
 	Dialogs() []res.DialogData
 	MeetReqs(reqs ...req.Requirement) bool
 	TakeModifiers(s serial.Serialer, mods ...effect.Modifier)
