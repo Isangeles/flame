@@ -145,6 +145,21 @@ func (c *Character) Apply(data res.CharacterData) {
 		}
 		c.startedDialogs.Store(charDialogData.StartedID, d)
 	}
+	// Dialogs.
+	for _, charDialogData := range data.Dialogs {
+		ob, _ := c.dialogs.Load(charDialogData.ID)
+		_, ok := ob.(res.DialogData)
+		if ok {
+			continue
+		}
+		dialogData := res.Dialog(charDialogData.ID)
+		if dialogData == nil {
+			log.Err.Printf("Character: %s: Apply: dialog data not found: %s",
+				c.ID(), charDialogData.ID)
+			continue
+		}
+		c.AddDialog(*dialogData)
+	}
 	// Effects.
 	for _, charEffectData := range data.Effects {
 		ob, _ := c.effects.Load(charEffectData.ID + charEffectData.Serial)
