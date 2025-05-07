@@ -2,7 +2,7 @@
 .SH NAME
 effect
 .SH DESCRIPTION
-Effects are set of modifiers that affects object for specified amount of time.
+Effects are set of modifiers that affects the object for specified amount of time.
 .br
 Effects can be used in other game objects like skills, items, dialogs.
 .SH PARAMETERS
@@ -14,11 +14,37 @@ Unique ID for the effect.
 * duration
 .br
 Amount of time for the effect to be active, in milliseconds.
+.P
+* melee-hit
+.br
+Boolean flag used to mark the effect as an melee hit.
+.P
+* infinite
+.br
+Boolean flag use to set infinite effect duration.
+.SH JSON EXAMPLE
+.nf
+{
+	"id": "effectBurn1",
+	"duration": 1000,
+	"melee-hit": false,
+	"infinite": false,
+	"modifiers": {
+		     "health-mods": [
+		     		    {
+					"min": -1,
+					"max": -2
+				    }
+		     ]
+	}
+}
 .SH XML EXAMPLE
 .nf
 <effects>
 	<effect id="effectBurn1"
-		duration="1000">
+		duration="1000"
+		melee-hit="false"
+		infinite="false">
 		<modifiers>
 			<health-mod min="-1"
 				    max="-2"/>
