@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ type Effect struct {
 	secTimer   int64
 	meleeHit   bool
 	infinite   bool
+	hostile    bool
 	started    bool
 }
 
@@ -52,6 +53,7 @@ func New(data res.EffectData) *Effect {
 	e.duration = int64(data.Duration)
 	e.meleeHit = data.MeleeHit
 	e.infinite = data.Infinite
+	e.hostile = data.Hostile
 	e.SetTime(data.Duration)
 	serial.Register(e)
 	return e
@@ -118,6 +120,11 @@ func (e *Effect) MeleeHit() bool {
 // Infinite checks if effect duration time is infinite.
 func (e *Effect) Infinite() bool {
 	return e.infinite
+}
+
+// Hostile checks if effect is an hostile action towards the target.
+func (e *Effect) Hostile() bool {
+	return e.hostile
 }
 
 // Source returns ID and serial value of effect

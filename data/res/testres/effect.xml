@@ -1,6 +1,7 @@
 <effect id="effect1"
 	duration="1000"
 	melee-hit="true"
-	infinite="true">
+	infinite="true"
+	hostile="true">
   <modifiers/>
 </effect>

@@ -22,6 +22,10 @@ Boolean flag used to mark the effect as an melee hit.
 * infinite
 .br
 Boolean flag use to set infinite effect duration.
+.P
+* hostile
+.br
+Boolean flag use to mark the effect as an hostile action towards the target.
 .SH JSON EXAMPLE
 .nf
 {
@@ -29,6 +33,7 @@ Boolean flag use to set infinite effect duration.
 	"duration": 1000,
 	"melee-hit": false,
 	"infinite": false,
+	"hostile": true,
 	"modifiers": {
 		     "health-mods": [
 		     		    {
@@ -44,7 +49,8 @@ Boolean flag use to set infinite effect duration.
 	<effect id="effectBurn1"
 		duration="1000"
 		melee-hit="false"
-		infinite="false">
+		infinite="false"
+		hostile="true">
 		<modifiers>
 			<health-mod min="-1"
 				    max="-2"/>

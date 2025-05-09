@@ -1,7 +1,7 @@
 /*
  * effect_test.go
  *
- * Copyright 2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2023-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,6 +90,9 @@ func TestEffectDataJson(t *testing.T) {
 	if !effect.Infinite {
 		t.Errorf("Infinite value is false")
 	}
+	if !effect.Hostile {
+		t.Errorf("Hostile value is false")
+	}
 }
 
 // TestEffectDataXml tests effect data XML mappings.
@@ -116,6 +119,9 @@ func TestEffectDataXml(t *testing.T) {
 	}
 	if !effect.Infinite {
 		t.Errorf("Infinite value is false")
+	}
+	if !effect.Hostile {
+		t.Errorf("Hostile value is false")
 	}
 }
 
