@@ -1,7 +1,7 @@
 /*
  * combat.go
  *
- * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -113,21 +113,22 @@ func (c *Character) HitModifiers() []effect.Modifier {
 	return effect.NewModifiers(mods)
 }
 
-// takeEffects adds specified effects
+// TakeEffects handles specified effect.
 func (c *Character) TakeEffect(e *effect.Effect) {
 	// TODO: handle resists
-	// Add effect.
 	c.AddEffect(e)
-	// Memorize source as hostile.
-	mem := TargetMemory{Attitude: Hostile}
-	mem.TargetID, mem.TargetSerial = e.Source()
-	c.MemorizeTarget(&mem)
-	// Add hit effects.
 	source := serial.Object(e.Source())
 	if s, ok := source.(effect.Target); ok && e.MeleeHit() {
+		// In case of melee hit add hit effects & modifiers from the source object
 		for _, e := range s.HitEffects() {
 			c.TakeEffect(e)
 		}
 		c.TakeModifiers(s, s.HitModifiers()...)
+	}
+	if e.Hostile() {
+		// Memorize source as hostile
+		mem := TargetMemory{Attitude: Hostile}
+		mem.TargetID, mem.TargetSerial = e.Source()
+		c.MemorizeTarget(&mem)
 	}
 }
