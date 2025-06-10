@@ -54,6 +54,7 @@ type CharacterData struct {
 	Mana           int                   `xml:"mana,attr" json:"mana"`
 	Exp            int                   `xml:"exp,attr" json:"exp"`
 	Restore        bool                  `xml:"restore,attr" json:"restore"`
+	OpenLoot       bool                  `xml:"open-loot,attr" json:"open-loot"`
 	Action         UseActionData         `xml:"action" json:"action"`
 	Area           string                `xml:"area,attr" json:"area"`
 	Chapter        string                `xml:"chapter,attr" json:"chapter"`

@@ -61,6 +61,7 @@ func (c *Character) Apply(data res.CharacterData) {
 	c.casted = data.Casted
 	c.targets = data.Targets
 	c.kills = data.Kills
+	c.openLoot = data.OpenLoot
 	if useaction.HasData(data.Action) {
 		c.action = useaction.New(data.Action)
 	}
@@ -236,6 +237,7 @@ func (c *Character) Data() res.CharacterData {
 		Targets:      c.targets,
 		Kills:        c.kills,
 		Restore:      true,
+		OpenLoot:     c.openLoot,
 		Area:         c.AreaID(),
 		Chapter:      c.ChapterID(),
 		UseCooldown:  c.useCooldown,

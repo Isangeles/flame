@@ -52,6 +52,7 @@ type Character struct {
 	exp             int
 	live            bool
 	agony           bool
+	openLoot        bool
 	sex             Gender
 	race            Race
 	attitude        Attitude
@@ -237,6 +238,12 @@ func (c *Character) Live() bool {
 // agony state.
 func (c *Character) Agony() bool {
 	return c.agony
+}
+
+// OpenLoot checks whether it should be possible
+// to loot the character at any time.
+func (c *Character) OpenLoot() bool {
+	return c.openLoot
 }
 
 // Gender returns character gender.
