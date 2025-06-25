@@ -1,7 +1,7 @@
 /*
  * inventory.go
  *
- * Copyright 2018-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,6 @@ type InventoryItem struct {
 type Container interface {
 	serial.Serialer
 	Inventory() *Inventory
-	OpentLoot() bool
 }
 
 // NewInventory creates new inventory.
