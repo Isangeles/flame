@@ -35,7 +35,8 @@ type Effect struct {
 	id, serial string
 	source     res.SerialObjectData
 	target     res.SerialObjectData
-	modifiers  []Modifier
+	mods       []Modifier
+	dotMods    []Modifier
 	duration   int64
 	time       int64
 	secTimer   int64
@@ -49,7 +50,8 @@ type Effect struct {
 func New(data res.EffectData) *Effect {
 	e := new(Effect)
 	e.id = data.ID
-	e.modifiers = NewModifiers(data.Modifiers)
+	e.mods = NewModifiers(data.Modifiers)
+	e.dotMods = NewModifiers(data.OverTimeModifiers)
 	e.duration = int64(data.Duration)
 	e.meleeHit = data.MeleeHit
 	e.infinite = data.Infinite
@@ -66,6 +68,7 @@ func (e *Effect) Update(delta int64) {
 			e.Serial(), e.duration)
 		return
 	}
+	// Fetch target and source objects
 	object := serial.Object(e.target.ID, e.target.Serial)
 	if object == nil {
 		log.Err.Printf("effect: %s#%s: target not found: %s#%s",
@@ -79,9 +82,14 @@ func (e *Effect) Update(delta int64) {
 		return
 	}
 	source := serial.Object(e.source.ID, e.source.Serial)
+	// Apply modifiers
+	if !e.started {
+		target.TakeModifiers(source, e.mods...)
+	}
+	// Apply over-time modifiers
 	e.secTimer += delta
 	if !e.started || e.secTimer >= 1000 { // at start and every second after that
-		target.TakeModifiers(source, e.modifiers...)
+		target.TakeModifiers(source, e.dotMods...)
 		e.secTimer = 0
 	}
 	e.started = true
@@ -162,7 +170,8 @@ func (e *Effect) Data() res.EffectData {
 	data := res.EffectData{
 		ID:        e.ID(),
 		Duration:  e.Duration(),
-		Modifiers: ModifiersData(e.modifiers...),
+		Modifiers: ModifiersData(e.mods...),
+		OverTimeModifiers: ModifiersData(e.dotMods...),
 	}
 	return data
 }

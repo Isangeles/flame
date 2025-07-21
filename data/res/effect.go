@@ -35,13 +35,14 @@ type EffectsData struct {
 
 // Struct for effect data resource.
 type EffectData struct {
-	XMLName   xml.Name      `xml:"effect" json:"-"`
-	ID        string        `xml:"id,attr" json:"id"`
-	Duration  int64         `xml:"duration,attr" json:"duration"`
-	MeleeHit  bool          `xml:"melee-hit,attr" json:"melee-hit"`
-	Infinite  bool          `xml:"infinite,attr" json:"infinite"`
-	Hostile   bool          `xml:"hostile,attr" json:"hostile"`
-	Modifiers ModifiersData `xml:"modifiers" json:"modifiers"`
+	XMLName           xml.Name      `xml:"effect" json:"-"`
+	ID                string        `xml:"id,attr" json:"id"`
+	Duration          int64         `xml:"duration,attr" json:"duration"`
+	MeleeHit          bool          `xml:"melee-hit,attr" json:"melee-hit"`
+	Infinite          bool          `xml:"infinite,attr" json:"infinite"`
+	Hostile           bool          `xml:"hostile,attr" json:"hostile"`
+	Modifiers         ModifiersData `xml:"modifiers" json:"modifiers"`
+	OverTimeModifiers ModifiersData `xml:"over-time-modifiers" json:"over-time-modifiers"`
 }
 
 // Struct for modifiers data resource.
