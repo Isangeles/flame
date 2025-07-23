@@ -47,7 +47,6 @@ type EffectData struct {
 
 // Struct for modifiers data resource.
 type ModifiersData struct {
-	XMLName          xml.Name              `xml:"modifiers" json:"-"`
 	HealthMods       []HealthModData       `xml:"health-mod" json:"health-mods"`
 	ManaMods         []ManaModData         `xml:"mana-mod" json:"mana-mods"`
 	FlagMods         []FlagModData         `xml:"flag-mod" json:"flag-mods"`
