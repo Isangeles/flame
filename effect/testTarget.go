@@ -31,13 +31,14 @@ import (
 // Testing struct to use to test effect targets.
 type testTarget struct {
 	Health int
-	Flags  []flag.Flag
+	Flags  map[string]flag.Flag
 }
 
 // Creates new testing target.
 func newTestTarget() *testTarget {
 	tt := new(testTarget)
 	tt.Health = 100
+	tt.Flags = make(map[string]flag.Flag)
 	return tt
 }
 
@@ -85,9 +86,19 @@ func (tt *testTarget) TakeModifiers(source serial.Serialer, mods ...Modifier) {
 	for _, m := range mods {
 		switch mod := m.(type) {
 		case *FlagMod:
-			tt.Flags = append(tt.Flags, mod.Flag())
+			tt.Flags[mod.Flag().ID()] = mod.Flag()
 		case *HealthMod:
 			tt.Health -= mod.Min()
+		}
+	}
+}
+
+// Removes the modifiers.
+func (tt *testTarget) RemoveModifiers(source serial.Serialer, mods ...Modifier) {
+	for _, m := range mods {
+		switch mod := m.(type) {
+		case *FlagMod:
+			delete(tt.Flags, mod.Flag().ID())
 		}
 	}
 }

@@ -96,6 +96,9 @@ func (e *Effect) Update(delta int64) {
 	if !e.Infinite() {
 		e.time -= delta
 	}
+	if !e.Infinite() && e.Time() <= 0 {
+		target.RemoveModifiers(source, e.mods...)
+	}
 }
 
 // ID returns effect ID.

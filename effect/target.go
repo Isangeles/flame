@@ -1,7 +1,7 @@
 /*
  * target.go
  *
- * Copyright 2019-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,4 +37,5 @@ type Target interface {
 	TakeEffect(e *Effect)
 	RemoveEffect(e *Effect)
 	TakeModifiers(s serial.Serialer, m ...Modifier)
+	RemoveModifiers(s serial.Serialer, m ...Modifier)
 }

@@ -42,6 +42,14 @@ func (c *Character) TakeModifiers(source serial.Serialer, mods ...effect.Modifie
 	}
 }
 
+// RemoveModifiers removes the effects of all specified modifiers.
+// Source can be nil.
+func (c *Character) RemoveModifiers(source serial.Serialer, mods ...effect.Modifier) {
+	for _, m := range mods {
+		c.removeModifier(source, m)
+	}
+}
+
 // takeModifier handles specified modifier.
 // Source can be nil.
 func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
@@ -146,5 +154,18 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 	}
 	if c.onModifierTaken != nil {
 		c.onModifierTaken(m)
+	}
+}
+
+// removeModifer removes specified modifier.
+// Source can be nil.
+func (c *Character) removeModifier(s serial.Serialer, m effect.Modifier) {
+	switch m := m.(type) {
+	case *effect.FlagMod:
+		if m.Off() {
+			c.AddFlag(m.Flag())
+			break
+		}
+		c.RemoveFlag(m.Flag())
 	}
 }

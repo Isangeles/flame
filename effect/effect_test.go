@@ -56,7 +56,11 @@ func TestEffectUpdateModifiers(t *testing.T) {
 	if ob.Health != 98 {
 		t.Fatalf("DOT modifier not ticking")
 	}
+	// Test finished effect
 	if eff.Time() > 0 {
 		t.Fatalf("Effect not finished")
+	}
+	if len(ob.Flags) != 0 {
+		t.Fatalf("Flag modifier not removed after finishing the effect")
 	}
 }
