@@ -63,6 +63,7 @@ func New(data res.EffectData) *Effect {
 
 // Update updates effect.
 func (e *Effect) Update(delta int64) {
+	// Check if effect is not finished
 	if e.started && e.Time() <= 0 && !e.Infinite() {
 		log.Err.Printf("effect: %s#%s: no time left: %d", e.ID(),
 			e.Serial(), e.duration)
@@ -92,12 +93,13 @@ func (e *Effect) Update(delta int64) {
 		target.TakeModifiers(source, e.dotMods...)
 		e.secTimer = 0
 	}
+	// Effect duration progress
 	e.started = true
 	if !e.Infinite() {
 		e.time -= delta
-	}
-	if !e.Infinite() && e.Time() <= 0 {
-		target.RemoveModifiers(source, e.mods...)
+		if e.Time() <= 0 {
+			target.RemoveModifiers(source, e.mods...)
+		}
 	}
 }
 
