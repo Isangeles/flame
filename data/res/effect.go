@@ -59,6 +59,7 @@ type ModifiersData struct {
 	TransferItemMods []TransferItemModData `xml:"transfer-item-mod" json:"transfer-item-mods"`
 	AttributeMods    []AttributeModData    `xml:"attribute-mod" json:"attribute-mods"`
 	MemoryMods       []MemoryModData       `xml:"memory-mod" json:"memory-mods"`
+	MoveSpeedMods    []MoveSpeedModData    `xml:"move-speed-mod" json:"move-speed-mods"`
 }
 
 // Struct for health modifier data.
@@ -121,4 +122,9 @@ type AttributeModData AttributesData
 // Struct for memory modifier data.
 type MemoryModData struct {
 	Attitude string `xml:"attitude,attr" json:"attitude"`
+}
+
+// Struct for movement speed modifier data.
+type MoveSpeedModData struct {
+	Value int64 `xml:"value,attr" json:"value"`
 }

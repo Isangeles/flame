@@ -1,7 +1,7 @@
 /*
  * attributes.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ const (
 // constitution, dexterity, wisdom, intelligence.
 type Attributes struct {
 	Str, Con, Dex, Wis, Int int
+	MoveMod                 int64
 }
 
 // Lift returns maximal size of inventory based on

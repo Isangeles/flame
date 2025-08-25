@@ -151,6 +151,8 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 		c.MemorizeTarget(&tar)
 	case *effect.ChapterMod:
 		c.SetChapterID(m.ChapterID())
+	case *effect.MoveSpeedMod:
+		c.Attributes().MoveMod += m.Value()
 	}
 	if c.onModifierTaken != nil {
 		c.onModifierTaken(m)
@@ -167,5 +169,7 @@ func (c *Character) removeModifier(s serial.Serialer, m effect.Modifier) {
 			break
 		}
 		c.RemoveFlag(m.Flag())
+	case *effect.MoveSpeedMod:
+		c.Attributes().MoveMod -= m.Value()
 	}
 }
