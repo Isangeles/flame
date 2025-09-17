@@ -541,7 +541,7 @@ func (c *Character) Cooldown() int64 {
 // BaseMoveCooldown returns character base movement
 // cooldown in milliseconds.
 func (c *Character) BaseMoveCooldown() int64 {
-	return moveCD - int64((1+c.Attributes().Dex)/4) + c.attributes.MoveMod
+	return moveCD - (int64((1+c.Attributes().Dex)/4) + c.attributes.MoveMod)
 }
 
 // MoveCooldown returns character movement cooldown in
