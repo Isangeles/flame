@@ -145,3 +145,14 @@ func TestTakeModifiersAddSkill(t *testing.T) {
 		t.Errorf("Skill not added")
 	}
 }
+
+// TestTakeModifiersMoveSpeed tests handling of move
+// speed modifier.
+func TestTakeModifiersMoveSpeed(t *testing.T) {
+	ob := New(charData)
+	mod := effect.NewMoveSpeedMod(res.MoveSpeedModData{10})
+	ob.TakeModifiers(nil, mod)
+	if ob.BaseMoveCooldown() != 4 {
+		t.Errorf("Invalid value of base move cooldown: %d", ob.BaseMoveCooldown())
+	}
+}
