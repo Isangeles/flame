@@ -30,10 +30,11 @@ import (
 )
 
 const (
-	BaseLift   = 10
-	BaseSight  = 300.0
-	BaseHealth = 50
-	BaseMana   = 10
+	BaseLift       = 10
+	BaseSight      = 300.0
+	BaseVisibility = 100
+	BaseHealth     = 50
+	BaseMana       = 10
 )
 
 // Attributes struct represents game character attributes: strenght,
@@ -55,6 +56,11 @@ func (a *Attributes) Sight() float64 {
 	return BaseSight // * float64(1 + a.Wis)
 }
 
+// Visibility return current visibility value.
+func (a *Attribiutes) Visibility() int {
+	return BaseVisibiliy
+}
+
 // Health returns maximal health based on
 // attributes.
 func (a *Attributes) Health() int {
@@ -69,8 +75,8 @@ func (a *Attributes) Mana() int {
 // Damage returns min and max damage values
 // based on attributes.
 func (a *Attributes) Damage() (int, int) {
-	min := 1 + (10 * a.Str + a.Dex)
-	max := 10 + (10 * a.Str + a.Dex)
+	min := 1 + (10*a.Str + a.Dex)
+	max := 10 + (10*a.Str + a.Dex)
 	return min, max
 }
 
