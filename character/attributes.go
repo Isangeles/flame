@@ -57,8 +57,8 @@ func (a *Attributes) Sight() float64 {
 }
 
 // Visibility return current visibility value.
-func (a *Attribiutes) Visibility() int {
-	return BaseVisibiliy
+func (a *Attributes) Visibility() int {
+	return BaseVisibility
 }
 
 // Health returns maximal health based on
