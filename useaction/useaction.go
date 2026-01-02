@@ -1,7 +1,7 @@
 /*
  * useaction.go
  *
- * Copyright 2020-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -215,7 +215,8 @@ func (ua *UseAction) Owner() serial.Serialer {
 	return serial.Object(ua.owner.ID, ua.owner.Serial)
 }
 
-// MinRange returns minimal required range for specified skill.
+// MinRange returns minimal required range between the action
+// owner and target to use the action.
 func (ua *UseAction) MinRange() float64 {
 	for _, r := range ua.Requirements() {
 		if r, ok := r.(*req.TargetRange); ok {
