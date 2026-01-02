@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2018-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ type Object interface {
 	Update(d int64)
 	Live() bool
 	Respawn() int64
+	Despawn() int64
 	AreaID() string
 	SetAreaID(s string)
 	SightRange() float64
@@ -266,6 +267,7 @@ func (a *Area) Apply(data res.AreaData) {
 			a.AddObject(char)
 		}
 		char.SetRespawn(areaCharData.Respawn)
+		char.SetDespawn(areaCharData.Despawn)
 		// Set position.
 		if areaCharData.InitX > 0 && areaCharData.InitY > 0 {
 			char.SetPosition(areaCharData.InitX, areaCharData.InitY)
@@ -310,6 +312,7 @@ func (a *Area) Data() res.AreaData {
 		charData.DestX, charData.DestY = c.DestPoint()
 		charData.DefX, charData.DefY = c.DefaultPosition()
 		charData.Respawn = c.Respawn()
+		charData.Despawn = c.Despawn()
 		data.Characters = append(data.Characters, charData)
 	}
 	for _, sa := range a.Subareas() {

@@ -1,7 +1,7 @@
 /*
  * character.go
  *
- * Copyright 2018-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,8 @@ type Character struct {
 	defX, defY      float64
 	useCooldown     int64 // millis
 	moveCooldown    int64 // millis
-	respawn         int64
+	respawn         int64 // millis
+	despawn         int64 // millis
 	areaID          string
 	chapterID       string
 	inventory       *item.Inventory
@@ -707,6 +708,16 @@ func (c *Character) SetRespawn(respawn int64) {
 // Respawn returns time of character respawn in milliseconds.
 func (c *Character) Respawn() int64 {
 	return c.respawn
+}
+
+// SetDespawn sets character despawn time in milliseconds.
+func (c *Character) SetDespawn(despawn int64) {
+	c.despawn = despawn
+}
+
+// Despawn returns time of character despawn time in milliseconds.
+func (c *Character) Despawn() int64 {
+	return c.despawn
 }
 
 // Casted returns usable object currently casted by the character.

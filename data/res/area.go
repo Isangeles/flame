@@ -1,7 +1,7 @@
 /*
  * area.go
  *
- * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ type AreaCharData struct {
 	DestY   float64    `xml:"dest-y,attr" json:"dest-pos-y"`
 	DefX    float64    `xml:"def-x,attr" json:"def-pos-x"`
 	DefY    float64    `xml:"def-y,attr" json:"def-pos-y"`
+	Despawn int64      `xml:"despawn,attr" json:"despawn"`
 	Respawn int64      `xml:"respawn,attr" json:"respawn"`
 	AI      bool       `xml:"ai,attr" json:"ai"`
 	Flags   []FlagData `xml:"flags>flag" json:"flags"`
