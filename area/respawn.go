@@ -1,7 +1,7 @@
 /*
  * respawn.go
  *
- * Copyright 2021-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2021-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,52 +35,78 @@ import (
 
 // Struct for area respawn.
 type Respawn struct {
-	area  *Area
-	queue *sync.Map
+	area         *Area
+	respawnQueue *sync.Map
+	despawnQueue *sync.Map
 }
 
 // newRespawn creates respawn for area.
 func newRespawn(area *Area) *Respawn {
 	r := Respawn{
 		area:  area,
-		queue: new(sync.Map),
+		respawnQueue: new(sync.Map),
+		despawnQueue: new(sync.Map),
 	}
 	return &r
 }
 
 // Update updates respawn.
 func (r *Respawn) Update() {
+	// Fill the queues
 	for _, ob := range r.area.Objects() {
-		_, inQueue := r.queue.Load(ob)
-		if inQueue || ob.Live() || ob.Respawn() < 1 {
-			continue
+		_, inQueue := r.respawnQueue.Load(ob)
+		if !inQueue && !ob.Live() && ob.Respawn() > 0 {
+			r.respawnQueue.Store(ob, r.area.Time.Add(time.Duration(ob.Respawn())*time.Millisecond))
 		}
-		r.queue.Store(ob, r.area.Time.Add(time.Duration(ob.Respawn())*time.Millisecond))
+		_, inQueue = r.despawnQueue.Load(ob)
+		if !inQueue && !ob.Live() && len(ob.Inventory().Items()) < 1 && ob.Despawn() > 0 {
+			r.despawnQueue.Store(ob, r.area.Time.Add(time.Duration(ob.Despawn())*time.Millisecond))
+		}
 	}
+	// Respawn
 	respObject := func(k, v interface{}) bool {
 		ob, keyOk := k.(serial.Serialer)
 		respTime, valueOk := v.(time.Time)
-		if keyOk && valueOk {
-			if respTime.Unix() > r.area.Time.Unix() {
-				return true
-			}
-			if char, ok := ob.(*character.Character); ok && !char.Live() {
-				r.respawnChar(char)
-			}
-			r.queue.Delete(ob)
+		if !keyOk || !valueOk || respTime.Unix() > r.area.Time.Unix(){
+			return true
 		}
+		if char, ok := ob.(*character.Character); ok && !char.Live() {
+			r.respawnChar(char)
+		}
+		r.respawnQueue.Delete(ob)
 		return true
 	}
-	r.queue.Range(respObject)
+	r.respawnQueue.Range(respObject)
+	// Despawn
+	despObject := func(k, v interface{}) bool {
+		ob, keyOk := k.(serial.Serialer)
+		despTime, valueOk := v.(time.Time)
+		if !keyOk || !valueOk || despTime.Unix() > r.area.Time.Unix() {
+			return true
+		}
+		if char, ok := ob.(*character.Character); ok && !char.Live() {
+			r.area.RemoveObject(char)
+		}
+		r.despawnQueue.Delete(ob)
+		return true
+	}
+	r.despawnQueue.Range(despObject)
 }
 
 // Apply applies respawn data.
 func (r *Respawn) Apply(data res.RespawnData) {
-	r.queue = new(sync.Map)
-	for _, ob := range data.Queue {
+	r.respawnQueue = new(sync.Map)
+	for _, ob := range data.RespawnQueue {
 		areaOb, _ := r.area.objects.Load(ob.ID + ob.Serial)
 		if _, ok := areaOb.(*character.Character); ok {
-			r.queue.Store(time.Unix(ob.Time, 0), areaOb)
+			r.respawnQueue.Store(time.Unix(ob.Time, 0), areaOb)
+			continue
+		}
+	}
+	for _, ob := range data.DespawnQueue {
+		areaOb, _ := r.area.objects.Load(ob.ID + ob.Serial)
+		if _, ok := areaOb.(*character.Character); ok {
+			r.despawnQueue.Store(time.Unix(ob.Time, 0), areaOb)
 			continue
 		}
 	}
@@ -89,19 +115,34 @@ func (r *Respawn) Apply(data res.RespawnData) {
 // Data returns data resource for respawn.
 func (r *Respawn) Data() res.RespawnData {
 	var data res.RespawnData
-	addObject := func(k, v interface{}) bool {
+	addRespawnObject := func(k, v interface{}) bool {
 		ob, keyOk := k.(serial.Serialer)
 		time, valueOk := v.(time.Time)
-		if keyOk && valueOk {
-			obData := res.RespawnObject{
-				SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
-				Time:             time.Unix(),
-			}
-			data.Queue = append(data.Queue, obData)
+		if !keyOk || !valueOk {
+			return true
 		}
+		obData := res.RespawnObject{
+			SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
+			Time:             time.Unix(),
+		}
+		data.RespawnQueue = append(data.RespawnQueue, obData)
 		return true
 	}
-	r.queue.Range(addObject)
+	r.respawnQueue.Range(addRespawnObject)
+	addDespawnObject := func(k, v interface{}) bool {
+		ob, keyOk := k.(serial.Serialer)
+		time, valueOk := v.(time.Time)
+		if !keyOk || !valueOk {
+			return true
+		}
+		obData := res.RespawnObject{
+			SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
+			Time:             time.Unix(),
+		}
+		data.DespawnQueue = append(data.DespawnQueue, obData)
+		return true
+	}
+	r.despawnQueue.Range(addDespawnObject)
 	return data
 }
 

@@ -61,7 +61,8 @@ type AreaCharData struct {
 
 // Struct for area respawn data.
 type RespawnData struct {
-	Queue []RespawnObject `xml:"queue" json:"queue"`
+	RespawnQueue []RespawnObject `xml:"respawn-queue" json:"respawn-queue"`
+	DespawnQueue []RespawnObject `xml:"despawn-queue" json:"despawn-queue"`
 }
 
 // Struct for area respawn object data.

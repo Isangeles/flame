@@ -1,7 +1,7 @@
 /*
  * respawn_test.go
  *
- * Copyright 2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2023-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@ import (
 
 // TestAreaRespawn tests respawn for area.
 func TestAreaRespawn(t *testing.T) {
-	// Create area.
+	// Create area
 	res.Characters = append(res.Characters, charData)
 	ob := character.New(charData)
 	ob.SetRespawn(1000)
 	area := New(areaData)
 	area.AddObject(ob)
-	// Test.
+	// Test
 	ob.SetHealth(0)
 	area.Update(1)
 	area.Update(1000)
@@ -51,3 +51,19 @@ func TestAreaRespawn(t *testing.T) {
 	}
 }
 
+// TestAreaDespawn tests despawn for area.
+func TestAreaDespawn(t *testing.T) {
+	// Create area
+	res.Characters = append(res.Characters, charData)
+	ob := character.New(charData)
+	ob.SetDespawn(1000)
+	area := New(areaData)
+	area.AddObject(ob)
+	// Test
+	ob.SetHealth(0)
+	area.Update(1)
+	area.Update(1000)
+	if len(area.Objects()) > 0 {
+		t.Errorf("Object not despawned")
+	}
+}

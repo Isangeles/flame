@@ -32,6 +32,7 @@ import (
 	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/effect"
+	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/log"
 	"github.com/isangeles/flame/serial"
 )
@@ -68,6 +69,7 @@ type Object interface {
 	BaseMoveCooldown() int64
 	MoveCooldown() int64
 	SetMoveCooldown(c int64)
+	Inventory() *item.Inventory
 }
 
 // New creates new area.
