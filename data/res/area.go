@@ -36,7 +36,7 @@ type AreaData struct {
 	Time       string           `xml:"time,attr" json:"time"`
 	Weather    string           `xml:"weather,attr" json:"weather"`
 	Map        *tmx.Map         `xml:"map" json:"map"`
-	Respawn    RespawnData      `xml:"respawn" json:"respawn"`
+	Spawn      SpawnData        `xml:"spawn" json:"spawn"`
 	Characters []AreaCharData   `xml:"characters>character" json:"characters"`
 	Subareas   []AreaData       `xml:"subareas>area" json:"subareas"`
 }
@@ -59,14 +59,14 @@ type AreaCharData struct {
 	Flags   []FlagData `xml:"flags>flag" json:"flags"`
 }
 
-// Struct for area respawn data.
-type RespawnData struct {
-	RespawnQueue []RespawnObject `xml:"respawn-queue" json:"respawn-queue"`
-	DespawnQueue []RespawnObject `xml:"despawn-queue" json:"despawn-queue"`
+// Struct for area spawn data.
+type SpawnData struct {
+	RespawnQueue []SpawnObject `xml:"respawn-queue" json:"respawn-queue"`
+	DespawnQueue []SpawnObject `xml:"despawn-queue" json:"despawn-queue"`
 }
 
 // Struct for area respawn object data.
-type RespawnObject struct {
+type SpawnObject struct {
 	SerialObjectData
 	Time int64
 }

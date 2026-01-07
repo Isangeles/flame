@@ -1,5 +1,5 @@
 /*
- * respawn.go
+ * spawn.go
  *
  * Copyright 2021-2026 Dariusz Sikora <ds@isangeles.dev>
  *
@@ -33,16 +33,16 @@ import (
 	"github.com/isangeles/flame/serial"
 )
 
-// Struct for area respawn.
-type Respawn struct {
+// Struct for area spawn.
+type Spawn struct {
 	area         *Area
 	respawnQueue *sync.Map
 	despawnQueue *sync.Map
 }
 
-// newRespawn creates respawn for area.
-func newRespawn(area *Area) *Respawn {
-	r := Respawn{
+// newSpawn creates spawn for the area.
+func newSpawn(area *Area) *Spawn {
+	r := Spawn{
 		area:  area,
 		respawnQueue: new(sync.Map),
 		despawnQueue: new(sync.Map),
@@ -50,8 +50,8 @@ func newRespawn(area *Area) *Respawn {
 	return &r
 }
 
-// Update updates respawn.
-func (r *Respawn) Update() {
+// Update updates spawn.
+func (r *Spawn) Update() {
 	// Fill the queues
 	for _, ob := range r.area.Objects() {
 		_, inQueue := r.respawnQueue.Load(ob)
@@ -94,7 +94,7 @@ func (r *Respawn) Update() {
 }
 
 // Apply applies respawn data.
-func (r *Respawn) Apply(data res.RespawnData) {
+func (r *Spawn) Apply(data res.SpawnData) {
 	r.respawnQueue = new(sync.Map)
 	for _, ob := range data.RespawnQueue {
 		areaOb, _ := r.area.objects.Load(ob.ID + ob.Serial)
@@ -113,29 +113,29 @@ func (r *Respawn) Apply(data res.RespawnData) {
 }
 
 // Data returns data resource for respawn.
-func (r *Respawn) Data() res.RespawnData {
-	var data res.RespawnData
-	addRespawnObject := func(k, v interface{}) bool {
+func (r *Spawn) Data() res.SpawnData {
+	var data res.SpawnData
+	addSpawnObject := func(k, v interface{}) bool {
 		ob, keyOk := k.(serial.Serialer)
 		time, valueOk := v.(time.Time)
 		if !keyOk || !valueOk {
 			return true
 		}
-		obData := res.RespawnObject{
+		obData := res.SpawnObject{
 			SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
 			Time:             time.Unix(),
 		}
 		data.RespawnQueue = append(data.RespawnQueue, obData)
 		return true
 	}
-	r.respawnQueue.Range(addRespawnObject)
+	r.respawnQueue.Range(addSpawnObject)
 	addDespawnObject := func(k, v interface{}) bool {
 		ob, keyOk := k.(serial.Serialer)
 		time, valueOk := v.(time.Time)
 		if !keyOk || !valueOk {
 			return true
 		}
-		obData := res.RespawnObject{
+		obData := res.SpawnObject{
 			SerialObjectData: res.SerialObjectData{ob.ID(), ob.Serial()},
 			Time:             time.Unix(),
 		}
@@ -147,7 +147,7 @@ func (r *Respawn) Data() res.RespawnData {
 }
 
 // respawnChar respawns specified character.
-func (r *Respawn) respawnChar(char *character.Character) {
+func (r *Spawn) respawnChar(char *character.Character) {
 	charData := res.Character(char.ID(), "")
 	if charData == nil {
 		log.Err.Printf("Area: %s: respawn: %s: character data not found",

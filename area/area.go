@@ -47,7 +47,7 @@ type Area struct {
 	Time     time.Time
 	weather  *Weather
 	areaMap  Map
-	respawn  *Respawn
+	spawn    *Spawn
 	objects  *sync.Map
 	subareas *sync.Map
 }
@@ -78,7 +78,7 @@ func New(data res.AreaData) *Area {
 	a.objects = new(sync.Map)
 	a.subareas = new(sync.Map)
 	a.weather = newWeather(a)
-	a.respawn = newRespawn(a)
+	a.spawn = newSpawn(a)
 	a.Apply(data)
 	return a
 }
@@ -98,7 +98,7 @@ func (a *Area) Update(delta int64) {
 	for _, sa := range a.Subareas() {
 		sa.Update(delta)
 	}
-	a.respawn.Update()
+	a.spawn.Update()
 }
 
 // ID returns area ID.
@@ -227,7 +227,7 @@ func (a *Area) Apply(data res.AreaData) {
 	if data.Map != nil {
 		a.areaMap = newMap(data.Map)
 	}
-	a.respawn.Apply(data.Respawn)
+	a.spawn.Apply(data.Spawn)
 	// Remove objects not present anymore.
 	removeChars := func(key, value interface{}) bool {
 		key, _ = key.(string)
@@ -296,10 +296,10 @@ func (a *Area) Apply(data res.AreaData) {
 // Data returns area data resource.
 func (a *Area) Data() res.AreaData {
 	data := res.AreaData{
-		ID:      a.ID(),
-		Time:    a.Time.Format(time.Kitchen),
-		Respawn: a.respawn.Data(),
-		Map:     a.areaMap.Data(),
+		ID:    a.ID(),
+		Time:  a.Time.Format(time.Kitchen),
+		Spawn: a.spawn.Data(),
+		Map:   a.areaMap.Data(),
 	}
 	for _, o := range a.Objects() {
 		c, ok := o.(*character.Character)

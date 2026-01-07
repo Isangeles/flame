@@ -1,5 +1,5 @@
 /*
- * respawn_test.go
+ * spawn_test.go
  *
  * Copyright 2023-2026 Dariusz Sikora <ds@isangeles.dev>
  *
