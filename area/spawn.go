@@ -59,7 +59,7 @@ func (r *Spawn) Update() {
 			r.respawnQueue.Store(ob, r.area.Time.Add(time.Duration(ob.Respawn())*time.Millisecond))
 		}
 		_, inQueue = r.despawnQueue.Load(ob)
-		if !inQueue && !ob.Live() && len(ob.Inventory().Items()) < 1 && ob.Despawn() > 0 {
+		if !inQueue && ob.OpenLoot() && len(ob.Inventory().Items()) < 1 && ob.Despawn() > 0 {
 			r.despawnQueue.Store(ob, r.area.Time.Add(time.Duration(ob.Despawn())*time.Millisecond))
 		}
 	}
@@ -84,7 +84,7 @@ func (r *Spawn) Update() {
 		if !keyOk || !valueOk || despTime.Unix() > r.area.Time.Unix() {
 			return true
 		}
-		if char, ok := ob.(*character.Character); ok && !char.Live() {
+		if char, ok := ob.(*character.Character); ok {
 			r.area.RemoveObject(char)
 		}
 		r.despawnQueue.Delete(ob)

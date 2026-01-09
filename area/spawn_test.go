@@ -32,7 +32,7 @@ import (
 
 // TestAreaRespawn tests respawn for area.
 func TestAreaRespawn(t *testing.T) {
-	// Create area
+	// Create object & area
 	res.Characters = append(res.Characters, charData)
 	ob := character.New(charData)
 	ob.SetRespawn(1000)
@@ -53,14 +53,13 @@ func TestAreaRespawn(t *testing.T) {
 
 // TestAreaDespawn tests despawn for area.
 func TestAreaDespawn(t *testing.T) {
-	// Create area
-	res.Characters = append(res.Characters, charData)
-	ob := character.New(charData)
+	// Create object & area
+	lootData := res.CharacterData{ID: "object", Level: 1, OpenLoot: true}
+	ob := character.New(lootData)
 	ob.SetDespawn(1000)
 	area := New(areaData)
 	area.AddObject(ob)
 	// Test
-	ob.SetHealth(0)
 	area.Update(1)
 	area.Update(1000)
 	if len(area.Objects()) > 0 {

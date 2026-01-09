@@ -63,6 +63,7 @@ type Object interface {
 	SetAreaID(s string)
 	SightRange() float64
 	Moving() bool
+	OpenLoot() bool
 	DestPoint() (float64, float64)
 	SetDestPoint(x float64, y float64)
 	Interrupt()
