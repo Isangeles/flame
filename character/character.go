@@ -27,6 +27,7 @@ package character
 
 import (
 	"fmt"
+	"math"
 	"sync"
 
 	"github.com/isangeles/flame/craft"
@@ -90,8 +91,8 @@ type Character struct {
 
 const (
 	baseExp               = 1000
-	useCD                 = 2000 // millis
-	moveCD                = 15   // millis
+	useCD                 = 2000       // millis
+	moveCD                = 15         // millis
 	startedDialogIDFormat = "%s_%s#%s" // [dialog ID]_[object ID]#[object serial]
 )
 
@@ -653,6 +654,12 @@ func (c *Character) RemoveFlag(f flag.Flag) {
 func (c *Character) HasFlag(flag flag.Flag) bool {
 	_, ok := c.flags.Load(flag.ID())
 	return ok
+}
+
+// InSight checks if specified XY position is in sight range
+// of the character.
+func (c *Character) InSight(x, y float64) bool {
+	return math.Hypot(c.posX-x, c.posY-y) <= c.SightRange()
 }
 
 // Journal returns quest journal.
