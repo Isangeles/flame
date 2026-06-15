@@ -6,7 +6,6 @@ MAJOR:
 * Documentation for directories: data, area, areas, area
 * Ability to place items on the ground
 * AOE effects
-* Character visibility effect(for stealth skill, etc.)
 * Currently, the kill requirement is checked against all of the character kill records,
   this is a problem while creating a quest that requires to kill something after accepting the
   quest(kill records could already be present and the quest stage will be completed immediately)
