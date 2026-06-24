@@ -1,7 +1,7 @@
 /*
  * movespeedmod.go
  *
- * Copyright 2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2025-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ type MoveSpeedMod struct {
 }
 
 // NewMoveSpeedMod creates new move speed modifier.
-func NewMoveSpeedMod(data res.MoveSpeedModData) *MoveSpeedMod {
+func NewMoveSpeedMod(data res.ValueModData) *MoveSpeedMod {
 	msm := MoveSpeedMod{data.Value}
 	return &msm
 }
@@ -43,7 +43,7 @@ func (msm *MoveSpeedMod) Value() int64 {
 	return msm.value
 }
 
-// Data returns data resource for modifier.
-func (msm *MoveSpeedMod) Data() res.MoveSpeedModData {
-	return res.MoveSpeedModData{msm.value}
+// Data returns data resource for the modifier.
+func (msm *MoveSpeedMod) Data() res.ValueModData {
+	return res.ValueModData{Value: msm.value}
 }

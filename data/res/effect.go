@@ -1,7 +1,7 @@
 /*
  * effect.go
  *
- * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ type ModifiersData struct {
 	TransferItemMods []TransferItemModData `xml:"transfer-item-mod" json:"transfer-item-mods"`
 	AttributeMods    []AttributeModData    `xml:"attribute-mod" json:"attribute-mods"`
 	MemoryMods       []MemoryModData       `xml:"memory-mod" json:"memory-mods"`
-	MoveSpeedMods    []MoveSpeedModData    `xml:"move-speed-mod" json:"move-speed-mods"`
+	MoveSpeedMods    []ValueModData        `xml:"move-speed-mod" json:"move-speed-mods"`
 }
 
 // Struct for health modifier data.
@@ -124,7 +124,7 @@ type MemoryModData struct {
 	Attitude string `xml:"attitude,attr" json:"attitude"`
 }
 
-// Struct for movement speed modifier data.
-type MoveSpeedModData struct {
+// Struct for generic value modifier data.
+type ValueModData struct {
 	Value int64 `xml:"value,attr" json:"value"`
 }
