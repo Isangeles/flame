@@ -1,7 +1,7 @@
 /*
  * mod_test.go
  *
- * Copyright 2023-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2023-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -150,7 +150,7 @@ func TestTakeModifiersAddSkill(t *testing.T) {
 // speed modifier.
 func TestTakeModifiersMoveSpeed(t *testing.T) {
 	ob := New(charData)
-	mod := effect.NewMoveSpeedMod(res.MoveSpeedModData{10})
+	mod := effect.NewMoveSpeedMod(res.ValueModData{10})
 	ob.TakeModifiers(nil, mod)
 	if ob.BaseMoveCooldown() != 4 {
 		t.Errorf("Invalid value of base move cooldown: %d", ob.BaseMoveCooldown())
