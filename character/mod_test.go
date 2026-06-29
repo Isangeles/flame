@@ -156,3 +156,14 @@ func TestTakeModifiersMoveSpeed(t *testing.T) {
 		t.Errorf("Invalid value of base move cooldown: %d", ob.BaseMoveCooldown())
 	}
 }
+
+// TestTakeVisibilityMod tests handling of the
+// visibility modifier.
+func TestTakeVisibilityMod(t *testing.T) {
+	ob := New(charData)
+	mod := effect.NewVisibilityMod(res.ValueModData{-10})
+	ob.TakeModifiers(nil, mod)
+	if ob.Attributes().Visibility() != 90 {
+		t.Errorf("Invalid visibility value: %d", ob.Attributes().Visibility())
+	}
+}

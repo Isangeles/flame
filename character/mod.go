@@ -1,7 +1,7 @@
 /*
  * mod.go
  *
- * Copyright 2019-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -153,6 +153,8 @@ func (c *Character) takeModifier(s serial.Serialer, m effect.Modifier) {
 		c.SetChapterID(m.ChapterID())
 	case *effect.MoveSpeedMod:
 		c.Attributes().MoveMod += m.Value()
+	case *effect.VisibilityMod:
+		c.Attributes().VisibilityMod += m.Value()
 	}
 	if c.onModifierTaken != nil {
 		c.onModifierTaken(m)

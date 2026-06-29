@@ -1,7 +1,7 @@
 /*
  * attributes.go
  *
- * Copyright 2018-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ const (
 // constitution, dexterity, wisdom, intelligence.
 type Attributes struct {
 	Str, Con, Dex, Wis, Int int
+	VisibilityMod           int
 	MoveMod                 int64
 }
 
@@ -58,7 +59,7 @@ func (a *Attributes) Sight() float64 {
 
 // Visibility return current visibility value.
 func (a *Attributes) Visibility() int {
-	return BaseVisibility
+	return BaseVisibility + a.VisibilityMod
 }
 
 // Health returns maximal health based on

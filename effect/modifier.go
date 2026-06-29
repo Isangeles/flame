@@ -84,6 +84,10 @@ func NewModifiers(data res.ModifiersData) (mods []Modifier) {
 		moveSpeedMod := NewMoveSpeedMod(md)
 		mods = append(mods, moveSpeedMod)
 	}
+	for _, md := range data.VisibilityMods {
+		visibilityMod := NewVisibilityMod(md)
+		mods = append(mods, visibilityMod)
+	}
 	return
 }
 
@@ -117,6 +121,8 @@ func ModifiersData(mods ...Modifier) (data res.ModifiersData) {
 			data.MemoryMods = append(data.MemoryMods, m.Data())
 		case *MoveSpeedMod:
 			data.MoveSpeedMods = append(data.MoveSpeedMods, m.Data())
+		case *VisibilityMod:
+			data.VisibilityMods = append(data.VisibilityMods, m.Data())
 		}
 	}
 	return

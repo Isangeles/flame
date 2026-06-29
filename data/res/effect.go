@@ -60,6 +60,7 @@ type ModifiersData struct {
 	AttributeMods    []AttributeModData    `xml:"attribute-mod" json:"attribute-mods"`
 	MemoryMods       []MemoryModData       `xml:"memory-mod" json:"memory-mods"`
 	MoveSpeedMods    []ValueModData        `xml:"move-speed-mod" json:"move-speed-mods"`
+	VisibilityMods   []ValueModData        `xml:"visibility-mod" json:"visibility-mods"`
 }
 
 // Struct for health modifier data.
