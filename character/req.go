@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,6 +133,11 @@ func (c *Character) meetReq(r req.Requirement) bool {
 		return mp >= r.Value()
 	case *req.Combat:
 		return c.Fighting() == r.Combat()
+	case *req.Visibility:
+		if r.Less() {
+			return c.Attributes().Visibility() > r.Value()
+		}
+		return c.Attributes().Visibility() <= r.Value()
 	default:
 		return true
 	}

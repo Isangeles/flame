@@ -1,7 +1,7 @@
 /*
  * req_test.go
  *
- * Copyright 2022-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2022-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ var (
 	itemReqData          = res.ItemReqData{"item1", 1, true}
 	combatReqData        = res.CombatReqData{true}
 	currencyReqData      = res.CurrencyReqData{10, true}
+	visibilityReqData    = res.VisibilityReqData{50, false, false}
 )
 
 // TestMeetReqsItem tests meet requiremet check function
@@ -155,6 +156,26 @@ func TestMeetReqsCombat(t *testing.T) {
 	char.SetTarget(nil)
 	if char.MeetReqs(combatReq) {
 		t.Errorf("Requirement should not be meet: character in combat: %v", char.Fighting())
+	}
+}
+
+// TestMeetReqsVisibility tests meet requirement check function
+// for visibility requirement.
+func TestMeetReqsVisibility(t *testing.T) {
+	// Meet.
+	char := New(charData)
+	char.Attributes().VisibilityMod = -50
+	visibilityReq := req.NewVisibility(visibilityReqData)
+	if !char.MeetReqs(visibilityReq) {
+		t.Errorf("Requirement should be meet: required visibility: %d, character visibility: %d",
+			visibilityReq.Value(), char.Attributes().Visibility())
+	}
+	// Not meet.
+	char.Attributes().VisibilityMod = 0
+	visibilityReq = req.NewVisibility(visibilityReqData)
+	if char.MeetReqs(visibilityReq) {
+		t.Errorf("Requirement should not be meet: required visibility: %d, character visibility: %d",
+			visibilityReq.Value(), char.Attributes().Visibility())
 	}
 }
 

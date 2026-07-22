@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2019-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ type ReqsData struct {
 	ManaReqs          []ManaReqData          `xml:"mana-req" json:"mana-reqs"`
 	ManaPercentReqs   []ManaPercentReqData   `xml:"mana-percent-req" json:"mana-percent-reqs"`
 	CombatReqs        []CombatReqData        `xml:"combat-req" json:"combat-reqs"`
+	VisibilityReqs    []VisibilityReqData    `xml:"visibility-req" json:"visibility-reqs"`
 }
 
 // Struct for level requirement data.
@@ -121,4 +122,11 @@ type ManaPercentReqData struct {
 // Struct for combat requirement data.
 type CombatReqData struct {
 	Combat bool `xml:"combat,attr" json:"combat"`
+}
+
+// Struct for visibility requirement data.
+type VisibilityReqData struct {
+	Value  int  `xml:"value,attr" json:"value"`
+	Less   bool `xml:"less,attr" json:"less"`
+	Charge bool `xml:"charge,attr" json:"charge"`
 }

@@ -1,7 +1,7 @@
 /*
  * req.go
  *
- * Copyright 2018-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -103,6 +103,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		creq := NewCombat(d)
 		reqs = append(reqs, creq)
 	}
+	for _, d := range data.VisibilityReqs {
+		vreq := NewVisibility(d)
+		reqs = append(reqs, vreq)
+	}
 	return
 }
 
@@ -149,6 +153,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Combat:
 			d := r.Data()
 			data.CombatReqs = append(data.CombatReqs, d)
+		case *Visibility:
+			d := r.Data()
+			data.VisibilityReqs = append(data.VisibilityReqs, d)
 		}
 	}
 	return
