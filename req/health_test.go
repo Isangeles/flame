@@ -1,7 +1,7 @@
 /*
  * health_test.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2022-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-var healthReqData = res.HealthReqData{100, true, true}
+var healthReqData = res.ValueReqData{100, true, true}
 
 // TestNewHealth tests creating new health requirement.
 func TestNewHealth(t *testing.T) {

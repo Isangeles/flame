@@ -1,7 +1,7 @@
 /*
  * healthpercent.go
  *
- * Copyright 2021-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2021-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ type HealthPercent struct {
 }
 
 // NewHealth creates new health requirement.
-func NewHealthPercent(data res.HealthPercentReqData) *HealthPercent {
+func NewHealthPercent(data res.ValueReqData) *HealthPercent {
 	hpr := HealthPercent{
 		value: data.Value,
 		less:  data.Less,
@@ -65,8 +65,8 @@ func (hpr *HealthPercent) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (hpr *HealthPercent) Data() res.HealthPercentReqData {
-	data := res.HealthPercentReqData{
+func (hpr *HealthPercent) Data() res.ValueReqData {
+	data := res.ValueReqData{
 		Value: hpr.value,
 		Less:  hpr.less,
 	}

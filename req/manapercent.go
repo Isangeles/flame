@@ -1,7 +1,7 @@
 /*
  * manapercent.go
  *
- * Copyright 2021-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2021-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ type ManaPercent struct {
 }
 
 // NewManaPercent creates new mana percent requirement.
-func NewManaPercent(data res.ManaPercentReqData) *ManaPercent {
+func NewManaPercent(data res.ValueReqData) *ManaPercent {
 	mpr := ManaPercent{
 		value: data.Value,
 		less:  data.Less,
@@ -65,8 +65,8 @@ func (mpr *ManaPercent) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (mpr *ManaPercent) Data() res.ManaPercentReqData {
-	data := res.ManaPercentReqData{
+func (mpr *ManaPercent) Data() res.ValueReqData {
+	data := res.ValueReqData{
 		Value: mpr.value,
 		Less:  mpr.less,
 	}

@@ -1,7 +1,7 @@
 /*
  * mana_test.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2022-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-var manaReqData = res.ManaReqData{100, true, true}
+var manaReqData = res.ValueReqData{100, true, true}
 
 // TestNewMana tests creating new mana requirement.
 func TestNewMana(t *testing.T) {

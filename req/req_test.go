@@ -203,9 +203,9 @@ func testReqsData() res.ReqsData {
 		res.ItemReqData{"item1", 1, false},
 		res.ItemReqData{"item2", 2, true},
 	}
-	currencyReqs := []res.CurrencyReqData{
-		res.CurrencyReqData{100, false},
-		res.CurrencyReqData{50, true},
+	currencyReqs := []res.ValueReqData{
+		res.ValueReqData{100, false, false},
+		res.ValueReqData{50, true, false},
 	}
 	targetRangeReqs := []res.TargetRangeReqData{
 		res.TargetRangeReqData{5},
@@ -219,21 +219,21 @@ func testReqsData() res.ReqsData {
 		res.QuestReqData{"quest1", false},
 		res.QuestReqData{"quest2", true},
 	}
-	healthReqs := []res.HealthReqData{
-		res.HealthReqData{100, false, false},
-		res.HealthReqData{50, true, true},
+	healthReqs := []res.ValueReqData{
+		res.ValueReqData{100, false, false},
+		res.ValueReqData{50, true, true},
 	}
-	healthPercentReqs := []res.HealthPercentReqData{
-		res.HealthPercentReqData{100, false},
-		res.HealthPercentReqData{50, true},
+	healthPercentReqs := []res.ValueReqData{
+		res.ValueReqData{100, false, false},
+		res.ValueReqData{50, true, false},
 	}
-	manaReqs := []res.ManaReqData{
-		res.ManaReqData{10, false, false},
-		res.ManaReqData{5, true, true},
+	manaReqs := []res.ValueReqData{
+		res.ValueReqData{10, false, false},
+		res.ValueReqData{5, true, true},
 	}
-	manaPercentReqs := []res.ManaPercentReqData{
-		res.ManaPercentReqData{100, false},
-		res.ManaPercentReqData{50, true},
+	manaPercentReqs := []res.ValueReqData{
+		res.ValueReqData{100, false, false},
+		res.ValueReqData{50, true, false},
 	}
 	combatReqs := []res.CombatReqData{
 		res.CombatReqData{false},

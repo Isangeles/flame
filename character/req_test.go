@@ -32,14 +32,14 @@ import (
 )
 
 var (
-	healthReqData        = res.HealthReqData{10, false, true}
-	manaReqData          = res.ManaReqData{10, false, true}
-	healthPercentReqData = res.HealthPercentReqData{100, false}
-	manaPercentReqData   = res.ManaPercentReqData{100, false}
+	healthReqData        = res.ValueReqData{10, false, true}
+	manaReqData          = res.ValueReqData{10, false, true}
+	healthPercentReqData = res.ValueReqData{100, false, false}
+	manaPercentReqData   = res.ValueReqData{100, false, false}
 	itemReqData          = res.ItemReqData{"item1", 1, true}
 	combatReqData        = res.CombatReqData{true}
-	currencyReqData      = res.CurrencyReqData{10, true}
-	visibilityReqData    = res.VisibilityReqData{50, false, false}
+	currencyReqData      = res.ValueReqData{10, false, true}
+	visibilityReqData    = res.ValueReqData{50, false, false}
 )
 
 // TestMeetReqsItem tests meet requiremet check function

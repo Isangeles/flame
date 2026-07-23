@@ -1,7 +1,7 @@
 /*
  * currency.go
  *
- * Copyright 2019-2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,9 +35,9 @@ type Currency struct {
 }
 
 // NewCurrency creates new currency requirement.
-func NewCurrency(data res.CurrencyReqData) *Currency {
+func NewCurrency(data res.ValueReqData) *Currency {
 	cr := new(Currency)
-	cr.amount = data.Amount
+	cr.amount = data.Value
 	cr.charge = data.Charge
 	return cr
 }
@@ -64,9 +64,9 @@ func (cr *Currency) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (cr *Currency) Data() res.CurrencyReqData {
-	data := res.CurrencyReqData{
-		Amount: cr.Amount(),
+func (cr *Currency) Data() res.ValueReqData {
+	data := res.ValueReqData{
+		Value:  cr.Amount(),
 		Charge: cr.Charge(),
 	}
 	return data

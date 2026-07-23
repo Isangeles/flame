@@ -1,7 +1,7 @@
 /*
  * health.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ type Health struct {
 }
 
 // NewHealth creates new health requirement.
-func NewHealth(data res.HealthReqData) *Health {
+func NewHealth(data res.ValueReqData) *Health {
 	h := Health{
 		less:   data.Less,
 		charge: data.Charge,
@@ -74,8 +74,8 @@ func (h *Health) SetMeet(meet bool) {
 }
 
 // Data returns data resource for health requiremnt.
-func (h *Health) Data() res.HealthReqData {
-	data := res.HealthReqData{
+func (h *Health) Data() res.ValueReqData {
+	data := res.ValueReqData{
 		Less:   h.less,
 		Charge: h.charge,
 		Value:  h.value,

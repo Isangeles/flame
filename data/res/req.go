@@ -29,21 +29,21 @@ import (
 
 // Struct for reqs data.
 type ReqsData struct {
-	XMLName           xml.Name               `xml:"reqs" json:"-"`
-	LevelReqs         []LevelReqData         `xml:"level-req" json:"level-reqs"`
-	GenderReqs        []GenderReqData        `xml:"gender-req" json:"gender-reqs"`
-	FlagReqs          []FlagReqData          `xml:"flag-req" json:"flag-reqs"`
-	ItemReqs          []ItemReqData          `xml:"item-req" json:"item-reqs"`
-	CurrencyReqs      []CurrencyReqData      `xml:"currency-req" json:"currency-reqs"`
-	TargetRangeReqs   []TargetRangeReqData   `xml:"target-range-req" json:"target-range-reqs"`
-	KillReqs          []KillReqData          `xml:"kill-req" json:"kill-reqs"`
-	QuestReqs         []QuestReqData         `xml:"quest-req" json:"quest-reqs"`
-	HealthReqs        []HealthReqData        `xml:"health-req" json:"health-reqs"`
-	HealthPercentReqs []HealthPercentReqData `xml:"health-percent-req" json:"health-percent-reqs"`
-	ManaReqs          []ManaReqData          `xml:"mana-req" json:"mana-reqs"`
-	ManaPercentReqs   []ManaPercentReqData   `xml:"mana-percent-req" json:"mana-percent-reqs"`
-	CombatReqs        []CombatReqData        `xml:"combat-req" json:"combat-reqs"`
-	VisibilityReqs    []VisibilityReqData    `xml:"visibility-req" json:"visibility-reqs"`
+	XMLName           xml.Name             `xml:"reqs" json:"-"`
+	LevelReqs         []LevelReqData       `xml:"level-req" json:"level-reqs"`
+	GenderReqs        []GenderReqData      `xml:"gender-req" json:"gender-reqs"`
+	FlagReqs          []FlagReqData        `xml:"flag-req" json:"flag-reqs"`
+	ItemReqs          []ItemReqData        `xml:"item-req" json:"item-reqs"`
+	CurrencyReqs      []ValueReqData       `xml:"currency-req" json:"currency-reqs"`
+	TargetRangeReqs   []TargetRangeReqData `xml:"target-range-req" json:"target-range-reqs"`
+	KillReqs          []KillReqData        `xml:"kill-req" json:"kill-reqs"`
+	QuestReqs         []QuestReqData       `xml:"quest-req" json:"quest-reqs"`
+	HealthReqs        []ValueReqData       `xml:"health-req" json:"health-reqs"`
+	HealthPercentReqs []ValueReqData       `xml:"health-percent-req" json:"health-percent-reqs"`
+	ManaReqs          []ValueReqData       `xml:"mana-req" json:"mana-reqs"`
+	ManaPercentReqs   []ValueReqData       `xml:"mana-percent-req" json:"mana-percent-reqs"`
+	CombatReqs        []CombatReqData      `xml:"combat-req" json:"combat-reqs"`
+	VisibilityReqs    []ValueReqData       `xml:"visibility-req" json:"visibility-reqs"`
 }
 
 // Struct for level requirement data.
@@ -70,12 +70,6 @@ type ItemReqData struct {
 	Charge bool   `xml:"charge,attr" json:"charge"`
 }
 
-// Struct for currency requirement data.
-type CurrencyReqData struct {
-	Amount int  `xml:"amount,attr" json:"amount"`
-	Charge bool `xml:"charge,attr" json:"charge"`
-}
-
 // Struct for target requirement data.
 type TargetRangeReqData struct {
 	MinRange float64 `xml:"min-range,attr" json:"min-range"`
@@ -93,39 +87,13 @@ type QuestReqData struct {
 	Completed bool   `xml:"completed,attr" json:"completed"`
 }
 
-// Struct for health requirement data.
-type HealthReqData struct {
-	Value  int  `xml:"value,attr" json:"value"`
-	Less   bool `xml:"less,attr" json:"less"`
-	Charge bool `xml:"charge,attr" json:"charge"`
-}
-
-// Struct for health percent requirement data.
-type HealthPercentReqData struct {
-	Value int  `xml:"value,attr" json:"value"`
-	Less  bool `xml:"less,attr" json:"less"`
-}
-
-// Struct for mana requirement data.
-type ManaReqData struct {
-	Value  int  `xml:"value,attr" json:"value"`
-	Less   bool `xml:"less,attr" json:"less"`
-	Charge bool `xml:"charge,attr" json:"charge"`
-}
-
-// Struct for mana percent requirement data.
-type ManaPercentReqData struct {
-	Value int  `xml:"value,attr" json:"value"`
-	Less  bool `xml:"less,attr" json:"less"`
-}
-
 // Struct for combat requirement data.
 type CombatReqData struct {
 	Combat bool `xml:"combat,attr" json:"combat"`
 }
 
-// Struct for visibility requirement data.
-type VisibilityReqData struct {
+// Struct for value requirement.
+type ValueReqData struct {
 	Value  int  `xml:"value,attr" json:"value"`
 	Less   bool `xml:"less,attr" json:"less"`
 	Charge bool `xml:"charge,attr" json:"charge"`

@@ -1,7 +1,7 @@
 /*
  * mana.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2022-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ type Mana struct {
 }
 
 // NewMana creates new mana requirement.
-func NewMana(data res.ManaReqData) *Mana {
+func NewMana(data res.ValueReqData) *Mana {
 	m := Mana{
 		less:   data.Less,
 		charge: data.Charge,
@@ -74,8 +74,8 @@ func (m *Mana) SetMeet(meet bool) {
 }
 
 // Data returns data resource for mana requiremnt.
-func (m *Mana) Data() res.ManaReqData {
-	data := res.ManaReqData{
+func (m *Mana) Data() res.ValueReqData {
+	data := res.ValueReqData{
 		Less:   m.less,
 		Charge: m.charge,
 		Value:  m.value,
