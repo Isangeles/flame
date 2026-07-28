@@ -31,4 +31,6 @@
   <mana-percent-req value="100"/>
   <combat-req combat="true"/>
   <combat-req combat="true"/>
+  <visibility-req/>
+  <visibility-req/>
 </reqs>

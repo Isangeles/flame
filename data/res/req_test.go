@@ -79,6 +79,9 @@ func TestReqsDataJson(t *testing.T) {
 	if len(reqs.CombatReqs) != 2 {
 		t.Errorf("Invalid number of combat requirements: %d != 2", len(reqs.CombatReqs))
 	}
+	if len(reqs.VisibilityReqs) != 2 {
+		t.Errorf("Invalid number of visibility requirements: %d != 2", len(reqs.VisibilityReqs))
+	}
 }
 
 // TestReqsDataXml tests requirements data XML mappings.
@@ -130,6 +133,9 @@ func TestReqsDataXml(t *testing.T) {
 	}
 	if len(reqs.CombatReqs) != 2 {
 		t.Errorf("Invalid number of combat requirements: %d != 2", len(reqs.CombatReqs))
+	}
+	if len(reqs.VisibilityReqs) != 2 {
+		t.Errorf("Invalid number of visibility requirements: %d != 2", len(reqs.VisibilityReqs))
 	}
 }
 

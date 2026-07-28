@@ -9,5 +9,7 @@
     "add-skill-mods": [ {}, {} ],
     "remove-item-mods": [ {}, {} ],
     "attribute-mods": [ {}, {} ],
-    "memory-mods": [ {}, {} ]
+    "memory-mods": [ {}, {} ],
+    "move-speed-mods": [ {}, {} ],
+    "visibility-mods": [ {}, {} ]
 }

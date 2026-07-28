@@ -124,5 +124,6 @@
 	{
 	    "combat":true
 	}
-    ]
+    ],
+    "visibility-reqs":[ {}, {} ]
 }

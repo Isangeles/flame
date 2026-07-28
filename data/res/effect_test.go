@@ -182,6 +182,14 @@ func TestModifiersDataJson(t *testing.T) {
 		t.Errorf("Invalid number of memory mods: %d != 2",
 			len(mods.MemoryMods))
 	}
+	if len(mods.MoveSpeedMods) != 2 {
+		t.Errorf("Invalid number of move speed mods: %d != 2",
+			len(mods.MoveSpeedMods))
+	}
+	if len(mods.VisibilityMods) != 2 {
+		t.Errorf("Invalid number of visibility mods: %d != 2",
+			len(mods.VisibilityMods))
+	}
 }
 
 // TestModifiersDataXml tests modifiers data XML mappings.
@@ -240,6 +248,14 @@ func TestModifiersDataXml(t *testing.T) {
 	if len(mods.MemoryMods) != 2 {
 		t.Errorf("Invalid number of memory mods: %d != 2",
 			len(mods.MemoryMods))
+	}
+	if len(mods.MoveSpeedMods) != 2 {
+		t.Errorf("Invalid number of move speed mods: %d != 2",
+			len(mods.MoveSpeedMods))
+	}
+	if len(mods.VisibilityMods) != 2 {
+		t.Errorf("Invalid number of visibility mods: %d != 2",
+			len(mods.VisibilityMods))
 	}
 }
 
