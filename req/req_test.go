@@ -1,7 +1,7 @@
 /*
  * req_test.go
  *
- * Copyright 2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2022-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ func TestNewRequirements(t *testing.T) {
 		manaReqs              = 0
 		manaPercentReqs       = 0
 		combatReqs            = 0
+		visibilityReqs        = 0
 	)
 	for _, r := range reqs {
 		switch r.(type) {
@@ -77,6 +78,8 @@ func TestNewRequirements(t *testing.T) {
 			manaPercentReqs++
 		case *Combat:
 			combatReqs++
+		case *Visibility:
+			visibilityReqs++
 		}
 	}
 	if levelReqs != 2 {
@@ -117,6 +120,9 @@ func TestNewRequirements(t *testing.T) {
 	}
 	if combatReqs != 2 {
 		t.Errorf("Invalid number of combat requirements: %d != 2", combatReqs)
+	}
+	if visibilityReqs != 2 {
+		t.Errorf("Invalid number of visibility requirements: %d != 2", visibilityReqs)
 	}
 }
 
@@ -182,6 +188,10 @@ func TestRequirementsData(t *testing.T) {
 		t.Errorf("Invalid number of combat requirements: %d != %d", len(data.CombatReqs),
 			len(expectedData.CombatReqs))
 	}
+	if len(data.VisibilityReqs) != len(expectedData.VisibilityReqs) {
+		t.Errorf("Invalid number of visibility requirements: %d != %d", len(data.VisibilityReqs),
+			len(expectedData.VisibilityReqs))
+	}
 }
 
 // testReqsData creats test requirements data
@@ -239,6 +249,10 @@ func testReqsData() res.ReqsData {
 		res.CombatReqData{false},
 		res.CombatReqData{true},
 	}
+	visibilityReqs := []res.ValueReqData{
+		res.ValueReqData{100, false, false},
+		res.ValueReqData{50, false, false},
+	}
 	data := res.ReqsData{
 		LevelReqs:         levelReqs,
 		GenderReqs:        genderReqs,
@@ -253,6 +267,7 @@ func testReqsData() res.ReqsData {
 		ManaReqs:          manaReqs,
 		ManaPercentReqs:   manaPercentReqs,
 		CombatReqs:        combatReqs,
+		VisibilityReqs:    visibilityReqs,
 	}
 	return data
 }
