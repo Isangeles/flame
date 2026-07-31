@@ -107,6 +107,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		vreq := NewVisibility(d)
 		reqs = append(reqs, vreq)
 	}
+	for _, d := range data.EffectReqs {
+		ereq := NewEffect(d)
+		reqs = append(reqs, ereq)
+	}
 	return
 }
 
@@ -156,6 +160,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Visibility:
 			d := r.Data()
 			data.VisibilityReqs = append(data.VisibilityReqs, d)
+		case *Effect:
+			d := r.Data()
+			data.EffectReqs = append(data.EffectReqs, d)
 		}
 	}
 	return

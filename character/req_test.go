@@ -27,6 +27,7 @@ import (
 	"testing"
 
 	"github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/req"
 )
@@ -40,6 +41,7 @@ var (
 	combatReqData        = res.CombatReqData{true}
 	currencyReqData      = res.ValueReqData{10, false, true}
 	visibilityReqData    = res.ValueReqData{50, false, false}
+	effectReqData        = res.EffectReqData{"effect1"}
 )
 
 // TestMeetReqsItem tests meet requiremet check function
@@ -196,6 +198,25 @@ func TestMeetReqsCurrency(t *testing.T) {
 	// Not meet.
 	char.Inventory().RemoveItem(item1)
 	if char.MeetReqs(currencyReq) {
+		t.Errorf("Requirement should not be meet")
+	}
+}
+
+// TestMeetReqsEffect tests meet requirement check function
+// for effect requirement.
+func TestMeetReqsEffect(t *testing.T) {
+	// Create object & requirement
+	char := New(charData)
+	eff := effect.New(res.EffectData{ID: "effect1", Infinite: true})
+	char.AddEffect(eff)
+	effReq := req.NewEffect(effectReqData)
+	// Meet
+	if !char.MeetReqs(effReq) {
+		t.Errorf("Requirement should be meet")
+	}
+	// Not meet
+	char.RemoveEffect(eff)
+	if char.MeetReqs(effReq) {
 		t.Errorf("Requirement should not be meet")
 	}
 }

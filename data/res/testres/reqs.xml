@@ -33,4 +33,6 @@
   <combat-req combat="true"/>
   <visibility-req/>
   <visibility-req/>
+  <effect-req/>
+  <effect-req/>
 </reqs>

@@ -138,6 +138,13 @@ func (c *Character) meetReq(r req.Requirement) bool {
 			return c.Attributes().Visibility() > r.Value()
 		}
 		return c.Attributes().Visibility() <= r.Value()
+	case *req.Effect:
+		for _, e := range c.Effects() {
+			if e.ID() == r.ID() {
+				return true
+			}
+		}
+		return false
 	default:
 		return true
 	}

@@ -82,6 +82,9 @@ func TestReqsDataJson(t *testing.T) {
 	if len(reqs.VisibilityReqs) != 2 {
 		t.Errorf("Invalid number of visibility requirements: %d != 2", len(reqs.VisibilityReqs))
 	}
+	if len(reqs.EffectReqs) != 2 {
+		t.Errorf("Invalid number of effect requirements: %d != 2", len(reqs.EffectReqs))
+	}
 }
 
 // TestReqsDataXml tests requirements data XML mappings.
@@ -136,6 +139,9 @@ func TestReqsDataXml(t *testing.T) {
 	}
 	if len(reqs.VisibilityReqs) != 2 {
 		t.Errorf("Invalid number of visibility requirements: %d != 2", len(reqs.VisibilityReqs))
+	}
+	if len(reqs.EffectReqs) != 2 {
+		t.Errorf("Invalid number of effect requirements: %d != 2", len(reqs.EffectReqs))
 	}
 }
 

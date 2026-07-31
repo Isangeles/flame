@@ -44,6 +44,7 @@ type ReqsData struct {
 	ManaPercentReqs   []ValueReqData       `xml:"mana-percent-req" json:"mana-percent-reqs"`
 	CombatReqs        []CombatReqData      `xml:"combat-req" json:"combat-reqs"`
 	VisibilityReqs    []ValueReqData       `xml:"visibility-req" json:"visibility-reqs"`
+	EffectReqs        []EffectReqData      `xml:"effect-req" json:"effect-reqs"`
 }
 
 // Struct for level requirement data.
@@ -90,6 +91,11 @@ type QuestReqData struct {
 // Struct for combat requirement data.
 type CombatReqData struct {
 	Combat bool `xml:"combat,attr" json:"combat"`
+}
+
+// Struct for effect requirement data.
+type EffectReqData struct {
+	ID string `xml:"id,attr" json:"id"`
 }
 
 // Struct for value requirement.

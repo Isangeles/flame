@@ -49,6 +49,7 @@ func TestNewRequirements(t *testing.T) {
 		manaPercentReqs       = 0
 		combatReqs            = 0
 		visibilityReqs        = 0
+		effectReqs            = 0
 	)
 	for _, r := range reqs {
 		switch r.(type) {
@@ -80,6 +81,8 @@ func TestNewRequirements(t *testing.T) {
 			combatReqs++
 		case *Visibility:
 			visibilityReqs++
+		case *Effect:
+			effectReqs++
 		}
 	}
 	if levelReqs != 2 {
@@ -123,6 +126,9 @@ func TestNewRequirements(t *testing.T) {
 	}
 	if visibilityReqs != 2 {
 		t.Errorf("Invalid number of visibility requirements: %d != 2", visibilityReqs)
+	}
+	if effectReqs != 2 {
+		t.Errorf("Invalid number of effect requirements: %d != 2", effectReqs)
 	}
 }
 
@@ -192,6 +198,10 @@ func TestRequirementsData(t *testing.T) {
 		t.Errorf("Invalid number of visibility requirements: %d != %d", len(data.VisibilityReqs),
 			len(expectedData.VisibilityReqs))
 	}
+	if len(data.EffectReqs) != len(expectedData.EffectReqs) {
+		t.Errorf("Invalid number of effect requirements: %d != %d",
+			len(data.EffectReqs), len(expectedData.EffectReqs))
+	}
 }
 
 // testReqsData creats test requirements data
@@ -253,6 +263,10 @@ func testReqsData() res.ReqsData {
 		res.ValueReqData{100, false, false},
 		res.ValueReqData{50, false, false},
 	}
+	effectReqs := []res.EffectReqData{
+		res.EffectReqData{"effect1"},
+		res.EffectReqData{"effect1"},
+	}
 	data := res.ReqsData{
 		LevelReqs:         levelReqs,
 		GenderReqs:        genderReqs,
@@ -268,6 +282,7 @@ func testReqsData() res.ReqsData {
 		ManaPercentReqs:   manaPercentReqs,
 		CombatReqs:        combatReqs,
 		VisibilityReqs:    visibilityReqs,
+		EffectReqs:        effectReqs,
 	}
 	return data
 }
