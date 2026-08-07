@@ -41,7 +41,7 @@ var (
 	combatReqData        = res.CombatReqData{true}
 	currencyReqData      = res.ValueReqData{10, false, true}
 	visibilityReqData    = res.ValueReqData{50, false, false}
-	effectReqData        = res.EffectReqData{"effect1"}
+	effectReqData        = res.IDReqData{ID: "effect1"}
 )
 
 // TestMeetReqsItem tests meet requiremet check function

@@ -34,7 +34,7 @@ type Effect struct {
 }
 
 // NewEffect creates new effect requirement.
-func NewEffect(data res.EffectReqData) *Effect {
+func NewEffect(data res.IDReqData) *Effect {
 	er := new(Effect)
 	er.id = data.ID
 	return er
@@ -56,7 +56,7 @@ func (er *Effect) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (er *Effect) Data() res.EffectReqData {
-	data := res.EffectReqData{er.id}
+func (er *Effect) Data() res.IDReqData {
+	data := res.IDReqData{ID: er.id}
 	return data
 }

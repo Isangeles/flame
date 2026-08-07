@@ -215,9 +215,9 @@ func testReqsData() res.ReqsData {
 		res.GenderReqData{"gender1"},
 		res.GenderReqData{"gender2"},
 	}
-	flagReqs := []res.FlagReqData{
-		res.FlagReqData{"flag1", false},
-		res.FlagReqData{"flag2", true},
+	flagReqs := []res.IDReqData{
+		res.IDReqData{"flag1", false},
+		res.IDReqData{"flag2", true},
 	}
 	itemReqs := []res.ItemReqData{
 		res.ItemReqData{"item1", 1, false},
@@ -263,9 +263,9 @@ func testReqsData() res.ReqsData {
 		res.ValueReqData{100, false, false},
 		res.ValueReqData{50, false, false},
 	}
-	effectReqs := []res.EffectReqData{
-		res.EffectReqData{"effect1"},
-		res.EffectReqData{"effect1"},
+	effectReqs := []res.IDReqData{
+		res.IDReqData{ID: "effect1"},
+		res.IDReqData{ID: "effect1"},
 	}
 	data := res.ReqsData{
 		LevelReqs:         levelReqs,

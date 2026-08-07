@@ -32,7 +32,7 @@ type ReqsData struct {
 	XMLName           xml.Name             `xml:"reqs" json:"-"`
 	LevelReqs         []LevelReqData       `xml:"level-req" json:"level-reqs"`
 	GenderReqs        []GenderReqData      `xml:"gender-req" json:"gender-reqs"`
-	FlagReqs          []FlagReqData        `xml:"flag-req" json:"flag-reqs"`
+	FlagReqs          []IDReqData          `xml:"flag-req" json:"flag-reqs"`
 	ItemReqs          []ItemReqData        `xml:"item-req" json:"item-reqs"`
 	CurrencyReqs      []ValueReqData       `xml:"currency-req" json:"currency-reqs"`
 	TargetRangeReqs   []TargetRangeReqData `xml:"target-range-req" json:"target-range-reqs"`
@@ -44,7 +44,7 @@ type ReqsData struct {
 	ManaPercentReqs   []ValueReqData       `xml:"mana-percent-req" json:"mana-percent-reqs"`
 	CombatReqs        []CombatReqData      `xml:"combat-req" json:"combat-reqs"`
 	VisibilityReqs    []ValueReqData       `xml:"visibility-req" json:"visibility-reqs"`
-	EffectReqs        []EffectReqData      `xml:"effect-req" json:"effect-reqs"`
+	EffectReqs        []IDReqData          `xml:"effect-req" json:"effect-reqs"`
 }
 
 // Struct for level requirement data.
@@ -56,12 +56,6 @@ type LevelReqData struct {
 // Struct for gender requirement data.
 type GenderReqData struct {
 	Gender string `xml:"type,attr" json:"gender"`
-}
-
-// Struct for flag requirement data.
-type FlagReqData struct {
-	ID  string `xml:"id,attr" json:"id"`
-	Off bool   `xml:"off,attr" json:"off"`
 }
 
 // Struct for item requirement data.
@@ -93,9 +87,11 @@ type CombatReqData struct {
 	Combat bool `xml:"combat,attr" json:"combat"`
 }
 
-// Struct for effect requirement data.
-type EffectReqData struct {
-	ID string `xml:"id,attr" json:"id"`
+// Struct for generic ID requirement data
+// for various ID requirements.
+type IDReqData struct {
+	ID  string `xml:"id,attr" json:"id"`
+	Off bool   `xml:"off,attr" json:"off"`
 }
 
 // Struct for value requirement.

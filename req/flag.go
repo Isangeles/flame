@@ -35,7 +35,7 @@ type Flag struct {
 }
 
 // NewFlag creates new flag requirement.
-func NewFlag(data res.FlagReqData) *Flag {
+func NewFlag(data res.IDReqData) *Flag {
 	fr := new(Flag)
 	fr.flagID = data.ID
 	fr.flagOff = data.Off
@@ -64,8 +64,8 @@ func (fr *Flag) SetMeet(meet bool) {
 }
 
 // Data returns data resource for requirement.
-func (cr *Flag) Data() res.FlagReqData {
-	data := res.FlagReqData{
+func (cr *Flag) Data() res.IDReqData {
+	data := res.IDReqData{
 		ID: cr.FlagID(),
 		Off: cr.FlagOff(),
 	}
