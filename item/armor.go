@@ -1,7 +1,7 @@
 /*
  * armor.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ type Armor struct {
 	serial    string
 	level     int
 	value     int
-	loot      bool
 	armor     int
 	eqEffects []res.EffectData
 	eqReqs    []req.Requirement
@@ -51,7 +50,6 @@ func NewArmor(data res.ArmorData) *Armor {
 		id:        data.ID,
 		level:     data.Level,
 		value:     data.Value,
-		loot:      data.Loot,
 		armor:     data.Armor,
 		eqEffects: data.EQEffects,
 	}

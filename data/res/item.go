@@ -1,7 +1,7 @@
 /*
  * item.go
  *
- * Copyright 2019-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ type ArmorData struct {
 	Value     int            `xml:"value,attr" json:"value"`
 	Level     int            `xml:"level,attr" json:"level"`
 	Armor     int            `xml:"armor,attr" json:"armor"`
-	Loot      bool           `xml:"loot,attr" json:"loot"`
 	EQEffects []EffectData   `xml:"eq>effects>effect" json:"eq-effects"`
 	EQReqs    ReqsData       `xml:"eq>reqs" json:"eq-reqs"`
 	Slots     []ItemSlotData `xml:"slots>slot" json:"slots"`
@@ -62,7 +61,6 @@ type WeaponData struct {
 	Level  int            `xml:"level,attr" json:"level"`
 	Damage DamageData     `xml:"damage" json:"damage"`
 	EQReqs ReqsData       `xml:"reqs" json:"eq-reqs"`
-	Loot   bool           `xml:"loot,attr" json:"loot"`
 	Slots  []ItemSlotData `xml:"slots>slot" json:"slots"`
 }
 
@@ -85,7 +83,6 @@ type MiscItemData struct {
 	ID         string        `xml:"id,attr" json:"id"`
 	Value      int           `xml:"value,attr" json:"value"`
 	Level      int           `xml:"level,attr" json:"level"`
-	Loot       bool          `xml:"loot,attr" json:"loot"`
 	Currency   bool          `xml:"currency,attr" json:"currency"`
 	Consumable bool          `xml:"consumable,attr" json:"consumable"`
 	UseAction  UseActionData `xml:"use" json:"use"`

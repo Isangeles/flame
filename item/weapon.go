@@ -1,7 +1,7 @@
 /*
  * weapon.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ type Weapon struct {
 	serial         string
 	value          int
 	level          int
-	loot           bool
 	dmgMin, dmgMax int
 	dmgType        objects.Element
 	dmgEffects     []res.EffectData
@@ -52,7 +51,6 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		id:      data.ID,
 		value:   data.Value,
 		level:   data.Level,
-		loot:    data.Loot,
 		dmgMin:  data.Damage.Min,
 		dmgMax:  data.Damage.Max,
 		dmgType: objects.Element(data.Damage.Type),

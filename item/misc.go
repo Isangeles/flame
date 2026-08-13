@@ -1,7 +1,7 @@
 /*
  * misc.go
  *
- * Copyright 2019-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2019-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ type Misc struct {
 	serial     string
 	value      int
 	level      int
-	loot       bool
 	currency   bool
 	consumable bool
 	useAction  *useaction.UseAction
@@ -49,7 +48,6 @@ func NewMisc(data res.MiscItemData) *Misc {
 	m := Misc{
 		id:         data.ID,
 		value:      data.Value,
-		loot:       data.Loot,
 		currency:   data.Currency,
 		consumable: data.Consumable,
 	}
