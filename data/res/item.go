@@ -67,6 +67,7 @@ type WeaponData struct {
 // Struct for damage data.
 type DamageData struct {
 	Type    string             `xml:"type,attr" json:"type"`
+	Ranged  bool               `xml:"ranged,attr" json:"ranged"`
 	Min     int                `xml:"min,attr" json:"min"`
 	Max     int                `xml:"max,attr" json:"max"`
 	Effects []ObjectEffectData `xml:"effects>effect" json:"effects"`

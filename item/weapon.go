@@ -37,6 +37,7 @@ type Weapon struct {
 	serial         string
 	value          int
 	level          int
+	ranged         bool
 	dmgMin, dmgMax int
 	dmgType        objects.Element
 	dmgEffects     []res.EffectData
@@ -51,6 +52,7 @@ func NewWeapon(data res.WeaponData) *Weapon {
 		id:      data.ID,
 		value:   data.Value,
 		level:   data.Level,
+		ranged:  data.Damage.Ranged,
 		dmgMin:  data.Damage.Min,
 		dmgMax:  data.Damage.Max,
 		dmgType: objects.Element(data.Damage.Type),
@@ -103,6 +105,12 @@ func (w *Weapon) Value() int {
 // Level returns item level.
 func (w *Weapon) Level() int {
 	return w.level
+}
+
+// Ranged checks if the weapon deals ranged
+// damage.
+func (w *Weapon) Ranged() bool {
+	return w.ranged
 }
 
 // Damge returns minimal and maximal
