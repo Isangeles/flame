@@ -11,7 +11,7 @@ MAJOR:
   quest(kill records could already be present and the quest stage will be completed immediately)
 * Better currency req charging strategy(currently it takes all currency items to satisfy the requirement
   even if value of the item exceeds the required value)
-* Weapon types & weapon type req(for skills)
+* Weapon type req(ranged or not)
 MINOR:
 * More examples
 * Improve combat system(include resilience, stats bonuses, etc.)
@@ -25,6 +25,7 @@ MINOR:
 * Remove json module flag for full switch to json data files
 * Handling dialog requirements
 * Way to set the starting equipment in chapter config
+* Handle requirement charge for: visibility req, health & mana reqs
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
