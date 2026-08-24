@@ -1,0 +1,157 @@
+.TH module
+.SH NAME
+module \- a self-contained game content package
+.SH DESCRIPTION
+A module is the top-level container for all game content in the Flame engine.
+.br
+It holds module-wide resources (characters, effects, items, recipes, skills, races, trainings)
+that are available across all chapters, as well as the chapters themselves.
+.br
+A module consists of a directory on the file system with a
+.B .module
+configuration file and a set of sub-directories holding the data files.
+.br
+Only one module can be active at a time; the engine loads it at startup and
+advances through its chapters as the game progresses.
+.SH STRUCTURE
+.P
+A module directory must contain the following:
+.P
+Files:
+.br
+.B .module
+\- module configuration file (see data/file/conf/.module)
+.P
+Sub-directories:
+.br
+.B chapters
+\- directory with module chapters (required; see data/dir/chapters)
+.br
+.B characters
+\- character base data files and exported player characters (see data/dir/characters)
+.br
+.B effects
+\- effect base data files (see effects)
+.br
+.B items
+\- item base data files: armors, weapons, misc (see inventory-item)
+.br
+.B lang
+\- translation files for module-level resources (see data/dir/lang)
+.br
+.B objects
+\- area object base data files (see objects)
+.br
+.B races
+\- race data files (lives under characters/races)
+.br
+.B recipes
+\- crafting recipe data files (see data/dir/recipes)
+.br
+.B skills
+\- skill base data files (see data/dir/skills)
+.br
+.B trainings
+\- training data files
+.SH CONFIGURATION
+The
+.B .module
+file in the module root directory controls how the engine loads the module.
+.P
+Required values:
+.br
+.B id
+\- unique module identifier
+.br
+.B chapter
+\- ID of the chapter to start with
+.br
+.B chapters
+\- semicolon-separated list of all chapter IDs in the module
+.P
+Optional values:
+.br
+.B json-data
+\- set to
+.I true
+if data files use JSON format (default: XML)
+.SH CREATING A MODULE
+.P
+1. Create a directory whose name matches the desired module ID.
+.P
+2. Create a
+.B .module
+file in that directory with at minimum the
+.B id
+and
+.B chapter
+keys set.
+.P
+3. Create the required sub-directories (chapters, characters, effects, items,
+lang, recipes, skills).
+.P
+4. Add at least one chapter sub-directory inside
+.B chapters/
+with a matching
+.B .chapter
+configuration file and a starting area.
+.P
+5. Populate the resource sub-directories with data files (JSON or XML).
+.P
+6. Load the module in code using
+.B data.ImportModuleDir
+and pass the result to
+.B flame.NewModule
+(see EXAMPLE below).
+.SH EXAMPLE
+.P
+Directory layout:
+.nf
+my-mod/
+    .module
+    chapters/
+        prologue/
+            .chapter
+            areas/
+    characters/
+        main.json
+    effects/
+        main.json
+    items/
+        armors/
+            main.json
+        weapons/
+            main.json
+        misc/
+            main.json
+    lang/
+        english/
+            main.lang
+    recipes/
+        main.json
+    skills/
+        main.json
+    trainings/
+        main.json
+.fi
+.P
+.B .module
+file:
+.nf
+id:my-mod
+chapter:prologue
+chapters:prologue;chapter1;epilogue
+json-data:true
+.fi
+.P
+Loading the module in Go:
+.nf
+modData, err := data.ImportModuleDir("my-mod")
+if err != nil {
+    panic(err)
+}
+mod := flame.NewModule(modData)
+.fi
+.SH SEE ALSO
+data/dir/module, data/dir/modules, data/file/conf/.module, data/dir/chapter,
+data/dir/chapters, characters, effects, inventory-item, modifiers, requirements
