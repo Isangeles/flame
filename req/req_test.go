@@ -50,6 +50,7 @@ func TestNewRequirements(t *testing.T) {
 		combatReqs            = 0
 		visibilityReqs        = 0
 		effectReqs            = 0
+		weaponReqs            = 0
 	)
 	for _, r := range reqs {
 		switch r.(type) {
@@ -83,6 +84,8 @@ func TestNewRequirements(t *testing.T) {
 			visibilityReqs++
 		case *Effect:
 			effectReqs++
+		case *Weapon:
+			weaponReqs++
 		}
 	}
 	if levelReqs != 2 {
@@ -129,6 +132,9 @@ func TestNewRequirements(t *testing.T) {
 	}
 	if effectReqs != 2 {
 		t.Errorf("Invalid number of effect requirements: %d != 2", effectReqs)
+	}
+	if weaponReqs != 2 {
+		t.Errorf("Invalid number of weapon requirements: %d != 2", weaponReqs)
 	}
 }
 
@@ -202,6 +208,10 @@ func TestRequirementsData(t *testing.T) {
 		t.Errorf("Invalid number of effect requirements: %d != %d",
 			len(data.EffectReqs), len(expectedData.EffectReqs))
 	}
+	if len(data.WeaponReqs) != len(expectedData.WeaponReqs) {
+		t.Errorf("Invalid number of weapon requirements: %d != %d",
+			len(data.WeaponReqs), len(expectedData.WeaponReqs))
+	}
 }
 
 // testReqsData creats test requirements data
@@ -267,6 +277,10 @@ func testReqsData() res.ReqsData {
 		res.IDReqData{ID: "effect1"},
 		res.IDReqData{ID: "effect1"},
 	}
+	weaponReqs := []res.WeaponReqData{
+		res.WeaponReqData{Ranged: true},
+		res.WeaponReqData{Ranged: false},
+	}
 	data := res.ReqsData{
 		LevelReqs:         levelReqs,
 		GenderReqs:        genderReqs,
@@ -283,6 +297,7 @@ func testReqsData() res.ReqsData {
 		CombatReqs:        combatReqs,
 		VisibilityReqs:    visibilityReqs,
 		EffectReqs:        effectReqs,
+		WeaponReqs:        weaponReqs,
 	}
 	return data
 }

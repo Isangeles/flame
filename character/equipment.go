@@ -1,7 +1,7 @@
 /*
  * equipment.go
  *
- * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,6 +98,18 @@ func (eq *Equipment) Equiped(item item.Equiper) bool {
 // Slots retuns all equipment slots.
 func (eq *Equipment) Slots() []*EquipmentSlot {
 	return eq.slots
+}
+
+// Weapons returns all equipped weapons.
+func (eq *Equipment) Weapons() (weapons []*item.Weapon) {
+	for _, it := range eq.Items() {
+		weapon, ok := it.(*item.Weapon)
+		if !ok {
+			continue
+		}
+		weapons = append(weapons, weapon)
+	}
+	return
 }
 
 // Apply applies specified data on the equipment.

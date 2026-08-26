@@ -45,6 +45,7 @@ type ReqsData struct {
 	CombatReqs        []CombatReqData      `xml:"combat-req" json:"combat-reqs"`
 	VisibilityReqs    []ValueReqData       `xml:"visibility-req" json:"visibility-reqs"`
 	EffectReqs        []IDReqData          `xml:"effect-req" json:"effect-reqs"`
+	WeaponReqs        []WeaponReqData      `xml:"weapon-req" json:"weapon-reqs"`
 }
 
 // Struct for level requirement data.
@@ -85,6 +86,11 @@ type QuestReqData struct {
 // Struct for combat requirement data.
 type CombatReqData struct {
 	Combat bool `xml:"combat,attr" json:"combat"`
+}
+
+// Struct for weapon requirement data.
+type WeaponReqData struct {
+	Ranged bool `xml:"ranged,attr" json:"ranged"`
 }
 
 // Struct for generic ID requirement data

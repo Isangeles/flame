@@ -85,6 +85,9 @@ func TestReqsDataJson(t *testing.T) {
 	if len(reqs.EffectReqs) != 2 {
 		t.Errorf("Invalid number of effect requirements: %d != 2", len(reqs.EffectReqs))
 	}
+	if len(reqs.WeaponReqs) != 2 {
+		t.Errorf("Invalid number of weapon requirements: %d != 2", len(reqs.WeaponReqs))
+	}
 }
 
 // TestReqsDataXml tests requirements data XML mappings.
@@ -142,6 +145,9 @@ func TestReqsDataXml(t *testing.T) {
 	}
 	if len(reqs.EffectReqs) != 2 {
 		t.Errorf("Invalid number of effect requirements: %d != 2", len(reqs.EffectReqs))
+	}
+	if len(reqs.WeaponReqs) != 2 {
+		t.Errorf("Invalid number of weapon requirements: %d != 2", len(reqs.WeaponReqs))
 	}
 }
 

@@ -145,6 +145,17 @@ func (c *Character) meetReq(r req.Requirement) bool {
 			}
 		}
 		return false
+	case *req.Weapon:
+		weapons := c.Equipment().Weapons()
+		if len(weapons) < 1 {
+			return false
+		}
+		for _, w := range weapons {
+			if (!w.Ranged() && r.Ranged()) || (w.Ranged() && !r.Ranged()) {
+				return false
+			}
+		}
+		return true
 	default:
 		return true
 	}

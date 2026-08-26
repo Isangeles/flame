@@ -111,6 +111,10 @@ func NewRequirements(data res.ReqsData) (reqs []Requirement) {
 		ereq := NewEffect(d)
 		reqs = append(reqs, ereq)
 	}
+	for _, d := range data.WeaponReqs {
+		wreq := NewWeapon(d)
+		reqs = append(reqs, wreq)
+	}
 	return
 }
 
@@ -163,6 +167,9 @@ func RequirementsData(reqs ...Requirement) (data res.ReqsData) {
 		case *Effect:
 			d := r.Data()
 			data.EffectReqs = append(data.EffectReqs, d)
+		case *Weapon:
+			d := r.Data()
+			data.WeaponReqs = append(data.WeaponReqs, d)
 		}
 	}
 	return

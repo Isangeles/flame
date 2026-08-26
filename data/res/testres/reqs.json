@@ -126,5 +126,6 @@
 	}
     ],
     "visibility-reqs":[ {}, {} ],
-    "effect-reqs": [ {}, {} ]
+    "effect-reqs": [ {}, {} ],
+    "weapon-reqs": [ {}, {} ]
 }

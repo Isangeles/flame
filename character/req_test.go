@@ -42,6 +42,7 @@ var (
 	currencyReqData      = res.ValueReqData{10, false, true}
 	visibilityReqData    = res.ValueReqData{50, false, false}
 	effectReqData        = res.IDReqData{ID: "effect1"}
+	weaponReqData        = res.WeaponReqData{Ranged: true}
 )
 
 // TestMeetReqsItem tests meet requiremet check function
@@ -217,6 +218,34 @@ func TestMeetReqsEffect(t *testing.T) {
 	// Not meet
 	char.RemoveEffect(eff)
 	if char.MeetReqs(effReq) {
+		t.Errorf("Requirement should not be meet")
+	}
+}
+
+// TestMeetReqsWeapon tests meet requirement check function
+// for weapon requirement.
+func TestMeetReqsWeapon(t *testing.T) {
+	// Create object & requirement
+	char := New(charData)
+	weaponData := res.WeaponData{
+		ID: "weapon1",
+		Damage: res.DamageData{Ranged: true},
+	}
+	weapon := item.NewWeapon(weaponData)
+	for _, s := range char.Equipment().Slots() {
+		if s.Type() == item.Hand {
+			s.SetItem(weapon)
+			break
+		}
+	}
+	weaponReq := req.NewWeapon(weaponReqData)
+	// Meet
+	if !char.MeetReqs(weaponReq) {
+		t.Errorf("Requirement should be meet")
+	}
+	// Not meet
+	char.Equipment().Unequip(weapon)
+	if char.MeetReqs(weaponReq) {
 		t.Errorf("Requirement should not be meet")
 	}
 }
