@@ -1,130 +1,17 @@
 {
-    "level-reqs":[
-	{
-	    "min":10,
-	    "max":20
-	},
-	{
-	    "min":10,
-	    "max":20
-	}
-    ],
-    "gender-reqs":[
-	{
-	    "gender":"gender1"
-	},
-	{
-	    "gender":"gender1"
-	}
-    ],
-    "flag-reqs":[
-	{
-	    "id":"flag1",
-	    "off":true
-	},
-	{
-	    "id":"flag1",
-	    "off":true
-	}
-    ],
-    "item-reqs":[
-	{
-	    "id":"item1",
-	    "amount":10,
-	    "charge":true
-	},
-	{
-	    "id":"item2",
-	    "amount":10,
-	    "charge":true
-	}
-    ],
-    "currency-reqs":[
-	{
-	    "amount":100,
-	    "charge":true
-	},
-	{
-	    "amount":100,
-	    "charge":true
-	}
-    ],
-    "target-range-reqs":[
-	{
-	    "min-range":100
-	},
-	{
-	    "min-range":100
-	}
-    ],
-    "kill-reqs":[
-	{
-	    "id":"char1",
-	    "amount":10
-	},
-	{
-	    "id":"char2",
-	    "amount":10
-	}
-    ],
-    "quest-reqs":[
-	{
-	    "id":"quest1",
-	    "completed":true
-	},
-	{
-	    "id":"quest2",
-	    "completed":true
-	}
-    ],
-    "health-reqs":[
-	{
-	    "value":100,
-	    "less":true
-	},
-	{
-	    "value":100,
-	    "less":true
-	}
-    ],
-    "health-percent-reqs":[
-	{
-	    "value":100,
-	    "less":true
-	},
-	{
-	    "value":100,
-	    "less":true
-	}
-    ],
-    "mana-reqs":[
-	{
-	    "value":100,
-	    "less":true
-	},
-	{
-	    "value":100,
-	    "less":true
-	}
-    ],
-    "mana-percent-reqs":[
-	{
-	    "value":100,
-	    "less":true
-	},
-	{
-	    "value":100,
-	    "less":true
-	}
-    ],
-    "combat-reqs":[
-	{
-	    "combat":true
-	},
-	{
-	    "combat":true
-	}
-    ],
+    "level-reqs":[ {}, {} ],
+    "gender-reqs":[ {}, {} ],
+    "flag-reqs":[ {}, {} ],
+    "item-reqs":[ {}, {} ],
+    "currency-reqs":[ {}, {} ],
+    "target-range-reqs":[ {}, {} ],
+    "kill-reqs":[ {}, {} ],
+    "quest-reqs":[ {}, {} ],
+    "health-reqs":[ {}, {} ],
+    "health-percent-reqs":[ {}, {} ],
+    "mana-reqs":[ {}, {} ],
+    "mana-percent-reqs":[ {}, {} ],
+    "combat-reqs":[ {}, {} ],
     "visibility-reqs":[ {}, {} ],
     "effect-reqs": [ {}, {} ],
     "weapon-reqs": [ {}, {} ]
