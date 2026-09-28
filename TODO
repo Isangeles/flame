@@ -25,6 +25,7 @@ MINOR:
 * Handling dialog requirements
 * Way to set the starting equipment in chapter config
 * Handle requirement charge for: visibility req, health & mana reqs
+* Min and max attributes starting amount for chapter config
 DONE:
 * Generating unique serial values for game objects
 * Functions for importing/exporting module
