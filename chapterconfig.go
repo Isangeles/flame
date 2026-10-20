@@ -1,7 +1,7 @@
 /*
  * chapterconfig.go
  *
- * Copyright 2018-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,15 +30,16 @@ import (
 // Struct for chapter configurtion
 // values.
 type ChapterConfig struct {
-	ID          string
-	Path        string
-	StartArea   string
-	StartPosX   float64
-	StartPosY   float64
-	StartItems  []string
-	StartSkills []string
-	StartAttrs  int
-	StartLevel  int
+	ID            string
+	Path          string
+	StartArea     string
+	StartPosX     float64
+	StartPosY     float64
+	StartItems    []string
+	StartSkills   []string
+	StartAttrsMin int
+	StartAttrsMax int
+	StartLevel    int
 }
 
 // FullPath returns path to chapter directory.

@@ -1,7 +1,7 @@
 /*
  * chapter.go
  *
- * Copyright 2018-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright 2018-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -188,8 +188,11 @@ func (c *Chapter) Apply(data res.ChapterData) {
 		c.conf.StartPosX, _ = strconv.ParseFloat(data.Config["start-pos"][0], 64)
 		c.conf.StartPosY, _ = strconv.ParseFloat(data.Config["start-pos"][1], 64)
 	}
-	if len(data.Config["start-attrs"]) > 0 {
-		c.conf.StartAttrs, _ = strconv.Atoi(data.Config["start-attrs"][0])
+	if len(data.Config["start-attrs-min"]) > 0 {
+		c.conf.StartAttrsMin, _ = strconv.Atoi(data.Config["start-attrs-min"][0])
+	}
+	if len(data.Config["start-attrs-max"]) > 0 {
+		c.conf.StartAttrsMax, _ = strconv.Atoi(data.Config["start-attrs-max"][0])
 	}
 	if len(data.Config["start-level"]) > 0 {
 		c.conf.StartLevel, _ = strconv.Atoi(data.Config["start-level"][0])
@@ -220,7 +223,8 @@ func (c *Chapter) Data() res.ChapterData {
 		fmt.Sprintf("%f", c.Conf().StartPosY)}
 	data.Config["start-items"] = c.Conf().StartItems
 	data.Config["start-skills"] = c.Conf().StartSkills
-	data.Config["start-attrs"] = []string{fmt.Sprintf("%d", c.Conf().StartAttrs)}
+	data.Config["start-attrs-min"] = []string{fmt.Sprintf("%d", c.Conf().StartAttrsMin)}
+	data.Config["start-attrs-max"] = []string{fmt.Sprintf("%d", c.Conf().StartAttrsMax)}
 	data.Config["start-level"] = []string{fmt.Sprintf("%d", c.Conf().StartLevel)}
 	data.Resources = *c.res
 	// Remove old characters from resources, besides basic ones.
